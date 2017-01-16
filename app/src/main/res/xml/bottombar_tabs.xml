@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_today"
+        icon="@drawable/ic_menu_gallery"
+        title="Today" />
+    <tab
+        id="@+id/tab_week"
+        icon="@drawable/ic_menu_gallery"
+        title="Week" />
+    <tab
+        id="@+id/tab_month"
+        icon="@drawable/ic_menu_gallery"
+        title="Month" />
+    <tab
+        id="@+id/tab_all"
+        icon="@drawable/ic_menu_gallery"
+        title="All" />
+</tabs>

@@ -1,0 +1,61 @@
+{
+  "properties": {
+    "title": "ExpenseManager Expenses",
+    "locale": "en"
+  },
+  "sheets": [
+    {
+      "properties": {
+        "sheetId": 1,
+        "title": "Expenses"
+      },
+      "data": [
+        {
+          "startRow": 0,
+          "startColumn": 0,
+          "rowData": [
+            {
+              "values": [
+                {
+                  "userEnteredValue": {
+                    "stringValue": "rowIdentifier"
+                  }
+                },
+                {
+                  "userEnteredValue": {
+                    "stringValue": "date"
+                  }
+                },
+                {
+                  "userEnteredValue": {
+                    "stringValue": "amount"
+                  }
+                },
+                {
+                  "userEnteredValue": {
+                    "stringValue": "paymentMode"
+                  }
+                },
+                {
+                  "userEnteredValue": {
+                    "stringValue": "category"
+                  }
+                },
+                {
+                  "userEnteredValue": {
+                    "stringValue": "notes"
+                  }
+                },
+                {
+                  "userEnteredValue": {
+                    "stringValue": "syncStatus"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
