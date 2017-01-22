@@ -5,13 +5,15 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ramitsuri.expensemanager.MainActivity">
+    tools:context="com.ramitsuri.expensemanager.MainActivity"
+    android:background="#EEEEEE">
 
     <FrameLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomBar" />
+        android:layout_above="@+id/bottomBar"
+        android:background="#EEEEEE" />
 
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"

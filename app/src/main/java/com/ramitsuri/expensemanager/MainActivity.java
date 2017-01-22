@@ -9,10 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
@@ -29,8 +31,11 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.ramitsuri.expensemanager.fragments.AllFragment;
+import com.ramitsuri.expensemanager.fragments.MonthFragment;
+import com.ramitsuri.expensemanager.fragments.TodayFragment;
+import com.ramitsuri.expensemanager.fragments.WeekFragment;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import java.io.IOException;
@@ -41,11 +46,18 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
+        AllFragment.OnFragmentInteractionListener, TodayFragment.OnFragmentInteractionListener,
+        WeekFragment.OnFragmentInteractionListener, MonthFragment.OnFragmentInteractionListener{
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
+    private AllFragment mAllFragment;
+    private TodayFragment mTodayFragment;
+    private WeekFragment mWeekFragment;
+    private MonthFragment mMonthFragment;
+    private BottomBar mBottomBar;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -65,30 +77,41 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 .setBackOff(new ExponentialBackOff());
         //getResultsFromApi();
 
-        final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.setDefaultTab(R.id.tab_all);
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+        setupFragments();
+        mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        mBottomBar.setDefaultTab(R.id.tab_all);
+        mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                if (tabId == R.id.tab_today) {
-                    BottomBarTab tab = bottomBar.getTabWithId(tabId);
-                    // The tab with id R.id.tab_favorites was selected,
-                    // change your content accordingly.
-                }
-                else if (tabId == R.id.tab_week) {
-                    // The tab with id R.id.tab_favorites was selected,
-                    // change your content accordingly.
-                }
-                else if (tabId == R.id.tab_month) {
-                    // The tab with id R.id.tab_favorites was selected,
-                    // change your content accordingly.
-                }
-                else if (tabId == R.id.tab_all) {
-                    // The tab with id R.id.tab_favorites was selected,
-                    // change your content accordingly.
-                }
+                switchFragment(tabId);
             }
         });
+
+
+    }
+
+    private void switchFragment(int tabId) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (tabId == R.id.tab_today) {
+            transaction.replace(R.id.contentContainer, mTodayFragment);
+        }
+        else if (tabId == R.id.tab_week) {
+            transaction.replace(R.id.contentContainer, mWeekFragment);
+        }
+        else if (tabId == R.id.tab_month) {
+            transaction.replace(R.id.contentContainer, mMonthFragment);
+        }
+        else if (tabId == R.id.tab_all) {
+            transaction.replace(R.id.contentContainer, mAllFragment);
+        }
+        transaction.commit();
+    }
+
+    private void setupFragments() {
+        mAllFragment = new AllFragment();
+        mTodayFragment = new TodayFragment();
+        mWeekFragment = new WeekFragment();
+        mMonthFragment = new MonthFragment();
     }
 
     private void getResultsFromApi() {
@@ -208,6 +231,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {

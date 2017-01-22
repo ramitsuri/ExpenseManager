@@ -57,6 +57,7 @@ public class ExpenseDBHelper {
 
     public List<Expense> getAllExpense(){
 
+        return null;
     }
 
     public void addExpense(Expense expense){
