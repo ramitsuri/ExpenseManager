@@ -9,14 +9,14 @@
     android:background="#EEEEEE">
 
     <FrameLayout
-        android:id="@+id/contentContainer"
+        android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomBar"
+        android:layout_above="@+id/bottom_bar"
         android:background="#EEEEEE" />
 
     <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottomBar"
+        android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"

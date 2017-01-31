@@ -85,7 +85,7 @@ public class ExpenseDBHelper {
         expense.setRowIdentifier(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_ROW_ID));
         expense.setAmount(cursor.getInt(ExpenseContract.ExpenseEntry.ID_COLUMN_AMOUNT));
         expense.setDateTime(cursor.getLong(ExpenseContract.ExpenseEntry.ID_COLUMN_DATE_TIME));
-        expense.setNotes(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_NOTES));
+        expense.setDescription(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_NOTES));
         expense.setSyncStatus(getBooleanForInt(cursor.getInt(ExpenseContract.ExpenseEntry.ID_COLUMN_SYNC_STATUS)));
         expense.setPaymentMode(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_PAYMENT_MODE));
         Category category = new Category();

@@ -16,6 +16,8 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,6 +33,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
+import com.ramitsuri.expensemanager.entities.Category;
+import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.fragments.AllFragment;
 import com.ramitsuri.expensemanager.fragments.MonthFragment;
 import com.ramitsuri.expensemanager.fragments.TodayFragment;
@@ -59,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private MonthFragment mMonthFragment;
     private BottomBar mBottomBar;
 
+
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -78,31 +84,29 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         //getResultsFromApi();
 
         setupFragments();
-        mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        mBottomBar.setDefaultTab(R.id.tab_all);
+        mBottomBar = (BottomBar) findViewById(R.id.bottom_bar);
+        mBottomBar.setDefaultTab(R.id.tab_today);
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 switchFragment(tabId);
             }
         });
-
-
     }
 
     private void switchFragment(int tabId) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (tabId == R.id.tab_today) {
-            transaction.replace(R.id.contentContainer, mTodayFragment);
+            transaction.replace(R.id.content_container, mTodayFragment);
         }
         else if (tabId == R.id.tab_week) {
-            transaction.replace(R.id.contentContainer, mWeekFragment);
+            transaction.replace(R.id.content_container, mWeekFragment);
         }
         else if (tabId == R.id.tab_month) {
-            transaction.replace(R.id.contentContainer, mMonthFragment);
+            transaction.replace(R.id.content_container, mMonthFragment);
         }
         else if (tabId == R.id.tab_all) {
-            transaction.replace(R.id.contentContainer, mAllFragment);
+            transaction.replace(R.id.content_container, mAllFragment);
         }
         transaction.commit();
     }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/expense_date_container"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:background="@drawable/circle_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/expense_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="20"
+            android:textSize="32sp"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/expense_detail_top_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/expense_date_container"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/expense_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/expense_text_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="•"
+            android:textSize="12sp"
+            android:paddingLeft="4dp"/>
+
+        <TextView
+            android:id="@+id/expense_payment_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discover"
+            android:textSize="12sp"
+            android:paddingLeft="4dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/expense_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/expense_date_container"
+        android:layout_below="@id/expense_detail_top_container"
+        android:layout_marginLeft="8dp"
+        android:text="Curd"
+        android:textSize="24sp" />
+
+
+    <TextView
+        android:id="@+id/expense_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:text="$52"
+        android:padding="8dp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="24sp"/>
+
+
+</RelativeLayout>
