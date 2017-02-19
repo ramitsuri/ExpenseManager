@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 switchFragment(tabId);
             }
         });
+        startActivity(new Intent(this, ExpenseDetailActivity.class));
     }
 
     private void switchFragment(int tabId) {
