@@ -49,7 +49,7 @@ public class TodayFragment extends Fragment {
         recyclerViewExpenses.setAdapter(mExpenseAdapter);
         DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.recycler_view_divider));
-        recyclerViewExpenses.addItemDecoration(divider);
+        //recyclerViewExpenses.addItemDecoration(divider);
         return view;
     }
 

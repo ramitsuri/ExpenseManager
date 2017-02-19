@@ -9,8 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
         android:background="@color/gray_light">
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/expense_date_container"
             android:orientation="horizontal">
 
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/expense_detail_top_container"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/expense_date_container"
             android:text="Curd"
             android:textColor="@android:color/white"
