@@ -46,7 +46,6 @@ public class TodayFragment extends Fragment {
         recyclerViewExpenses.setHasFixedSize(true);
         recyclerViewExpenses.setLayoutManager(recyclerViewLManager);
         recyclerViewExpenses.setAdapter(mExpenseAdapter);
-        recyclerViewExpenses.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         return view;
     }
 

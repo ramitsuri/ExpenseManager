@@ -19,6 +19,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
 
     private ArrayList<Expense> mExpenses;
 
+    private static final int mItemViewTypeTop = 0;
+
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView mFieldDate;
@@ -48,22 +50,44 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
 
     @Override
     public ExpenseAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_row, null);
-        CustomViewHolder viewHolder = new CustomViewHolder(view);
+        CustomViewHolder viewHolder;
+        View view;
+        switch (viewType){
+
+            case 0:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_row_top, null);
+                viewHolder = new CustomViewHolder(view);
+                break;
+
+            default:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_row, null);
+                viewHolder = new CustomViewHolder(view);
+                break;
+        }
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ExpenseAdapter.CustomViewHolder holder, int position) {
         //holder.mFieldDate.setText(String.valueOf(mExpenses.get(position).getDateTime()));
-        holder.mFieldCategory.setText(mExpenses.get(position).getCategory().getName());
-        holder.mFieldPaymentMode.setText(mExpenses.get(position).getPaymentMode());
-        holder.mFieldDescription.setText(mExpenses.get(position).getDescription());
-        //holder.mFieldAmount.setText(String.valueOf(mExpenses.get(position).getAmount()));
+        if(position>0) {
+            holder.mFieldCategory.setText(mExpenses.get(position).getCategory().getName());
+            holder.mFieldPaymentMode.setText(mExpenses.get(position).getPaymentMode());
+            holder.mFieldDescription.setText(mExpenses.get(position).getDescription());
+            //holder.mFieldAmount.setText(String.valueOf(mExpenses.get(position).getAmount()));
+        }
     }
 
     @Override
     public int getItemCount() {
         return mExpenses.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position == 0){
+            return mItemViewTypeTop;
+        }
+        return 1;
     }
 }

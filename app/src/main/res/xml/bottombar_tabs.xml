@@ -2,18 +2,14 @@
 <tabs>
     <tab
         id="@+id/tab_today"
-        icon="@drawable/ic_menu_gallery"
+        icon="@drawable/ic_event_white_24dp"
         title="Today" />
     <tab
         id="@+id/tab_week"
-        icon="@drawable/ic_menu_gallery"
+        icon="@drawable/ic_date_range_white_24dp"
         title="Week" />
     <tab
         id="@+id/tab_month"
-        icon="@drawable/ic_menu_gallery"
+        icon="@drawable/ic_event_note_white_24dp"
         title="Month" />
-    <tab
-        id="@+id/tab_all"
-        icon="@drawable/ic_menu_gallery"
-        title="All" />
 </tabs>

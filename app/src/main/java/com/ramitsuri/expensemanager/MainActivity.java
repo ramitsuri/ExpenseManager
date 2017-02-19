@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         else if (tabId == R.id.tab_month) {
             transaction.replace(R.id.content_container, mMonthFragment);
         }
-        else if (tabId == R.id.tab_all) {
-            transaction.replace(R.id.content_container, mAllFragment);
-        }
         transaction.commit();
     }
 
