@@ -14,16 +14,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,13 +38,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
-import com.ramitsuri.expensemanager.entities.Category;
-import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.fragments.AllFragment;
-import com.ramitsuri.expensemanager.fragments.MonthFragment;
-import com.ramitsuri.expensemanager.fragments.TodayFragment;
-import com.ramitsuri.expensemanager.fragments.WeekFragment;
+import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -58,18 +51,15 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
-        AllFragment.OnFragmentInteractionListener, TodayFragment.OnFragmentInteractionListener,
-        WeekFragment.OnFragmentInteractionListener, MonthFragment.OnFragmentInteractionListener{
+        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener{
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
-    private AllFragment mAllFragment;
-    private TodayFragment mTodayFragment;
-    private WeekFragment mWeekFragment;
-    private MonthFragment mMonthFragment;
+    private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private BottomBar mBottomBar;
     private DrawerLayout mDrawerLayout;
+    private FloatingActionButton mFabAddExpense;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -104,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         //getResultsFromApi();
 
         setupFragments();
-
-
+        mFabAddExpense = (FloatingActionButton)findViewById(R.id.fab_add);
+        mFabAddExpense.setOnClickListener(this);
 
         mBottomBar = (BottomBar) findViewById(R.id.bottom_bar);
         mBottomBar.setDefaultTab(R.id.tab_today);
@@ -115,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 switchFragment(tabId);
             }
         });
-        //startActivity(new Intent(this, ExpenseDetailActivity.class));
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -125,9 +114,31 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
+
+                        switch (menuItem.getItemId()){
+                            case R.id.nav_expenses:
+                                break;
+                            case R.id.nav_all_expenses:
+                                break;
+                            case R.id.nav_categories:
+                                startRecyclerViewActivity(Constants.RECYCLER_VIEW_CATEGORIES);
+                                break;
+                            case R.id.nav_payment_methods:
+                                startRecyclerViewActivity(Constants.RECYCLER_VIEW_PAYMENT_METHODS);
+                                break;
+                            case R.id.nav_settings:
+                                break;
+                        }
+
                         return true;
                     }
                 });
+    }
+
+    private void startRecyclerViewActivity(int recyclerViewMode) {
+        Intent intent = new Intent(this, RecyclerViewActivity.class);
+        intent.putExtra(Constants.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE, recyclerViewMode);
+        startActivity(intent);
     }
 
     @Override
@@ -155,10 +166,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void setupFragments() {
-        mAllFragment = new AllFragment();
-        mTodayFragment = new TodayFragment();
-        mWeekFragment = new WeekFragment();
-        mMonthFragment = new MonthFragment();
+        mTodayFragment = new SelectedExpensesFragment();
+        mWeekFragment = new SelectedExpensesFragment();
+        mMonthFragment = new SelectedExpensesFragment();
     }
 
     private void getResultsFromApi() {
@@ -283,6 +293,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == mFabAddExpense){
+            startActivity(new Intent(this, ExpenseDetailActivity.class));
+        }
     }
 
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {

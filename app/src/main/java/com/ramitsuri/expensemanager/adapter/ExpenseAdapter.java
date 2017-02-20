@@ -10,14 +10,11 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 
 import java.util.ArrayList;
-
-/**
- * Created by ramitsuri on 1/29/2017.
- */
+import java.util.List;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomViewHolder>   {
 
-    private ArrayList<Expense> mExpenses;
+    private List<Expense> mExpenses;
 
     private static final int mItemViewTypeTop = 0;
 
@@ -44,7 +41,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
         }
     }
 
-    public ExpenseAdapter(ArrayList<Expense> expenses){
+    public ExpenseAdapter(List<Expense> expenses){
         mExpenses = expenses;
     }
 

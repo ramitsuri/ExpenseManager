@@ -19,17 +19,12 @@ import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by ramitsuri on 1/21/2017.
- */
+public class SelectedExpensesFragment extends Fragment {
 
-public class TodayFragment extends Fragment {
-
-    private ArrayList<Expense> mExpenses;
+    private List<Expense> mExpenses;
     private ExpenseAdapter mExpenseAdapter;
-
-    private AllFragment.OnFragmentInteractionListener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +34,7 @@ public class TodayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_today, container, false);
+        View view = inflater.inflate(R.layout.fragment_selected_expenses, container, false);
         RecyclerView recyclerViewExpenses = (RecyclerView)view.findViewById(R.id.recycler_view_expenses);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getActivity());
         mExpenses = getExpenses(Constants.TAB_ALL_ID);
@@ -56,12 +51,6 @@ public class TodayFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof AllFragment.OnFragmentInteractionListener) {
-            mListener = (AllFragment.OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     public interface OnFragmentInteractionListener {
@@ -69,8 +58,8 @@ public class TodayFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private ArrayList<Expense> getExpenses(int tabId) {
-        ArrayList<Expense> expenses = new ArrayList<>();
+    private List<Expense> getExpenses(int tabId) {
+        List<Expense> expenses = new ArrayList<>();
         for (int i=0; i<10; i++) {
             Expense expense = new Expense();
             expense.setCategory(new Category(1, "Food", 2));
