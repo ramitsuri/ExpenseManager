@@ -8,7 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
+import com.ramitsuri.expensemanager.dialog.CurrencyPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.DatePickerDialogFragment;
+import com.ramitsuri.expensemanager.dialog.PaymentPickerDialogFragment;
 
 public class ExpenseDetailActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -47,11 +50,14 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
             DialogFragment newFragment = new DatePickerDialogFragment();
             newFragment.show(getSupportFragmentManager(), "datePicker");
         } else if(view == mCategoryPicker){
-
+            DialogFragment newFragment = new CategoryPickerDialogFragment();
+            newFragment.show(getSupportFragmentManager(), "datePicker");
         } else if(view == mPaymentMethodPicker){
-
+            DialogFragment newFragment = new PaymentPickerDialogFragment();
+            newFragment.show(getSupportFragmentManager(), "datePicker");
         } else if(view == mCurrencyPicker){
-
+            DialogFragment newFragment = new CurrencyPickerDialogFragment();
+            newFragment.show(getSupportFragmentManager(), "datePicker");
         }
     }
 }
