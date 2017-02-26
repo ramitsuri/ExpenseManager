@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
                 android:hint="Description"/>
+
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
@@ -64,6 +65,21 @@
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/expense_store_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <EditText
+                android:id="@+id/edit_text_store"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:hint="Where"/>
+
+        </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
 
