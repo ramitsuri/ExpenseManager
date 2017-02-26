@@ -15,9 +15,8 @@ import com.ramitsuri.expensemanager.dialog.PaymentPickerDialogFragment;
 
 public class ExpenseDetailActivity extends AppCompatActivity implements View.OnClickListener{
 
-    TextView mDatePicker, mCategoryPicker, mPaymentMethodPicker;
     EditText mFieldAmount, mFieldDescription;
-    Button mCurrencyPicker;
+    Button mCurrencyPicker, mDatePicker, mCategoryPicker, mPaymentMethodPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +28,9 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void setupView() {
-        mDatePicker = (TextView)findViewById(R.id.date_picker);
-        mCategoryPicker = (TextView)findViewById(R.id.category_picker);
-        mPaymentMethodPicker = (TextView)findViewById(R.id.payment_method_picker);
+        mDatePicker = (Button) findViewById(R.id.date_picker);
+        mCategoryPicker = (Button)findViewById(R.id.category_picker);
+        mPaymentMethodPicker = (Button)findViewById(R.id.payment_method_picker);
         mCurrencyPicker = (Button)findViewById(R.id.currency_picker);
         mFieldAmount = (EditText)findViewById(R.id.edit_text_amount);
         mFieldDescription = (EditText)findViewById(R.id.edit_text_description);
@@ -51,13 +50,13 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
             newFragment.show(getSupportFragmentManager(), "datePicker");
         } else if(view == mCategoryPicker){
             DialogFragment newFragment = new CategoryPickerDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "datePicker");
+            newFragment.show(getSupportFragmentManager(), "categoryPicker");
         } else if(view == mPaymentMethodPicker){
             DialogFragment newFragment = new PaymentPickerDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "datePicker");
+            newFragment.show(getSupportFragmentManager(), "paymentMethodPicker");
         } else if(view == mCurrencyPicker){
             DialogFragment newFragment = new CurrencyPickerDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "datePicker");
+            newFragment.show(getSupportFragmentManager(), "currencyPicker");
         }
     }
 }

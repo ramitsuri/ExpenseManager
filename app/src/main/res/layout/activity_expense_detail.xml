@@ -93,18 +93,25 @@
         android:id="@+id/bottom_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
+        android:padding="8dp"
         android:gravity="bottom"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
 
-        <TextView
+
+
+        <Button
             android:id="@+id/date_picker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:background="@color/gray_dark"
+            android:paddingLeft="8dp"
+            android:drawableLeft="@drawable/ic_today_24dp"
+            android:drawableTint="@color/gray_text"
+            android:textSize="12sp"
+            android:textColor="@color/gray_text"
             android:text="Today"/>
 
         <View
@@ -114,13 +121,19 @@
             android:layout_marginRight="16dp"
             android:background="@color/gray_light" />
 
-        <TextView
+
+        <Button
             android:id="@+id/category_picker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:background="@color/gray_dark"
+            android:paddingLeft="8dp"
+            android:drawableLeft="@drawable/ic_category_white_24dp"
+            android:drawableTint="@color/gray_text"
+            android:textSize="12sp"
+            android:textColor="@color/gray_text"
             android:text="Food"/>
 
         <View
@@ -130,13 +143,18 @@
             android:layout_marginRight="16dp"
             android:background="@color/gray_light" />
 
-        <TextView
+        <Button
             android:id="@+id/payment_method_picker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:background="@color/gray_dark"
+            android:paddingLeft="8dp"
+            android:drawableLeft="@drawable/ic_expense_payment_method_white_24dp"
+            android:drawableTint="@color/gray_text"
+            android:textSize="12sp"
+            android:textColor="@color/gray_text"
             android:text="Discover"/>
 
     </LinearLayout>
