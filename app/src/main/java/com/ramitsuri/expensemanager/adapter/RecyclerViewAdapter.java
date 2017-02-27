@@ -1,15 +1,19 @@
 package com.ramitsuri.expensemanager.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.helper.ActivityHelper;
+
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.CustomViewHolder>{
@@ -24,9 +28,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private EditText mValueEdit;
         private ImageView mBtnSaveValue;
         private LinearLayout mValueEditContainer;
-        private TextView mPreviousValue;
-        private EditText mPreviousValueEdit;
-        private LinearLayout mPreviousContainer;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
@@ -42,21 +43,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void onClick(View view) {
             if(view == mValue){
                 View previousView = mRecyclerView.getChildAt(mPreviousPosition);
-                previousView.findViewById(R.id.edit_container).setVisibility(View.GONE);
-                ((TextView) previousView.findViewById(R.id.value)).setText(
-                        ((EditText) previousView.findViewById(R.id.value_edit)).getEditableText().toString());
-                previousView.findViewById(R.id.value).setVisibility(View.VISIBLE);
-
+                if(previousView!=null) {
+                    previousView.findViewById(R.id.edit_container).setVisibility(View.GONE);
+                    ((TextView) previousView.findViewById(R.id.value)).setText(
+                            ((EditText) previousView.findViewById(R.id.value_edit)).getEditableText().toString());
+                    previousView.findViewById(R.id.value).setVisibility(View.VISIBLE);
+                }
                 mValueEditContainer.setVisibility(View.VISIBLE);
                 mValue.setVisibility(View.GONE);
-                mPreviousContainer = mValueEditContainer;
-                mPreviousValue = mValue;
-                mPreviousValueEdit = mValueEdit;
+                mValueEdit.requestFocus();
+                ActivityHelper.showSoftKeyboard(mRecyclerView.getContext(), mValueEdit);
                 mPreviousPosition = getAdapterPosition();
             } else if (view == mBtnSaveValue){
                 mValueEditContainer.setVisibility(View.GONE);
                 mValue.setText(mValueEdit.getEditableText().toString());
                 mValue.setVisibility(View.VISIBLE);
+                mValueEdit.clearFocus();
+                ActivityHelper.hideSoftKeyboard(mRecyclerView.getContext(), mValueEdit);
             }
         }
     }
@@ -77,6 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(RecyclerViewAdapter.CustomViewHolder holder, int position) {
         holder.mValue.setText(mValues.get(position));
         holder.mValueEdit.setText(mValues.get(position));
+        holder.mValueEdit.setSelection(mValues.get(position).length());
     }
 
     @Override

@@ -27,7 +27,7 @@ public class PaymentPickerDialogFragment extends DialogFragment {
 
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(840, 1360);
+        //getDialog().getWindow().setLayout(840, 1360);
     }
 
     public List<String> getPaymentMethods(){

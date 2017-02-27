@@ -1,6 +1,5 @@
 package com.ramitsuri.expensemanager.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.ramitsuri.expensemanager.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,21 @@ public class CategoryPickerDialogFragment extends DialogFragment {
                         Toast.makeText(getContext(), items[which], Toast.LENGTH_SHORT).show();
                     }
                 });
+        builder.setView(R.layout.category_picker_dialog);
         return builder.create();
     }
-    @Override
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.category_picker_dialog, container, false);
+        return view;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(840, 1360);
+        //getDialog().getWindow().setLayout(840, 1360);
     }
 
     public List<String> getCategories() {

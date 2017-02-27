@@ -21,6 +21,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private BottomBar mBottomBar;
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton mFabAddExpense;
+    private Toolbar mToolbar;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -74,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             setupDrawerContent(navigationView);
         }
 
-
+        View headerLayout = navigationView.getHeaderView(0);
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         menuItem.setChecked(true);
+                        setTitle(menuItem.getTitle());
                         mDrawerLayout.closeDrawers();
 
                         switch (menuItem.getItemId()){

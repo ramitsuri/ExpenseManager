@@ -1,12 +1,14 @@
 package com.ramitsuri.expensemanager;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.CurrencyPickerDialogFragment;
@@ -17,14 +19,25 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
 
     EditText mFieldAmount, mFieldDescription;
     Button mCurrencyPicker, mDatePicker, mCategoryPicker, mPaymentMethodPicker;
+    private FloatingActionButton mFabDone;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_detail);
 
+        setupActionBar();
         setupView();
         setupListeners();
+    }
+
+    private void setupActionBar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setupView() {
@@ -34,6 +47,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mCurrencyPicker = (Button)findViewById(R.id.currency_picker);
         mFieldAmount = (EditText)findViewById(R.id.edit_text_amount);
         mFieldDescription = (EditText)findViewById(R.id.edit_text_description);
+        mFabDone = (FloatingActionButton)findViewById(R.id.fab_done);
     }
 
     private void setupListeners() {
@@ -41,6 +55,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mCategoryPicker.setOnClickListener(this);
         mPaymentMethodPicker.setOnClickListener(this);
         mCurrencyPicker.setOnClickListener(this);
+        mFabDone.setOnClickListener(this);
     }
 
     @Override
@@ -57,6 +72,8 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         } else if(view == mCurrencyPicker){
             DialogFragment newFragment = new CurrencyPickerDialogFragment();
             newFragment.show(getSupportFragmentManager(), "currencyPicker");
+        } else if(view == mFabDone){
+            finish();
         }
     }
 }

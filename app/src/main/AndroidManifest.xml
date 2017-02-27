@@ -23,7 +23,11 @@
         </activity>
         <activity
             android:name=".ExpenseDetailActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ramitsuri.expensemanager.MainActivity" />
+        </activity>
         <activity android:name=".RecyclerViewActivity"></activity>
     </application>
 
