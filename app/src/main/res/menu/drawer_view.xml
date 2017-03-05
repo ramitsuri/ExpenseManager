@@ -4,38 +4,31 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_expenses"
-            android:icon="@drawable/ic_expenses_white_24dp"
-            android:title="Expenses"
-            android:checked="true" />
+            android:checked="true"
+            android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="@string/nav_menu_expenses" />
 
         <item
             android:id="@+id/nav_all_expenses"
-            android:icon="@drawable/ic_all_expenses_white_24dp"
-            android:title="All Expenses" />
+            android:icon="@drawable/ic_all"
+            android:title="@string/nav_menu_all_expenses" />
 
         <item
             android:id="@+id/nav_budget"
-            android:icon="@drawable/ic_all_expenses_white_24dp"
-            android:title="Budget" />
+            android:icon="@drawable/ic_budget"
+            android:title="@string/nav_menu_budget" />
+
+        <item
+            android:id="@+id/nav_payment_methods"
+            android:icon="@drawable/ic_expense_payment_method"
+            android:title="@string/nav_menu_payment_methods" />
+        <item
+            android:id="@+id/nav_categories"
+            android:icon="@drawable/ic_category"
+            android:title="@string/nav_menu_categories" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/nav_menu_settings" />
     </group>
-
-    <item android:title="Settings">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_payment_methods"
-                    android:icon="@drawable/ic_expense_payment_method_white_24dp"
-                    android:title="Payment Methods" />
-                <item
-                    android:id="@+id/nav_categories"
-                    android:icon="@drawable/ic_category_white_24dp"
-                    android:title="Categories" />
-                <item
-                    android:id="@+id/nav_settings"
-                    android:icon="@drawable/ic_settings_white_24dp"
-                    android:title="Settings" />
-            </group>
-        </menu>
-    </item>
-
 </menu>

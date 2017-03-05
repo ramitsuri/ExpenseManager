@@ -33,7 +33,11 @@
 
         <activity
             android:name=".RecyclerViewActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ramitsuri.expensemanager.MainActivity" />
+        </activity>
 
     </application>
 

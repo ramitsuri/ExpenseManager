@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">Expense Manager</string>
     <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_all_fragment">Hello all fragment</string>
-    <string name="hello_month_fragment">Hello month fragment</string>
-    <string name="hello_week_fragment">Hello week fragment</string>
-    <string name="hello_today_fragment">Hello today fragment</string>
-    hello_all_fragment
+    <string name="bottom_menu_today">Today</string>
+    <string name="bottom_menu_week">Week</string>
+    <string name="bottom_menu_month">Month</string>
+    <string name="nav_menu_expenses">Expenses</string>
+    <string name="nav_menu_all_expenses">All Expenses</string>
+    <string name="nav_menu_budget">Budgeting</string>
+    <string name="nav_menu_categories">Categories</string>
+    <string name="nav_menu_payment_methods">Payment Methods</string>
+    <string name="nav_menu_settings">Settings</string>
 </resources>

@@ -1,9 +1,11 @@
 package com.ramitsuri.expensemanager;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.FrameLayout;
 
@@ -12,25 +14,30 @@ import com.ramitsuri.expensemanager.adapter.RecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewActivity extends BaseNavigationViewActivity {
+public class RecyclerViewActivity extends AppCompatActivity {
 
     private List<String> mValues;
     private RecyclerViewAdapter mAdapter;
     private List<String> mCategories;
     private List<String> mPaymentMethods;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
 
+        setupActionBar();
+
         RecyclerView recyclerViewValues = (RecyclerView) findViewById(R.id.recycler_view_values);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(this);
         if(getIntent().getIntExtra(Constants.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE,
                 Constants.RECYCLER_VIEW_CATEGORIES) == Constants.RECYCLER_VIEW_CATEGORIES){
             mValues = getCategories();
+            setTitle(getString(R.string.nav_menu_categories));
         } else {
             mValues = getPaymentMethods();
+            setTitle(getString(R.string.nav_menu_payment_methods));
         }
         mAdapter = new RecyclerViewAdapter(mValues);
         recyclerViewValues.setHasFixedSize(true);
@@ -60,6 +67,14 @@ public class RecyclerViewActivity extends BaseNavigationViewActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewValues);
+    }
+
+    private void setupActionBar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 
     public List<String> getCategories() {

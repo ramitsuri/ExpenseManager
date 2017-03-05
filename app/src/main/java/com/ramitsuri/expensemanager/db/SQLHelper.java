@@ -17,10 +17,11 @@ public class SQLHelper extends SQLiteOpenHelper {
                     ExpenseContract.ExpenseEntry.COLUMN_AMOUNT + " REAL,"+
                     ExpenseContract.ExpenseEntry.COLUMN_PAYMENT_MODE + " TEXT,"+
                     ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_ID + " INTEGER,"+
-                    ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_PARENT_ID + " INTEGER,"+
                     ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_NAME + " TEXT,"+
                     ExpenseContract.ExpenseEntry.COLUMN_NOTES + " TEXT,"+
-                    ExpenseContract.ExpenseEntry.COLUMN_SYNC_STATUS + " TEXT)";
+                    ExpenseContract.ExpenseEntry.COLUMN_SYNC_STATUS + " TEXT)," +
+                    ExpenseContract.ExpenseEntry.COLUMN_FLAGGED+ " INTEGER,"
+    ;
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ExpenseContract.ExpenseEntry.TABLE_NAME;

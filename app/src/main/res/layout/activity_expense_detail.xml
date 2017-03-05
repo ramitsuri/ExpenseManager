@@ -104,7 +104,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginRight="24dp"
             android:scaleType="center"
-            android:src="@drawable/ic_done_white_24dp" />
+            android:src="@drawable/ic_done" />
 
         <View
             android:layout_width="match_parent"
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/gray_dark"
-                android:drawableLeft="@drawable/ic_today_24dp"
+                android:drawableLeft="@drawable/ic_today"
                 android:drawableTint="@color/gray_text"
                 android:gravity="center"
                 android:paddingLeft="8dp"
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/gray_dark"
-                android:drawableLeft="@drawable/ic_category_white_24dp"
+                android:drawableLeft="@drawable/ic_category"
                 android:drawableTint="@color/gray_text"
                 android:gravity="center"
                 android:paddingLeft="8dp"
@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/gray_dark"
-                android:drawableLeft="@drawable/ic_expense_payment_method_white_24dp"
+                android:drawableLeft="@drawable/ic_expense_payment_method"
                 android:drawableTint="@color/gray_text"
                 android:gravity="center"
                 android:paddingLeft="8dp"

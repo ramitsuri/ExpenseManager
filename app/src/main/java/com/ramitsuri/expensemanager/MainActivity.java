@@ -12,22 +12,17 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -84,6 +79,8 @@ public class MainActivity extends BaseNavigationViewActivity
 
         setupFragments();
 
+        switchFragments(0);
+
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
@@ -96,7 +93,7 @@ public class MainActivity extends BaseNavigationViewActivity
         setSupportActionBar(mToolbar);*/
 
         final ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
 
         mFabAddExpense = (FloatingActionButton)findViewById(R.id.fab_add);
@@ -122,19 +119,26 @@ public class MainActivity extends BaseNavigationViewActivity
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            switch (item.getItemId()) {
-                case R.id.tab_today:
-                    transaction.replace(R.id.content_container, mTodayFragment);
-                case R.id.tab_week:
-                    transaction.replace(R.id.content_container, mWeekFragment);
-                case R.id.tab_month:
-                    transaction.replace(R.id.content_container, mMonthFragment);
-            }
-            transaction.commit();
+            switchFragments(item.getItemId());
             return true;
         }
     };
+
+    private void switchFragments(int itemId) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        switch (itemId) {
+            case R.id.tab_week:
+                transaction.replace(R.id.content_container, mWeekFragment);
+                break;
+            case R.id.tab_month:
+                transaction.replace(R.id.content_container, mMonthFragment);
+                break;
+            default:
+                transaction.replace(R.id.content_container, mTodayFragment);
+                break;
+        }
+        transaction.commit();
+    }
 
     private void setupFragments() {
         mTodayFragment = new SelectedExpensesFragment();

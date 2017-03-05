@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/tab_today"
-        android:icon="@drawable/ic_today_24dp"
-        android:title="Today" />
+        android:icon="@drawable/ic_today"
+        android:title="@string/bottom_menu_today" />
     <item
         android:id="@+id/tab_week"
-        android:icon="@drawable/ic_week_24dp"
-        android:title="Week" />
+        android:icon="@drawable/ic_week"
+        android:title="@string/bottom_menu_week" />
     <item
         android:id="@+id/tab_month"
-        android:icon="@drawable/ic_month_24dp"
-        android:title="Month" />
+        android:icon="@drawable/ic_month"
+        android:title="@string/bottom_menu_month" />
 </menu>
