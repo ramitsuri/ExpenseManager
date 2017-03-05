@@ -9,10 +9,6 @@ import com.ramitsuri.expensemanager.entities.Expense;
 
 import java.util.List;
 
-/**
- * Created by ramitsuri on 1/15/2017.
- */
-
 public class ExpenseDBHelper {
 
     SQLHelper sqlHelper;
@@ -32,9 +28,9 @@ public class ExpenseDBHelper {
                 ExpenseContract.ExpenseEntry.COLUMN_PAYMENT_MODE,
                 ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_ID,
                 ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_NAME,
-                ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_PARENT_ID,
                 ExpenseContract.ExpenseEntry.COLUMN_NOTES,
-                ExpenseContract.ExpenseEntry.COLUMN_SYNC_STATUS
+                ExpenseContract.ExpenseEntry.COLUMN_SYNC_STATUS,
+                ExpenseContract.ExpenseEntry.COLUMN_FLAGGED
         };
         String selection = ExpenseContract.ExpenseEntry._ID + " = ?";
         String[] selectionArgs = { String.valueOf(id) };
@@ -82,16 +78,25 @@ public class ExpenseDBHelper {
 
     private Expense cursorToExpense(Cursor cursor) {
         Expense expense = new Expense();
-        expense.setRowIdentifier(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_ROW_ID));
-        expense.setAmount(cursor.getInt(ExpenseContract.ExpenseEntry.ID_COLUMN_AMOUNT));
-        expense.setDateTime(cursor.getLong(ExpenseContract.ExpenseEntry.ID_COLUMN_DATE_TIME));
-        expense.setDescription(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_NOTES));
-        expense.setSyncStatus(getBooleanForInt(cursor.getInt(ExpenseContract.ExpenseEntry.ID_COLUMN_SYNC_STATUS)));
-        expense.setPaymentMode(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_PAYMENT_MODE));
+        expense.setRowIdentifier(cursor.getString(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_ROW_ID)));
+        expense.setAmount(cursor.getInt(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_AMOUNT)));
+        expense.setDateTime(cursor.getLong(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_DATE_TIME)));
+        expense.setDescription(cursor.getString(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_NOTES)));
+        expense.setSyncStatus(getBooleanForInt(cursor.getInt(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_SYNC_STATUS))));
+        expense.setPaymentMode(cursor.getString(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_PAYMENT_MODE)));
         Category category = new Category();
-        category.setId(cursor.getInt(ExpenseContract.ExpenseEntry.ID_COLUMN_CATEGORY_ID));
-        category.setName(cursor.getString(ExpenseContract.ExpenseEntry.ID_COLUMN_CATEGORY_NAME));
-        category.setParentID(cursor.getInt(ExpenseContract.ExpenseEntry.ID_COLUMN_CATEGORY_PARENT_ID));
+        category.setId(cursor.getInt(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_ID)));
+        category.setName(cursor.getString(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_CATEGORY_NAME)));
+        expense.setIsFlagged(getBooleanForInt(cursor.getInt(
+                cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_FLAGGED))));
         expense.setCategory(category);
 
         return expense;

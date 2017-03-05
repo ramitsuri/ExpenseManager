@@ -3,10 +3,6 @@ package com.ramitsuri.expensemanager.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by ramitsuri on 1/15/2017.
- */
-
 public class Expense implements Parcelable{
     private String mRowIdentifier;
     private long mDateTime;
@@ -14,20 +10,22 @@ public class Expense implements Parcelable{
     private String mPaymentMode;
     private Category mCategory;
     private String mDescription;
-    private boolean mSyncStatus;
+    private boolean mIsSynced;
+    private boolean mIsFlagged;
 
     public Expense() {
     }
 
     public Expense(String rowIdentifier, long dateTime, double amount, String paymentMode,
-                   Category category, String description, boolean syncStatus) {
-        this.mRowIdentifier = rowIdentifier;
-        this.mDateTime = dateTime;
-        this.mAmount = amount;
-        this.mPaymentMode = paymentMode;
-        this.mCategory = category;
-        this.mDescription = description;
-        this.mSyncStatus = syncStatus;
+                   Category category, String description, boolean isSynced, boolean isFlagged) {
+        mRowIdentifier = rowIdentifier;
+        mDateTime = dateTime;
+        mAmount = amount;
+        mPaymentMode = paymentMode;
+        mCategory = category;
+        mDescription = description;
+        mIsSynced = isSynced;
+        mIsFlagged = isFlagged;
     }
 
     public static final Creator<Expense> CREATOR = new Creator<Expense>() {
@@ -49,7 +47,8 @@ public class Expense implements Parcelable{
         mPaymentMode = in.readString();
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mDescription = in.readString();
-        mSyncStatus = in.readByte() != 0;
+        mIsSynced = in.readByte() != 0;
+        mIsFlagged = in.readByte() != 0;
     }
 
     @Override
@@ -65,7 +64,8 @@ public class Expense implements Parcelable{
         parcel.writeString(mPaymentMode);
         parcel.writeParcelable(mCategory, i);
         parcel.writeString(mDescription);
-        parcel.writeByte((byte) (mSyncStatus ? 1 : 0));
+        parcel.writeByte((byte) (mIsSynced ? 1 : 0));
+        parcel.writeByte((byte) (mIsFlagged ? 1 : 0));
     }
 
     public String getRowIdentifier() {
@@ -117,10 +117,18 @@ public class Expense implements Parcelable{
     }
 
     public boolean isSyncStatus() {
-        return mSyncStatus;
+        return mIsSynced;
     }
 
     public void setSyncStatus(boolean syncStatus) {
-        this.mSyncStatus = syncStatus;
+        this.mIsSynced = syncStatus;
+    }
+
+    public boolean isFlagged(){
+        return mIsFlagged;
+    }
+
+    public void setIsFlagged(boolean isFlagged){
+        mIsFlagged = isFlagged;
     }
 }

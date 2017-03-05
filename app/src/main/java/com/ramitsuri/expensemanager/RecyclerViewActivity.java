@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.widget.FrameLayout;
 
 import com.ramitsuri.expensemanager.adapter.RecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewActivity extends AppCompatActivity {
+public class RecyclerViewActivity extends BaseNavigationViewActivity {
 
     private List<String> mValues;
     private RecyclerViewAdapter mAdapter;

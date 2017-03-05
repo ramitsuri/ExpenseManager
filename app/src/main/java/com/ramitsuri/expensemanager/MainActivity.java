@@ -27,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,8 +43,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,14 +52,14 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
+public class MainActivity extends BaseNavigationViewActivity
+        implements EasyPermissions.PermissionCallbacks,
         SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener{
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
-    private BottomBar mBottomBar;
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton mFabAddExpense;
     private Toolbar mToolbar;
@@ -78,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /*FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);*/
 
         setupViews();
 
@@ -91,21 +92,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void setupViews() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+       /* mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);*/
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         ab.setDisplayHomeAsUpEnabled(true);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            setupDrawerContent(navigationView);
-        }
-
-        View headerLayout = navigationView.getHeaderView(0);
 
         mFabAddExpense = (FloatingActionButton)findViewById(R.id.fab_add);
         mFabAddExpense.setOnClickListener(this);
@@ -113,41 +105,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         BottomNavigationView bottomNavigation =
                 (BottomNavigationView)findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
-
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        setTitle(menuItem.getTitle());
-                        mDrawerLayout.closeDrawers();
-
-                        switch (menuItem.getItemId()){
-                            case R.id.nav_expenses:
-                                break;
-                            case R.id.nav_all_expenses:
-                                break;
-                            case R.id.nav_categories:
-                                startRecyclerViewActivity(Constants.RECYCLER_VIEW_CATEGORIES);
-                                break;
-                            case R.id.nav_payment_methods:
-                                startRecyclerViewActivity(Constants.RECYCLER_VIEW_PAYMENT_METHODS);
-                                break;
-                            case R.id.nav_settings:
-                                break;
-                        }
-
-                        return true;
-                    }
-                });
-    }
-
-    private void startRecyclerViewActivity(int recyclerViewMode) {
-        Intent intent = new Intent(this, RecyclerViewActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE, recyclerViewMode);
-        startActivity(intent);
     }
 
     @Override
@@ -177,22 +134,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             transaction.commit();
             return true;
         }
-
     };
-
-    private void switchFragment(int tabId) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (tabId == R.id.tab_today) {
-            transaction.replace(R.id.content_container, mTodayFragment);
-        }
-        else if (tabId == R.id.tab_week) {
-            transaction.replace(R.id.content_container, mWeekFragment);
-        }
-        else if (tabId == R.id.tab_month) {
-            transaction.replace(R.id.content_container, mMonthFragment);
-        }
-        transaction.commit();
-    }
 
     private void setupFragments() {
         mTodayFragment = new SelectedExpensesFragment();
