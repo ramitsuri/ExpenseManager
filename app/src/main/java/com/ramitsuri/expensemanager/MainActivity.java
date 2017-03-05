@@ -14,9 +14,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -76,6 +78,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setupViews();
+
+        setupFragments();
+
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
+        //getResultsFromApi();
+
+    }
+
+    private void setupViews() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
@@ -91,24 +106,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
 
         View headerLayout = navigationView.getHeaderView(0);
-        mCredential = GoogleAccountCredential.usingOAuth2(
-                getApplicationContext(), Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());
 
-        //getResultsFromApi();
-
-        setupFragments();
         mFabAddExpense = (FloatingActionButton)findViewById(R.id.fab_add);
         mFabAddExpense.setOnClickListener(this);
 
-        mBottomBar = (BottomBar) findViewById(R.id.bottom_bar);
-        mBottomBar.setDefaultTab(R.id.tab_today);
-        mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                switchFragment(tabId);
-            }
-        });
+        BottomNavigationView bottomNavigation =
+                (BottomNavigationView)findViewById(R.id.bottom_navigation);
+        bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -155,6 +159,26 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            switch (item.getItemId()) {
+                case R.id.tab_today:
+                    transaction.replace(R.id.content_container, mTodayFragment);
+                case R.id.tab_week:
+                    transaction.replace(R.id.content_container, mWeekFragment);
+                case R.id.tab_month:
+                    transaction.replace(R.id.content_container, mMonthFragment);
+            }
+            transaction.commit();
+            return true;
+        }
+
+    };
 
     private void switchFragment(int tabId) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

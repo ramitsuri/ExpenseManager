@@ -12,7 +12,11 @@
             android:id="@+id/nav_all_expenses"
             android:icon="@drawable/ic_all_expenses_white_24dp"
             android:title="All Expenses" />
-\
+
+        <item
+            android:id="@+id/nav_budget"
+            android:icon="@drawable/ic_all_expenses_white_24dp"
+            android:title="Budget" />
     </group>
 
     <item android:title="Settings">
