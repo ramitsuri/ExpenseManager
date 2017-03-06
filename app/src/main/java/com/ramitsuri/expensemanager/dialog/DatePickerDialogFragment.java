@@ -6,11 +6,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
-public class DatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+import static com.ramitsuri.expensemanager.helper.DateHelper.getLongDate;
+
+public class DatePickerDialogFragment extends DialogFragment implements
+        DatePickerDialog.OnDateSetListener{
 
     private DatePickerCallbacks mCallbacks;
     public interface DatePickerCallbacks{
@@ -36,13 +38,5 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         mCallbacks.onDatePicked(getLongDate(year, month, day));
-    }
-
-    private long getLongDate(int year, int month, int day){
-        long date;
-        month = month + 1;
-        date = year * 100 + month;
-        date = date * 100 + day;
-        return date;
     }
 }

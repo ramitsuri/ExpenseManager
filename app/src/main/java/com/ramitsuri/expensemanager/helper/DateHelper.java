@@ -20,4 +20,12 @@ public class DateHelper {
         return df.format(rightNow.getTime());
     }
 
+    public static long getLongDate(int year, int month, int day){
+        long date;
+        month = month + 1;
+        date = year * 100 + month;
+        date = date * 100 + day;
+        return date;
+    }
+
 }
