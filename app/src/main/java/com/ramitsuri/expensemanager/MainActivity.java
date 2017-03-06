@@ -37,6 +37,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.ramitsuri.expensemanager.db.ExpenseHelper;
+import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
 
 import java.io.IOException;
@@ -85,6 +87,8 @@ public class MainActivity extends BaseNavigationViewActivity
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
         //getResultsFromApi();
+
+        List<Expense> expenses = ExpenseHelper.getExpenses();
 
     }
 

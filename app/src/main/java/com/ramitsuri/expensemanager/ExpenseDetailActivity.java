@@ -10,17 +10,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.ramitsuri.expensemanager.db.ExpenseHelper;
 import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.CurrencyPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.DatePickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.PaymentPickerDialogFragment;
+import com.ramitsuri.expensemanager.entities.Category;
+import com.ramitsuri.expensemanager.entities.Expense;
 
-public class ExpenseDetailActivity extends AppCompatActivity implements View.OnClickListener{
+public class ExpenseDetailActivity extends AppCompatActivity implements View.OnClickListener,
+        PaymentPickerDialogFragment.PaymentMethodPickerCallbacks,
+        DatePickerDialogFragment.DatePickerCallbacks,
+        CategoryPickerDialogFragment.CategoryPickerCallbacks,
+        CurrencyPickerDialogFragment.CurrencyPickerCallbacks{
 
-    EditText mFieldAmount, mFieldDescription;
+    EditText mFieldAmount, mFieldDescription, mFieldStore;
     Button mCurrencyPicker, mDatePicker, mCategoryPicker, mPaymentMethodPicker;
     private FloatingActionButton mFabDone;
     private Toolbar mToolbar;
+    private String mPaymentMethod;
+    private Category mCategory;
+    private long mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mCurrencyPicker = (Button)findViewById(R.id.currency_picker);
         mFieldAmount = (EditText)findViewById(R.id.edit_text_amount);
         mFieldDescription = (EditText)findViewById(R.id.edit_text_description);
+        mFieldStore = (EditText)findViewById(R.id.edit_text_store);
         mFabDone = (FloatingActionButton)findViewById(R.id.fab_done);
     }
 
@@ -73,7 +84,42 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
             DialogFragment newFragment = new CurrencyPickerDialogFragment();
             newFragment.show(getSupportFragmentManager(), "currencyPicker");
         } else if(view == mFabDone){
+            createExpense();
             finish();
         }
+    }
+
+    private void createExpense() {
+        Expense expense = new Expense();
+        expense.setRowIdentifier("1");
+        expense.setDateTime(mDate);
+        expense.setStore(mFieldStore.getEditableText().toString());
+        expense.setDescription(mFieldDescription.getEditableText().toString());
+        expense.setPaymentMode(mPaymentMethod);
+        expense.setAmount(mFieldAmount.getEditableText().toString());
+        expense.setCategory(mCategory);
+        ExpenseHelper.addExpense(expense);
+    }
+
+    @Override
+    public void onPaymentMethodPicked(String paymentMethod) {
+        mPaymentMethod = paymentMethod;
+    }
+
+    @Override
+    public void onDatePicked(long date) {
+        mDate = date;
+    }
+
+    @Override
+    public void onCurrencyPicked(String currency) {
+
+    }
+
+    @Override
+    public void onCategoryPicked(String category) {
+        mCategory = new Category();
+        mCategory.setName(category);
+        mCategory.setId(1);
     }
 }

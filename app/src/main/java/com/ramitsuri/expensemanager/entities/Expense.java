@@ -6,24 +6,27 @@ import android.os.Parcelable;
 public class Expense implements Parcelable{
     private String mRowIdentifier;
     private long mDateTime;
-    private double mAmount;
+    private String mAmount;
     private String mPaymentMode;
     private Category mCategory;
     private String mDescription;
+    private String mStore;
     private boolean mIsSynced;
     private boolean mIsFlagged;
 
     public Expense() {
     }
 
-    public Expense(String rowIdentifier, long dateTime, double amount, String paymentMode,
-                   Category category, String description, boolean isSynced, boolean isFlagged) {
+    public Expense(String rowIdentifier, long dateTime, String amount, String paymentMode,
+                   Category category, String description, String store,
+                   boolean isSynced, boolean isFlagged) {
         mRowIdentifier = rowIdentifier;
         mDateTime = dateTime;
         mAmount = amount;
         mPaymentMode = paymentMode;
         mCategory = category;
         mDescription = description;
+        mStore = store;
         mIsSynced = isSynced;
         mIsFlagged = isFlagged;
     }
@@ -43,10 +46,11 @@ public class Expense implements Parcelable{
     protected Expense(Parcel in) {
         mRowIdentifier = in.readString();
         mDateTime = in.readLong();
-        mAmount = in.readDouble();
+        mAmount = in.readString();
         mPaymentMode = in.readString();
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mDescription = in.readString();
+        mStore = in.readString();
         mIsSynced = in.readByte() != 0;
         mIsFlagged = in.readByte() != 0;
     }
@@ -60,10 +64,11 @@ public class Expense implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mRowIdentifier);
         parcel.writeLong(mDateTime);
-        parcel.writeDouble(mAmount);
+        parcel.writeString(mAmount);
         parcel.writeString(mPaymentMode);
         parcel.writeParcelable(mCategory, i);
         parcel.writeString(mDescription);
+        parcel.writeString(mStore);
         parcel.writeByte((byte) (mIsSynced ? 1 : 0));
         parcel.writeByte((byte) (mIsFlagged ? 1 : 0));
     }
@@ -73,7 +78,7 @@ public class Expense implements Parcelable{
     }
 
     public void setRowIdentifier(String rowIdentifier) {
-        this.mRowIdentifier = rowIdentifier;
+        mRowIdentifier = rowIdentifier;
     }
 
     public long getDateTime() {
@@ -81,15 +86,15 @@ public class Expense implements Parcelable{
     }
 
     public void setDateTime(long dateTime) {
-        this.mDateTime = dateTime;
+        mDateTime = dateTime;
     }
 
-    public double getAmount() {
+    public String getAmount() {
         return mAmount;
     }
 
-    public void setAmount(double amount) {
-        this.mAmount = amount;
+    public void setAmount(String amount) {
+        mAmount = amount;
     }
 
     public String getPaymentMode() {
@@ -97,7 +102,7 @@ public class Expense implements Parcelable{
     }
 
     public void setPaymentMode(String paymentMode) {
-        this.mPaymentMode = paymentMode;
+        mPaymentMode = paymentMode;
     }
 
     public Category getCategory() {
@@ -105,23 +110,23 @@ public class Expense implements Parcelable{
     }
 
     public void setCategory(Category category) {
-        this.mCategory = category;
+        mCategory = category;
     }
 
     public String getDescription() {
         return mDescription;
     }
 
-    public void setDescription(String mDescription) {
-        this.mDescription = mDescription;
+    public void setDescription(String description) {
+        mDescription = description;
     }
 
-    public boolean isSyncStatus() {
+    public boolean isSynced() {
         return mIsSynced;
     }
 
-    public void setSyncStatus(boolean syncStatus) {
-        this.mIsSynced = syncStatus;
+    public void setIsSynced(boolean syncStatus) {
+        mIsSynced = syncStatus;
     }
 
     public boolean isFlagged(){
@@ -130,5 +135,13 @@ public class Expense implements Parcelable{
 
     public void setIsFlagged(boolean isFlagged){
         mIsFlagged = isFlagged;
+    }
+
+    public String getStore() {
+        return mStore;
+    }
+
+    public void setStore(String store) {
+        mStore = store;
     }
 }

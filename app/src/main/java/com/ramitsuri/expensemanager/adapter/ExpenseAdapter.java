@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.helper.DateHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
         private TextView mFieldPaymentMode;
         private TextView mFieldDescription;
         private TextView mFieldAmount;
+        private TextView mStore;
+        //private TextView mTopDate;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
@@ -33,6 +36,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
             mFieldPaymentMode = (TextView)itemView.findViewById(R.id.expense_payment_mode);
             mFieldDescription = (TextView)itemView.findViewById(R.id.expense_description);
             mFieldAmount = (TextView)itemView.findViewById(R.id.expense_amount);
+            mStore = (TextView)itemView.findViewById(R.id.expense_store);
+            //mTopDate = (TextView)itemView.findViewById(R.id.date);
         }
 
         @Override
@@ -49,30 +54,34 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
     public ExpenseAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CustomViewHolder viewHolder;
         View view;
-        switch (viewType){
+        /*switch (viewType){
 
             case 0:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_row_top, null);
                 viewHolder = new CustomViewHolder(view);
                 break;
 
-            default:
+            default:*/
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_row, null);
                 viewHolder = new CustomViewHolder(view);
-                break;
-        }
+                /*break;
+        }*/
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ExpenseAdapter.CustomViewHolder holder, int position) {
-        //holder.mFieldDate.setText(String.valueOf(mExpenses.get(position).getDateTime()));
-        if(position>0) {
+        /*if(position>0) {*/
             holder.mFieldCategory.setText(mExpenses.get(position).getCategory().getName());
             holder.mFieldPaymentMode.setText(mExpenses.get(position).getPaymentMode());
             holder.mFieldDescription.setText(mExpenses.get(position).getDescription());
-            //holder.mFieldAmount.setText(String.valueOf(mExpenses.get(position).getAmount()));
-        }
+            holder.mFieldAmount.setText(mExpenses.get(position).getAmount());
+            holder.mFieldDate.setText(DateHelper.
+                    getJustTheDayOfMonth(mExpenses.get(position).getDateTime()));
+            holder.mStore.setText(mExpenses.get(position).getStore());
+        /*} else {
+            holder.mTopDate.setText(DateHelper.getTodaysDate());
+        }*/
     }
 
     @Override
@@ -80,11 +89,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
         return mExpenses.size();
     }
 
-    @Override
+    /*@Override
     public int getItemViewType(int position) {
         if(position == 0){
             return mItemViewTypeTop;
         }
         return 1;
-    }
+    }*/
 }
