@@ -13,15 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.db.ExpenseHelper;
-import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.DateHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SelectedExpensesFragment extends Fragment {
@@ -49,7 +46,7 @@ public class SelectedExpensesFragment extends Fragment {
         RecyclerView recyclerViewExpenses =
                 (RecyclerView)view.findViewById(R.id.recycler_view_expenses);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getActivity());
-        mExpenses = getExpenses(Constants.TAB_ALL_ID);
+        mExpenses = getExpenses(0);
         mExpenseAdapter = new ExpenseAdapter(mExpenses);
         recyclerViewExpenses.setHasFixedSize(true);
         recyclerViewExpenses.setLayoutManager(recyclerViewLManager);

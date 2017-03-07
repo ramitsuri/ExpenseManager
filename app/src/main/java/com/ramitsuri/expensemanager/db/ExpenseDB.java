@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.ramitsuri.expensemanager.constants.DB;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 
@@ -44,16 +45,16 @@ public class ExpenseDB {
     public String[] getAllColumns() {
         return new String[]{
                 ADAPTER_ROWID,
-                Constants.COLUMN_ROW_ID,
-                Constants.COLUMN_DATE_TIME,
-                Constants.COLUMN_AMOUNT,
-                Constants.COLUMN_PAYMENT_MODE,
-                Constants.COLUMN_CATEGORY_ID,
-                Constants.COLUMN_CATEGORY_NAME,
-                Constants.COLUMN_NOTES,
-                Constants.COLUMN_STORE,
-                Constants.COLUMN_SYNC_STATUS,
-                Constants.COLUMN_FLAGGED
+                DB.COLUMN_ROW_ID,
+                DB.COLUMN_DATE_TIME,
+                DB.COLUMN_AMOUNT,
+                DB.COLUMN_PAYMENT_MODE,
+                DB.COLUMN_CATEGORY_ID,
+                DB.COLUMN_CATEGORY_NAME,
+                DB.COLUMN_NOTES,
+                DB.COLUMN_STORE,
+                DB.COLUMN_SYNC_STATUS,
+                DB.COLUMN_FLAGGED
         };
     }
 
@@ -70,16 +71,16 @@ public class ExpenseDB {
         boolean flagged = expense.isFlagged();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Constants.COLUMN_ROW_ID, rowId);
-        contentValues.put(Constants.COLUMN_DATE_TIME, dateTime);
-        contentValues.put(Constants.COLUMN_AMOUNT, amount);
-        contentValues.put(Constants.COLUMN_PAYMENT_MODE, paymentMode);
-        contentValues.put(Constants.COLUMN_CATEGORY_ID, categoryID);
-        contentValues.put(Constants.COLUMN_CATEGORY_NAME, categoryName);
-        contentValues.put(Constants.COLUMN_NOTES, notes);
-        contentValues.put(Constants.COLUMN_STORE, store);
-        contentValues.put(Constants.COLUMN_SYNC_STATUS, syncStatus);
-        contentValues.put(Constants.COLUMN_FLAGGED, flagged);
+        contentValues.put(DB.COLUMN_ROW_ID, rowId);
+        contentValues.put(DB.COLUMN_DATE_TIME, dateTime);
+        contentValues.put(DB.COLUMN_AMOUNT, amount);
+        contentValues.put(DB.COLUMN_PAYMENT_MODE, paymentMode);
+        contentValues.put(DB.COLUMN_CATEGORY_ID, categoryID);
+        contentValues.put(DB.COLUMN_CATEGORY_NAME, categoryName);
+        contentValues.put(DB.COLUMN_NOTES, notes);
+        contentValues.put(DB.COLUMN_STORE, store);
+        contentValues.put(DB.COLUMN_SYNC_STATUS, syncStatus);
+        contentValues.put(DB.COLUMN_FLAGGED, flagged);
 
         return contentValues;
     }
@@ -88,35 +89,37 @@ public class ExpenseDB {
         Expense expense = new Expense();
         Category category = new Category();
         for(String column: cursor.getColumnNames()){
-            if(column.equals(Constants.COLUMN_ROW_ID)){
-                String value = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_ROW_ID));
+            if(column.equals(DB.COLUMN_ROW_ID)){
+                String value = cursor.getString(cursor.getColumnIndex(DB.COLUMN_ROW_ID));
                 expense.setRowIdentifier(value);
-            } else if(column.equals(Constants.COLUMN_DATE_TIME)){
-                long value = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_DATE_TIME));
+            } else if(column.equals(DB.COLUMN_DATE_TIME)){
+                long value = cursor.getLong(cursor.getColumnIndex(DB.COLUMN_DATE_TIME));
                 expense.setDateTime(value);
-            } else if(column.equals(Constants.COLUMN_AMOUNT)){
-                String value = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_AMOUNT));
+            } else if(column.equals(DB.COLUMN_AMOUNT)){
+                String value = cursor.getString(cursor.getColumnIndex(DB.COLUMN_AMOUNT));
                 expense.setAmount(value);
-            } else if(column.equals(Constants.COLUMN_PAYMENT_MODE)){
-                String value = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_PAYMENT_MODE));
+            } else if(column.equals(DB.COLUMN_PAYMENT_MODE)){
+                String value =
+                        cursor.getString(cursor.getColumnIndex(DB.COLUMN_PAYMENT_MODE));
                 expense.setPaymentMode(value);
-            } else if(column.equals(Constants.COLUMN_CATEGORY_ID)){
-                int value = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_CATEGORY_ID));
+            } else if(column.equals(DB.COLUMN_CATEGORY_ID)){
+                int value = cursor.getInt(cursor.getColumnIndex(DB.COLUMN_CATEGORY_ID));
                 category.setId(value);
-            } else if(column.equals(Constants.COLUMN_CATEGORY_NAME)){
-                String value = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CATEGORY_NAME));
+            } else if(column.equals(DB.COLUMN_CATEGORY_NAME)){
+                String value =
+                        cursor.getString(cursor.getColumnIndex(DB.COLUMN_CATEGORY_NAME));
                 category.setName(value);
-            } else if(column.equals(Constants.COLUMN_NOTES)){
-                String value = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_NOTES));
+            } else if(column.equals(DB.COLUMN_NOTES)){
+                String value = cursor.getString(cursor.getColumnIndex(DB.COLUMN_NOTES));
                 expense.setDescription(value);
-            } else if(column.equals(Constants.COLUMN_STORE)){
-                String value = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_STORE));
+            } else if(column.equals(DB.COLUMN_STORE)){
+                String value = cursor.getString(cursor.getColumnIndex(DB.COLUMN_STORE));
                 expense.setStore(value);
-            } else if(column.equals(Constants.COLUMN_SYNC_STATUS)){
-                int value = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_SYNC_STATUS));
+            } else if(column.equals(DB.COLUMN_SYNC_STATUS)){
+                int value = cursor.getInt(cursor.getColumnIndex(DB.COLUMN_SYNC_STATUS));
                 expense.setIsSynced(getBooleanForInt(value));
-            } else if(column.equals(Constants.COLUMN_FLAGGED)){
-                int value = cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_FLAGGED));
+            } else if(column.equals(DB.COLUMN_FLAGGED)){
+                int value = cursor.getInt(cursor.getColumnIndex(DB.COLUMN_FLAGGED));
                 expense.setIsFlagged(getBooleanForInt(value));
             }
         }
@@ -129,7 +132,7 @@ public class ExpenseDB {
 
         boolean insertSuccess = true;
         ContentValues contentValues = getExpensesContentValues(expense);
-        long result = mDatabase.insertOrThrow(Constants.TABLE_EEPENSES, null, contentValues);
+        long result = mDatabase.insertOrThrow(DB.TABLE_EEPENSES, null, contentValues);
         if(result <= 0){
             insertSuccess = false;
         }
@@ -140,12 +143,12 @@ public class ExpenseDB {
     public Expense getExpense(String id) {
         open();
         String[] columns = getAllColumns();
-        String selection = Constants.COLUMN_ROW_ID + " = ? ";
+        String selection = DB.COLUMN_ROW_ID + " = ? ";
         String[] selectionArgs = new String[]{
                 id
         };
 
-        Cursor cursor = getCursor(Constants.TABLE_EEPENSES, columns, selection, selectionArgs,
+        Cursor cursor = getCursor(DB.TABLE_EEPENSES, columns, selection, selectionArgs,
                 null, null, null, null);
 
         Expense expense = null;
@@ -169,7 +172,7 @@ public class ExpenseDB {
 
         String[] columns = getAllColumns();
 
-        Cursor cursor = getCursor(Constants.TABLE_EEPENSES, columns, null, null, null, null, null,
+        Cursor cursor = getCursor(DB.TABLE_EEPENSES, columns, null, null, null, null, null,
                 null);
 
         List<Expense> expenses = new ArrayList<>();

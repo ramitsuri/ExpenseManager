@@ -7,9 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.widget.FrameLayout;
 
 import com.ramitsuri.expensemanager.adapter.RecyclerViewAdapter;
+import com.ramitsuri.expensemanager.constants.IntentExtras;
+import com.ramitsuri.expensemanager.constants.RecyclerViewValuesType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,8 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         RecyclerView recyclerViewValues = (RecyclerView) findViewById(R.id.recycler_view_values);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(this);
-        if(getIntent().getIntExtra(Constants.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE,
-                Constants.RECYCLER_VIEW_CATEGORIES) == Constants.RECYCLER_VIEW_CATEGORIES){
+        if(getIntent().getIntExtra(IntentExtras.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE,
+                RecyclerViewValuesType.RECYCLER_VIEW_CATEGORIES) == RecyclerViewValuesType.RECYCLER_VIEW_CATEGORIES){
             mValues = getCategories();
             setTitle(getString(R.string.nav_menu_categories));
         } else {

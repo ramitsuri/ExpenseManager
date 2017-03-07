@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.ramitsuri.expensemanager.constants.IntentExtras;
+import com.ramitsuri.expensemanager.constants.RecyclerViewValuesType;
+
 public class BaseNavigationViewActivity extends AppCompatActivity{
 
     protected DrawerLayout mDrawerLayout;
@@ -26,7 +29,8 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
         super.setContentView(mDrawerLayout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.common_open_on_phone, R.string.app_name);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.drawer_open, R.string.drawer_closed);
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
 
@@ -57,10 +61,12 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
                             case R.id.nav_all_expenses:
                                 break;
                             case R.id.nav_categories:
-                                startRecyclerViewActivity(Constants.RECYCLER_VIEW_CATEGORIES);
+                                startRecyclerViewActivity(
+                                        RecyclerViewValuesType.RECYCLER_VIEW_CATEGORIES);
                                 break;
                             case R.id.nav_payment_methods:
-                                startRecyclerViewActivity(Constants.RECYCLER_VIEW_PAYMENT_METHODS);
+                                startRecyclerViewActivity(
+                                        RecyclerViewValuesType.RECYCLER_VIEW_PAYMENT_METHODS);
                                 break;
                             case R.id.nav_settings:
                                 break;
@@ -82,7 +88,7 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
 
     private void startRecyclerViewActivity(int recyclerViewMode) {
         Intent intent = new Intent(this, RecyclerViewActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE, recyclerViewMode);
+        intent.putExtra(IntentExtras.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE, recyclerViewMode);
         startActivity(intent);
     }
 }

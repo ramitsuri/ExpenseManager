@@ -1,6 +1,6 @@
-package com.ramitsuri.expensemanager.db;
+package com.ramitsuri.expensemanager.constants;
 
-public class Constants {
+public class DB {
 
     public static final int DATABASE_VERSION = 1;
 

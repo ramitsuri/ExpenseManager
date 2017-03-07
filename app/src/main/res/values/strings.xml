@@ -13,4 +13,6 @@
     <string name="currency_picker_title">Select Currency</string>
     <string name="payment_method_picker_title">Select Payment Method</string>
     <string name="category_picker_title">Select Category</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_closed">Closed</string>
 </resources>
