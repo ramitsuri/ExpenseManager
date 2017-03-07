@@ -37,6 +37,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.ramitsuri.expensemanager.constants.ExpenseViewType;
+import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.db.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
@@ -81,7 +83,7 @@ public class MainActivity extends BaseNavigationViewActivity
 
         setupFragments();
 
-        switchFragments(0);
+        switchFragments(R.id.tab_today);
 
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
@@ -137,7 +139,7 @@ public class MainActivity extends BaseNavigationViewActivity
             case R.id.tab_month:
                 transaction.replace(R.id.content_container, mMonthFragment);
                 break;
-            default:
+            case R.id.tab_today:
                 transaction.replace(R.id.content_container, mTodayFragment);
                 break;
         }
@@ -145,9 +147,20 @@ public class MainActivity extends BaseNavigationViewActivity
     }
 
     private void setupFragments() {
+        Bundle args = new Bundle();
         mTodayFragment = new SelectedExpensesFragment();
+        args.putInt(Others.EXPENSE_VIEW_TYPE, ExpenseViewType.TODAY);
+        mTodayFragment.setArguments(args);
+
+        args = new Bundle();
         mWeekFragment = new SelectedExpensesFragment();
+        args.putInt(Others.EXPENSE_VIEW_TYPE, ExpenseViewType.WEEK);
+        mWeekFragment.setArguments(args);
+
+        args = new Bundle();
         mMonthFragment = new SelectedExpensesFragment();
+        args.putInt(Others.EXPENSE_VIEW_TYPE, ExpenseViewType.MONTH);
+        mMonthFragment.setArguments(args);
     }
 
     private void getResultsFromApi() {

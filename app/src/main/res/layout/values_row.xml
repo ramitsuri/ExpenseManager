@@ -44,6 +44,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
+                android:tint="@color/colorPrimary"
                 android:src="@drawable/ic_done"/>
 
         </LinearLayout>

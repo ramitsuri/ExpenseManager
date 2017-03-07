@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
+import com.ramitsuri.expensemanager.constants.ExpenseViewType;
+import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.db.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.DateHelper;
@@ -26,10 +28,12 @@ public class SelectedExpensesFragment extends Fragment {
     private List<Expense> mExpenses;
     private ExpenseAdapter mExpenseAdapter;
     private TextView mFieldTopDate;
+    private int mType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mType = getArguments().getInt(Others.EXPENSE_VIEW_TYPE);
     }
 
     @Override

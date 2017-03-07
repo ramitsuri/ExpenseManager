@@ -54,7 +54,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/expense_text_divider"
+                android:id="@+id/expense_text_divider1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dp"
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dp"
-                android:text="Discover"
+                android:text="Subway"
                 android:textColor="@color/gray_text"
                 android:textSize="12sp" />
 
