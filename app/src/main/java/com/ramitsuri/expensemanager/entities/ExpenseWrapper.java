@@ -8,6 +8,7 @@ public class ExpenseWrapper {
     private String mTopExpense;
     private String mTopCategory;
     private String mTopStore;
+    private String mTotal;
     private List<Expense> mExpenses;
 
     public String getDate() {
@@ -40,6 +41,14 @@ public class ExpenseWrapper {
 
     public void setTopStore(String topStore) {
         mTopStore = topStore;
+    }
+
+    public String getTotal() {
+        return mTotal;
+    }
+
+    public void setTotal(String total) {
+        mTotal = total;
     }
 
     public List<Expense> getExpenses() {

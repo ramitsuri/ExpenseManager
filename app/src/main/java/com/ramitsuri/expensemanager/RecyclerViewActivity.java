@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager;
 
+import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 import com.ramitsuri.expensemanager.adapter.RecyclerViewAdapter;
 import com.ramitsuri.expensemanager.constants.IntentExtras;
@@ -55,10 +58,18 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int position = viewHolder.getAdapterPosition();
+                final int position = viewHolder.getAdapterPosition();
                 mValues.remove(position);
                 mAdapter.notifyItemRemoved(position);
-
+                View.OnClickListener undoClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAdapter.notifyItemRemoved(position + 1);
+                        mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+                    }
+                };
+                Snackbar.make(viewHolder.itemView, "Deleted", Snackbar.LENGTH_LONG).
+                        setAction("Undo", undoClickListener).show();
                 /*
                  adapter.notifyItemRemoved(position + 1);    //notifies the RecyclerView Adapter that data in adapter has been removed at a particular position.
                  adapter.notifyItemRangeChanged(position, adapter.getItemCount());   //notifies the RecyclerView Adapter that positions of element in adapter has been changed from position(removed element index to end of list), please update it.
