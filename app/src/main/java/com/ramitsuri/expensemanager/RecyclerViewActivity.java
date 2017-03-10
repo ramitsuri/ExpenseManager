@@ -1,6 +1,6 @@
 package com.ramitsuri.expensemanager;
 
-import android.content.DialogInterface;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,13 +18,16 @@ import com.ramitsuri.expensemanager.constants.RecyclerViewValuesType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewActivity extends AppCompatActivity {
+public class RecyclerViewActivity extends AppCompatActivity implements View.OnClickListener{
 
     private List<String> mValues;
     private RecyclerViewAdapter mAdapter;
     private List<String> mCategories;
     private List<String> mPaymentMethods;
     private Toolbar mToolbar;
+    private FloatingActionButton mFabAddValue;
+    private RecyclerView mRecyclerViewValues;
+    private boolean mIsEditingMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,9 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         setupActionBar();
 
-        RecyclerView recyclerViewValues = (RecyclerView) findViewById(R.id.recycler_view_values);
+        mFabAddValue = (FloatingActionButton)findViewById(R.id.fab_add_value);
+        mFabAddValue.setOnClickListener(this);
+        mRecyclerViewValues = (RecyclerView) findViewById(R.id.recycler_view_values);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(this);
         if(getIntent().getIntExtra(IntentExtras.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE,
                 RecyclerViewValuesType.RECYCLER_VIEW_CATEGORIES) == RecyclerViewValuesType.RECYCLER_VIEW_CATEGORIES){
@@ -43,10 +48,10 @@ public class RecyclerViewActivity extends AppCompatActivity {
             mValues = getPaymentMethods();
             setTitle(getString(R.string.nav_menu_payment_methods));
         }
-        mAdapter = new RecyclerViewAdapter(mValues);
-        recyclerViewValues.setHasFixedSize(true);
-        recyclerViewValues.setLayoutManager(recyclerViewLManager);
-        recyclerViewValues.setAdapter(mAdapter);
+        mAdapter = new RecyclerViewAdapter(this, mValues);
+        mRecyclerViewValues.setHasFixedSize(false);
+        mRecyclerViewValues.setLayoutManager(recyclerViewLManager);
+        mRecyclerViewValues.setAdapter(mAdapter);
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT){
@@ -59,12 +64,14 @@ public class RecyclerViewActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 final int position = viewHolder.getAdapterPosition();
+                final String removedValue = mValues.get(position);
                 mValues.remove(position);
                 mAdapter.notifyItemRemoved(position);
                 View.OnClickListener undoClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mAdapter.notifyItemRemoved(position + 1);
+                        mValues.add(position, removedValue);
+                        mAdapter.notifyItemInserted(position);
                         mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
                     }
                 };
@@ -78,7 +85,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
                 };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerViewValues);
+        itemTouchHelper.attachToRecyclerView(mRecyclerViewValues);
     }
 
     private void setupActionBar() {
@@ -114,5 +121,32 @@ public class RecyclerViewActivity extends AppCompatActivity {
         mPaymentMethods.add("WF Savings");
         mPaymentMethods.add("Amazon");
         return mPaymentMethods;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == mFabAddValue){
+            handleFabAddClicked();
+        }
+    }
+
+    private void handleFabAddClicked() {
+        if(mIsEditingMode) {
+            mAdapter.saveValue();
+        } else {
+            mValues.add("New Category");
+            mAdapter.notifyItemInserted(mValues.size());
+            mAdapter.setAddNew(mRecyclerViewValues);
+        }
+        mIsEditingMode = !mIsEditingMode;
+        switchFabIcon(mIsEditingMode);
+    }
+
+    public void switchFabIcon(boolean isEditingMode){
+        if(!isEditingMode){
+            mFabAddValue.setImageResource(R.drawable.ic_add);
+        } else {
+            mFabAddValue.setImageResource(R.drawable.ic_done);
+        }
     }
 }

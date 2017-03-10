@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context="com.ramitsuri.expensemanager.RecyclerViewActivity">
 
     <include layout="@layout/toolbar"
@@ -13,7 +15,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_dark">
+        android:background="@color/gray_light"
+        android:padding="8dp">
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:cardview="http://schemas.android.com/apk/res-auto"
@@ -32,6 +35,17 @@
             </android.support.v7.widget.RecyclerView>
 
         </android.support.v7.widget.CardView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="24dp"
+            android:layout_marginRight="24dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_add" />
 
     </RelativeLayout>
 

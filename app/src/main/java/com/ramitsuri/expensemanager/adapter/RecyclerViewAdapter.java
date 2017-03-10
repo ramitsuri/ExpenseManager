@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.RecyclerViewActivity;
 import com.ramitsuri.expensemanager.helper.ActivityHelper;
 
 import java.util.List;
@@ -18,6 +20,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private List<String> mValues;
     private RecyclerView mRecyclerView;
+    private View mViewClicked;
+    private Context mContext;
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -58,6 +62,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         private void handleEditValue() {
+            ((RecyclerViewActivity)mContext).switchFabIcon(false);
+            mViewClicked = mValueEdit;
             mValueEditContainer.setVisibility(View.VISIBLE);
             mValue.setVisibility(View.GONE);
             mValueEdit.requestFocus();
@@ -65,8 +71,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public RecyclerViewAdapter(List<String> values){
+    public RecyclerViewAdapter(Context context, List<String> values){
         mValues = values;
+        mContext = context;
     }
 
     @Override
@@ -92,6 +99,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             }
         });
+    }
+
+    public void saveValue(){
+        mViewClicked.clearFocus();
+    }
+
+    public void setAddNew(RecyclerView recyclerView){
+        mRecyclerView = recyclerView;
+        this.notifyItemInserted(mValues.size() - 1);
     }
 
     @Override
