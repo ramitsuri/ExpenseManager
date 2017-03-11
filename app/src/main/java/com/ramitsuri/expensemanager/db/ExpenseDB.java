@@ -62,32 +62,40 @@ public class ExpenseDB extends BaseDB{
         Expense expense = new Expense();
         for(String column: cursor.getColumnNames()){
             if(column.equals(ExpenseDBConstants.COLUMN_ROW_ID)){
-                String value = cursor.getString(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_ROW_ID));
+                String value = cursor.getString(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_ROW_ID));
                 expense.setRowIdentifier(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_DATE_TIME)){
-                long value = cursor.getLong(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_DATE_TIME));
+                long value = cursor.getLong(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_DATE_TIME));
                 expense.setDateTime(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_AMOUNT)){
-                String value = cursor.getString(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_AMOUNT));
+                String value = cursor.getString(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_AMOUNT));
                 expense.setAmount(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_PAYMENT_MODE_ID)){
-                int value =
-                        cursor.getInt(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_PAYMENT_MODE_ID));
+                int value = cursor.getInt(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_PAYMENT_MODE_ID));
                 expense.setPaymentModeId(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_CATEGORY_ID)){
-                int value = cursor.getInt(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_CATEGORY_ID));
+                int value = cursor.getInt(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_CATEGORY_ID));
                 expense.setCategoryId(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_NOTES)){
-                String value = cursor.getString(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_NOTES));
+                String value = cursor.getString(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_NOTES));
                 expense.setDescription(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_STORE)){
-                String value = cursor.getString(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_STORE));
+                String value = cursor.getString(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_STORE));
                 expense.setStore(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_SYNC_STATUS)){
-                int value = cursor.getInt(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_SYNC_STATUS));
+                int value = cursor.getInt(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_SYNC_STATUS));
                 expense.setIsSynced(isTrue(value));
             } else if(column.equals(ExpenseDBConstants.COLUMN_FLAGGED)){
-                int value = cursor.getInt(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_FLAGGED));
+                int value = cursor.getInt(
+                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_FLAGGED));
                 expense.setIsFlagged(isTrue(value));
             }
         }
@@ -99,7 +107,8 @@ public class ExpenseDB extends BaseDB{
 
         boolean insertSuccess = true;
         ContentValues contentValues = getExpensesContentValues(expense);
-        long result = mDatabase.insertOrThrow(ExpenseDBConstants.TABLE_EEPENSES, null, contentValues);
+        long result = mDatabase.insertOrThrow(ExpenseDBConstants.TABLE_EEPENSES, null,
+                contentValues);
         if(result <= 0){
             insertSuccess = false;
         }
@@ -115,8 +124,8 @@ public class ExpenseDB extends BaseDB{
                 id
         };
 
-        Cursor cursor = getCursor(ExpenseDBConstants.TABLE_EEPENSES, columns, selection, selectionArgs,
-                null, null, null, null);
+        Cursor cursor = getCursor(ExpenseDBConstants.TABLE_EEPENSES, columns, selection,
+                selectionArgs, null, null, null, null);
 
         Expense expense = null;
         try {
@@ -139,8 +148,8 @@ public class ExpenseDB extends BaseDB{
 
         String[] columns = getAllColumns();
 
-        Cursor cursor = getCursor(ExpenseDBConstants.TABLE_EEPENSES, columns, null, null, null, null, null,
-                null);
+        Cursor cursor = getCursor(ExpenseDBConstants.TABLE_EEPENSES, columns, null, null, null,
+                null, null, null);
 
         List<Expense> expenses = new ArrayList<>();
         try {

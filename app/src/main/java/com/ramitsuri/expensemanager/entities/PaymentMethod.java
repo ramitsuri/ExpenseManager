@@ -8,6 +8,10 @@ public class PaymentMethod implements Parcelable{
     private int mId;
     private String mName;
 
+    public  PaymentMethod(){
+
+    }
+
     public PaymentMethod(int id, String name){
         mId = id;
         mName = name;
