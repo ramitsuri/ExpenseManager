@@ -14,7 +14,7 @@
         android:layout_height="wrap_content" />
 
     <RelativeLayout
-        android:mId="@+mId/activity_expense_detail"
+        android:id="@+id/activity_expense_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -39,14 +39,14 @@
             android:paddingBottom="@dimen/activity_vertical_margin">
 
             <android.support.design.widget.TextInputLayout
-                android:mId="@+mId/expense_description_layout"
+                android:id="@+id/expense_description_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nextFocusForward="@+mId/edit_text_amount"
+                android:nextFocusForward="@+id/edit_text_amount"
                 android:layout_alignParentTop="true">
 
                 <EditText
-                    android:mId="@+mId/edit_text_description"
+                    android:id="@+id/edit_text_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Description"
@@ -57,12 +57,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@mId/expense_description_layout"
+                android:layout_below="@id/expense_description_layout"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <Button
-                    android:mId="@+mId/currency_picker"
+                    android:id="@+id/currency_picker"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="8dp"
@@ -73,12 +73,12 @@
                     android:textColor="@color/red" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:mId="@+mId/amount_layout"
+                    android:id="@+id/amount_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:mId="@+mId/edit_text_amount"
+                        android:id="@+id/edit_text_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Amount"
@@ -90,13 +90,13 @@
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:mId="@+mId/expense_store_layout"
+                android:id="@+id/expense_store_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
                 <EditText
-                    android:mId="@+mId/edit_text_store"
+                    android:id="@+id/edit_text_store"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Store"
@@ -109,10 +109,10 @@
         </android.support.v7.widget.CardView>
 
         <android.support.design.widget.FloatingActionButton
-            android:mId="@+mId/fab_done"
+            android:id="@+id/fab_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+mId/bottom_button_container"
+            android:layout_above="@+id/bottom_button_container"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="16dp"
             android:layout_marginRight="24dp"
@@ -122,11 +122,11 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_above="@+mId/bottom_button_container"
+            android:layout_above="@+id/bottom_button_container"
             android:background="@color/gray_light" />
 
         <android.support.v7.widget.CardView
-            android:mId="@+mId/bottom_button_container"
+            android:id="@+id/bottom_button_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -142,7 +142,7 @@
             android:padding="8dp">
 
             <Button
-                android:mId="@+mId/date_picker"
+                android:id="@+id/date_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -164,7 +164,7 @@
 
 
             <Button
-                android:mId="@+mId/category_picker"
+                android:id="@+id/category_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -185,7 +185,7 @@
                 android:background="@color/gray_light" />
 
             <Button
-                android:mId="@+mId/payment_method_picker"
+                android:id="@+id/payment_method_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

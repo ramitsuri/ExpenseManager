@@ -27,7 +27,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:mId="@+mId/date"
+                    android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nov 21, 2017"
@@ -54,7 +54,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:mId="@+mId/text_top_expense"
+                                android:id="@+id/text_top_expense"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
@@ -63,7 +63,7 @@
                                 android:textSize="12sp" />
 
                             <TextView
-                                android:mId="@+mId/text_top_category"
+                                android:id="@+id/text_top_category"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
@@ -72,7 +72,7 @@
                                 android:textSize="12sp" />
 
                             <TextView
-                                android:mId="@+mId/text_top_store"
+                                android:id="@+id/text_top_store"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Top Store"
@@ -87,7 +87,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:mId="@+mId/value_top_expense"
+                                android:id="@+id/value_top_expense"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
@@ -96,7 +96,7 @@
                                 android:textSize="12sp" />
 
                             <TextView
-                                android:mId="@+mId/value_top_category"
+                                android:id="@+id/value_top_category"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
@@ -105,7 +105,7 @@
                                 android:textSize="12sp" />
 
                             <TextView
-                                android:mId="@+mId/value_top_store"
+                                android:id="@+id/value_top_store"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Food, $100"
@@ -161,7 +161,7 @@
             cardview:cardCornerRadius="2dp">
 
             <android.support.v7.widget.RecyclerView
-                android:mId="@+mId/recycler_view_expenses"
+                android:id="@+id/recycler_view_expenses"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical" />

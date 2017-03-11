@@ -11,34 +11,11 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpenseDB {
+public class ExpenseDB extends BaseDB{
 
-    private SQLHelper mSQLHelper;
-    private SQLiteDatabase mDatabase;
-    private static final String ADAPTER_ROWID = "ROWID as _id";
 
     public ExpenseDB(Context context) {
-        mSQLHelper = SQLHelper.getInstance(context.getApplicationContext());
-    }
-
-    private void open() {
-        mDatabase = mSQLHelper.getWritableDatabase();
-    }
-
-    private void close(){
-
-    }
-
-    public Cursor getCursor(String table, String[] columns, String selection, String[] selectionArgs
-            , String groupBy, String having, String orderBy, String limit) {
-        open();
-        return mDatabase.query(table, columns, selection, selectionArgs, groupBy, having, orderBy,
-                limit);
-    }
-
-    public Cursor getCursor(String sql, String[] selectionArgs) {
-        open();
-        return mDatabase.rawQuery(sql, selectionArgs);
+        super(context);
     }
 
     public String[] getAllColumns() {
@@ -108,10 +85,10 @@ public class ExpenseDB {
                 expense.setStore(value);
             } else if(column.equals(ExpenseDBConstants.COLUMN_SYNC_STATUS)){
                 int value = cursor.getInt(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_SYNC_STATUS));
-                expense.setIsSynced(getBooleanForInt(value));
+                expense.setIsSynced(isTrue(value));
             } else if(column.equals(ExpenseDBConstants.COLUMN_FLAGGED)){
                 int value = cursor.getInt(cursor.getColumnIndex(ExpenseDBConstants.COLUMN_FLAGGED));
-                expense.setIsFlagged(getBooleanForInt(value));
+                expense.setIsFlagged(isTrue(value));
             }
         }
         return expense;
@@ -193,9 +170,5 @@ public class ExpenseDB {
 
     public void deleteAllExpense() {
 
-    }
-
-    private boolean getBooleanForInt(int anInt) {
-        return anInt == 0 ? false : true;
     }
 }

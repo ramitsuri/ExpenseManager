@@ -16,7 +16,7 @@
         android:paddingTop="16dp">
 
         <TextView
-            android:mId="@+mId/value"
+            android:id="@+id/value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -24,14 +24,14 @@
             android:textColor="@color/gray_text" />
 
         <LinearLayout
-            android:mId="@+mId/edit_container"
+            android:id="@+id/edit_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:visibility="gone">
 
             <EditText
-                android:mId="@+mId/value_edit"
+                android:id="@+id/value_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -42,7 +42,7 @@
                 android:imeActionLabel="Save" />
 
             <ImageView
-                android:mId="@+mId/btn_save_value"
+                android:id="@+id/btn_save_value"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
