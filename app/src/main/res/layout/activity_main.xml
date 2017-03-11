@@ -2,13 +2,13 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:mId="@+mId/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ramitsuri.expensemanager.MainActivity">
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+        android:mId="@+mId/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -16,23 +16,23 @@
         app:menu="@menu/bottom_navigation" />
 
     <android.support.v4.widget.NestedScrollView
-        android:id="@+id/myScrollingContent"
+        android:mId="@+mId/myScrollingContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <FrameLayout
-            android:id="@+id/content_container"
+            android:mId="@+mId/content_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_navigation"
+            android:layout_above="@+mId/bottom_navigation"
             android:background="@color/gray_light"
             android:paddingBottom="108dp" />
 
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add"
+        android:mId="@+mId/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -41,7 +41,7 @@
         android:layout_marginRight="24dp"
         android:scaleType="center"
         android:src="@drawable/ic_add"
-        app:layout_anchor="@id/bottom_navigation"
+        app:layout_anchor="@mId/bottom_navigation"
         app:layout_anchorGravity="right|top" />
 
 </android.support.design.widget.CoordinatorLayout>

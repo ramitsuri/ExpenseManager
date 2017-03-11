@@ -34,7 +34,7 @@
 
         <activity
             android:name=".RecyclerViewActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ramitsuri.expensemanager.MainActivity" />

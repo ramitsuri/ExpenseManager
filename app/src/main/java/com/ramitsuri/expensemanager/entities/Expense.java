@@ -7,8 +7,8 @@ public class Expense implements Parcelable{
     private String mRowIdentifier;
     private long mDateTime;
     private String mAmount;
-    private String mPaymentMode;
-    private Category mCategory;
+    private int mPaymentModeId;
+    private int mCategoryId;
     private String mDescription;
     private String mStore;
     private boolean mIsSynced;
@@ -17,14 +17,14 @@ public class Expense implements Parcelable{
     public Expense() {
     }
 
-    public Expense(String rowIdentifier, long dateTime, String amount, String paymentMode,
-                   Category category, String description, String store,
+    public Expense(String rowIdentifier, long dateTime, String amount, int paymentModeId,
+                   int categoryId, String description, String store,
                    boolean isSynced, boolean isFlagged) {
         mRowIdentifier = rowIdentifier;
         mDateTime = dateTime;
         mAmount = amount;
-        mPaymentMode = paymentMode;
-        mCategory = category;
+        mPaymentModeId = paymentModeId;
+        mCategoryId = categoryId;
         mDescription = description;
         mStore = store;
         mIsSynced = isSynced;
@@ -47,8 +47,8 @@ public class Expense implements Parcelable{
         mRowIdentifier = in.readString();
         mDateTime = in.readLong();
         mAmount = in.readString();
-        mPaymentMode = in.readString();
-        mCategory = in.readParcelable(Category.class.getClassLoader());
+        mPaymentModeId = in.readInt();
+        mCategoryId = in.readInt();
         mDescription = in.readString();
         mStore = in.readString();
         mIsSynced = in.readByte() != 0;
@@ -65,8 +65,8 @@ public class Expense implements Parcelable{
         parcel.writeString(mRowIdentifier);
         parcel.writeLong(mDateTime);
         parcel.writeString(mAmount);
-        parcel.writeString(mPaymentMode);
-        parcel.writeParcelable(mCategory, i);
+        parcel.writeInt(mPaymentModeId);
+        parcel.writeInt(mCategoryId);
         parcel.writeString(mDescription);
         parcel.writeString(mStore);
         parcel.writeByte((byte) (mIsSynced ? 1 : 0));
@@ -97,20 +97,20 @@ public class Expense implements Parcelable{
         mAmount = amount;
     }
 
-    public String getPaymentMode() {
-        return mPaymentMode;
+    public int getPaymentModeId() {
+        return mPaymentModeId;
     }
 
-    public void setPaymentMode(String paymentMode) {
-        mPaymentMode = paymentMode;
+    public void setPaymentModeId(int paymentModeId) {
+        mPaymentModeId = paymentModeId;
     }
 
-    public Category getCategory() {
-        return mCategory;
+    public int getCategoryId() {
+        return mCategoryId;
     }
 
-    public void setCategory(Category category) {
-        mCategory = category;
+    public void setCategoryId(int categoryId) {
+        mCategoryId = categoryId;
     }
 
     public String getDescription() {

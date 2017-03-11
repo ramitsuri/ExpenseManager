@@ -4,12 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Category implements Parcelable {
-    private int id;
-    private String name;
+    private int mId;
+    private String mName;
 
     protected Category(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
+        mId = in.readInt();
+        mName = in.readString();
     }
 
     public static final Creator<Category> CREATOR = new Creator<Category>() {
@@ -27,25 +27,25 @@ public class Category implements Parcelable {
     public Category() {
     }
 
-    public Category(int id, String name, int parentID) {
-        this.id = id;
-        this.name = name;
+    public Category(int id, String name) {
+        mId = id;
+        mName = name;
     }
 
     public int getId() {
-        return id;
+        return mId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        mId = id;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Category implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(name);
+        parcel.writeInt(mId);
+        parcel.writeString(mName);
     }
 }

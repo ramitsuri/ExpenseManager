@@ -4,10 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.ramitsuri.expensemanager.constants.DB;
-
 public class SQLHelper extends SQLiteOpenHelper {
 
+
+    public static final int DATABASE_VERSION = 1;
     private static SQLHelper sInstance;
     public static final String DATABASE_NAME = "expensemanager.db";
 
@@ -19,7 +19,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     }
 
     public SQLHelper(Context context) {
-        super(context, DATABASE_NAME, null, DB.DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public SQLHelper(Context context, String name,
@@ -29,12 +29,17 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(DB.CREATE_TABLE_EXPENSES);
+        sqLiteDatabase.execSQL(ExpenseDBConstants.CREATE_TABLE_EXPENSES);
+        sqLiteDatabase.execSQL(CategoryDBConstants.CREATE_TABLE_CATEGORIES);
+        sqLiteDatabase.execSQL(PaymentMethodDBConstants.CREATE_TABLE_CATEGORIES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DB.TABLE_EEPENSES);
+        String drop = "DROP TABLE IF EXISTS ";
+        sqLiteDatabase.execSQL(drop + ExpenseDBConstants.TABLE_EEPENSES);
+        sqLiteDatabase.execSQL(drop + CategoryDBConstants.CREATE_TABLE_CATEGORIES);
+        sqLiteDatabase.execSQL(drop + PaymentMethodDBConstants.CREATE_TABLE_CATEGORIES);
         onCreate(sqLiteDatabase);
     }
 }

@@ -38,7 +38,9 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
+import com.ramitsuri.expensemanager.constants.IntentExtras;
 import com.ramitsuri.expensemanager.constants.Others;
+import com.ramitsuri.expensemanager.constants.RecyclerViewValuesType;
 import com.ramitsuri.expensemanager.db.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
@@ -92,6 +94,9 @@ public class MainActivity extends BaseNavigationViewActivity
 
         List<Expense> expenses = ExpenseHelper.getExpenses();
 
+        /*Intent intent = new Intent(this, RecyclerViewActivity.class);
+        intent.putExtra(IntentExtras.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE, RecyclerViewValuesType.RECYCLER_VIEW_CATEGORIES);
+        startActivity(intent);*/
     }
 
     private void setupViews() {

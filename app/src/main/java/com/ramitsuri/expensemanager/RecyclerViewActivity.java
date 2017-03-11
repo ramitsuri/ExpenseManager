@@ -18,7 +18,7 @@ import com.ramitsuri.expensemanager.constants.RecyclerViewValuesType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewActivity extends AppCompatActivity implements View.OnClickListener{
+public class RecyclerViewActivity extends AppCompatActivity implements View.OnClickListener, RecyclerViewAdapter.ValueEditCallbacks{
 
     private List<String> mValues;
     private RecyclerViewAdapter mAdapter;
@@ -131,22 +131,27 @@ public class RecyclerViewActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void handleFabAddClicked() {
-        if(mIsEditingMode) {
+        /*if(mIsEditingMode) {
             mAdapter.saveValue();
-        } else {
+        } else {*/
             mValues.add("New Category");
             mAdapter.notifyItemInserted(mValues.size());
-            mAdapter.setAddNew(mRecyclerViewValues);
-        }
+        /*}
         mIsEditingMode = !mIsEditingMode;
-        switchFabIcon(mIsEditingMode);
+        switchFabIconToEditingMode(mIsEditingMode);*/
     }
 
-    public void switchFabIcon(boolean isEditingMode){
-        if(!isEditingMode){
-            mFabAddValue.setImageResource(R.drawable.ic_add);
-        } else {
+    public void switchFabIconToEditingMode(boolean isEditingMode){
+        if(isEditingMode){
             mFabAddValue.setImageResource(R.drawable.ic_done);
+        } else {
+            mFabAddValue.setImageResource(R.drawable.ic_add);
         }
+    }
+
+    @Override
+    public void onValueEditMode(boolean isEditMode) {
+        View v = getCurrentFocus();
+        switchFabIconToEditingMode(isEditMode);
     }
 }

@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/tab_today"
+        android:mId="@+mId/tab_today"
         android:icon="@drawable/ic_today"
         android:title="@string/bottom_menu_today" />
     <item
-        android:id="@+id/tab_week"
+        android:mId="@+mId/tab_week"
         android:icon="@drawable/ic_week"
         android:title="@string/bottom_menu_week" />
     <item
-        android:id="@+id/tab_month"
+        android:mId="@+mId/tab_month"
         android:icon="@drawable/ic_month"
         android:title="@string/bottom_menu_month" />
 </menu>

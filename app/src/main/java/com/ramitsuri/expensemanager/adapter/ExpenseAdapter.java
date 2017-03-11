@@ -10,7 +10,6 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.DateHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomViewHolder>   {
@@ -72,8 +71,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
     @Override
     public void onBindViewHolder(ExpenseAdapter.CustomViewHolder holder, int position) {
         /*if(position>0) {*/
-            holder.mFieldCategory.setText(mExpenses.get(position).getCategory().getName());
-            holder.mFieldPaymentMode.setText(mExpenses.get(position).getPaymentMode());
+            holder.mFieldCategory.setText(mExpenses.get(position).getCategoryId().getName());
+            holder.mFieldPaymentMode.setText(mExpenses.get(position).getPaymentModeId());
             holder.mFieldDescription.setText(mExpenses.get(position).getDescription());
             holder.mFieldAmount.setText(mExpenses.get(position).getAmount());
             holder.mFieldDate.setText(DateHelper.

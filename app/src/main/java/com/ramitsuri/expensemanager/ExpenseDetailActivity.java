@@ -95,9 +95,9 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         expense.setDateTime(mDate);
         expense.setStore(mFieldStore.getEditableText().toString());
         expense.setDescription(mFieldDescription.getEditableText().toString());
-        expense.setPaymentMode(mPaymentMethod);
+        expense.setPaymentModeId(mPaymentMethod);
         expense.setAmount(mFieldAmount.getEditableText().toString());
-        expense.setCategory(mCategory);
+        expense.setCategoryId(mCategory);
         ExpenseHelper.addExpense(expense);
     }
 

@@ -1,7 +1,9 @@
 package com.ramitsuri.expensemanager.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private RecyclerView mRecyclerView;
     private View mViewClicked;
     private Context mContext;
+    private ValueEditCallbacks mCallbacks;
+
+    public interface ValueEditCallbacks{
+        void onValueEditMode(boolean isEditMode);
+    }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -62,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         private void handleEditValue() {
-            ((RecyclerViewActivity)mContext).switchFabIcon(false);
+            mCallbacks.onValueEditMode(true);
             mViewClicked = mValueEdit;
             mValueEditContainer.setVisibility(View.VISIBLE);
             mValue.setVisibility(View.GONE);
@@ -74,6 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter(Context context, List<String> values){
         mValues = values;
         mContext = context;
+        mCallbacks = (RecyclerViewActivity)context;
     }
 
     @Override
@@ -93,21 +101,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus){
-                    holder.mValue.setText(holder.mValueEdit.getEditableText().toString());
-                    holder.mValue.setVisibility(View.VISIBLE);
-                    holder.mValueEditContainer.setVisibility(View.GONE);
+                    handleSave(holder);
                 }
             }
         });
+        holder.mValueEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                holder.mValueEdit.clearFocus();
+                return true;
+            }
+        });
+    }
+    private void handleSave(CustomViewHolder holder) {
+        mCallbacks.onValueEditMode(false);
+        //((RecyclerViewActivity)mContext).switchFabIconToEditingMode(false);
+        holder.mValue.setText(holder.mValueEdit.getEditableText().toString());
+        holder.mValue.setVisibility(View.VISIBLE);
+        holder.mValueEditContainer.setVisibility(View.GONE);
+        ActivityHelper.hideSoftKeyboard(mRecyclerView.getContext(), holder.mValueEdit);
     }
 
     public void saveValue(){
         mViewClicked.clearFocus();
     }
 
-    public void setAddNew(RecyclerView recyclerView){
-        mRecyclerView = recyclerView;
-        this.notifyItemInserted(mValues.size() - 1);
+    public void setAddNew(List<String> values){
+        mValues = values;
+        int a = this.getItemCount();
+        long as = getItemId(getItemCount()-1);
+        //this.notifyItemInserted(mValues.size() - 1);
     }
 
     @Override

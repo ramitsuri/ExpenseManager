@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
@@ -67,6 +68,12 @@ public class SelectedExpensesFragment extends Fragment {
         super.onAttach(context);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        mExpenseAdapter.notifyDataSetChanged();
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -76,8 +83,8 @@ public class SelectedExpensesFragment extends Fragment {
         List<Expense> expenses = ExpenseHelper.getExpenses();
         /*for (int i=0; i<10; i++) {
             Expense expense = new Expense();
-            expense.setCategory(new Category(1, "Food", 2));
-            expense.setPaymentMode("Discover");
+            expense.setCategoryId(new Category(1, "Food", 2));
+            expense.setPaymentModeId("Discover");
             expense.setDescription("Curd");
             expense.setAmount("0");
             expenses.add(expense);
