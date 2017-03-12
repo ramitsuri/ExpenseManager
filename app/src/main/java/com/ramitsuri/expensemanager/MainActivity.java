@@ -39,6 +39,7 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
+import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -98,24 +99,27 @@ public class MainActivity extends BaseNavigationViewActivity
     }
 
     private void debug() {
-        CategoryHelper.addCategory("Food");
-        CategoryHelper.addCategory("Travel");
-        CategoryHelper.addCategory("Entertainment");
-        CategoryHelper.addCategory("Utilities");
-        CategoryHelper.addCategory("Rent");
-        CategoryHelper.addCategory("Home");
-        CategoryHelper.addCategory("Groceries");
-        CategoryHelper.addCategory("Tech");
-        CategoryHelper.addCategory("Miscellaneous");
-        CategoryHelper.addCategory("Fun");
-        CategoryHelper.addCategory("Personal");
-        CategoryHelper.addCategory("Shopping");
+        if(!AppHelper.isFirstRunComplete()) {
+            CategoryHelper.addCategory("Food");
+            CategoryHelper.addCategory("Travel");
+            CategoryHelper.addCategory("Entertainment");
+            CategoryHelper.addCategory("Utilities");
+            CategoryHelper.addCategory("Rent");
+            CategoryHelper.addCategory("Home");
+            CategoryHelper.addCategory("Groceries");
+            CategoryHelper.addCategory("Tech");
+            CategoryHelper.addCategory("Miscellaneous");
+            CategoryHelper.addCategory("Fun");
+            CategoryHelper.addCategory("Personal");
+            CategoryHelper.addCategory("Shopping");
 
-        PaymentMethodHelper.addPaymentMethod("Discover");
-        PaymentMethodHelper.addPaymentMethod("Cash");
-        PaymentMethodHelper.addPaymentMethod("WF Checking");
-        PaymentMethodHelper.addPaymentMethod("WF Savings");
-        PaymentMethodHelper.addPaymentMethod("Amazon");
+            PaymentMethodHelper.addPaymentMethod("Discover");
+            PaymentMethodHelper.addPaymentMethod("Cash");
+            PaymentMethodHelper.addPaymentMethod("WF Checking");
+            PaymentMethodHelper.addPaymentMethod("WF Savings");
+            PaymentMethodHelper.addPaymentMethod("Amazon");
+            AppHelper.setFirstRunComplete();
+        }
     }
 
     private void setupViews() {

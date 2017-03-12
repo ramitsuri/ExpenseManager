@@ -2,6 +2,8 @@ package com.ramitsuri.expensemanager;
 
 import android.app.Application;
 
+import com.ramitsuri.expensemanager.helper.PrefHelper;
+
 public class MainApplication extends Application {
 
     private static MainApplication sSingleton;
@@ -9,7 +11,6 @@ public class MainApplication extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-
         sSingleton = this;
     }
 
