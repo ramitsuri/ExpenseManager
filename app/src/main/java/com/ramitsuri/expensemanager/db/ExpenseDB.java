@@ -3,11 +3,12 @@ package com.ramitsuri.expensemanager.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,85 +21,137 @@ public class ExpenseDB extends BaseDB{
 
     public String[] getAllColumns() {
         return new String[]{
-                ADAPTER_ROWID,
-                ExpenseDBConstants.COLUMN_ROW_ID,
-                ExpenseDBConstants.COLUMN_DATE_TIME,
-                ExpenseDBConstants.COLUMN_AMOUNT,
-                ExpenseDBConstants.COLUMN_PAYMENT_MODE_ID,
-                ExpenseDBConstants.COLUMN_CATEGORY_ID,
-                ExpenseDBConstants.COLUMN_NOTES,
-                ExpenseDBConstants.COLUMN_STORE,
-                ExpenseDBConstants.COLUMN_SYNC_STATUS,
-                ExpenseDBConstants.COLUMN_FLAGGED
+                DBConstants.COLUMN_EXPENSE_ROW_ID,
+                DBConstants.COLUMN_EXPENSE_DATE_TIME,
+                DBConstants.COLUMN_EXPENSE_AMOUNT,
+                DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
+                DBConstants.COLUMN_EXPENSE_CATEGORY_ID,
+                DBConstants.COLUMN_EXPENSE_NOTES,
+                DBConstants.COLUMN_EXPENSE_STORE,
+                DBConstants.COLUMN_EXPENSE_SYNC_STATUS,
+                DBConstants.COLUMN_EXPENSE_FLAGGED
         };
+    }
+
+    public String[] getAllJoinColumns(){
+        String rowIdColumn =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_ROW_ID);
+        String dateTimeColumn =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME);
+        String amountColumn =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_AMOUNT);
+        String notesColumn =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_NOTES);
+        String storeColumn =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_STORE);
+        String syncStatusColumn =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_SYNC_STATUS);
+        String flagColumn =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_FLAGGED);
+        String paymentMethodIdColumn =
+                getCol(DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID);
+        String paymentMethodNameColumn =
+                getCol(DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_NAME);
+        String categoryIdColumn =
+                getCol(DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_ID);
+        String categoryNameColumn =
+                getCol(DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_NAME);
+
+
+        String[] columns = {
+                rowIdColumn,
+                dateTimeColumn,
+                amountColumn,
+                notesColumn,
+                storeColumn,
+                syncStatusColumn,
+                flagColumn,
+                paymentMethodIdColumn,
+                paymentMethodNameColumn,
+                categoryIdColumn,
+                categoryNameColumn
+        };
+        return columns;
     }
 
     public ContentValues getExpensesContentValues(Expense expense) {
         String rowId = expense.getRowIdentifier();
         long dateTime = expense.getDateTime();
-        String amount = expense.getAmount();
-        int paymentModeId = expense.getPaymentModeId();
-        int categoryID = expense.getCategoryId();
+        String amount = String.valueOf(expense.getAmount());
+        int paymentMethodId = expense.getPaymentMethod().getId();
+        int categoryID = expense.getCategory().getId();
         String notes = expense.getDescription();
         String store = expense.getStore();
         boolean syncStatus = expense.isSynced();
         boolean flagged = expense.isFlagged();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ExpenseDBConstants.COLUMN_ROW_ID, rowId);
-        contentValues.put(ExpenseDBConstants.COLUMN_DATE_TIME, dateTime);
-        contentValues.put(ExpenseDBConstants.COLUMN_AMOUNT, amount);
-        contentValues.put(ExpenseDBConstants.COLUMN_PAYMENT_MODE_ID, paymentModeId);
-        contentValues.put(ExpenseDBConstants.COLUMN_CATEGORY_ID, categoryID);
-        contentValues.put(ExpenseDBConstants.COLUMN_NOTES, notes);
-        contentValues.put(ExpenseDBConstants.COLUMN_STORE, store);
-        contentValues.put(ExpenseDBConstants.COLUMN_SYNC_STATUS, syncStatus);
-        contentValues.put(ExpenseDBConstants.COLUMN_FLAGGED, flagged);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_ROW_ID, rowId);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_DATE_TIME, dateTime);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_AMOUNT, amount);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID, paymentMethodId);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_CATEGORY_ID, categoryID);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_NOTES, notes);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_STORE, store);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_SYNC_STATUS, syncStatus);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_FLAGGED, flagged);
 
         return contentValues;
     }
 
     private Expense getExpenseFromCursor(Cursor cursor) {
         Expense expense = new Expense();
+        Category category = new Category();
+        PaymentMethod paymentMethod = new PaymentMethod();
         for(String column: cursor.getColumnNames()){
-            if(column.equals(ExpenseDBConstants.COLUMN_ROW_ID)){
+            if(column.equals(DBConstants.COLUMN_EXPENSE_ROW_ID)){
                 String value = cursor.getString(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_ROW_ID));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_ROW_ID));
                 expense.setRowIdentifier(value);
-            } else if(column.equals(ExpenseDBConstants.COLUMN_DATE_TIME)){
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_DATE_TIME)){
                 long value = cursor.getLong(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_DATE_TIME));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_DATE_TIME));
                 expense.setDateTime(value);
-            } else if(column.equals(ExpenseDBConstants.COLUMN_AMOUNT)){
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_AMOUNT)){
                 String value = cursor.getString(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_AMOUNT));
-                expense.setAmount(value);
-            } else if(column.equals(ExpenseDBConstants.COLUMN_PAYMENT_MODE_ID)){
-                int value = cursor.getInt(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_PAYMENT_MODE_ID));
-                expense.setPaymentModeId(value);
-            } else if(column.equals(ExpenseDBConstants.COLUMN_CATEGORY_ID)){
-                int value = cursor.getInt(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_CATEGORY_ID));
-                expense.setCategoryId(value);
-            } else if(column.equals(ExpenseDBConstants.COLUMN_NOTES)){
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_AMOUNT));
+                expense.setAmount(new BigDecimal(value));
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_NOTES)){
                 String value = cursor.getString(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_NOTES));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_NOTES));
                 expense.setDescription(value);
-            } else if(column.equals(ExpenseDBConstants.COLUMN_STORE)){
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_STORE)){
                 String value = cursor.getString(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_STORE));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_STORE));
                 expense.setStore(value);
-            } else if(column.equals(ExpenseDBConstants.COLUMN_SYNC_STATUS)){
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_SYNC_STATUS)){
                 int value = cursor.getInt(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_SYNC_STATUS));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_SYNC_STATUS));
                 expense.setIsSynced(isTrue(value));
-            } else if(column.equals(ExpenseDBConstants.COLUMN_FLAGGED)){
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_FLAGGED)){
                 int value = cursor.getInt(
-                        cursor.getColumnIndex(ExpenseDBConstants.COLUMN_FLAGGED));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_FLAGGED));
                 expense.setIsFlagged(isTrue(value));
+            } else if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_ID)){
+                int value = cursor.getInt(
+                        cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_ID));
+                paymentMethod.setId(value);
+            } else if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_NAME)){
+                String value = cursor.getString(
+                        cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_NAME));
+                paymentMethod.setName(value);
+            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_ID)){
+                int value = cursor.getInt(
+                        cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_ID));
+                category.setId(value);
+            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_NAME)){
+                String value = cursor.getString(
+                        cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_NAME));
+                category.setName(value);
             }
         }
+        expense.setCategory(category);
+        expense.setPaymentMethod(paymentMethod);
         return expense;
     }
 
@@ -107,7 +160,7 @@ public class ExpenseDB extends BaseDB{
 
         boolean insertSuccess = true;
         ContentValues contentValues = getExpensesContentValues(expense);
-        long result = mDatabase.insertOrThrow(ExpenseDBConstants.TABLE_EEPENSES, null,
+        long result = mDatabase.insertOrThrow(DBConstants.TABLE_EXPENSES, null,
                 contentValues);
         if(result <= 0){
             insertSuccess = false;
@@ -118,13 +171,19 @@ public class ExpenseDB extends BaseDB{
 
     public Expense getExpense(String id) {
         open();
-        String[] columns = getAllColumns();
-        String selection = ExpenseDBConstants.COLUMN_ROW_ID + " = ? ";
+        String table = getJoinTable(
+                DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
+                DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
+                DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_ID);
+
+        String[] columns = getAllJoinColumns();
+
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ? ";
         String[] selectionArgs = new String[]{
                 id
         };
 
-        Cursor cursor = getCursor(ExpenseDBConstants.TABLE_EEPENSES, columns, selection,
+        Cursor cursor = getCursor(table, columns, selection,
                 selectionArgs, null, null, null, null);
 
         Expense expense = null;
@@ -146,10 +205,17 @@ public class ExpenseDB extends BaseDB{
     public List<Expense> getAllExpense() {
         open();
 
-        String[] columns = getAllColumns();
+        String table = getJoinTable(
+                DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
+                DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
+                DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_ID);
 
-        Cursor cursor = getCursor(ExpenseDBConstants.TABLE_EEPENSES, columns, null, null, null,
-                null, null, null);
+        String[] columns = getAllJoinColumns();
+
+        String selection = null;
+        String[] selectionArgs = null;
+
+        Cursor cursor = getCursor(table, columns, selection, selectionArgs, null, null, null, null);
 
         List<Expense> expenses = new ArrayList<>();
         try {
@@ -169,12 +235,197 @@ public class ExpenseDB extends BaseDB{
         return expenses;
     }
 
-    public void editExpense(Expense expense) {
+    public boolean editExpenseDateTime(String rowId, long dateTime) {
+        open();
 
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_DATE_TIME, dateTime);
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
     }
 
-    public void deleteExpense(int id) {
+    public boolean editExpenseAmount(String rowId, BigDecimal amount) {
+        open();
 
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_AMOUNT, String.valueOf(amount));
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
+    }
+
+    public boolean editExpenseDescription(String rowId, String description) {
+        open();
+
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_NOTES, description);
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
+    }
+
+    public boolean editExpenseStore(String rowId, String store) {
+        open();
+
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_STORE, store);
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
+    }
+
+    public boolean editExpenseSyncStatus(String rowId, boolean syncStatus) {
+        open();
+
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_SYNC_STATUS, syncStatus);
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
+    }
+
+    public boolean editExpenseFlag(String rowId, boolean isFlagged) {
+        open();
+
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_FLAGGED, isFlagged);
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
+    }
+    public boolean editExpensePaymentMethodId(String rowId, int id) {
+        open();
+
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID, id);
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
+    }
+
+    public boolean editExpenseCategoryId(String rowId, int id) {
+        open();
+
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                rowId
+        };
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_EXPENSE_CATEGORY_ID, id);
+
+        int result = mDatabase.update(
+                DBConstants.TABLE_EXPENSES,
+                contentValues,
+                selection,
+                selectionArgs
+        );
+        close();
+
+        return result > 0;
+    }
+
+    public synchronized boolean deleteExpense(Expense expense){
+        open();
+        String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+        String[] selectionArgs = new String[]{
+                expense.getRowIdentifier()
+        };
+
+        int result = mDatabase.delete(
+                DBConstants.TABLE_EXPENSES,
+                selection,
+                selectionArgs
+        );
+
+        close();
+
+        return result > 0;
     }
 
     public void deleteAllExpense() {

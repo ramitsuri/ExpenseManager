@@ -18,9 +18,8 @@ public class PaymentMethodDB extends BaseDB {
 
     public String[] getAllColumns(){
         return new String[]{
-                ADAPTER_ROWID,
-                PaymentMethodDBConstants.COLUMN_ID,
-                PaymentMethodDBConstants.COLUMN_NAME
+                DBConstants.COLUMN_PAYMENT_METHOD_ID,
+                DBConstants.COLUMN_PAYMENT_METHOD_NAME
         };
     }
 
@@ -29,8 +28,8 @@ public class PaymentMethodDB extends BaseDB {
         String name = paymentMethod.getName();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(PaymentMethodDBConstants.COLUMN_ID, id);
-        contentValues.put(PaymentMethodDBConstants.COLUMN_NAME, name);
+        contentValues.put(DBConstants.COLUMN_PAYMENT_METHOD_ID, id);
+        contentValues.put(DBConstants.COLUMN_PAYMENT_METHOD_NAME, name);
 
         return contentValues;
     }
@@ -38,12 +37,12 @@ public class PaymentMethodDB extends BaseDB {
     public PaymentMethod getPaymentMethodFromCursor(Cursor cursor){
         PaymentMethod paymentMethod = new PaymentMethod();
         for(String column: cursor.getColumnNames()){
-            if(column.equals(PaymentMethodDBConstants.COLUMN_ID)){
-                int value = cursor.getInt(cursor.getColumnIndex(PaymentMethodDBConstants.COLUMN_ID));
+            if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_ID)){
+                int value = cursor.getInt(cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_ID));
                 paymentMethod.setId(value);
-            } else if(column.equals(CategoryDBConstants.COLUMN_NAME)){
+            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_NAME)){
                 String value = cursor.getString(
-                        cursor.getColumnIndex(PaymentMethodDBConstants.COLUMN_NAME));
+                        cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_NAME));
                 paymentMethod.setName(value);
             }
         }
@@ -55,7 +54,7 @@ public class PaymentMethodDB extends BaseDB {
 
         boolean insertSuccess = true;
         ContentValues contentValues = getPaymentMethodContentValues(paymentMethod);
-        long result = mDatabase.insertOrThrow(PaymentMethodDBConstants.TABLE_PAYMENT_METHOD, null,
+        long result = mDatabase.insertOrThrow(DBConstants.TABLE_PAYMENT_METHOD, null,
                 contentValues);
         if(result <= 0){
             insertSuccess = false;
@@ -69,7 +68,7 @@ public class PaymentMethodDB extends BaseDB {
 
         String[] columns = getAllColumns();
 
-        Cursor cursor = getCursor(PaymentMethodDBConstants.TABLE_PAYMENT_METHOD, columns,
+        Cursor cursor = getCursor(DBConstants.TABLE_PAYMENT_METHOD, columns,
                 null, null, null, null, null, null);
 
         List<PaymentMethod> paymentMethods = new ArrayList<>();
@@ -96,13 +95,13 @@ public class PaymentMethodDB extends BaseDB {
             throw new IllegalArgumentException();
         }
         open();
-        String selection1 = PaymentMethodDBConstants.COLUMN_ID + " = ?";
+        String selection1 = DBConstants.COLUMN_PAYMENT_METHOD_ID + " = ?";
         String[] selectionArgs1 = new String[]{
                 String.valueOf(paymentMethodId)
         };
 
         int result1 = mDatabase.delete(
-                PaymentMethodDBConstants.TABLE_PAYMENT_METHOD,
+                DBConstants.TABLE_PAYMENT_METHOD,
                 selection1,
                 selectionArgs1
         );
@@ -118,16 +117,16 @@ public class PaymentMethodDB extends BaseDB {
         }
         open();
 
-        String selection = PaymentMethodDBConstants.COLUMN_ID + " = ?";
+        String selection = DBConstants.COLUMN_PAYMENT_METHOD_ID + " = ?";
         String[] selectionArgs = new String[]{
                 String.valueOf(paymentMethodId)
         };
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(PaymentMethodDBConstants.COLUMN_NAME, newName);
+        contentValues.put(DBConstants.COLUMN_PAYMENT_METHOD_NAME, newName);
 
         int result = mDatabase.update(
-                PaymentMethodDBConstants.TABLE_PAYMENT_METHOD,
+                DBConstants.TABLE_PAYMENT_METHOD,
                 contentValues,
                 selection,
                 selectionArgs

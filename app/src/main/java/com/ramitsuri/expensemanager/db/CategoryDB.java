@@ -17,9 +17,8 @@ public class CategoryDB extends BaseDB{
 
     public String[] getAllColumns(){
         return new String[]{
-                ADAPTER_ROWID,
-                CategoryDBConstants.COLUMN_ID,
-                CategoryDBConstants.COLUMN_NAME
+                DBConstants.COLUMN_CATEGORIES_ID,
+                DBConstants.COLUMN_CATEGORIES_NAME
         };
     }
 
@@ -28,8 +27,8 @@ public class CategoryDB extends BaseDB{
         String name = category.getName();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CategoryDBConstants.COLUMN_ID, id);
-        contentValues.put(CategoryDBConstants.COLUMN_NAME, name);
+        contentValues.put(DBConstants.COLUMN_CATEGORIES_ID, id);
+        contentValues.put(DBConstants.COLUMN_CATEGORIES_NAME, name);
 
         return contentValues;
     }
@@ -37,12 +36,12 @@ public class CategoryDB extends BaseDB{
     public Category getCategoryFromCursor(Cursor cursor){
         Category category = new Category();
         for(String column: cursor.getColumnNames()){
-            if(column.equals(CategoryDBConstants.COLUMN_ID)){
-                int value = cursor.getInt(cursor.getColumnIndex(CategoryDBConstants.COLUMN_ID));
+            if(column.equals(DBConstants.COLUMN_CATEGORIES_ID)){
+                int value = cursor.getInt(cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_ID));
                 category.setId(value);
-            } else if(column.equals(CategoryDBConstants.COLUMN_NAME)){
+            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_NAME)){
                 String value =
-                        cursor.getString(cursor.getColumnIndex(CategoryDBConstants.COLUMN_NAME));
+                        cursor.getString(cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_NAME));
                 category.setName(value);
             }
         }
@@ -54,7 +53,7 @@ public class CategoryDB extends BaseDB{
 
         boolean insertSuccess = true;
         ContentValues contentValues = getCategoryContentValues(category);
-        long result = mDatabase.insertOrThrow(CategoryDBConstants.TABLE_CATEGORIES, null,
+        long result = mDatabase.insertOrThrow(DBConstants.TABLE_CATEGORIES, null,
                 contentValues);
         if(result <= 0){
             insertSuccess = false;
@@ -68,7 +67,7 @@ public class CategoryDB extends BaseDB{
 
         String[] columns = getAllColumns();
 
-        Cursor cursor = getCursor(CategoryDBConstants.TABLE_CATEGORIES, columns, null, null, null,
+        Cursor cursor = getCursor(DBConstants.TABLE_CATEGORIES, columns, null, null, null,
                 null, null, null);
 
         List<Category> categories = new ArrayList<>();
@@ -95,13 +94,13 @@ public class CategoryDB extends BaseDB{
             throw new IllegalArgumentException();
         }
         open();
-        String selection1 = CategoryDBConstants.COLUMN_ID + " = ?";
+        String selection1 = DBConstants.COLUMN_CATEGORIES_ID + " = ?";
         String[] selectionArgs1 = new String[]{
                 String.valueOf(categoryId)
         };
 
         int result1 = mDatabase.delete(
-                CategoryDBConstants.TABLE_CATEGORIES,
+                DBConstants.TABLE_CATEGORIES,
                 selection1,
                 selectionArgs1
         );
@@ -117,16 +116,16 @@ public class CategoryDB extends BaseDB{
         }
         open();
 
-        String selection = CategoryDBConstants.COLUMN_ID + " = ?";
+        String selection = DBConstants.COLUMN_CATEGORIES_ID + " = ?";
         String[] selectionArgs = new String[]{
                 String.valueOf(categoryId)
         };
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CategoryDBConstants.COLUMN_NAME, newName);
+        contentValues.put(DBConstants.COLUMN_CATEGORIES_NAME, newName);
 
         int result = mDatabase.update(
-                CategoryDBConstants.TABLE_CATEGORIES,
+                DBConstants.TABLE_CATEGORIES,
                 contentValues,
                 selection,
                 selectionArgs

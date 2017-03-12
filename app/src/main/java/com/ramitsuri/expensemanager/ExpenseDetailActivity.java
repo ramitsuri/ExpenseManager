@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.ramitsuri.expensemanager.db.ExpenseHelper;
+import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.CurrencyPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.DatePickerDialogFragment;
@@ -95,9 +95,9 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         expense.setDateTime(mDate);
         expense.setStore(mFieldStore.getEditableText().toString());
         expense.setDescription(mFieldDescription.getEditableText().toString());
-        expense.setPaymentModeId(mPaymentMethod);
+        expense.setPaymentMethod(mPaymentMethod);
         expense.setAmount(mFieldAmount.getEditableText().toString());
-        expense.setCategoryId(mCategory);
+        expense.setCategory(mCategory);
         ExpenseHelper.addExpense(expense);
     }
 

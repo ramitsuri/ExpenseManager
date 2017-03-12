@@ -22,7 +22,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
 
         private TextView mFieldDate;
         private TextView mFieldCategory;
-        private TextView mFieldPaymentMode;
+        private TextView mFieldPaymentMethod;
         private TextView mFieldDescription;
         private TextView mFieldAmount;
         private TextView mStore;
@@ -32,7 +32,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
             super(itemView);
             mFieldDate = (TextView)itemView.findViewById(R.id.expense_date);
             mFieldCategory = (TextView)itemView.findViewById(R.id.expense_category);
-            mFieldPaymentMode = (TextView)itemView.findViewById(R.id.expense_payment_mode);
+            mFieldPaymentMethod = (TextView)itemView.findViewById(R.id.expense_payment_mode);
             mFieldDescription = (TextView)itemView.findViewById(R.id.expense_description);
             mFieldAmount = (TextView)itemView.findViewById(R.id.expense_amount);
             mStore = (TextView)itemView.findViewById(R.id.expense_store);
@@ -71,8 +71,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
     @Override
     public void onBindViewHolder(ExpenseAdapter.CustomViewHolder holder, int position) {
         /*if(position>0) {*/
-            holder.mFieldCategory.setText(mExpenses.get(position).getCategoryId().getName());
-            holder.mFieldPaymentMode.setText(mExpenses.get(position).getPaymentModeId());
+            holder.mFieldCategory.setText(mExpenses.get(position).getCategory().getName());
+            holder.mFieldPaymentMethod.setText(mExpenses.get(position).getPaymentMethod().getName());
             holder.mFieldDescription.setText(mExpenses.get(position).getDescription());
             holder.mFieldAmount.setText(mExpenses.get(position).getAmount());
             holder.mFieldDate.setText(DateHelper.

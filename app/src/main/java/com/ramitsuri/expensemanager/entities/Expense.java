@@ -3,12 +3,14 @@ package com.ramitsuri.expensemanager.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.math.BigDecimal;
+
 public class Expense implements Parcelable{
     private String mRowIdentifier;
     private long mDateTime;
-    private String mAmount;
-    private int mPaymentModeId;
-    private int mCategoryId;
+    private BigDecimal mAmount;
+    private PaymentMethod mPaymentMethod;
+    private Category mCategory;
     private String mDescription;
     private String mStore;
     private boolean mIsSynced;
@@ -17,14 +19,14 @@ public class Expense implements Parcelable{
     public Expense() {
     }
 
-    public Expense(String rowIdentifier, long dateTime, String amount, int paymentModeId,
-                   int categoryId, String description, String store,
+    public Expense(String rowIdentifier, long dateTime, BigDecimal amount, PaymentMethod paymentMethod,
+                   Category category, String description, String store,
                    boolean isSynced, boolean isFlagged) {
         mRowIdentifier = rowIdentifier;
         mDateTime = dateTime;
         mAmount = amount;
-        mPaymentModeId = paymentModeId;
-        mCategoryId = categoryId;
+        mPaymentMethod = paymentMethod;
+        mCategory = category;
         mDescription = description;
         mStore = store;
         mIsSynced = isSynced;
@@ -46,9 +48,9 @@ public class Expense implements Parcelable{
     protected Expense(Parcel in) {
         mRowIdentifier = in.readString();
         mDateTime = in.readLong();
-        mAmount = in.readString();
-        mPaymentModeId = in.readInt();
-        mCategoryId = in.readInt();
+        mAmount = new BigDecimal(in.readString());
+        mPaymentMethod = in.readParcelable(PaymentMethod.class.getClassLoader());
+        mCategory = in.readParcelable(Category.class.getClassLoader());
         mDescription = in.readString();
         mStore = in.readString();
         mIsSynced = in.readByte() != 0;
@@ -64,9 +66,9 @@ public class Expense implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mRowIdentifier);
         parcel.writeLong(mDateTime);
-        parcel.writeString(mAmount);
-        parcel.writeInt(mPaymentModeId);
-        parcel.writeInt(mCategoryId);
+        parcel.writeString(String.valueOf(mAmount));
+        parcel.writeParcelable(mPaymentMethod, i);
+        parcel.writeParcelable(mCategory, i);
         parcel.writeString(mDescription);
         parcel.writeString(mStore);
         parcel.writeByte((byte) (mIsSynced ? 1 : 0));
@@ -89,28 +91,28 @@ public class Expense implements Parcelable{
         mDateTime = dateTime;
     }
 
-    public String getAmount() {
+    public BigDecimal getAmount() {
         return mAmount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(BigDecimal amount) {
         mAmount = amount;
     }
 
-    public int getPaymentModeId() {
-        return mPaymentModeId;
+    public PaymentMethod getPaymentMethod() {
+        return mPaymentMethod;
     }
 
-    public void setPaymentModeId(int paymentModeId) {
-        mPaymentModeId = paymentModeId;
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        mPaymentMethod = paymentMethod;
     }
 
-    public int getCategoryId() {
-        return mCategoryId;
+    public Category getCategory() {
+        return mCategory;
     }
 
-    public void setCategoryId(int categoryId) {
-        mCategoryId = categoryId;
+    public void setCategory(Category category) {
+        mCategory = category;
     }
 
     public String getDescription() {

@@ -1,7 +1,8 @@
-package com.ramitsuri.expensemanager.db;
+package com.ramitsuri.expensemanager.helper;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
+import com.ramitsuri.expensemanager.db.ExpenseDB;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 

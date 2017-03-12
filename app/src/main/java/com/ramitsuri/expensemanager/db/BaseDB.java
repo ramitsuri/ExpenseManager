@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class BaseDB {
 
-    protected static final String ADAPTER_ROWID = "ROWID as _id";
-
     private SQLHelper mSQLHelper;
     protected SQLiteDatabase mDatabase;
 
@@ -58,6 +56,19 @@ public class BaseDB {
                 .append(getCol(table1, table1Column))
                 .append("=")
                 .append(getCol(table2, table2Column))
+                .toString();
+    }
+
+    protected String getJoinTable(String table1, String table1Column, String table2,
+                                  String table2Column, String table3, String table3Column){
+        return new StringBuilder()
+                .append(getJoinTable(table1, table1Column, table2, table2Column))
+                .append(" JOIN ")
+                .append(table3)
+                .append(" ON ")
+                .append(getCol(table1, table1Column))
+                .append(" = ")
+                .append(getCol(table3, table3Column))
                 .toString();
     }
 }
