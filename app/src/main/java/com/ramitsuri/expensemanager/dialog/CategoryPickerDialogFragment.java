@@ -9,9 +9,10 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.entities.Category;
+import com.ramitsuri.expensemanager.helper.CategoryHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,11 @@ import java.util.List;
 public class CategoryPickerDialogFragment extends DialogFragment {
 
     private CategoryPickerCallbacks mCallbacks;
+    private List<Category> mCategories;
+    private List<String> mCategoryNames;
+
     public interface CategoryPickerCallbacks{
-        void onCategoryPicked(String category);
+        void onCategoryPicked(Category category);
     }
 
     @Override
@@ -31,13 +35,14 @@ public class CategoryPickerDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        List<String> values = getCategories();
-        final CharSequence[] items = values.toArray(new CharSequence[values.size()]);
+        buildCategoryList();
+        final CharSequence[] items =
+                mCategoryNames.toArray(new CharSequence[mCategoryNames.size()]);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.category_picker_title))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        mCallbacks.onCategoryPicked(String.valueOf(items[which]));
+                        mCallbacks.onCategoryPicked(mCategories.get(which));
                     }
                 });
         builder.setView(R.layout.category_picker_dialog);
@@ -57,20 +62,11 @@ public class CategoryPickerDialogFragment extends DialogFragment {
         //getDialog().getWindow().setLayout(840, 1360);
     }
 
-    public List<String> getCategories() {
-        List mCategories = new ArrayList<>();
-        mCategories.add("Food");
-        mCategories.add("Travel");
-        mCategories.add("Entertainment");
-        mCategories.add("Utilities");
-        mCategories.add("Rent");
-        mCategories.add("Home");
-        mCategories.add("Groceries");
-        mCategories.add("Tech");
-        mCategories.add("Miscellaneous");
-        mCategories.add("Fun");
-        mCategories.add("Personal");
-        mCategories.add("Shopping");
-        return mCategories;
+    public void buildCategoryList() {
+        mCategories = CategoryHelper.getAllCategories();
+        mCategoryNames = new ArrayList<>();
+        for(Category category: mCategories){
+            mCategoryNames.add(category.toString());
+        }
     }
 }

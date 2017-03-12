@@ -410,11 +410,11 @@ public class ExpenseDB extends BaseDB{
         return result > 0;
     }
 
-    public synchronized boolean deleteExpense(Expense expense){
+    public synchronized boolean deleteExpense(String id){
         open();
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
         String[] selectionArgs = new String[]{
-                expense.getRowIdentifier()
+                id
         };
 
         int result = mDatabase.delete(

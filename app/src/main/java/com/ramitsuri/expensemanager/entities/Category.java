@@ -58,4 +58,9 @@ public class Category implements Parcelable {
         parcel.writeInt(mId);
         parcel.writeString(mName);
     }
+
+    @Override
+    public String toString(){
+        return mName;
+    }
 }

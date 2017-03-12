@@ -9,7 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.helper.DateHelper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.CurrencyPickerDialogFragment;
@@ -18,6 +23,8 @@ import com.ramitsuri.expensemanager.dialog.PaymentPickerDialogFragment;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 
+import java.math.BigDecimal;
+
 public class ExpenseDetailActivity extends AppCompatActivity implements View.OnClickListener,
         PaymentPickerDialogFragment.PaymentMethodPickerCallbacks,
         DatePickerDialogFragment.DatePickerCallbacks,
@@ -25,12 +32,12 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         CurrencyPickerDialogFragment.CurrencyPickerCallbacks{
 
     EditText mFieldAmount, mFieldDescription, mFieldStore;
-    Button mCurrencyPicker, mDatePicker, mCategoryPicker, mPaymentMethodPicker;
+    RelativeLayout mDatePicker, mCategoryPicker, mPaymentMethodPicker;
+    TextView mDatePickerText, mCategoryPickerText, mPaymentMethodPickerText;
+    Button mCurrencyPicker;
     private FloatingActionButton mFabDone;
     private Toolbar mToolbar;
-    private String mPaymentMethod;
-    private Category mCategory;
-    private long mDate;
+    private Expense mExpense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         setupActionBar();
         setupView();
         setupListeners();
+        mExpense = new Expense();
     }
 
     private void setupActionBar() {
@@ -51,14 +59,19 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void setupView() {
-        mDatePicker = (Button) findViewById(R.id.date_picker);
-        mCategoryPicker = (Button)findViewById(R.id.category_picker);
-        mPaymentMethodPicker = (Button)findViewById(R.id.payment_method_picker);
+        mDatePicker = (RelativeLayout) findViewById(R.id.date_picker);
+        mCategoryPicker = (RelativeLayout)findViewById(R.id.category_picker);
+        mPaymentMethodPicker = (RelativeLayout)findViewById(R.id.payment_method_picker);
         mCurrencyPicker = (Button)findViewById(R.id.currency_picker);
         mFieldAmount = (EditText)findViewById(R.id.edit_text_amount);
         mFieldDescription = (EditText)findViewById(R.id.edit_text_description);
         mFieldStore = (EditText)findViewById(R.id.edit_text_store);
         mFabDone = (FloatingActionButton)findViewById(R.id.fab_done);
+        mDatePickerText = (TextView)findViewById(R.id.date_picker_text);
+        mCategoryPickerText = (TextView)findViewById(R.id.category_picker_text);
+        mPaymentMethodPickerText = (TextView)findViewById(R.id.payment_method_picker_text);
+
+        mDatePickerText.setText(DateHelper.getTodaysDate());
     }
 
     private void setupListeners() {
@@ -90,36 +103,32 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void createExpense() {
-        Expense expense = new Expense();
-        expense.setRowIdentifier("1");
-        expense.setDateTime(mDate);
-        expense.setStore(mFieldStore.getEditableText().toString());
-        expense.setDescription(mFieldDescription.getEditableText().toString());
-        expense.setPaymentMethod(mPaymentMethod);
-        expense.setAmount(mFieldAmount.getEditableText().toString());
-        expense.setCategory(mCategory);
-        ExpenseHelper.addExpense(expense);
+        mExpense.setRowIdentifier("1");
+        mExpense.setStore(mFieldStore.getEditableText().toString());
+        mExpense.setDescription(mFieldDescription.getEditableText().toString());
+        mExpense.setAmount(new BigDecimal(mFieldAmount.getEditableText().toString()));
+        ExpenseHelper.addExpense(mExpense);
     }
 
     @Override
-    public void onPaymentMethodPicked(String paymentMethod) {
-        mPaymentMethod = paymentMethod;
+    public void onPaymentMethodPicked(PaymentMethod paymentMethod) {
+        mExpense.setPaymentMethod(paymentMethod);
+        mPaymentMethodPickerText.setText(paymentMethod.toString());
     }
 
     @Override
-    public void onDatePicked(long date) {
-        mDate = date;
+    public void onDatePicked(int year, int month, int day) {
+        mDatePickerText.setText(DateHelper.getPrettyDate(year, month, day));
+        mExpense.setDateTime(DateHelper.getLongDateForDB(year, month, day));
     }
 
     @Override
     public void onCurrencyPicked(String currency) {
-
     }
 
     @Override
-    public void onCategoryPicked(String category) {
-        mCategory = new Category();
-        mCategory.setName(category);
-        mCategory.setId(1);
+    public void onCategoryPicked(Category category) {
+        mExpense.setCategory(category);
+        mCategoryPickerText.setText(category.toString());
     }
 }

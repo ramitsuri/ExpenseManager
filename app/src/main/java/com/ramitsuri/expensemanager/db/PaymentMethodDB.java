@@ -16,14 +16,14 @@ public class PaymentMethodDB extends BaseDB {
         super(context);
     }
 
-    public String[] getAllColumns(){
+    private String[] getAllColumns(){
         return new String[]{
                 DBConstants.COLUMN_PAYMENT_METHOD_ID,
                 DBConstants.COLUMN_PAYMENT_METHOD_NAME
         };
     }
 
-    public ContentValues getPaymentMethodContentValues(PaymentMethod paymentMethod){
+    private ContentValues getPaymentMethodContentValues(PaymentMethod paymentMethod){
         int id = paymentMethod.getId();
         String name = paymentMethod.getName();
 
@@ -34,13 +34,14 @@ public class PaymentMethodDB extends BaseDB {
         return contentValues;
     }
 
-    public PaymentMethod getPaymentMethodFromCursor(Cursor cursor){
+    private PaymentMethod getPaymentMethodFromCursor(Cursor cursor){
         PaymentMethod paymentMethod = new PaymentMethod();
         for(String column: cursor.getColumnNames()){
             if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_ID)){
-                int value = cursor.getInt(cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_ID));
+                int value =
+                        cursor.getInt(cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_ID));
                 paymentMethod.setId(value);
-            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_NAME)){
+            } else if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_NAME)){
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_NAME));
                 paymentMethod.setName(value);
@@ -49,11 +50,12 @@ public class PaymentMethodDB extends BaseDB {
         return paymentMethod;
     }
 
-    public synchronized boolean setPaymentMethod(PaymentMethod paymentMethod){
+    public synchronized boolean setPaymentMethod(String name){
         open();
 
         boolean insertSuccess = true;
-        ContentValues contentValues = getPaymentMethodContentValues(paymentMethod);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_PAYMENT_METHOD_NAME, name);
         long result = mDatabase.insertOrThrow(DBConstants.TABLE_PAYMENT_METHOD, null,
                 contentValues);
         if(result <= 0){

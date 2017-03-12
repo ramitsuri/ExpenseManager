@@ -5,9 +5,15 @@ import java.util.Calendar;
 
 public class DateHelper {
 
-    public static String getPrettyDate(long date){
+    private static int FIRST_DAY_OF_WEEK = Calendar.MONDAY;
 
-        return "";
+    public static String getPrettyDate(int year, int month, int day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy");
+        return df.format(calendar.getTime());
     }
 
     public static String getJustTheDayOfMonth(long date){
@@ -15,12 +21,12 @@ public class DateHelper {
     }
 
     public static String getTodaysDate(){
-        Calendar rightNow = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy");
-        return df.format(rightNow.getTime());
+        return df.format(calendar.getTime());
     }
 
-    public static long getLongDate(int year, int month, int day){
+    public static long getLongDateForDB(int year, int month, int day){
         long date;
         month = month + 1;
         date = year * 100 + month;
@@ -28,4 +34,24 @@ public class DateHelper {
         return date;
     }
 
+    public static long getLongFirstDayOfWeek(){
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_WEEK);
+        int difference = FIRST_DAY_OF_WEEK - today;
+        calendar.add(Calendar.DATE, difference);
+        return getLongDateForDB(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    private static long getDayFromLongDate(long date){
+        return date % 100;
+    }
+
+    private static long getMonthFromLongDate(long date){
+        return (date / 100) % 100;
+    }
+
+    private static long getYearFromLongDate(long date){
+        return (date / 100) / 100;
+    }
 }

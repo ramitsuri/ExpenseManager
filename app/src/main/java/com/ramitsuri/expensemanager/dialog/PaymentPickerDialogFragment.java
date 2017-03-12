@@ -1,24 +1,26 @@
 package com.ramitsuri.expensemanager.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentPickerDialogFragment extends DialogFragment {
 
+    private List<PaymentMethod> mPaymentMethods;
+    private List<String> mPaymentMethodNames;
     private PaymentMethodPickerCallbacks mCallbacks;
     public interface PaymentMethodPickerCallbacks{
-        void onPaymentMethodPicked(String paymentMethod);
+        void onPaymentMethodPicked(PaymentMethod paymentMethod);
     }
 
     @Override
@@ -29,13 +31,14 @@ public class PaymentPickerDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        List<String> values = getPaymentMethods();
-        final CharSequence[] items = values.toArray(new CharSequence[values.size()]);
+        buildPaymentMethods();
+        final CharSequence[] items =
+                mPaymentMethodNames.toArray(new CharSequence[mPaymentMethodNames.size()]);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.payment_method_picker_title))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        mCallbacks.onPaymentMethodPicked(String.valueOf(items[which]));
+                        mCallbacks.onPaymentMethodPicked(mPaymentMethods.get(which));
                     }
                 });
         return builder.create();
@@ -46,13 +49,17 @@ public class PaymentPickerDialogFragment extends DialogFragment {
         //getDialog().getWindow().setLayout(840, 1360);
     }
 
-    public List<String> getPaymentMethods(){
-        List mPaymentMethods = new ArrayList<>();
-        mPaymentMethods.add("Discover");
+    public void buildPaymentMethods(){
+        mPaymentMethods = PaymentMethodHelper.getAllPaymentMethods();
+        mPaymentMethodNames = new ArrayList<>();
+        for(PaymentMethod paymentMethod: mPaymentMethods){
+            mPaymentMethodNames.add(paymentMethod.toString());
+        }
+        /*mPaymentMethods.add("Discover");
         mPaymentMethods.add("Cash");
         mPaymentMethods.add("WF Checking");
         mPaymentMethods.add("WF Savings");
         mPaymentMethods.add("Amazon");
-        return mPaymentMethods;
+        return mPaymentMethods;*/
     }
 }

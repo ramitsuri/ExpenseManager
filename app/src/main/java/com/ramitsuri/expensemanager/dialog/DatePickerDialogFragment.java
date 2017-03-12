@@ -9,14 +9,12 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 
-import static com.ramitsuri.expensemanager.helper.DateHelper.getLongDate;
-
 public class DatePickerDialogFragment extends DialogFragment implements
         DatePickerDialog.OnDateSetListener{
 
     private DatePickerCallbacks mCallbacks;
     public interface DatePickerCallbacks{
-        void onDatePicked(long date);
+        void onDatePicked(int year, int month, int day);
     }
 
     @Override
@@ -37,6 +35,6 @@ public class DatePickerDialogFragment extends DialogFragment implements
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        mCallbacks.onDatePicked(getLongDate(year, month, day));
+        mCallbacks.onDatePicked(year, month, day);
     }
 }

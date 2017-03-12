@@ -48,11 +48,12 @@ public class CategoryDB extends BaseDB{
         return category;
     }
 
-    public synchronized boolean setCategory(Category category){
+    public synchronized boolean setCategory(String name){
         open();
 
         boolean insertSuccess = true;
-        ContentValues contentValues = getCategoryContentValues(category);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBConstants.COLUMN_CATEGORIES_NAME, name);
         long result = mDatabase.insertOrThrow(DBConstants.TABLE_CATEGORIES, null,
                 contentValues);
         if(result <= 0){

@@ -12,7 +12,7 @@ public class DBConstants {
             "CREATE TABLE "
                     + TABLE_CATEGORIES
                     + "("
-                    + COLUMN_CATEGORIES_ID + " INTEGER, "
+                    + COLUMN_CATEGORIES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                     + COLUMN_CATEGORIES_NAME + " TEXT"
                     + ");"
             ;
@@ -54,7 +54,7 @@ public class DBConstants {
             "CREATE TABLE "
                     + TABLE_PAYMENT_METHOD
                     + "("
-                    + COLUMN_PAYMENT_METHOD_ID + " INTEGER, "
+                    + COLUMN_PAYMENT_METHOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                     + COLUMN_PAYMENT_METHOD_NAME + " TEXT"
                     + ");"
             ;
