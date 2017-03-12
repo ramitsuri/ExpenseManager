@@ -44,10 +44,11 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_detail);
 
+        mExpense = new Expense();
+
         setupActionBar();
         setupView();
         setupListeners();
-        mExpense = new Expense();
     }
 
     private void setupActionBar() {
@@ -71,7 +72,11 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mCategoryPickerText = (TextView)findViewById(R.id.category_picker_text);
         mPaymentMethodPickerText = (TextView)findViewById(R.id.payment_method_picker_text);
 
-        mDatePickerText.setText(DateHelper.getTodaysDate());
+        long date = DateHelper.getTodaysLongDate();
+        //handleCategoryPicked();
+        handleDatePicked(DateHelper.getYearFromLongDate(date),
+                DateHelper.getMonthFromLongDate(date) - 1, DateHelper.getDayFromLongDate(date));
+        //handlePaymentPicked();
     }
 
     private void setupListeners() {
@@ -106,18 +111,30 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mExpense.setRowIdentifier("1");
         mExpense.setStore(mFieldStore.getEditableText().toString());
         mExpense.setDescription(mFieldDescription.getEditableText().toString());
-        mExpense.setAmount(new BigDecimal(mFieldAmount.getEditableText().toString()));
+        String amount = mFieldAmount.getEditableText().toString();
+        if(amount.isEmpty()){
+            amount = "0";
+        }
+        mExpense.setAmount(new BigDecimal(amount));
         ExpenseHelper.addExpense(mExpense);
     }
 
     @Override
     public void onPaymentMethodPicked(PaymentMethod paymentMethod) {
+        handlePaymentPicked(paymentMethod);
+    }
+
+    private void handlePaymentPicked(PaymentMethod paymentMethod) {
         mExpense.setPaymentMethod(paymentMethod);
         mPaymentMethodPickerText.setText(paymentMethod.toString());
     }
 
     @Override
     public void onDatePicked(int year, int month, int day) {
+        handleDatePicked(year, month, day);
+    }
+
+    private void handleDatePicked(int year, int month, int day) {
         mDatePickerText.setText(DateHelper.getPrettyDate(year, month, day));
         mExpense.setDateTime(DateHelper.getLongDateForDB(year, month, day));
     }
@@ -128,6 +145,10 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onCategoryPicked(Category category) {
+        handleCategoryPicked(category);
+    }
+
+    private void handleCategoryPicked(Category category) {
         mExpense.setCategory(category);
         mCategoryPickerText.setText(category.toString());
     }

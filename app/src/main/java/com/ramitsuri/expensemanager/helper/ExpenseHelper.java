@@ -88,7 +88,7 @@ public class ExpenseHelper {
         ExpenseWrapper expenseWrapper = new ExpenseWrapper();
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
-        long startDate = DateHelper.getLongDateForDB(DateHelper.getFirstDayofWeek(date));
+        long startDate = DateHelper.getLongDateForDB(DateHelper.getFirstDayOfWeek(date));
         long endDate = DateHelper.getLongDateForDB(DateHelper.getLastDayOfWeek(date));
         expenseWrapper.setExpenses(getDB().getAllExpenseInDateRange(startDate, endDate));
 

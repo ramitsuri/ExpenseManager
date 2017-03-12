@@ -49,6 +49,11 @@ public class DateHelper {
         return df.format(calendar.getTime());
     }
 
+    public static long getTodaysLongDate(){
+        Calendar calendar = Calendar.getInstance();
+        return getLongDateForDB(calendar.getTime());
+    }
+
     public static long getLongDateForDB(int year, int month, int day){
         long date;
         month = month + 1;
@@ -64,7 +69,7 @@ public class DateHelper {
                 calendar.get(Calendar.DAY_OF_MONTH));
     }
 
-    public static Date getFirstDayofWeek(Date date){
+    public static Date getFirstDayOfWeek(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int today = calendar.get(Calendar.DAY_OF_WEEK);
@@ -90,15 +95,15 @@ public class DateHelper {
         return firstDayOfWeek - today;
     }
 
-    private static int getDayFromLongDate(long date){
+    public static int getDayFromLongDate(long date){
         return (int)(date % 100);
     }
 
-    private static int getMonthFromLongDate(long date){
+    public static int getMonthFromLongDate(long date){
         return (int)((date / 100) % 100);
     }
 
-    private static int getYearFromLongDate(long date){
+    public static int getYearFromLongDate(long date){
         return (int)((date / 100) / 100);
     }
 }
