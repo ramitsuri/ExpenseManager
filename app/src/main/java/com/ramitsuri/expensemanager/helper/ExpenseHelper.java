@@ -7,6 +7,8 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ExpenseHelper {
@@ -20,7 +22,7 @@ public class ExpenseHelper {
     }
 
     public static List<Expense> getExpenses(){
-        return getDB().getAllExpense();
+        return getDB().getAllExpense(null, null);
     }
 
     public static boolean addExpense(Expense expense){
@@ -83,18 +85,55 @@ public class ExpenseHelper {
     }
 
     private static ExpenseWrapper getExpenseWrapperWeek() {
-        return null;
+        ExpenseWrapper expenseWrapper = new ExpenseWrapper();
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        long startDate = DateHelper.getLongDateForDB(DateHelper.getFirstDayofWeek(date));
+        long endDate = DateHelper.getLongDateForDB(DateHelper.getLastDayOfWeek(date));
+        expenseWrapper.setExpenses(getDB().getAllExpenseInDateRange(startDate, endDate));
+
+        expenseWrapper.setDate(DateHelper.getPrettyDate(startDate, endDate));
+        return expenseWrapper;
     }
 
     private static ExpenseWrapper getExpenseWrapperAll() {
-        return null;
+        ExpenseWrapper expenseWrapper = new ExpenseWrapper();
+        expenseWrapper.setExpenses(getDB().getAllExpense(null, null));
+
+        expenseWrapper.setDate("All Expenses");
+        return expenseWrapper;
     }
 
     private static ExpenseWrapper getExpenseWrapperMonth() {
-        return null;
+        ExpenseWrapper expenseWrapper = new ExpenseWrapper();
+
+        //expenses
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int startDay = calendar.getActualMinimum(calendar.DAY_OF_MONTH);
+        int endDay = calendar.getActualMaximum(calendar.DAY_OF_MONTH);
+        expenseWrapper.setExpenses(getDB().getAllExpenseInDateRange(
+                DateHelper.getLongDateForDB(year, month, startDay),
+                DateHelper.getLongDateForDB(year, month, endDay)));
+
+        expenseWrapper.setDate(DateHelper.getPrettyDate(year, month, startDay,
+                year, month, endDay));
+        return expenseWrapper;
     }
 
     private static ExpenseWrapper getExpenseWrapperToday() {
-        return null;
+        ExpenseWrapper expenseWrapper = new ExpenseWrapper();
+
+        //expenses
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        long date = DateHelper.getLongDateForDB(year, month, day);
+        expenseWrapper.setExpenses(getDB().getAllExpenseForDay(date));
+
+        expenseWrapper.setDate(DateHelper.getPrettyDate(year, month, day));
+        return expenseWrapper;
     }
 }

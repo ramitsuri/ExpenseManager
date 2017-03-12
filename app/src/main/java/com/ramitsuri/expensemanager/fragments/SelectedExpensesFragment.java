@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.constants.Others;
+import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.DateHelper;
@@ -27,12 +28,14 @@ public class SelectedExpensesFragment extends Fragment {
     private List<Expense> mExpenses;
     private ExpenseAdapter mExpenseAdapter;
     private TextView mFieldTopDate;
+    private ExpenseWrapper mExpenseWrapper;
     private int mType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mType = getArguments().getInt(Others.EXPENSE_VIEW_TYPE);
+        mExpenseWrapper = getExpenseWrapper();
     }
 
     @Override
@@ -45,11 +48,11 @@ public class SelectedExpensesFragment extends Fragment {
 
     private void setupViews(View view){
         mFieldTopDate = (TextView)view.findViewById(R.id.date);
-        mFieldTopDate.setText(DateHelper.getTodaysDate());
+        mFieldTopDate.setText(mExpenseWrapper.getDate());
         RecyclerView recyclerViewExpenses =
                 (RecyclerView)view.findViewById(R.id.recycler_view_expenses);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getActivity());
-        mExpenses = getExpenses(0);
+        mExpenses = mExpenseWrapper.getExpenses();
         mExpenseAdapter = new ExpenseAdapter(mExpenses);
         recyclerViewExpenses.setHasFixedSize(true);
         recyclerViewExpenses.setLayoutManager(recyclerViewLManager);
@@ -77,17 +80,8 @@ public class SelectedExpensesFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private List<Expense> getExpenses(int tabId) {
-        List<Expense> expenses = ExpenseHelper.getExpenses();
-        /*for (int i=0; i<10; i++) {
-            Expense expense = new Expense();
-            expense.setCategory(new Category(1, "Food", 2));
-            expense.setPaymentMethod("Discover");
-            expense.setDescription("Curd");
-            expense.setAmount("0");
-            expenses.add(expense);
-        }*/
-        return expenses;
+    private ExpenseWrapper getExpenseWrapper(){
+        return ExpenseHelper.getExpenseWrapper(mType);
     }
 
 }

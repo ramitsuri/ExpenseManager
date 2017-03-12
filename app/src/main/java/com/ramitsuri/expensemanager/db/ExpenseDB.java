@@ -202,7 +202,7 @@ public class ExpenseDB extends BaseDB{
     }
 
 
-    public List<Expense> getAllExpense() {
+    public List<Expense> getAllExpense(String selection, String[] selectionArgs) {
         open();
 
         String table = getJoinTable(
@@ -211,9 +211,6 @@ public class ExpenseDB extends BaseDB{
                 DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_ID);
 
         String[] columns = getAllJoinColumns();
-
-        String selection = null;
-        String[] selectionArgs = null;
 
         Cursor cursor = getCursor(table, columns, selection, selectionArgs, null, null, null, null);
 
@@ -233,6 +230,31 @@ public class ExpenseDB extends BaseDB{
         close();
 
         return expenses;
+    }
+
+    public List<Expense> getAllExpenseInDateRange(long startDate, long endDate) {
+        open();
+
+        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
+                " BETWEEN ? AND ?";
+        String[] selectionArgs = {
+                String.valueOf(startDate),
+                String.valueOf(endDate)
+        };
+
+        return getAllExpense(selection, selectionArgs);
+    }
+
+    public List<Expense> getAllExpenseForDay(long date) {
+        open();
+
+        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
+                " = ?";
+        String[] selectionArgs = {
+                String.valueOf(date)
+        };
+
+        return getAllExpense(selection, selectionArgs);
     }
 
     public boolean editExpenseDateTime(String rowId, long dateTime) {
