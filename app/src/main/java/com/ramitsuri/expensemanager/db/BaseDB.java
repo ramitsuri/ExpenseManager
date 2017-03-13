@@ -59,14 +59,21 @@ public class BaseDB {
                 .toString();
     }
 
-    protected String getJoinTable(String table1, String table1Column, String table2,
-                                  String table2Column, String table3, String table3Column){
+    protected String getJoinTable(String table1, String table1Column1, String table1Column2,
+                                  String table2, String table2Column,
+                                  String table3, String table3Column){
         return new StringBuilder()
-                .append(getJoinTable(table1, table1Column, table2, table2Column))
+                .append(table1)
+                .append(" JOIN ")
+                .append(table2)
+                .append(" ON ")
+                .append(getCol(table1, table1Column1))
+                .append("=")
+                .append(getCol(table2, table2Column))
                 .append(" JOIN ")
                 .append(table3)
                 .append(" ON ")
-                .append(getCol(table1, table1Column))
+                .append(getCol(table1, table1Column2))
                 .append(" = ")
                 .append(getCol(table3, table3Column))
                 .toString();

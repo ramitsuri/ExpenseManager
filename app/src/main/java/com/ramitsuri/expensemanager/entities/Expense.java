@@ -19,6 +19,20 @@ public class Expense implements Parcelable{
     public Expense() {
     }
 
+    public Expense(String rowIdentifier, String dateTime, String amount, int paymentMethod,
+                   int category, String description, String store,
+                   boolean isSynced, boolean isFlagged){
+        mRowIdentifier = rowIdentifier;
+        mDateTime = Long.parseLong(dateTime);
+        mAmount = new BigDecimal(amount);
+        mPaymentMethod = new PaymentMethod(paymentMethod, "");
+        mCategory = new Category(category, "");
+        mDescription = description;
+        mStore = store;
+        mIsSynced = isSynced;
+        mIsFlagged = isFlagged;
+    }
+
     public Expense(String rowIdentifier, long dateTime, BigDecimal amount, PaymentMethod paymentMethod,
                    Category category, String description, String store,
                    boolean isSynced, boolean isFlagged) {

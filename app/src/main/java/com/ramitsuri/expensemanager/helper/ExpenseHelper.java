@@ -117,8 +117,7 @@ public class ExpenseHelper {
                 DateHelper.getLongDateForDB(year, month, startDay),
                 DateHelper.getLongDateForDB(year, month, endDay)));
 
-        expenseWrapper.setDate(DateHelper.getPrettyDate(year, month, startDay,
-                year, month, endDay));
+        expenseWrapper.setDate(DateHelper.getPrettyMonthDate(year, month, startDay));
         return expenseWrapper;
     }
 

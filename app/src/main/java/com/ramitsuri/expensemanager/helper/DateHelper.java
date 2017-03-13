@@ -28,6 +28,15 @@ public class DateHelper {
         return date;
     }
 
+    public static String getPrettyMonthDate(int year, int month, int day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        SimpleDateFormat df = new SimpleDateFormat("MMM yyyy");
+        return df.format(calendar.getTime());
+    }
+
     public static String getPrettyDate(long date1, long date2){
         int year1 = getYearFromLongDate(date1);
         int year2 = getYearFromLongDate(date2);

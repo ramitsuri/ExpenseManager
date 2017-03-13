@@ -132,17 +132,17 @@ public class ExpenseDB extends BaseDB{
                 int value = cursor.getInt(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_FLAGGED));
                 expense.setIsFlagged(isTrue(value));
-            } else if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_ID)){
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID)){
                 int value = cursor.getInt(
-                        cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_ID));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID));
                 paymentMethod.setId(value);
             } else if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_NAME)){
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_NAME));
                 paymentMethod.setName(value);
-            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_ID)){
+            } else if(column.equals(DBConstants.COLUMN_EXPENSE_CATEGORY_ID)){
                 int value = cursor.getInt(
-                        cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_ID));
+                        cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_CATEGORY_ID));
                 category.setId(value);
             } else if(column.equals(DBConstants.COLUMN_CATEGORIES_NAME)){
                 String value = cursor.getString(
@@ -173,8 +173,10 @@ public class ExpenseDB extends BaseDB{
         open();
         String table = getJoinTable(
                 DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
+                DBConstants.COLUMN_EXPENSE_CATEGORY_ID,
                 DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
-                DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_ID);
+                DBConstants.TABLE_CATEGORIES,
+                DBConstants.COLUMN_CATEGORIES_ID);
 
         String[] columns = getAllJoinColumns();
 
@@ -206,9 +208,11 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String table = getJoinTable(
-                DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
-                DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
-                DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_ID);
+                        DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
+                        DBConstants.COLUMN_EXPENSE_CATEGORY_ID,
+                        DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
+                        DBConstants.TABLE_CATEGORIES,
+                        DBConstants.COLUMN_CATEGORIES_ID);
 
         String[] columns = getAllJoinColumns();
 
