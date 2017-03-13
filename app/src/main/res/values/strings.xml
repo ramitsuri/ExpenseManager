@@ -15,4 +15,7 @@
     <string name="category_picker_title">Select Category</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_closed">Closed</string>
+    <string name="detail_activity_edit_description_hint">Description</string>
+    <string name="detail_activity_edit_amount_hint">Amount</string>
+    <string name="detail_activity_edit_store_hint">Additional Info</string>
 </resources>

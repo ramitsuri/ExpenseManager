@@ -33,6 +33,12 @@ public class PrefHelper {
         editor.apply();
     }
 
+    public static void set(String prefName, long value){
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putLong(prefName, value);
+        editor.apply();
+    }
+
     public static void remove(String prefName){
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.remove(prefName);
@@ -55,5 +61,9 @@ public class PrefHelper {
 
     public static int get(String prefName, int defaultValue){
         return getSharedPreferences().getInt(prefName, defaultValue);
+    }
+
+    public static long get(String prefName, long defaultValue){
+        return getSharedPreferences().getLong(prefName, defaultValue);
     }
 }

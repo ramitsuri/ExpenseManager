@@ -7,6 +7,8 @@ import android.database.Cursor;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.helper.AppHelper;
+import com.ramitsuri.expensemanager.helper.DateHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public class ExpenseDB extends BaseDB{
     }
 
     public ContentValues getExpensesContentValues(Expense expense) {
-        String rowId = expense.getRowIdentifier();
+
         long dateTime = expense.getDateTime();
         String amount = String.valueOf(expense.getAmount());
         int paymentMethodId = expense.getPaymentMethod().getId();
@@ -86,7 +88,6 @@ public class ExpenseDB extends BaseDB{
         boolean flagged = expense.isFlagged();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DBConstants.COLUMN_EXPENSE_ROW_ID, rowId);
         contentValues.put(DBConstants.COLUMN_EXPENSE_DATE_TIME, dateTime);
         contentValues.put(DBConstants.COLUMN_EXPENSE_AMOUNT, amount);
         contentValues.put(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID, paymentMethodId);
@@ -157,9 +158,15 @@ public class ExpenseDB extends BaseDB{
 
     public synchronized boolean setExpense(Expense expense){
         open();
-
+        long date = DateHelper.getTodaysLongDate();
+        if(date != (AppHelper.getLastAddedID() / 1000)){
+            AppHelper.setLastAddedID(date * 1000L);
+        }
+        long rowIdLong = AppHelper.getLastAddedID() + 1;
+        AppHelper.setLastAddedID(rowIdLong);
         boolean insertSuccess = true;
         ContentValues contentValues = getExpensesContentValues(expense);
+        contentValues.put(DBConstants.COLUMN_EXPENSE_ROW_ID, String.valueOf(rowIdLong));
         long result = mDatabase.insertOrThrow(DBConstants.TABLE_EXPENSES, null,
                 contentValues);
         if(result <= 0){

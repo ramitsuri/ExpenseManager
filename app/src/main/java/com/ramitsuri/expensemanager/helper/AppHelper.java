@@ -11,4 +11,12 @@ public class AppHelper {
     public static void setFirstRunComplete(){
         PrefHelper.set(PrefKeys.IS_FIRST_RUN_COMPLETE, true);
     }
+
+    public static long getLastAddedID(){
+        return PrefHelper.get(PrefKeys.LAST_STORED_ID, 20170101000L);
+    }
+
+    public static void setLastAddedID(long value){
+        PrefHelper.set(PrefKeys.LAST_STORED_ID, value);
+    }
 }

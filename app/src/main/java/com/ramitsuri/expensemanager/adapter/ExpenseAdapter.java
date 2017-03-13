@@ -20,13 +20,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView mFieldDate;
-        private TextView mFieldCategory;
-        private TextView mFieldPaymentMethod;
-        private TextView mFieldDescription;
-        private TextView mFieldAmount;
-        private TextView mStore;
-        //private TextView mTopDate;
+        private TextView mFieldDate, mFieldCategory, mFieldPaymentMethod, mFieldDescription,
+                mFieldAmount, mStore, mStoreDivider;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
@@ -36,6 +31,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
             mFieldDescription = (TextView)itemView.findViewById(R.id.expense_description);
             mFieldAmount = (TextView)itemView.findViewById(R.id.expense_amount);
             mStore = (TextView)itemView.findViewById(R.id.expense_store);
+            mStoreDivider = (TextView)itemView.findViewById(R.id.expense_text_divider2);
             //mTopDate = (TextView)itemView.findViewById(R.id.date);
         }
 
@@ -58,13 +54,19 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
 
     @Override
     public void onBindViewHolder(ExpenseAdapter.CustomViewHolder holder, int position) {
-            holder.mFieldCategory.setText(mExpenses.get(position).getCategory().getName());
-            holder.mFieldPaymentMethod.setText(mExpenses.get(position).getPaymentMethod().getName());
-            holder.mFieldDescription.setText(mExpenses.get(position).getDescription());
-            holder.mFieldAmount.setText(String.valueOf(mExpenses.get(position).getAmount()));
-            holder.mFieldDate.setText(DateHelper.
-                    getJustTheDayOfMonth(mExpenses.get(position).getDateTime()));
+        holder.mFieldCategory.setText(mExpenses.get(position).getCategory().getName());
+        holder.mFieldPaymentMethod.setText(mExpenses.get(position).getPaymentMethod().getName());
+        holder.mFieldDescription.setText(mExpenses.get(position).getDescription());
+        holder.mFieldAmount.setText(String.valueOf(mExpenses.get(position).getAmount()));
+        holder.mFieldDate.setText(DateHelper.
+                getJustTheDayOfMonth(mExpenses.get(position).getDateTime()));
+        if(mExpenses.get(position).getStore().equals("<EMPTY>") ||
+                mExpenses.get(position).getStore().isEmpty()) {
+            holder.mStoreDivider.setVisibility(View.GONE);
+            holder.mStore.setVisibility(View.GONE);
+        } else {
             holder.mStore.setText(mExpenses.get(position).getStore());
+        }
     }
 
     @Override

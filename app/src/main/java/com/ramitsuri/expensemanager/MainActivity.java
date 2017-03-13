@@ -106,7 +106,6 @@ public class MainActivity extends BaseNavigationViewActivity
                 .setBackOff(new ExponentialBackOff());
         //getResultsFromApi();
 
-        List<Expense> expenses = ExpenseHelper.getExpenses();
 
         debug();
     }
