@@ -66,24 +66,14 @@ public class AllExpensesActivity extends AppCompatActivity
         mPaymentMethodSpinner.setOnItemSelectedListener(this);
 
         List<Category> categories = CategoryHelper.getAllCategories();
-        List<String> stringCategories = new ArrayList<>();
-        for (Category category: categories) {
-            stringCategories.add(category.toString());
-        }
-        ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, stringCategories);
-
+        ArrayAdapter<Category> categoriesAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, categories);
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCategorySpinner.setAdapter(categoriesAdapter);
 
         List<PaymentMethod> paymentMethods = PaymentMethodHelper.getAllPaymentMethods();
-        List<String> stringPaymentMethods = new ArrayList<>();
-        for (PaymentMethod payment: paymentMethods) {
-            stringPaymentMethods.add(payment.toString());
-        }
-        ArrayAdapter<String> paymentMethodsAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, stringPaymentMethods);
-
+        ArrayAdapter<PaymentMethod> paymentMethodsAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, paymentMethods);
         paymentMethodsAdapter.
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mPaymentMethodSpinner.setAdapter(paymentMethodsAdapter);
@@ -95,6 +85,7 @@ public class AllExpensesActivity extends AppCompatActivity
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        int a = i;
 
     }
 
