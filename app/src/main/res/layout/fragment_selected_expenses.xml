@@ -164,11 +164,11 @@
                 android:id="@+id/recycler_view_expenses"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                android:nestedScrollingEnabled="false"/>
 
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
-
 
 </FrameLayout>

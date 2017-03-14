@@ -52,13 +52,14 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
+                        //menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
                         switch (menuItem.getItemId()){
                             case R.id.nav_expenses:
                                 startExpensesActivity();
                                 break;
                             case R.id.nav_all_expenses:
+                                startAllExpenseActivity();
                                 break;
                             case R.id.nav_categories:
                                 startRecyclerViewActivity(
@@ -74,6 +75,10 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
                         return onOptionsItemSelected(menuItem);
                     }
                 });
+    }
+
+    private void startAllExpenseActivity() {
+        startActivity(new Intent(this, AllExpensesActivity.class));
     }
 
     private void startExpensesActivity() {

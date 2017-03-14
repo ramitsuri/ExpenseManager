@@ -14,7 +14,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -24,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ExpenseDetailActivity"
             android:windowSoftInputMode="adjustResize">
@@ -32,7 +30,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ramitsuri.expensemanager.MainActivity" />
         </activity>
-
         <activity
             android:name=".RecyclerViewActivity"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
@@ -40,7 +37,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ramitsuri.expensemanager.MainActivity" />
         </activity>
-
+        <activity android:name=".AllExpensesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ramitsuri.expensemanager.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
