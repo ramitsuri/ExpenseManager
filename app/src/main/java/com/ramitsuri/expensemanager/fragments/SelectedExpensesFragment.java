@@ -17,6 +17,7 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
+import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.DateHelper;
@@ -27,7 +28,7 @@ public class SelectedExpensesFragment extends Fragment {
 
     private List<Expense> mExpenses;
     private ExpenseAdapter mExpenseAdapter;
-    private TextView mFieldTopDate;
+    private TextView mFieldTopDate, mTotal;
     private ExpenseWrapper mExpenseWrapper;
     private int mType;
 
@@ -49,6 +50,9 @@ public class SelectedExpensesFragment extends Fragment {
     private void setupViews(View view){
         mFieldTopDate = (TextView)view.findViewById(R.id.date);
         mFieldTopDate.setText(mExpenseWrapper.getDate());
+        mTotal = (TextView)view.findViewById(R.id.expense_total);
+        mTotal.setText(AppHelper.getCurrency() + mExpenseWrapper.getTotal());
+
         RecyclerView recyclerViewExpenses =
                 (RecyclerView)view.findViewById(R.id.recycler_view_expenses);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getActivity());

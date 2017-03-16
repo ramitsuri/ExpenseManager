@@ -5,4 +5,6 @@ public class PrefKeys {
 
     public static final String LAST_STORED_ID = "last_stored_id";
 
+    public static final String CURRENCY = "currency";
+
 }

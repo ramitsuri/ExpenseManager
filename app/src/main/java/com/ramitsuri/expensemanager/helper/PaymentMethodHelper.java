@@ -23,4 +23,8 @@ public class PaymentMethodHelper {
     public static boolean updatePaymentMethodName(int id, String name){
         return getDB().setPaymentMethodName(id, name);
     }
+
+    public static PaymentMethod getFirstPaymentMethod(){
+        return getDB().getFirstPaymentMethod();
+    }
 }

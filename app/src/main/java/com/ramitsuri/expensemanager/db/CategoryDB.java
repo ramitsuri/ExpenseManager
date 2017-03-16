@@ -89,6 +89,22 @@ public class CategoryDB extends BaseDB{
         return categories;
     }
 
+    public Category getFirstCategory(){
+        open();
+
+        String[] columns = getAllColumns();
+
+        Cursor cursor = getCursor(DBConstants.TABLE_CATEGORIES, columns, null, null, null, null,
+                null, null);
+        Category category = null;
+        if(cursor.moveToFirst()){
+            category = getCategoryFromCursor(cursor);
+        }
+        cursor.close();
+        close();
+        return category;
+    }
+
     //TODO don't delete if category has corresponding rows in expense table
     public synchronized boolean deleteCategory(int categoryId){
         if(categoryId <= 0){

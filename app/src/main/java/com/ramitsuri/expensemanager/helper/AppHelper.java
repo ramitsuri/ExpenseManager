@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.helper;
 
+import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.constants.PrefKeys;
 
 public class AppHelper {
@@ -18,5 +19,13 @@ public class AppHelper {
 
     public static void setLastAddedID(long value){
         PrefHelper.set(PrefKeys.LAST_STORED_ID, value);
+    }
+
+    public static String getCurrency(){
+        return PrefHelper.get(PrefKeys.CURRENCY, Others.DEFAULT_CURRENCY);
+    }
+
+    public static void setCurrency(String currency){
+        PrefHelper.set(PrefKeys.CURRENCY, currency);
     }
 }

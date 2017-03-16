@@ -91,6 +91,23 @@ public class PaymentMethodDB extends BaseDB {
         return paymentMethods;
     }
 
+    public PaymentMethod getFirstPaymentMethod(){
+        open();
+
+        String[] columns = getAllColumns();
+
+        Cursor cursor = getCursor(DBConstants.TABLE_PAYMENT_METHOD, columns, null, null,
+                null, null, null, null);
+
+        PaymentMethod paymentMethod = null;
+
+        if(cursor.moveToFirst()){
+            paymentMethod = getPaymentMethodFromCursor(cursor);
+        }
+
+        return paymentMethod;
+    }
+
     //TODO don't delete if payment method has corresponding rows in expense table
     public synchronized boolean deletePaymentMethod(int paymentMethodId){
         if(paymentMethodId <= 0){

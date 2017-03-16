@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
@@ -17,6 +18,7 @@ import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
@@ -27,11 +29,11 @@ import java.util.List;
 public class AllExpensesActivity extends AppCompatActivity
         implements AdapterView.OnItemSelectedListener{
 
-    private List<Expense> mExpenses;
     private ExpenseAdapter mExpenseAdapter;
     private ExpenseWrapper mExpenseWrapper;
     private Toolbar mToolbar;
     private Spinner mCategorySpinner, mPaymentMethodSpinner;
+    private TextView mTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +56,15 @@ public class AllExpensesActivity extends AppCompatActivity
     private void setupViews(){
         RecyclerView recyclerViewExpenses =
                 (RecyclerView)findViewById(R.id.recycler_view_expenses);
+        mTotal = (TextView) findViewById(R.id.expense_total);
+        mTotal.setText(AppHelper.getCurrency() + mExpenseWrapper.getTotal());
+
+        mExpenseAdapter = new ExpenseAdapter(mExpenseWrapper.getExpenses());
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(this);
-        mExpenses = mExpenseWrapper.getExpenses();
-        mExpenseAdapter = new ExpenseAdapter(mExpenses);
         recyclerViewExpenses.setHasFixedSize(true);
         recyclerViewExpenses.setLayoutManager(recyclerViewLManager);
         recyclerViewExpenses.setAdapter(mExpenseAdapter);
+
         mCategorySpinner = (Spinner) findViewById(R.id.spinner_categories);
         mCategorySpinner.setOnItemSelectedListener(this);
         mPaymentMethodSpinner = (Spinner) findViewById(R.id.spinner_payment_methods);

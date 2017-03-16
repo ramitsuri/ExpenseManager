@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.helper.AppHelper;
+import com.ramitsuri.expensemanager.helper.CategoryHelper;
 import com.ramitsuri.expensemanager.helper.DateHelper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
@@ -22,6 +24,7 @@ import com.ramitsuri.expensemanager.dialog.DatePickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.PaymentPickerDialogFragment;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
 import java.math.BigDecimal;
 
@@ -71,6 +74,9 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mDatePickerText = (TextView)findViewById(R.id.date_picker_text);
         mCategoryPickerText = (TextView)findViewById(R.id.category_picker_text);
         mPaymentMethodPickerText = (TextView)findViewById(R.id.payment_method_picker_text);
+        onCurrencyPicked(AppHelper.getCurrency());
+        onCategoryPicked(CategoryHelper.getFirstCategory());
+        onPaymentMethodPicked(PaymentMethodHelper.getFirstPaymentMethod());
 
         long date = DateHelper.getTodaysLongDate();
         //handleCategoryPicked();
@@ -141,6 +147,8 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onCurrencyPicked(String currency) {
+        AppHelper.setCurrency(currency.split("-")[1]);
+        mCurrencyPicker.setText(currency.split("-")[1]);
     }
 
     @Override

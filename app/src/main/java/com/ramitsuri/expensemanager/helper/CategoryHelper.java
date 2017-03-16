@@ -23,4 +23,8 @@ public class CategoryHelper {
     public static boolean updateCategoryName(int id, String name){
         return getDB().setCategoryName(id, name);
     }
+
+    public static Category getFirstCategory(){
+        return getDB().getFirstCategory();
+    }
 }

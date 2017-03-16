@@ -92,6 +92,8 @@ public class ExpenseHelper {
         long endDate = DateHelper.getLongDateForDB(DateHelper.getLastDayOfWeek(date));
         expenseWrapper.setExpenses(getDB().getAllExpenseInDateRange(startDate, endDate));
 
+        expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
+
         expenseWrapper.setDate(DateHelper.getPrettyDate(startDate, endDate));
         return expenseWrapper;
     }
@@ -99,6 +101,8 @@ public class ExpenseHelper {
     private static ExpenseWrapper getExpenseWrapperAll() {
         ExpenseWrapper expenseWrapper = new ExpenseWrapper();
         expenseWrapper.setExpenses(getDB().getAllExpense(null, null));
+
+        expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
 
         expenseWrapper.setDate("All Expenses");
         return expenseWrapper;
@@ -117,6 +121,8 @@ public class ExpenseHelper {
                 DateHelper.getLongDateForDB(year, month, startDay),
                 DateHelper.getLongDateForDB(year, month, endDay)));
 
+        expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
+
         expenseWrapper.setDate(DateHelper.getPrettyMonthDate(year, month, startDay));
         return expenseWrapper;
     }
@@ -132,7 +138,18 @@ public class ExpenseHelper {
         long date = DateHelper.getLongDateForDB(year, month, day);
         expenseWrapper.setExpenses(getDB().getAllExpenseForDay(date));
 
+        expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
+
         expenseWrapper.setDate(DateHelper.getPrettyDate(year, month, day));
+
         return expenseWrapper;
+    }
+
+    private static String getTotal(List<Expense> expenses) {
+        BigDecimal total = new BigDecimal("0");
+        for(Expense expense: expenses){
+            total = total.add(expense.getAmount());
+        }
+        return String.valueOf(total);
     }
 }
