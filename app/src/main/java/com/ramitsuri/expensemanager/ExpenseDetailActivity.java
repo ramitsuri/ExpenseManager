@@ -147,7 +147,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onCurrencyPicked(String currency) {
-        AppHelper.setCurrency(currency.split("-")[1]);
+        AppHelper.setCurrency(currency);
         mCurrencyPicker.setText(currency.split("-")[1]);
     }
 

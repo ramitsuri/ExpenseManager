@@ -17,7 +17,6 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
-import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.DateHelper;
@@ -31,31 +30,32 @@ public class SelectedExpensesFragment extends Fragment {
     private TextView mFieldTopDate, mTotal;
     private ExpenseWrapper mExpenseWrapper;
     private int mType;
+    private View mMainView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mType = getArguments().getInt(Others.EXPENSE_VIEW_TYPE);
-        mExpenseWrapper = getExpenseWrapper();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_selected_expenses, container, false);
-        setupViews(view);
-        return view;
+        mMainView = inflater.inflate(R.layout.fragment_selected_expenses, container, false);
+        return mMainView;
     }
 
-    private void setupViews(View view){
-        mFieldTopDate = (TextView)view.findViewById(R.id.date);
+    private void setupViews(){
+        mFieldTopDate = (TextView)mMainView.findViewById(R.id.date);
         mFieldTopDate.setText(mExpenseWrapper.getDate());
-        mTotal = (TextView)view.findViewById(R.id.expense_total);
-        mTotal.setText(AppHelper.getCurrency() + mExpenseWrapper.getTotal());
+        mTotal = (TextView)mMainView.findViewById(R.id.expense_total);
+        mTotal.setText(mExpenseWrapper.getTotal());
 
         RecyclerView recyclerViewExpenses =
-                (RecyclerView)view.findViewById(R.id.recycler_view_expenses);
+                (RecyclerView)mMainView.findViewById(R.id.recycler_view_expenses);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getActivity());
+
         mExpenses = mExpenseWrapper.getExpenses();
         mExpenseAdapter = new ExpenseAdapter(mExpenses);
         recyclerViewExpenses.setHasFixedSize(true);
@@ -76,7 +76,9 @@ public class SelectedExpensesFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        mExpenseAdapter.notifyDataSetChanged();
+        mExpenseWrapper = getExpenseWrapper();
+        //mExpenseAdapter.notifyDataSetChanged();
+        setupViews();
     }
 
     public interface OnFragmentInteractionListener {
