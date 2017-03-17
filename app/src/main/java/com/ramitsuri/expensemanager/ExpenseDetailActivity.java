@@ -96,8 +96,9 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         if(view == mDatePicker){
-            DialogFragment newFragment = new DatePickerDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "datePicker");
+            DialogFragment newFragment = DatePickerDialogFragment.newInstance();
+            newFragment.show(getSupportFragmentManager(),
+                    DatePickerDialogFragment.TAG);
         } else if(view == mCategoryPicker){
             DialogFragment newFragment = new CategoryPickerDialogFragment();
             newFragment.show(getSupportFragmentManager(), "categoryPicker");

@@ -1,40 +1,55 @@
 package com.ramitsuri.expensemanager.dialog;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import java.util.Calendar;
+import com.ramitsuri.expensemanager.R;
 
-public class DatePickerDialogFragment extends DialogFragment implements
-        DatePickerDialog.OnDateSetListener{
 
+public class DatePickerDialogFragment extends DialogFragment {
+
+    public static String TAG = DatePickerDialogFragment.class.getName();
     private DatePickerCallbacks mCallbacks;
+    private DatePicker mDatePicker;
+
     public interface DatePickerCallbacks{
         void onDatePicked(int year, int month, int day);
     }
+
+    public static DatePickerDialogFragment newInstance(){
+        return new DatePickerDialogFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.dialog_fragment_date_picker, container, false);
+        mDatePicker = (DatePicker) v.findViewById(R.id.date_picker);
+        mDatePicker.init(2017, 2, 14, mListener);
+        return v;
+    }
+
+    DatePicker.OnDateChangedListener mListener = new DatePicker.OnDateChangedListener() {
+        @Override
+        public void onDateChanged(DatePicker datePicker, int year, int month, int day) {
+            mCallbacks.onDatePicked(year, month, day);
+            dismiss();
+        }
+    };
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
         mCallbacks = (DatePickerCallbacks) context;
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        return new DatePickerDialog(getActivity(), this, year, month, day);
-    }
-
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        mCallbacks.onDatePicked(year, month, day);
     }
 }
