@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.helper.AppHelper;
@@ -21,7 +20,7 @@ import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.CurrencyPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.DatePickerDialogFragment;
-import com.ramitsuri.expensemanager.dialog.PaymentPickerDialogFragment;
+import com.ramitsuri.expensemanager.dialog.PaymentMethodPickerDialogFragment;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
@@ -29,7 +28,7 @@ import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 import java.math.BigDecimal;
 
 public class ExpenseDetailActivity extends AppCompatActivity implements View.OnClickListener,
-        PaymentPickerDialogFragment.PaymentMethodPickerCallbacks,
+        PaymentMethodPickerDialogFragment.PaymentMethodPickerCallbacks,
         DatePickerDialogFragment.DatePickerCallbacks,
         CategoryPickerDialogFragment.CategoryPickerCallbacks,
         CurrencyPickerDialogFragment.CurrencyPickerCallbacks{
@@ -103,8 +102,8 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
             DialogFragment newFragment = new CategoryPickerDialogFragment();
             newFragment.show(getSupportFragmentManager(), "categoryPicker");
         } else if(view == mPaymentMethodPicker){
-            DialogFragment newFragment = new PaymentPickerDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "paymentMethodPicker");
+            DialogFragment newFragment = PaymentMethodPickerDialogFragment.newInstance();
+            newFragment.show(getSupportFragmentManager(), PaymentMethodPickerDialogFragment.TAG);
         } else if(view == mCurrencyPicker){
             DialogFragment newFragment = new CurrencyPickerDialogFragment();
             newFragment.show(getSupportFragmentManager(), "currencyPicker");
