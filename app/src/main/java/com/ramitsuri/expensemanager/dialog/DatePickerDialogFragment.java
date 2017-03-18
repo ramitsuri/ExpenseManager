@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Others;
 
 
 public class DatePickerDialogFragment extends DialogFragment {
@@ -16,6 +17,9 @@ public class DatePickerDialogFragment extends DialogFragment {
     public static String TAG = DatePickerDialogFragment.class.getName();
     private DatePickerCallbacks mCallbacks;
     private DatePicker mDatePicker;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
 
     public interface DatePickerCallbacks{
         void onDatePicked(int year, int month, int day);
@@ -28,6 +32,9 @@ public class DatePickerDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mYear = getArguments().getInt(Others.DATE_PICKER_YEAR);
+        mMonth = getArguments().getInt(Others.DATE_PICKER_MONTH);
+        mDay = getArguments().getInt(Others.DATE_PICKER_DAY);
     }
 
     @Override
@@ -35,7 +42,7 @@ public class DatePickerDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_fragment_date_picker, container, false);
         mDatePicker = (DatePicker) v.findViewById(R.id.date_picker);
-        mDatePicker.init(2017, 2, 14, mListener);
+        mDatePicker.init(mYear, mMonth, mDay, mListener);
         return v;
     }
 

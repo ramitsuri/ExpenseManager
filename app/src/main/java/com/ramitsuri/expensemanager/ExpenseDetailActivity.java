@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
@@ -26,6 +27,7 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 public class ExpenseDetailActivity extends AppCompatActivity implements View.OnClickListener,
         PaymentMethodPickerDialogFragment.PaymentMethodPickerCallbacks,
@@ -40,6 +42,9 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     private FloatingActionButton mFabDone;
     private Toolbar mToolbar;
     private Expense mExpense;
+    private int mYear, mMonth, mDay;
+    private Category mCategory;
+    private PaymentMethod mPaymentMethod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,15 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         setupActionBar();
         setupView();
         setupListeners();
+        setupDate();
+        mCategory = CategoryHelper.getFirstCategory();
+        mPaymentMethod = PaymentMethodHelper.getFirstPaymentMethod();
+    }
+
+    private void setupDate() {
+        Calendar calendar = Calendar.getInstance();
+        handleDatePicked(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     private void setupActionBar() {
@@ -74,14 +88,8 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mCategoryPickerText = (TextView)findViewById(R.id.category_picker_text);
         mPaymentMethodPickerText = (TextView)findViewById(R.id.payment_method_picker_text);
         onCurrencyPicked(AppHelper.getCurrency());
-        onCategoryPicked(CategoryHelper.getFirstCategory());
-        onPaymentMethodPicked(PaymentMethodHelper.getFirstPaymentMethod());
-
-        long date = DateHelper.getTodaysLongDate();
-        //handleCategoryPicked();
-        handleDatePicked(DateHelper.getYearFromLongDate(date),
-                DateHelper.getMonthFromLongDate(date) - 1, DateHelper.getDayFromLongDate(date));
-        //handlePaymentPicked();
+        handleCategoryPicked(CategoryHelper.getFirstCategory());
+        handlePaymentPicked(PaymentMethodHelper.getFirstPaymentMethod());
     }
 
     private void setupListeners() {
@@ -95,26 +103,48 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         if(view == mDatePicker){
-            DialogFragment newFragment = DatePickerDialogFragment.newInstance();
-            newFragment.show(getSupportFragmentManager(),
-                    DatePickerDialogFragment.TAG);
+            showDatePicker();
         } else if(view == mCategoryPicker){
-            DialogFragment newFragment = new CategoryPickerDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "categoryPicker");
+            showCategoryPicker();
         } else if(view == mPaymentMethodPicker){
-            DialogFragment newFragment = PaymentMethodPickerDialogFragment.newInstance();
-            newFragment.show(getSupportFragmentManager(), PaymentMethodPickerDialogFragment.TAG);
+            showPaymentMethodPicker();
         } else if(view == mCurrencyPicker){
-            DialogFragment newFragment = new CurrencyPickerDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "currencyPicker");
+            DialogFragment newFragment = CurrencyPickerDialogFragment.newInstance();
+            newFragment.show(getSupportFragmentManager(), CurrencyPickerDialogFragment.TAG);
         } else if(view == mFabDone){
             createExpense();
             finish();
         }
     }
 
+    private void showPaymentMethodPicker() {
+        Bundle args = new Bundle();
+        args.putParcelable(Others.PAYMENT_METHOD_PICKER_METHOD, mPaymentMethod);
+        DialogFragment newFragment = PaymentMethodPickerDialogFragment.newInstance();
+        newFragment.setArguments(args);
+        newFragment.show(getSupportFragmentManager(), PaymentMethodPickerDialogFragment.TAG);
+    }
+
+    private void showCategoryPicker() {
+        Bundle args = new Bundle();
+        args.putParcelable(Others.CATEGORY_PICKER_CATEGORY, mCategory);
+        DialogFragment newFragment = CategoryPickerDialogFragment.newInstance();
+        newFragment.setArguments(args);
+        newFragment.show(getSupportFragmentManager(), CategoryPickerDialogFragment.TAG);
+    }
+
+    private void showDatePicker() {
+        Bundle args = new Bundle();
+        args.putInt(Others.DATE_PICKER_YEAR, mYear);
+        args.putInt(Others.DATE_PICKER_MONTH, mMonth);
+        args.putInt(Others.DATE_PICKER_DAY, mDay);
+        DialogFragment newFragment = DatePickerDialogFragment.newInstance();
+        newFragment.setArguments(args);
+        newFragment.show(getSupportFragmentManager(),
+                DatePickerDialogFragment.TAG);
+    }
+
     private void createExpense() {
-        mExpense.setRowIdentifier("1");
         mExpense.setStore(mFieldStore.getEditableText().toString());
         mExpense.setDescription(mFieldDescription.getEditableText().toString());
         String amount = mFieldAmount.getEditableText().toString();
@@ -122,6 +152,8 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
             amount = "0";
         }
         mExpense.setAmount(new BigDecimal(amount));
+        mExpense.setPaymentMethod(mPaymentMethod);
+        mExpense.setCategory(mCategory);
         ExpenseHelper.addExpense(mExpense);
     }
 
@@ -131,7 +163,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void handlePaymentPicked(PaymentMethod paymentMethod) {
-        mExpense.setPaymentMethod(paymentMethod);
+        mPaymentMethod = paymentMethod;
         mPaymentMethodPickerText.setText(paymentMethod.toString());
     }
 
@@ -143,6 +175,9 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     private void handleDatePicked(int year, int month, int day) {
         mDatePickerText.setText(DateHelper.getPrettyDate(year, month, day));
         mExpense.setDateTime(DateHelper.getLongDateForDB(year, month, day));
+        mYear = year;
+        mMonth = month;
+        mDay = day;
     }
 
     @Override
@@ -157,7 +192,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void handleCategoryPicked(Category category) {
-        mExpense.setCategory(category);
+        mCategory = category;
         mCategoryPickerText.setText(category.toString());
     }
 }

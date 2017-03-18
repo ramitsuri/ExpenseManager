@@ -14,6 +14,11 @@ import java.util.List;
 
 public class CurrencyPickerDialogFragment extends DialogFragment {
 
+    public static String TAG = CurrencyPickerDialogFragment.class.getName();
+
+    public static CurrencyPickerDialogFragment newInstance(){
+        return new CurrencyPickerDialogFragment();
+    }
     private CurrencyPickerCallbacks mCallbacks;
     public interface CurrencyPickerCallbacks{
         void onCurrencyPicked(String currency);

@@ -12,14 +12,17 @@ import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ListPickerAdapter;
+import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
 
-public class CategoryPickerDialogFragment extends DialogFragment {
+public class CategoryPickerDialogFragment extends DialogFragment
+        implements ListPickerAdapter.ListPickerAdapterCallbacks{
 
 
     public static String TAG = CategoryPickerDialogFragment.class.getName();
 
+    private Context mContext;
     private ListPickerAdapter<Category> mAdapter;
     private CategoryPickerCallbacks mCallbacks;
     private TextView mTitle;
@@ -44,13 +47,13 @@ public class CategoryPickerDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.dialog_fragment_list_picker, container, false);
         mTitle = (TextView) v.findViewById(R.id.title);
         mTitle.setText(getString(R.string.category_picker_title));
-        mAdapter = new ListPickerAdapter<>(CategoryHelper.getAllCategories());
+        mAdapter = new ListPickerAdapter<>(this, CategoryHelper.getAllCategories(),
+                (Category)getArguments().getParcelable(Others.CATEGORY_PICKER_CATEGORY));
         mCategoriesRecyclerView = (RecyclerView) v.findViewById(R.id.values);
         mCategoriesRecyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getContext());
         mCategoriesRecyclerView.setLayoutManager(recyclerViewLManager);
         mCategoriesRecyclerView.setAdapter(mAdapter);
-
         return v;
     }
 
@@ -58,5 +61,13 @@ public class CategoryPickerDialogFragment extends DialogFragment {
     public void onAttach(Context context){
         super.onAttach(context);
         mCallbacks = (CategoryPickerCallbacks) context;
+        mContext = context;
+    }
+
+
+    @Override
+    public void onItemSelected(Object item) {
+        dismiss();
+        mCallbacks.onCategoryPicked((Category)item);
     }
 }

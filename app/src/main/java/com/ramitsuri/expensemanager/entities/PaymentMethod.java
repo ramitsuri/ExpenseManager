@@ -65,4 +65,19 @@ public class PaymentMethod implements Parcelable{
     public String toString(){
         return mName;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof PaymentMethod)) {
+            return false;
+        }
+        return this.getId() == ((PaymentMethod) other).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = hashCode * this.getId() + this.getName().hashCode();
+        return hashCode;
+    }
 }

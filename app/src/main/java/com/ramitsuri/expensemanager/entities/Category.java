@@ -63,4 +63,19 @@ public class Category implements Parcelable {
     public String toString(){
         return mName;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Category)) {
+            return false;
+        }
+        return this.getId() == ((Category) other).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = hashCode * this.getId() + this.getName().hashCode();
+        return hashCode;
+    }
 }
