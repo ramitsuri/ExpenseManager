@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context="com.ramitsuri.expensemanager.RecyclerViewActivity">
+    tools:context="com.ramitsuri.expensemanager.CategoriesActivity">
 
     <include layout="@layout/toolbar"
         android:layout_width="match_parent"

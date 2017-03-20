@@ -18,7 +18,11 @@
     <string name="detail_activity_edit_description_hint">Description</string>
     <string name="detail_activity_edit_amount_hint">Amount</string>
     <string name="detail_activity_edit_store_hint">Additional Info</string>
-
+    <string name="category_deleted">Category Deleted</string>
+    <string name="payment_deleted">Payment Method Deleted</string>
+    <string name="undo">UNDO</string>
+    <string name="add_new">Add New</string>
+    <string name="edit">Edit</string>
 
     <string name="all_expenses_search">FIND</string>
 </resources>

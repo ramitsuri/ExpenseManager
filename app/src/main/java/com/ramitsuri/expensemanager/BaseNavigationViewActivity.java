@@ -62,12 +62,10 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
                                 startAllExpenseActivity();
                                 break;
                             case R.id.nav_categories:
-                                startRecyclerViewActivity(
-                                        RecyclerViewValuesType.RECYCLER_VIEW_CATEGORIES);
+                                startCategoriesActivity();
                                 break;
                             case R.id.nav_payment_methods:
-                                startRecyclerViewActivity(
-                                        RecyclerViewValuesType.RECYCLER_VIEW_PAYMENT_METHODS);
+                                startPaymentMethodsActivity();
                                 break;
                             case R.id.nav_settings:
                                 break;
@@ -91,9 +89,13 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
         }*/
     }
 
-    private void startRecyclerViewActivity(int recyclerViewMode) {
-        Intent intent = new Intent(this, RecyclerViewActivity.class);
-        intent.putExtra(IntentExtras.INTENT_EXTRA_RECYCLER_VIEW_ACTIVITY_MODE, recyclerViewMode);
+    private void startCategoriesActivity() {
+        Intent intent = new Intent(this, CategoriesActivity.class);
+        startActivity(intent);
+    }
+
+    private void startPaymentMethodsActivity() {
+        Intent intent = new Intent(this, PaymentMethodsActivity.class);
         startActivity(intent);
     }
 }
