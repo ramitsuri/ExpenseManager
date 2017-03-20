@@ -210,6 +210,55 @@ public class ExpenseDB extends BaseDB{
         return expense;
     }
 
+    public Expense getTopExpenseOnDay(long date) {
+
+        Expense expense = getTopExpenseInPeriod(date, 0);
+        return expense;
+    }
+
+    public Expense getTopExpenseInPeriod(long startDate, long endDate) {
+        open();
+        String table = getJoinTable(
+                DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
+                DBConstants.COLUMN_EXPENSE_CATEGORY_ID,
+                DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
+                DBConstants.TABLE_CATEGORIES,
+                DBConstants.COLUMN_CATEGORIES_ID);
+
+        String[] columns = getAllJoinColumns();
+
+        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME)+
+                " BETWEEN ? AND ?";
+        String[] selectionArgs = {
+                String.valueOf(startDate),
+                String.valueOf(endDate)
+        };
+        if(endDate == 0){
+            selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
+                    " = ?";
+            selectionArgs = new String[]{String.valueOf(startDate)};
+        }
+
+
+        String orderBy = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_AMOUNT) +
+                " DESC";
+        Cursor cursor = getCursor(table, columns, selection,
+                selectionArgs, null, null, orderBy, null);
+
+        Expense expense = null;
+        try {
+            if(cursor.moveToFirst()){
+                expense = getExpenseFromCursor(cursor);
+            }
+        }
+        catch (Exception e){
+
+        }
+
+        cursor.close();
+        close();
+        return expense;
+    }
 
     public List<Expense> getAllExpense(String selection, String[] selectionArgs) {
         open();

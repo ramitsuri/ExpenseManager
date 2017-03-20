@@ -92,6 +92,9 @@ public class ExpenseHelper {
         long endDate = DateHelper.getLongDateForDB(DateHelper.getLastDayOfWeek(date));
         expenseWrapper.setExpenses(getDB().getAllExpenseInDateRange(startDate, endDate));
 
+        Expense topExpense = getDB().getTopExpenseInPeriod(startDate, endDate);
+        expenseWrapper.setTopExpense(topExpense.getDescription() + ", " +
+                AppHelper.getCurrency().split("-")[1]+ topExpense.getAmount());
         expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
 
         expenseWrapper.setDate(DateHelper.getPrettyDate(startDate, endDate));
@@ -115,15 +118,18 @@ public class ExpenseHelper {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int startDay = calendar.getActualMinimum(calendar.DAY_OF_MONTH);
-        int endDay = calendar.getActualMaximum(calendar.DAY_OF_MONTH);
-        expenseWrapper.setExpenses(getDB().getAllExpenseInDateRange(
-                DateHelper.getLongDateForDB(year, month, startDay),
-                DateHelper.getLongDateForDB(year, month, endDay)));
+        long startDate = DateHelper.getLongDateForDB(year, month,
+                calendar.getActualMinimum(calendar.DAY_OF_MONTH));
+        long endDate = DateHelper.getLongDateForDB(year, month,
+                calendar.getActualMaximum(calendar.DAY_OF_MONTH));
+        expenseWrapper.setExpenses(getDB().getAllExpenseInDateRange(startDate, endDate));
 
+        Expense topExpense = getDB().getTopExpenseInPeriod(startDate, endDate);
+        expenseWrapper.setTopExpense(topExpense.getDescription() + ", " +
+                AppHelper.getCurrency().split("-")[1]+ topExpense.getAmount());
         expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
 
-        expenseWrapper.setDate(DateHelper.getPrettyMonthDate(year, month, startDay));
+        expenseWrapper.setDate(DateHelper.getPrettyMonthDate(year, month, calendar.DAY_OF_MONTH));
         return expenseWrapper;
     }
 
@@ -138,6 +144,9 @@ public class ExpenseHelper {
         long date = DateHelper.getLongDateForDB(year, month, day);
         expenseWrapper.setExpenses(getDB().getAllExpenseForDay(date));
 
+        Expense topExpense = getDB().getTopExpenseOnDay(date);
+        expenseWrapper.setTopExpense(topExpense.getDescription() + ", " +
+                AppHelper.getCurrency().split("-")[1]+ topExpense.getAmount());
         expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
 
         expenseWrapper.setDate(DateHelper.getPrettyDate(year, month, day));
