@@ -83,7 +83,9 @@ public class SelectedExpensesFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        mExpenseWrapper = getExpenseWrapper();
+        if(mExpenseWrapper == null) {
+            mExpenseWrapper = getExpenseWrapper();
+        }
         //mExpenseAdapter.notifyDataSetChanged();
         setupViews();
     }
