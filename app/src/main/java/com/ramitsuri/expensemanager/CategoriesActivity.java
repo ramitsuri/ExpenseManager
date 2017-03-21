@@ -53,7 +53,7 @@ public class CategoriesActivity extends AppCompatActivity implements View.OnClic
         mRecyclerViewValues.setHasFixedSize(false);
         mRecyclerViewValues.setLayoutManager(recyclerViewLManager);
         mRecyclerViewValues.setAdapter(mAdapter);
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+        /*ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT){
                     @Override
                     public boolean onMove(RecyclerView recyclerView,
@@ -83,7 +83,7 @@ public class CategoriesActivity extends AppCompatActivity implements View.OnClic
                 };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerViewValues);
+        itemTouchHelper.attachToRecyclerView(mRecyclerViewValues);*/
     }
 
     private void setupActionBar() {

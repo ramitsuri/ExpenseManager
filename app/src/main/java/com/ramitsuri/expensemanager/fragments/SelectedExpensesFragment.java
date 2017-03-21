@@ -22,6 +22,7 @@ import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.helper.DateHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectedExpensesFragment extends Fragment {
@@ -60,6 +61,9 @@ public class SelectedExpensesFragment extends Fragment {
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getActivity());
 
         mExpenses = mExpenseWrapper.getExpenses();
+        if(mExpenses == null){
+            mExpenses = new ArrayList<>();
+        }
         mExpenseAdapter = new ExpenseAdapter(mExpenses);
         recyclerViewExpenses.setHasFixedSize(true);
         recyclerViewExpenses.setLayoutManager(recyclerViewLManager);
