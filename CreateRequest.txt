@@ -1,54 +1,399 @@
-{
-  "properties": {
+ 
+POST https://sheets.googleapis.com/v4/spreadsheets?fields=namedRanges%2Cproperties%2Csheets%2CspreadsheetId%2CspreadsheetUrl&key={YOUR_API_KEY}
+ {
+  "properties": 
+  {
     "title": "ExpenseManager Expenses",
     "locale": "en"
   },
-  "sheets": [
+  "sheets": 
+  [
     {
-      "properties": {
+      "properties": 
+      {
         "sheetId": 1,
-        "title": "Expenses"
+        "title": "Categories",
+        "index": 2
       },
-      "data": [
+      "data": 
+      [
         {
           "startRow": 0,
           "startColumn": 0,
-          "rowData": [
+          "rowData": 
+          [
             {
-              "values": [
+              "values": 
+              [
                 {
-                  "userEnteredValue": {
-                    "stringValue": "rowIdentifier"
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "CATEGORY_ID"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
                   }
                 },
                 {
-                  "userEnteredValue": {
-                    "stringValue": "date"
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "CATEGORY_NAME"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "properties": 
+      {
+        "sheetId": 2,
+        "title": "PaymentMethods",
+        "index": 3
+      },
+      "data": 
+      [
+        {
+          "startRow": 0,
+          "startColumn": 0,
+          "rowData": 
+          [
+            {
+              "values": 
+              [
+                {
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "PAYMENT_ID"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
                   }
                 },
                 {
-                  "userEnteredValue": {
-                    "stringValue": "amount"
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "PAYMENT_NAME"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "properties": 
+      {
+        "sheetId": 3,
+        "title": "Expenses",
+        "index": 1
+      },
+      "data": 
+      [
+        {
+          "startRow": 0,
+          "startColumn": 0,
+          "rowData": 
+          [
+            {
+              "values": 
+              [
+                {
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "ROW_ID"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
                   }
                 },
                 {
-                  "userEnteredValue": {
-                    "stringValue": "paymentMode"
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "DATE_TIME"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
                   }
                 },
                 {
-                  "userEnteredValue": {
-                    "stringValue": "category"
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "AMOUNT"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
                   }
                 },
                 {
-                  "userEnteredValue": {
-                    "stringValue": "mDescription"
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "PAYMENT_METHOD_ID"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
                   }
                 },
                 {
-                  "userEnteredValue": {
-                    "stringValue": "syncStatus"
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "CATEGORY_ID"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
+                  }
+                },
+                {
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "DESCRIPTION"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
+                  }
+                },
+                {
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "ADDITIONAL_INFO"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
+                  }
+                },
+                {
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "FLAGGED"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
+                  }
+                },
+                {
+                  "userEnteredValue": 
+                  {
+                    "stringValue": "SYNC_STATUS"
+                  },
+                  "userEnteredFormat": 
+                  {
+                    "backgroundColor": 
+                    {
+                      "red": 223,
+                      "green": 50,
+                      "blue": 103
+                    },
+                    "textFormat": 
+                    {
+                      "foregroundColor": 
+                      {
+                        "red": 1,
+                        "green": 1,
+                        "blue": 1
+                      },
+                      "bold": true
+                    }
                   }
                 }
               ]
