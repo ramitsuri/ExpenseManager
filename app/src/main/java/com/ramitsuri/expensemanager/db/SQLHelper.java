@@ -30,14 +30,16 @@ public class SQLHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(DBConstants.CREATE_TABLE_EXPENSES);
         sqLiteDatabase.execSQL(DBConstants.CREATE_TABLE_CATEGORIES);
         sqLiteDatabase.execSQL(DBConstants.CREATE_TABLE_PAYMENT_METHODS);
+        sqLiteDatabase.execSQL(DBConstants.CREATE_TABLE_BUDGET);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         String drop = "DROP TABLE IF EXISTS ";
-        sqLiteDatabase.execSQL(drop + DBConstants.TABLE_EXPENSES);
-        sqLiteDatabase.execSQL(drop + DBConstants.CREATE_TABLE_CATEGORIES);
-        sqLiteDatabase.execSQL(drop + DBConstants.CREATE_TABLE_PAYMENT_METHODS);
+        /*sqLiteDatabase.execSQL(drop + DBConstants.TABLE_EXPENSES);
+        sqLiteDatabase.execSQL(drop + DBConstants.TABLE_CATEGORIES);
+        sqLiteDatabase.execSQL(drop + DBConstants.TABLE_PAYMENT_METHOD);*/
+        sqLiteDatabase.execSQL(DBConstants.CREATE_TABLE_BUDGET);
         onCreate(sqLiteDatabase);
     }
 }

@@ -2,7 +2,7 @@ package com.ramitsuri.expensemanager.db;
 
 public class DBConstants {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static final String TABLE_CATEGORIES = "categories";
     public static final String COLUMN_CATEGORIES_ID = "categoryId";
@@ -56,6 +56,19 @@ public class DBConstants {
                     + "("
                     + COLUMN_PAYMENT_METHOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                     + COLUMN_PAYMENT_METHOD_NAME + " TEXT"
+                    + ");"
+            ;
+
+    public static final String TABLE_BUDGET = "budget";
+    public static final String COLUMN_BUDGET_ID = "budgetId";
+    public static final String COLUMN_BUDGET_CATEGORY_ID = "categoryId";
+
+    public static final String CREATE_TABLE_BUDGET =
+            "CREATE TABLE "
+                    + TABLE_BUDGET
+                    + "("
+                    + COLUMN_BUDGET_ID + " INTEGER, "
+                    + COLUMN_BUDGET_CATEGORY_ID + " INTEGER"
                     + ");"
             ;
 }
