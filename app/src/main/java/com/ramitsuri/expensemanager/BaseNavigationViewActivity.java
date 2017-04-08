@@ -1,6 +1,9 @@
 package com.ramitsuri.expensemanager;
 
+import android.Manifest;
+import android.accounts.AccountManager;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -9,41 +12,65 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.ramitsuri.expensemanager.constants.IntentExtras;
-import com.ramitsuri.expensemanager.constants.RecyclerViewValuesType;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.ramitsuri.expensemanager.constants.Others;
+import com.ramitsuri.expensemanager.helper.AppHelper;
 
-public class BaseNavigationViewActivity extends AppCompatActivity{
+import java.util.Arrays;
+import java.util.List;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class BaseNavigationViewActivity extends AppCompatActivity {
 
     protected DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
+    private LinearLayout mAccount;
+    private TextView mAccountText;
+    private GoogleAccountCredential mCredential;
 
     @Override
-    public void setContentView(int layoutResID)
-    {
+    public void setContentView(int layoutResID) {
         mDrawerLayout = (DrawerLayout)
                 getLayoutInflater().inflate(R.layout.activity_base_navigation_view, null);
-
         super.setContentView(mDrawerLayout);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(Others.SCOPES))
+                .setBackOff(new ExponentialBackOff());
+
+        mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.drawer_open, R.string.drawer_closed);
+
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView = (NavigationView)findViewById(R.id.nav_view);
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
         }
-
         mNavigationView.getMenu().getItem(0).setChecked(true);
         View headerLayout = mNavigationView.getHeaderView(0);
+        mAccount = (LinearLayout)headerLayout.findViewById(R.id.header);
+        mAccountText = (TextView)headerLayout.findViewById(R.id.account);
+        mAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermission();
+            }
+        });
 
         FrameLayout activityContainer =
-                (FrameLayout) mDrawerLayout.findViewById(R.id.content_frame);
+                (FrameLayout)mDrawerLayout.findViewById(R.id.content_frame);
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
     }
 
@@ -54,7 +81,7 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         //menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
-                        switch (menuItem.getItemId()){
+                        switch (menuItem.getItemId()) {
                             case R.id.nav_expenses:
                                 startExpensesActivity();
                                 break;
@@ -97,5 +124,48 @@ public class BaseNavigationViewActivity extends AppCompatActivity{
     private void startPaymentMethodsActivity() {
         Intent intent = new Intent(this, PaymentMethodsActivity.class);
         startActivity(intent);
+    }
+
+    private void requestPermission() {
+        if (EasyPermissions.hasPermissions(
+                this, Manifest.permission.GET_ACCOUNTS)) {
+            return;
+        } else {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.account_access_permission_text),
+                    Others.REQUEST_PERMISSION_GET_ACCOUNTS,
+                    Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Others.REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
+                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        AppHelper.setAccountName(accountName);
+                        mAccountText.setText(accountName);
+                        mCredential.setSelectedAccountName(accountName);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)){
+            startActivityForResult(mCredential.newChooseAccountIntent(),
+                    Others.REQUEST_ACCOUNT_PICKER);
+        }
     }
 }

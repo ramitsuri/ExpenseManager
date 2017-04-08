@@ -28,4 +28,12 @@ public class AppHelper {
     public static void setCurrency(String currency){
         PrefHelper.set(PrefKeys.CURRENCY, currency);
     }
+
+    public static String getAccountName(){
+        return PrefHelper.get(PrefKeys.ACCOUNT_NAME, null);
+    }
+
+    public static void setAccountName(String name){
+        PrefHelper.set(PrefKeys.ACCOUNT_NAME, name);
+    }
 }

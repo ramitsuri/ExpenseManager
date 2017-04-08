@@ -70,29 +70,19 @@ public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
         SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener{
     GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    private Button mCallApiButton;
-    ProgressDialog mProgress;
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
-    private DrawerLayout mDrawerLayout;
     private FloatingActionButton mFabAddExpense;
-    private Toolbar mToolbar;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-
-    private static final String BUTTON_TEXT = "Call Google Sheets API";
-    private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { SheetsScopes.SPREADSHEETS };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);*/
 
         setupViews();
 
@@ -103,16 +93,11 @@ public class MainActivity extends BaseNavigationViewActivity
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-        //getResultsFromApi();
-
 
         debug();
-        //SQLHelper.getInstance(MainApplication.getInstance());
     }
 
     private void setupViews() {
-       /* mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);*/
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -177,7 +162,7 @@ public class MainActivity extends BaseNavigationViewActivity
         mMonthFragment = new SelectedExpensesFragment();
         args.putInt(Others.EXPENSE_VIEW_TYPE, ExpenseViewType.MONTH);
         mMonthFragment.setArguments(args);
-    }
+    }/*
 
     private void getResultsFromApi() {
         if (! isGooglePlayServicesAvailable()) {
@@ -189,9 +174,9 @@ public class MainActivity extends BaseNavigationViewActivity
         } else {
             new MakeRequestTask(mCredential).execute();
         }
-    }
+    }*/
 
-    @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
+    /*@AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
@@ -297,7 +282,7 @@ public class MainActivity extends BaseNavigationViewActivity
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
-    }
+    }*/
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -362,7 +347,7 @@ public class MainActivity extends BaseNavigationViewActivity
         }
     }
 
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    /*private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
         private com.google.api.services.sheets.v4.Sheets mService = null;
         private Exception mLastError = null;
 
@@ -408,8 +393,8 @@ public class MainActivity extends BaseNavigationViewActivity
 
         @Override
         protected void onPreExecute() {
-            /*mOutputText.setText("");
-            mProgress.show();*/
+            *//*mOutputText.setText("");
+            mProgress.show();*//*
         }
 
         @Override
@@ -436,14 +421,14 @@ public class MainActivity extends BaseNavigationViewActivity
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    /*mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());*/
+                    *//*mOutputText.setText("The following error occurred:\n"
+                            + mLastError.getMessage());*//*
                 }
             } else {
                 //mOutputText.setText("Request cancelled.");
             }
         }
-    }
+    }*/
 
    /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {

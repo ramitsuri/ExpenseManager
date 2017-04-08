@@ -25,4 +25,6 @@
     <string name="edit">Edit</string>
 
     <string name="all_expenses_search">FIND</string>
+
+    <string name="account_access_permission_text">"To backup your data to Google Sheets, this app needs to access your Google account (via Contacts)."</string>
 </resources>

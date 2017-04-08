@@ -7,4 +7,6 @@ public class PrefKeys {
 
     public static final String CURRENCY = "currency";
 
+    public static final String ACCOUNT_NAME = "account_name";
+
 }

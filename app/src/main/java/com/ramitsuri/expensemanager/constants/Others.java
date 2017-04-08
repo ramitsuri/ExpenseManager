@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.constants;
 
+import com.google.api.services.sheets.v4.SheetsScopes;
+
 public class Others {
     public static final String EXPENSE_VIEW_TYPE = "expense_view_type";
 
@@ -14,4 +16,9 @@ public class Others {
     public static final String CATEGORY_PICKER_CATEGORY = "category_picker_category";
 
     public static final String DEFAULT_CURRENCY = "USD - $";
+
+    public static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    public static final int REQUEST_ACCOUNT_PICKER = 1000;
+    public static final int REQUEST_AUTHORIZATION = 1001;
+    public static final String[] SCOPES = { SheetsScopes.SPREADSHEETS, SheetsScopes.DRIVE};
 }
