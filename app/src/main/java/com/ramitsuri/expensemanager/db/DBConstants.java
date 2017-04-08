@@ -61,14 +61,16 @@ public class DBConstants {
 
     public static final String TABLE_BUDGET = "budget";
     public static final String COLUMN_BUDGET_ID = "budgetId";
-    public static final String COLUMN_BUDGET_CATEGORY_ID = "categoryId";
+    public static final String COLUMN_BUDGET_CATEGORY_IDS = "categoryIds";
+    public static final String COLUMN_BUDGET_AMOUNT = "amount";
 
     public static final String CREATE_TABLE_BUDGET =
             "CREATE TABLE "
                     + TABLE_BUDGET
                     + "("
-                    + COLUMN_BUDGET_ID + " INTEGER, "
-                    + COLUMN_BUDGET_CATEGORY_ID + " INTEGER"
+                    + COLUMN_BUDGET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + COLUMN_BUDGET_CATEGORY_IDS + " TEXT, "
+                    + COLUMN_BUDGET_AMOUNT + " TEXT"
                     + ");"
             ;
 }
