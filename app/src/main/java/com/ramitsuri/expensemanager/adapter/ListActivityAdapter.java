@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.CategoriesActivity;
 
 import java.util.List;
 

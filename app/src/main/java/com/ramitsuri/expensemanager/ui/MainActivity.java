@@ -1,17 +1,9 @@
-package com.ramitsuri.expensemanager;
+package com.ramitsuri.expensemanager.ui;
 
 import android.Manifest;
-import android.accounts.AccountManager;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,36 +12,23 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.ValueRange;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.async.SheetsCreateLoader;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
-import com.ramitsuri.expensemanager.db.SQLHelper;
-import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
-import com.ramitsuri.expensemanager.helper.ExpenseHelper;
-import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
@@ -59,16 +38,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
-        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener{
+        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener,
+        LoaderManager.LoaderCallbacks<Spreadsheet>{
     GoogleAccountCredential mCredential;
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private FloatingActionButton mFabAddExpense;
@@ -90,9 +67,9 @@ public class MainActivity extends BaseNavigationViewActivity
 
         switchFragments(R.id.tab_today);
 
-        mCredential = GoogleAccountCredential.usingOAuth2(
+        /*mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());
+                .setBackOff(new ExponentialBackOff());*/
 
         debug();
     }
@@ -292,7 +269,8 @@ public class MainActivity extends BaseNavigationViewActivity
     @Override
     public void onClick(View view) {
         if(view == mFabAddExpense){
-            startActivity(new Intent(this, ExpenseDetailActivity.class));
+            //startActivity(new Intent(this, ExpenseDetailActivity.class));
+            getSupportLoaderManager().initLoader(1, null, this).forceLoad();
         }
     }
 
@@ -490,5 +468,20 @@ public class MainActivity extends BaseNavigationViewActivity
         /*if(isStoragePermissionGranted()){
             getDb();
         }*/
+    }
+
+    @Override
+    public Loader<Spreadsheet> onCreateLoader(int id, Bundle args) {
+        return new SheetsCreateLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Spreadsheet> loader, Spreadsheet spreadsheet) {
+        String s = spreadsheet.getSpreadsheetId();
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
     }
 }

@@ -2,7 +2,7 @@ package com.ramitsuri.expensemanager.db;
 
 public class DBConstants {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     public static final String TABLE_CATEGORIES = "categories";
     public static final String COLUMN_CATEGORIES_ID = "categoryId";

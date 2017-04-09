@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ramitsuri.expensemanager.CategoriesActivity;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Others;
 

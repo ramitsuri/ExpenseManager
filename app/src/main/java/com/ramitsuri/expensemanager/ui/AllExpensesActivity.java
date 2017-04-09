@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanager;
+package com.ramitsuri.expensemanager.ui;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;

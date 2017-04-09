@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanager;
+package com.ramitsuri.expensemanager.ui;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.helper.AppHelper;

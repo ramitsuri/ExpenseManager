@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanager;
+package com.ramitsuri.expensemanager.ui;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -15,18 +15,23 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
+import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 
 import java.util.Arrays;
-import java.util.List;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class BaseNavigationViewActivity extends AppCompatActivity {
+public class BaseNavigationViewActivity extends AppCompatActivity implements
+        GoogleApiClient.OnConnectionFailedListener{
 
     protected DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -35,6 +40,7 @@ public class BaseNavigationViewActivity extends AppCompatActivity {
     private LinearLayout mAccount;
     private TextView mAccountText;
     private GoogleAccountCredential mCredential;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -62,6 +68,9 @@ public class BaseNavigationViewActivity extends AppCompatActivity {
         View headerLayout = mNavigationView.getHeaderView(0);
         mAccount = (LinearLayout)headerLayout.findViewById(R.id.header);
         mAccountText = (TextView)headerLayout.findViewById(R.id.account);
+        mAccountText.setText(
+                AppHelper.getAccountName() == null ? getString(R.string.connect_account) :
+                        AppHelper.getAccountName());
         mAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,11 +104,16 @@ public class BaseNavigationViewActivity extends AppCompatActivity {
                                 startPaymentMethodsActivity();
                                 break;
                             case R.id.nav_settings:
+                                startSettingsActivity();
                                 break;
                         }
                         return onOptionsItemSelected(menuItem);
                     }
                 });
+    }
+
+    private void startSettingsActivity() {
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     private void startAllExpenseActivity() {
@@ -127,9 +141,11 @@ public class BaseNavigationViewActivity extends AppCompatActivity {
     }
 
     private void requestPermission() {
-        if (EasyPermissions.hasPermissions(
-                this, Manifest.permission.GET_ACCOUNTS)) {
+        if (AppHelper.getAccountName() != null) {
             return;
+        } else if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
+            startActivityForResult(mCredential.newChooseAccountIntent(),
+                    Others.REQUEST_ACCOUNT_PICKER);
         } else {
             EasyPermissions.requestPermissions(
                     this,
@@ -151,6 +167,7 @@ public class BaseNavigationViewActivity extends AppCompatActivity {
                         AppHelper.setAccountName(accountName);
                         mAccountText.setText(accountName);
                         mCredential.setSelectedAccountName(accountName);
+                        requestSheetsAccess();
                     }
                 }
                 break;
@@ -163,9 +180,30 @@ public class BaseNavigationViewActivity extends AppCompatActivity {
             @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)){
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             startActivityForResult(mCredential.newChooseAccountIntent(),
                     Others.REQUEST_ACCOUNT_PICKER);
         }
+    }
+
+    private void requestSheetsAccess() {
+        GoogleSignInOptions gso =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(Others.SCOPES[0]), new Scope(Others.SCOPES[1]))
+                        .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, Others.REQUEST_AUTHORIZATION);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
