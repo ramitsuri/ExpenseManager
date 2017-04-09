@@ -25,6 +25,14 @@ public class ExpenseHelper {
         return getDB().getAllExpense(null, null);
     }
 
+    public static List<Expense> getExpensesRequiringBackup(){
+        return getDB().getAllExpensesRequiringBackup();
+    }
+
+    public static boolean updateSyncStatusAfterBackup(List<Expense> expenses){
+        return getDB().updateExpensesSyncStatus(expenses);
+    }
+
     public static boolean addExpense(Expense expense){
         return getDB().setExpense(expense);
     }

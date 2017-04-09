@@ -9,4 +9,8 @@ public class PrefKeys {
 
     public static final String ACCOUNT_NAME = "account_name";
 
+    public static final String SHEETS_ID = "sheets_id";
+
+    public static final String LAST_BACKUP_TIME = "last_backup_time";
+
 }

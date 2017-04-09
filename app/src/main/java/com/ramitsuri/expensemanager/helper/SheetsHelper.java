@@ -1,8 +1,10 @@
 package com.ramitsuri.expensemanager.helper;
 
+import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.ramitsuri.expensemanager.db.DBConstants;
+import com.ramitsuri.expensemanager.entities.Expense;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ public class SheetsHelper {
     private static String SPREADSHEET_TITLE = "Expense Manager Expenses";
     private static String LOCALE = "en";
 
-    public static Spreadsheet getNewSpreadsheet(){
+    public static Spreadsheet getNewSpreadsheet() {
         Spreadsheet spreadsheet = new Spreadsheet();
         SpreadsheetProperties properties = new SpreadsheetProperties();
         properties.setTitle(SPREADSHEET_TITLE);
@@ -69,7 +71,7 @@ public class SheetsHelper {
         return spreadsheet;
     }
 
-    private static SheetProperties getSheetProperties(int id, int index, String title){
+    private static SheetProperties getSheetProperties(int id, int index, String title) {
         SheetProperties sheetProperties = new SheetProperties();
         sheetProperties.setSheetId(id);
         sheetProperties.setTitle(title);
@@ -77,7 +79,7 @@ public class SheetsHelper {
         return sheetProperties;
     }
 
-    private static Color getColor(float r, float b, float g){
+    private static Color getColor(float r, float b, float g) {
         Color backgroundColor = new Color();
         backgroundColor.setRed(r);
         backgroundColor.setBlue(b);
@@ -85,7 +87,7 @@ public class SheetsHelper {
         return backgroundColor;
     }
 
-    private static CellFormat getCellFormat(){
+    private static CellFormat getCellFormat() {
         CellFormat cellFormat = new CellFormat();
         cellFormat.setBackgroundColor(getColor(223F, 103F, 50F));
         TextFormat textFormat = new TextFormat();
@@ -95,7 +97,7 @@ public class SheetsHelper {
         return cellFormat;
     }
 
-    private static CellData getCellData(String columnName){
+    private static CellData getCellData(String columnName) {
         CellData cellData = new CellData();
         cellData.setUserEnteredValue(new ExtendedValue().setStringValue(columnName));
         cellData.setUserEnteredFormat(getCellFormat());
@@ -108,7 +110,9 @@ public class SheetsHelper {
         cellData.add(getCellData(DBConstants.COLUMN_PAYMENT_METHOD_ID));
         cellData.add(getCellData(DBConstants.COLUMN_PAYMENT_METHOD_NAME));
         rowData.setValues(cellData);
-        return new ArrayList<RowData>(){{add(rowData);}};
+        return new ArrayList<RowData>() {{
+            add(rowData);
+        }};
     }
 
     private static List<RowData> getRowDataExpenses() {
@@ -124,7 +128,9 @@ public class SheetsHelper {
         cellData.add(getCellData(DBConstants.COLUMN_EXPENSE_FLAGGED));
         cellData.add(getCellData(DBConstants.COLUMN_EXPENSE_SYNC_STATUS));
         rowData.setValues(cellData);
-        return new ArrayList<RowData>(){{add(rowData);}};
+        return new ArrayList<RowData>() {{
+            add(rowData);
+        }};
     }
 
     private static List<RowData> getRowDataCategories() {
@@ -133,7 +139,9 @@ public class SheetsHelper {
         cellData.add(getCellData(DBConstants.COLUMN_CATEGORIES_ID));
         cellData.add(getCellData(DBConstants.COLUMN_CATEGORIES_NAME));
         rowData.setValues(cellData);
-        return new ArrayList<RowData>(){{add(rowData);}};
+        return new ArrayList<RowData>() {{
+            add(rowData);
+        }};
     }
 
     private static List<RowData> getRowDataBudget() {
@@ -143,6 +151,66 @@ public class SheetsHelper {
         cellData.add(getCellData(DBConstants.COLUMN_BUDGET_CATEGORY_IDS));
         cellData.add(getCellData(DBConstants.COLUMN_BUDGET_AMOUNT));
         rowData.setValues(cellData);
-        return new ArrayList<RowData>(){{add(rowData);}};
+        return new ArrayList<RowData>() {{
+            add(rowData);
+        }};
+    }
+
+    private static Request getCategorySheetsRequest() {
+        Request request = new Request();
+        return null;
+    }
+
+    public static Request getExpenseSheetsRequest(List<Expense> expensesToBackup) {
+        Request request = new Request();
+        AppendCellsRequest appendCellsRequest = new AppendCellsRequest();
+        appendCellsRequest.setFields("*");
+        appendCellsRequest.setSheetId(1);
+        List<RowData> rows = new ArrayList<>();
+        for (Expense expense : expensesToBackup) {
+            RowData rowData = new RowData();
+            List<CellData> row = new ArrayList<>();
+            CellData cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(expense.getRowIdentifier()));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(expense.getDateTime())));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(expense.getAmount())));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(new ExtendedValue()
+                    .setStringValue(String.valueOf(expense.getPaymentMethod().getId())));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(new ExtendedValue()
+                    .setStringValue(String.valueOf(expense.getCategory().getId())));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(expense.getDescription())));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(expense.getStore())));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue()
+                            .setStringValue(String.valueOf(expense.isFlagged() ? 1 : 0)));
+            row.add(cellData);
+            cellData = new CellData();
+            cellData.setUserEnteredValue(new ExtendedValue().setStringValue(String.valueOf(1)));
+            row.add(cellData);
+            rowData.setValues(row);
+            rows.add(rowData);
+        }
+        appendCellsRequest.setRows(rows);
+        request.setAppendCells(appendCellsRequest);
+        return request;
     }
 }

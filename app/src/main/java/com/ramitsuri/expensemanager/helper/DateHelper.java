@@ -115,4 +115,10 @@ public class DateHelper {
     public static int getYearFromLongDate(long date){
         return (int)((date / 100) / 100);
     }
+
+    public static String getDateTimeFromTimeInMillis(long timeInMillis){
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        Date date = new Date(timeInMillis);
+        return sdf.format(date);
+    }
 }

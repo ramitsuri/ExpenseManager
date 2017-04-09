@@ -36,4 +36,20 @@ public class AppHelper {
     public static void setAccountName(String name){
         PrefHelper.set(PrefKeys.ACCOUNT_NAME, name);
     }
+
+    public static void setSheetsId(String id){
+        PrefHelper.set(PrefKeys.SHEETS_ID, id);
+    }
+
+    public static String getSheetsId(){
+        return PrefHelper.get(PrefKeys.SHEETS_ID, null);
+    }
+
+    public static void setLastBackupTime(long time){
+        PrefHelper.set(PrefKeys.LAST_BACKUP_TIME, time);
+    }
+
+    public static long getLastBackupTimeInMillis(){
+        return PrefHelper.get(PrefKeys.LAST_BACKUP_TIME, 0);
+    }
 }

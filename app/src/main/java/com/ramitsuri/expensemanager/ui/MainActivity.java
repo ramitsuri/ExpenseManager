@@ -24,6 +24,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.async.SheetsBackupLoader;
 import com.ramitsuri.expensemanager.async.SheetsCreateLoader;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
@@ -44,8 +45,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
-        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Spreadsheet>{
+        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener{
     GoogleAccountCredential mCredential;
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private FloatingActionButton mFabAddExpense;
@@ -270,7 +270,43 @@ public class MainActivity extends BaseNavigationViewActivity
     public void onClick(View view) {
         if(view == mFabAddExpense){
             //startActivity(new Intent(this, ExpenseDetailActivity.class));
-            getSupportLoaderManager().initLoader(1, null, this).forceLoad();
+            /*getSupportLoaderManager().initLoader(1, null,
+                    new LoaderManager.LoaderCallbacks<Spreadsheet>() {
+                        @Override
+                        public Loader<Spreadsheet> onCreateLoader(int id, Bundle args) {
+                            return new SheetsCreateLoader(MainActivity.this);
+                        }
+
+                        @Override
+                        public void onLoadFinished(Loader<Spreadsheet> loader, Spreadsheet spreadsheet) {
+                            if(spreadsheet != null) {
+                                AppHelper.setSheetsId(spreadsheet.getSpreadsheetId());
+                            }
+                        }
+
+                        @Override
+                        public void onLoaderReset(Loader<Spreadsheet> loader) {
+
+                        }
+                    }).forceLoad();*/
+
+            getSupportLoaderManager().initLoader(1, null,
+                    new LoaderManager.LoaderCallbacks<Boolean>() {
+                        @Override
+                        public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+                            return new SheetsBackupLoader(MainActivity.this);
+                        }
+
+                        @Override
+                        public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+                            boolean s = data;
+                        }
+
+                        @Override
+                        public void onLoaderReset(Loader<Boolean> loader) {
+
+                        }
+                    }).forceLoad();
         }
     }
 
@@ -468,20 +504,5 @@ public class MainActivity extends BaseNavigationViewActivity
         /*if(isStoragePermissionGranted()){
             getDb();
         }*/
-    }
-
-    @Override
-    public Loader<Spreadsheet> onCreateLoader(int id, Bundle args) {
-        return new SheetsCreateLoader(this);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Spreadsheet> loader, Spreadsheet spreadsheet) {
-        String s = spreadsheet.getSpreadsheetId();
-    }
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-
     }
 }

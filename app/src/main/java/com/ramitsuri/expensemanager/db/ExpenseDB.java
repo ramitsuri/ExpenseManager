@@ -513,4 +513,39 @@ public class ExpenseDB extends BaseDB{
     public void deleteAllExpense() {
 
     }
+
+    public List<Expense> getAllExpensesRequiringBackup() {
+        open();
+
+        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_SYNC_STATUS) +
+                " = ?";
+        String[] selectionArgs = {
+                String.valueOf(0)
+        };
+
+        return getAllExpense(selection, selectionArgs);
+    }
+
+    public synchronized boolean updateExpensesSyncStatus(List<Expense> backedUpExpenses){
+        open();
+        List results = new ArrayList();
+        for(Expense expense: backedUpExpenses){
+            String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
+            String[] selectionArgs = new String[]{
+                    expense.getRowIdentifier()
+            };
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DBConstants.COLUMN_EXPENSE_SYNC_STATUS, 1);
+
+            int result = mDatabase.update(
+                    DBConstants.TABLE_EXPENSES,
+                    contentValues,
+                    selection,
+                    selectionArgs
+            );
+            results.add(result);
+        }
+        return  (results.size() == backedUpExpenses.size());
+    }
 }
