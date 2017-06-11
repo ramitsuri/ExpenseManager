@@ -3,8 +3,11 @@ package com.ramitsuri.expensemanager.ui;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,16 +17,14 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.async.SheetsCreateLoader;
 import com.ramitsuri.expensemanager.constants.Others;
+import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 
 import java.util.Arrays;
@@ -31,7 +32,7 @@ import java.util.Arrays;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class BaseNavigationViewActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LoaderResponse> {
 
     protected DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -40,7 +41,6 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
     private LinearLayout mAccount;
     private TextView mAccountText;
     private GoogleAccountCredential mCredential;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -75,6 +75,7 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 requestPermission();
+                //requestSheetsAccess();
             }
         });
 
@@ -167,10 +168,14 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                         AppHelper.setAccountName(accountName);
                         mAccountText.setText(accountName);
                         mCredential.setSelectedAccountName(accountName);
-                        requestSheetsAccess();
+                        getSupportLoaderManager().restartLoader(1, null, this).forceLoad();
                     }
                 }
                 break;
+            case Others.REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK && data != null){
+                    getSupportLoaderManager().restartLoader(1, null, this).forceLoad();
+                }
         }
     }
 
@@ -186,24 +191,27 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
         }
     }
 
-    private void requestSheetsAccess() {
-        GoogleSignInOptions gso =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(Others.SCOPES[0]), new Scope(Others.SCOPES[1]))
-                        .build();
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, Others.REQUEST_AUTHORIZATION);
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public Loader<LoaderResponse> onCreateLoader(int id, Bundle args) {
+        return new SheetsCreateLoader(this, AppHelper.getAccountName());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<LoaderResponse> loader, LoaderResponse data) {
+        if (data.getResponseCode() == 1) {
+            AppHelper.setSheetsId(data.getSheetId());
+        } else if (data.getResponseCode() == 2) {
+            startActivityForResult(data.getIntent(), Others.REQUEST_AUTHORIZATION);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<LoaderResponse> loader) {
 
     }
 }

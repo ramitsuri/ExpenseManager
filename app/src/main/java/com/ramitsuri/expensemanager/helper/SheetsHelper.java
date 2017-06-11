@@ -156,11 +156,6 @@ public class SheetsHelper {
         }};
     }
 
-    private static Request getCategorySheetsRequest() {
-        Request request = new Request();
-        return null;
-    }
-
     public static Request getExpenseSheetsRequest(List<Expense> expensesToBackup) {
         Request request = new Request();
         AppendCellsRequest appendCellsRequest = new AppendCellsRequest();

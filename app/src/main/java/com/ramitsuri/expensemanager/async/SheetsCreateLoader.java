@@ -1,8 +1,6 @@
 package com.ramitsuri.expensemanager.async;
 
-
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -12,29 +10,31 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.*;
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.constants.Others;
-import com.ramitsuri.expensemanager.helper.AppHelper;
+import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.SheetsHelper;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-public class SheetsCreateLoader extends AsyncTaskLoader<Spreadsheet> {
+public class SheetsCreateLoader extends AsyncTaskLoader<LoaderResponse> {
 
     private GoogleAccountCredential mCredential;
-    private com.google.api.services.sheets.v4.Sheets mService;
+    private com.google.api.services.sheets.v4.Sheets mService = null;
     private HttpTransport mTransport;
     private JsonFactory mJsonFactory;
-    private FragmentActivity mActivity;
 
-    public SheetsCreateLoader(Context context) {
+    private static final String[] SCOPES = { SheetsScopes.SPREADSHEETS, SheetsScopes.DRIVE};
+
+    public SheetsCreateLoader(Context context, String accountName) {
         super(context);
-        mActivity = (FragmentActivity)context;
-        mCredential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(Others.SCOPES)).
+        mCredential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(SCOPES)).
                 setBackOff(new ExponentialBackOff());
-        mCredential.setSelectedAccountName(AppHelper.getAccountName());
+        if(accountName != null){
+            mCredential.setSelectedAccountName(accountName);
+        }
         mTransport = AndroidHttp.newCompatibleTransport();
         mJsonFactory = JacksonFactory.getDefaultInstance();
         mService = new com.google.api.services.sheets.v4.Sheets.Builder(
@@ -44,16 +44,14 @@ public class SheetsCreateLoader extends AsyncTaskLoader<Spreadsheet> {
     }
 
     @Override
-    public Spreadsheet loadInBackground() {
-        Spreadsheet spreadsheet = SheetsHelper.getNewSpreadsheet();
+    public LoaderResponse loadInBackground() {
         try {
-            spreadsheet = mService.spreadsheets().create(spreadsheet).execute();
+            Spreadsheet sheet = mService.spreadsheets().create(SheetsHelper.getNewSpreadsheet()).execute();
+            return new LoaderResponse(1, null, sheet.getSpreadsheetId());
         } catch (UserRecoverableAuthIOException e) {
-            mActivity.startActivityForResult(e.getIntent(), Others.REQUEST_AUTHORIZATION);
-            e.printStackTrace();
+            return new LoaderResponse(2, e.getIntent(), null);
         } catch (IOException e) {
-            e.printStackTrace();
+            return new LoaderResponse(3, null, null);
         }
-        return spreadsheet;
     }
 }

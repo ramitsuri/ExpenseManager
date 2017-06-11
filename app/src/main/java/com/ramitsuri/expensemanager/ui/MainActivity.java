@@ -1,44 +1,26 @@
 package com.ramitsuri.expensemanager.ui;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.async.SheetsBackupLoader;
-import com.ramitsuri.expensemanager.async.SheetsCreateLoader;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -46,15 +28,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
         SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener{
-    GoogleAccountCredential mCredential;
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private FloatingActionButton mFabAddExpense;
-
-    static final int REQUEST_ACCOUNT_PICKER = 1000;
-    static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    private static final String[] SCOPES = { SheetsScopes.SPREADSHEETS };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +41,6 @@ public class MainActivity extends BaseNavigationViewActivity
         setupFragments();
 
         switchFragments(R.id.tab_today);
-
-        /*mCredential = GoogleAccountCredential.usingOAuth2(
-                getApplicationContext(), Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());*/
 
         debug();
     }
@@ -139,127 +110,7 @@ public class MainActivity extends BaseNavigationViewActivity
         mMonthFragment = new SelectedExpensesFragment();
         args.putInt(Others.EXPENSE_VIEW_TYPE, ExpenseViewType.MONTH);
         mMonthFragment.setArguments(args);
-    }/*
-
-    private void getResultsFromApi() {
-        if (! isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (! isDeviceOnline()) {
-            //mOutputText.setText("No network connection available.");
-        } else {
-            new MakeRequestTask(mCredential).execute();
-        }
-    }*/
-
-    /*@AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
-    private void chooseAccount() {
-        if (EasyPermissions.hasPermissions(
-                this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREF_ACCOUNT_NAME, null);
-            if (accountName != null) {
-                mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi();
-            } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(
-                        mCredential.newChooseAccountIntent(),
-                        REQUEST_ACCOUNT_PICKER);
-            }
-        } else {
-            // Request the GET_ACCOUNTS permission via a user dialog
-            EasyPermissions.requestPermissions(
-                    this,
-                    "This app needs to access your Google account (via Contacts).",
-                    REQUEST_PERMISSION_GET_ACCOUNTS,
-                    Manifest.permission.GET_ACCOUNTS);
-        }
     }
-
-    @Override
-    protected void onActivityResult(
-            int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case REQUEST_GOOGLE_PLAY_SERVICES:
-                if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
-                } else {
-                    getResultsFromApi();
-                }
-                break;
-            case REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null &&
-                        data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
-                        mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
-                    }
-                }
-                break;
-            case REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK) {
-                    getResultsFromApi();
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(
-                requestCode, permissions, grantResults, this);
-        getDb();
-    }
-
-    private boolean isDeviceOnline() {
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
-
-    private boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
-    }
-
-    private void acquireGooglePlayServices() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-        }
-    }
-
-    void showGooglePlayServicesAvailabilityErrorDialog(
-            final int connectionStatusCode) {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        Dialog dialog = apiAvailability.getErrorDialog(
-                MainActivity.this,
-                connectionStatusCode,
-                REQUEST_GOOGLE_PLAY_SERVICES);
-        dialog.show();
-    }*/
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -269,48 +120,11 @@ public class MainActivity extends BaseNavigationViewActivity
     @Override
     public void onClick(View view) {
         if(view == mFabAddExpense){
-            //startActivity(new Intent(this, ExpenseDetailActivity.class));
-            /*getSupportLoaderManager().initLoader(1, null,
-                    new LoaderManager.LoaderCallbacks<Spreadsheet>() {
-                        @Override
-                        public Loader<Spreadsheet> onCreateLoader(int id, Bundle args) {
-                            return new SheetsCreateLoader(MainActivity.this);
-                        }
-
-                        @Override
-                        public void onLoadFinished(Loader<Spreadsheet> loader, Spreadsheet spreadsheet) {
-                            if(spreadsheet != null) {
-                                AppHelper.setSheetsId(spreadsheet.getSpreadsheetId());
-                            }
-                        }
-
-                        @Override
-                        public void onLoaderReset(Loader<Spreadsheet> loader) {
-
-                        }
-                    }).forceLoad();*/
-
-            getSupportLoaderManager().initLoader(1, null,
-                    new LoaderManager.LoaderCallbacks<Boolean>() {
-                        @Override
-                        public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-                            return new SheetsBackupLoader(MainActivity.this);
-                        }
-
-                        @Override
-                        public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
-                            boolean s = data;
-                        }
-
-                        @Override
-                        public void onLoaderReset(Loader<Boolean> loader) {
-
-                        }
-                    }).forceLoad();
+            startActivity(new Intent(this, ExpenseDetailActivity.class));
         }
     }
 
-    public void getDb() {
+   /* public void getDb() {
             try {
                 InputStream myInput = new FileInputStream("/data/data/com.ramitsuri.expensemanager/databases/expensemanager.db");
 
@@ -359,113 +173,8 @@ public class MainActivity extends BaseNavigationViewActivity
             //Log.v(TAG,"Permission is granted");
             return true;
         }
-    }
-
-    /*private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.sheets.v4.Sheets mService = null;
-        private Exception mLastError = null;
-
-        MakeRequestTask(GoogleAccountCredential credential) {
-            HttpTransport transport = AndroidHttp.newCompatibleTransport();
-            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            mService = new com.google.api.services.sheets.v4.Sheets.Builder(
-                    transport, jsonFactory, credential)
-                    .setApplicationName("Google Sheets API Android Quickstart")
-                    .build();
-        }
-
-        @Override
-        protected List<String> doInBackground(Void... params) {
-            try {
-                return getDataFromApi();
-            } catch (Exception e) {
-                mLastError = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        private List<String> getDataFromApi() throws IOException {
-            String spreadsheetId = "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms";
-            //String spreadsheetId = "1pzDFprwHn6pbh6lRC8_emFEvQSa3MDnnU6baOAPwgcQ";
-            String range = "Class Data!A2:E";
-            List<String> results = new ArrayList<String>();
-            ValueRange response = this.mService.spreadsheets().values()
-                    .get(spreadsheetId, range)
-                    .execute();
-            List<List<Object>> values = response.getValues();
-            if (values != null) {
-                results.add("Name, Major");
-                for (List row : values) {
-                    results.add(row.get(0) + ", " + row.get(4));
-                }
-            }
-            return results;
-        }
-
-
-
-        @Override
-        protected void onPreExecute() {
-            *//*mOutputText.setText("");
-            mProgress.show();*//*
-        }
-
-        @Override
-        protected void onPostExecute(List<String> output) {
-            //mProgress.hide();
-            if (output == null || output.size() == 0) {
-                //mOutputText.setText("No results returned.");
-            } else {
-                output.add(0, "Data retrieved using the Google Sheets API:");
-                //mOutputText.setText(TextUtils.join("\n", output));
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            //mProgress.hide();
-            if (mLastError != null) {
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    showGooglePlayServicesAvailabilityErrorDialog(
-                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                    .getConnectionStatusCode());
-                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            MainActivity.REQUEST_AUTHORIZATION);
-                } else {
-                    *//*mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());*//*
-                }
-            } else {
-                //mOutputText.setText("Request cancelled.");
-            }
-        }
     }*/
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-*/
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
 
