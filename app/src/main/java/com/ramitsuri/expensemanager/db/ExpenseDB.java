@@ -14,15 +14,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpenseDB extends BaseDB{
-
+public class ExpenseDB extends BaseDB {
 
     public ExpenseDB(Context context) {
         super(context);
     }
 
     public String[] getAllColumns() {
-        return new String[]{
+        return new String[] {
                 DBConstants.COLUMN_EXPENSE_ROW_ID,
                 DBConstants.COLUMN_EXPENSE_DATE_TIME,
                 DBConstants.COLUMN_EXPENSE_AMOUNT,
@@ -35,7 +34,7 @@ public class ExpenseDB extends BaseDB{
         };
     }
 
-    public String[] getAllJoinColumns(){
+    public String[] getAllJoinColumns() {
         String rowIdColumn =
                 getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_ROW_ID);
         String dateTimeColumn =
@@ -58,7 +57,6 @@ public class ExpenseDB extends BaseDB{
                 getCol(DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_ID);
         String categoryNameColumn =
                 getCol(DBConstants.TABLE_CATEGORIES, DBConstants.COLUMN_CATEGORIES_NAME);
-
 
         String[] columns = {
                 rowIdColumn,
@@ -104,48 +102,48 @@ public class ExpenseDB extends BaseDB{
         Expense expense = new Expense();
         Category category = new Category();
         PaymentMethod paymentMethod = new PaymentMethod();
-        for(String column: cursor.getColumnNames()){
-            if(column.equals(DBConstants.COLUMN_EXPENSE_ROW_ID)){
+        for (String column : cursor.getColumnNames()) {
+            if (column.equals(DBConstants.COLUMN_EXPENSE_ROW_ID)) {
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_ROW_ID));
                 expense.setRowIdentifier(value);
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_DATE_TIME)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_DATE_TIME)) {
                 long value = cursor.getLong(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_DATE_TIME));
                 expense.setDateTime(value);
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_AMOUNT)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_AMOUNT)) {
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_AMOUNT));
                 expense.setAmount(new BigDecimal(value));
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_NOTES)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_NOTES)) {
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_NOTES));
                 expense.setDescription(value);
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_STORE)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_STORE)) {
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_STORE));
                 expense.setStore(value);
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_SYNC_STATUS)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_SYNC_STATUS)) {
                 int value = cursor.getInt(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_SYNC_STATUS));
                 expense.setIsSynced(isTrue(value));
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_FLAGGED)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_FLAGGED)) {
                 int value = cursor.getInt(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_FLAGGED));
                 expense.setIsFlagged(isTrue(value));
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID)) {
                 int value = cursor.getInt(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID));
                 paymentMethod.setId(value);
-            } else if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_NAME)){
+            } else if (column.equals(DBConstants.COLUMN_PAYMENT_METHOD_NAME)) {
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_NAME));
                 paymentMethod.setName(value);
-            } else if(column.equals(DBConstants.COLUMN_EXPENSE_CATEGORY_ID)){
+            } else if (column.equals(DBConstants.COLUMN_EXPENSE_CATEGORY_ID)) {
                 int value = cursor.getInt(
                         cursor.getColumnIndex(DBConstants.COLUMN_EXPENSE_CATEGORY_ID));
                 category.setId(value);
-            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_NAME)){
+            } else if (column.equals(DBConstants.COLUMN_CATEGORIES_NAME)) {
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_NAME));
                 category.setName(value);
@@ -156,10 +154,10 @@ public class ExpenseDB extends BaseDB{
         return expense;
     }
 
-    public synchronized boolean setExpense(Expense expense){
+    public synchronized boolean setExpense(Expense expense) {
         open();
         long date = DateHelper.getTodaysLongDate();
-        if(date != (AppHelper.getLastAddedID() / 1000)){
+        if (date != (AppHelper.getLastAddedID() / 1000)) {
             AppHelper.setLastAddedID(date * 1000L);
         }
         long rowIdLong = AppHelper.getLastAddedID() + 1;
@@ -169,7 +167,7 @@ public class ExpenseDB extends BaseDB{
         contentValues.put(DBConstants.COLUMN_EXPENSE_ROW_ID, String.valueOf(rowIdLong));
         long result = mDatabase.insertOrThrow(DBConstants.TABLE_EXPENSES, null,
                 contentValues);
-        if(result <= 0){
+        if (result <= 0) {
             insertSuccess = false;
         }
         close();
@@ -188,7 +186,7 @@ public class ExpenseDB extends BaseDB{
         String[] columns = getAllJoinColumns();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ? ";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 id
         };
 
@@ -197,11 +195,10 @@ public class ExpenseDB extends BaseDB{
 
         Expense expense = null;
         try {
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 expense = getExpenseFromCursor(cursor);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -227,18 +224,18 @@ public class ExpenseDB extends BaseDB{
 
         String[] columns = getAllJoinColumns();
 
-        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME)+
-                " BETWEEN ? AND ?";
+        String selection =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
+                        " BETWEEN ? AND ?";
         String[] selectionArgs = {
                 String.valueOf(startDate),
                 String.valueOf(endDate)
         };
-        if(endDate == 0){
+        if (endDate == 0) {
             selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
                     " = ?";
-            selectionArgs = new String[]{String.valueOf(startDate)};
+            selectionArgs = new String[] {String.valueOf(startDate)};
         }
-
 
         String orderBy = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_AMOUNT) +
                 " DESC";
@@ -247,11 +244,10 @@ public class ExpenseDB extends BaseDB{
 
         Expense expense = null;
         try {
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 expense = getExpenseFromCursor(cursor);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -264,11 +260,11 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String table = getJoinTable(
-                        DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
-                        DBConstants.COLUMN_EXPENSE_CATEGORY_ID,
-                        DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
-                        DBConstants.TABLE_CATEGORIES,
-                        DBConstants.COLUMN_CATEGORIES_ID);
+                DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_PAYMENT_METHOD_ID,
+                DBConstants.COLUMN_EXPENSE_CATEGORY_ID,
+                DBConstants.TABLE_PAYMENT_METHOD, DBConstants.COLUMN_PAYMENT_METHOD_ID,
+                DBConstants.TABLE_CATEGORIES,
+                DBConstants.COLUMN_CATEGORIES_ID);
 
         String[] columns = getAllJoinColumns();
 
@@ -276,13 +272,13 @@ public class ExpenseDB extends BaseDB{
 
         List<Expense> expenses = new ArrayList<>();
         try {
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 do {
                     Expense expense = getExpenseFromCursor(cursor);
                     expenses.add(expense);
                 } while (cursor.moveToNext());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -295,8 +291,9 @@ public class ExpenseDB extends BaseDB{
     public List<Expense> getAllExpenseInDateRange(long startDate, long endDate) {
         open();
 
-        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
-                " BETWEEN ? AND ?";
+        String selection =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
+                        " BETWEEN ? AND ?";
         String[] selectionArgs = {
                 String.valueOf(startDate),
                 String.valueOf(endDate)
@@ -308,8 +305,9 @@ public class ExpenseDB extends BaseDB{
     public List<Expense> getAllExpenseForDay(long date) {
         open();
 
-        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
-                " = ?";
+        String selection =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_DATE_TIME) +
+                        " = ?";
         String[] selectionArgs = {
                 String.valueOf(date)
         };
@@ -321,7 +319,7 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -343,7 +341,7 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -365,7 +363,7 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -387,7 +385,7 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -409,7 +407,7 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -431,7 +429,7 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -448,11 +446,12 @@ public class ExpenseDB extends BaseDB{
 
         return result > 0;
     }
+
     public boolean editExpensePaymentMethodId(String rowId, int id) {
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -474,7 +473,7 @@ public class ExpenseDB extends BaseDB{
         open();
 
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 rowId
         };
 
@@ -492,10 +491,10 @@ public class ExpenseDB extends BaseDB{
         return result > 0;
     }
 
-    public synchronized boolean deleteExpense(String id){
+    public synchronized boolean deleteExpense(String id) {
         open();
         String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 id
         };
 
@@ -517,8 +516,9 @@ public class ExpenseDB extends BaseDB{
     public List<Expense> getAllExpensesRequiringBackup() {
         open();
 
-        String selection = getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_SYNC_STATUS) +
-                " = ?";
+        String selection =
+                getCol(DBConstants.TABLE_EXPENSES, DBConstants.COLUMN_EXPENSE_SYNC_STATUS) +
+                        " = ?";
         String[] selectionArgs = {
                 String.valueOf(0)
         };
@@ -526,12 +526,12 @@ public class ExpenseDB extends BaseDB{
         return getAllExpense(selection, selectionArgs);
     }
 
-    public synchronized boolean updateExpensesSyncStatus(List<Expense> backedUpExpenses){
+    public synchronized boolean updateExpensesSyncStatus(List<Expense> backedUpExpenses) {
         open();
         List results = new ArrayList();
-        for(Expense expense: backedUpExpenses){
+        for (Expense expense : backedUpExpenses) {
             String selection = DBConstants.COLUMN_EXPENSE_ROW_ID + " = ?";
-            String[] selectionArgs = new String[]{
+            String[] selectionArgs = new String[] {
                     expense.getRowIdentifier()
             };
 
@@ -546,6 +546,6 @@ public class ExpenseDB extends BaseDB{
             );
             results.add(result);
         }
-        return  (results.size() == backedUpExpenses.size());
+        return (results.size() == backedUpExpenses.size());
     }
 }

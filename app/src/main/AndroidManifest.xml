@@ -52,6 +52,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ramitsuri.expensemanager.ui.MainActivity" />
         </activity>
+
+        <service
+            android:name=".service.BackupService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
     </application>
 
 </manifest>

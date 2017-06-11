@@ -2,6 +2,10 @@ package com.ramitsuri.expensemanager.ui;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,15 +21,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.async.SheetsCreateLoader;
+import com.ramitsuri.expensemanager.constants.LoaderIDs;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.AppHelper;
+import com.ramitsuri.expensemanager.service.BackupService;
 
 import java.util.Arrays;
 
@@ -168,13 +175,15 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                         AppHelper.setAccountName(accountName);
                         mAccountText.setText(accountName);
                         mCredential.setSelectedAccountName(accountName);
-                        getSupportLoaderManager().restartLoader(1, null, this).forceLoad();
+                        getSupportLoaderManager().restartLoader(LoaderIDs.SHEETS_CREATE, null, this)
+                                .forceLoad();
                     }
                 }
                 break;
             case Others.REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK && data != null){
-                    getSupportLoaderManager().restartLoader(1, null, this).forceLoad();
+                if (resultCode == RESULT_OK && data != null) {
+                    getSupportLoaderManager().restartLoader(LoaderIDs.SHEETS_CREATE, null, this)
+                            .forceLoad();
                 }
         }
     }
@@ -205,6 +214,7 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<LoaderResponse> loader, LoaderResponse data) {
         if (data.getResponseCode() == 1) {
             AppHelper.setSheetsId(data.getSheetId());
+            scheduleJob();
         } else if (data.getResponseCode() == 2) {
             startActivityForResult(data.getIntent(), Others.REQUEST_AUTHORIZATION);
         }
@@ -213,5 +223,16 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<LoaderResponse> loader) {
 
+    }
+
+    private void scheduleJob() {
+        ComponentName serviceComponent = new ComponentName(this, BackupService.class);
+        JobInfo.Builder builder = new JobInfo.Builder(1, serviceComponent);
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED);
+        builder.setRequiresCharging(true);
+        builder.setRequiresDeviceIdle(true);
+        builder.setPeriodic(86400000);
+        JobScheduler scheduler = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        scheduler.schedule(builder.build());
     }
 }
