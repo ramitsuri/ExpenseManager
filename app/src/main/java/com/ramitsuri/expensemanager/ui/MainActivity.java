@@ -12,8 +12,6 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.services.sheets.v4.SheetsScopes;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
@@ -42,7 +40,7 @@ public class MainActivity extends BaseNavigationViewActivity
 
         switchFragments(R.id.tab_today);
 
-        debug();
+        //debug();
     }
 
     private void setupViews() {

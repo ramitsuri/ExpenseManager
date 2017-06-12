@@ -47,11 +47,11 @@ public class SheetsCreateLoader extends AsyncTaskLoader<LoaderResponse> {
     public LoaderResponse loadInBackground() {
         try {
             Spreadsheet sheet = mService.spreadsheets().create(SheetsHelper.getNewSpreadsheet()).execute();
-            return new LoaderResponse(1, null, sheet.getSpreadsheetId());
+            return new LoaderResponse(LoaderResponse.SUCCESS, null, sheet.getSpreadsheetId());
         } catch (UserRecoverableAuthIOException e) {
-            return new LoaderResponse(2, e.getIntent(), null);
+            return new LoaderResponse(LoaderResponse.REQUEST_ACCESS, e.getIntent(), null);
         } catch (IOException e) {
-            return new LoaderResponse(3, null, null);
+            return new LoaderResponse(LoaderResponse.FAILURE, null, null);
         }
     }
 }

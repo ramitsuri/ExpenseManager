@@ -52,4 +52,12 @@ public class AppHelper {
     public static long getLastBackupTimeInMillis(){
         return PrefHelper.get(PrefKeys.LAST_BACKUP_TIME, 0);
     }
+
+    public static void setFirstBackupComplete(boolean isFirstBackupDone) {
+        PrefHelper.set(PrefKeys.IS_FIRST_BACKUP_DONE, isFirstBackupDone);
+    }
+
+    public static boolean isFirstBackupComplete(){
+        return PrefHelper.get(PrefKeys.IS_FIRST_BACKUP_DONE, false);
+    }
 }

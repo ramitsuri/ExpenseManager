@@ -13,4 +13,6 @@ public class PrefKeys {
 
     public static final String LAST_BACKUP_TIME = "last_backup_time";
 
+    public static final String IS_FIRST_BACKUP_DONE = "is_first_backup_done";
+
 }

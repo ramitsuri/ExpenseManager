@@ -38,17 +38,16 @@ public class SelectedExpensesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mType = getArguments().getInt(Others.EXPENSE_VIEW_TYPE);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         mMainView = inflater.inflate(R.layout.fragment_selected_expenses, container, false);
         return mMainView;
     }
 
-    private void setupViews(){
+    private void setupViews() {
         mFieldTopDate = (TextView)mMainView.findViewById(R.id.date);
         mFieldTopDate.setText(mExpenseWrapper.getDate());
         mTotal = (TextView)mMainView.findViewById(R.id.expense_total);
@@ -61,7 +60,7 @@ public class SelectedExpensesFragment extends Fragment {
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getActivity());
 
         mExpenses = mExpenseWrapper.getExpenses();
-        if(mExpenses == null){
+        if (mExpenses == null) {
             mExpenses = new ArrayList<>();
         }
         mExpenseAdapter = new ExpenseAdapter(mExpenses);
@@ -81,11 +80,9 @@ public class SelectedExpensesFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(mExpenseWrapper == null) {
-            mExpenseWrapper = getExpenseWrapper();
-        }
+        mExpenseWrapper = getExpenseWrapper();
         //mExpenseAdapter.notifyDataSetChanged();
         setupViews();
     }
@@ -95,8 +92,7 @@ public class SelectedExpensesFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private ExpenseWrapper getExpenseWrapper(){
+    private ExpenseWrapper getExpenseWrapper() {
         return ExpenseHelper.getExpenseWrapper(mType);
     }
-
 }

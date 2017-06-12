@@ -12,12 +12,16 @@ public class BackupService extends JobService {
 
     //if you start asynchronous processing in this method, return true
     @Override
-    public boolean onStartJob(JobParameters params) {
+    public boolean onStartJob(final JobParameters params) {
         new SheetsBackupTask(getApplicationContext()){
             @Override
             protected void onPostExecute(LoaderResponse loaderResponse) {
                 super.onPostExecute(loaderResponse);
-
+                if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                    jobFinished(params, false);
+                } else {
+                    jobFinished(params, true);
+                }
             }
         }.execute();
         return true;

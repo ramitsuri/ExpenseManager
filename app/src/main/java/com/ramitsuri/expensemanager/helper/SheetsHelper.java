@@ -1,10 +1,13 @@
 package com.ramitsuri.expensemanager.helper;
 
+import com.google.api.client.json.GenericJson;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.ramitsuri.expensemanager.db.DBConstants;
+import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,12 @@ public class SheetsHelper {
 
     private static String SPREADSHEET_TITLE = "Expense Manager Expenses";
     private static String LOCALE = "en";
+    public static int EXPENSES_SHEET_ID = 1;
+    public static int PAYMENT_METHOD_SHEET_ID = 2;
+    public static int CATEGORIES_SHEET_ID = 3;
+    public static int BUDGET_SHEET_ID = 4;
+    public static String CATEGORIES_NAMED_RANGE_ID = String.valueOf(CATEGORIES_SHEET_ID);
+    public static String PAYMENT_METHODS_NAMED_RANGE_ID = String.valueOf(PAYMENT_METHOD_SHEET_ID);
 
     public static Spreadsheet getNewSpreadsheet() {
         Spreadsheet spreadsheet = new Spreadsheet();
@@ -22,7 +31,8 @@ public class SheetsHelper {
         spreadsheet.setProperties(properties);
 
         Sheet sheet1 = new Sheet();
-        sheet1.setProperties(getSheetProperties(3, 3, DBConstants.TABLE_CATEGORIES));
+        sheet1.setProperties(getSheetProperties(CATEGORIES_SHEET_ID, CATEGORIES_SHEET_ID,
+                DBConstants.TABLE_CATEGORIES));
         List<GridData> data = new ArrayList<>();
         GridData gridData = new GridData();
         gridData.setStartColumn(0);
@@ -32,7 +42,8 @@ public class SheetsHelper {
         sheet1.setData(data);
 
         Sheet sheet2 = new Sheet();
-        sheet2.setProperties(getSheetProperties(2, 2, DBConstants.TABLE_PAYMENT_METHOD));
+        sheet2.setProperties(getSheetProperties(PAYMENT_METHOD_SHEET_ID, PAYMENT_METHOD_SHEET_ID,
+                DBConstants.TABLE_PAYMENT_METHOD));
         data = new ArrayList<>();
         gridData = new GridData();
         gridData.setStartColumn(0);
@@ -42,7 +53,8 @@ public class SheetsHelper {
         sheet2.setData(data);
 
         Sheet sheet3 = new Sheet();
-        sheet3.setProperties(getSheetProperties(1, 1, DBConstants.TABLE_EXPENSES));
+        sheet3.setProperties(getSheetProperties(EXPENSES_SHEET_ID, EXPENSES_SHEET_ID,
+                DBConstants.TABLE_EXPENSES));
         data = new ArrayList<>();
         gridData = new GridData();
         gridData.setStartColumn(0);
@@ -52,7 +64,8 @@ public class SheetsHelper {
         sheet3.setData(data);
 
         Sheet sheet4 = new Sheet();
-        sheet4.setProperties(getSheetProperties(4, 4, DBConstants.TABLE_BUDGET));
+        sheet4.setProperties(
+                getSheetProperties(BUDGET_SHEET_ID, BUDGET_SHEET_ID, DBConstants.TABLE_BUDGET));
         data = new ArrayList<>();
         gridData = new GridData();
         gridData.setStartColumn(0);
@@ -160,7 +173,7 @@ public class SheetsHelper {
         Request request = new Request();
         AppendCellsRequest appendCellsRequest = new AppendCellsRequest();
         appendCellsRequest.setFields("*");
-        appendCellsRequest.setSheetId(1);
+        appendCellsRequest.setSheetId(EXPENSES_SHEET_ID);
         List<RowData> rows = new ArrayList<>();
         for (Expense expense : expensesToBackup) {
             RowData rowData = new RowData();
@@ -206,6 +219,92 @@ public class SheetsHelper {
         }
         appendCellsRequest.setRows(rows);
         request.setAppendCells(appendCellsRequest);
+        return request;
+    }
+
+    public static Request getDeleteRangeRequest(int sheetId) {
+        Request request = new Request();
+        GenericJson deleteRangeRequest = new GenericJson();
+        deleteRangeRequest.set("shiftDimension", "ROWS");
+        GridRange range = new GridRange();
+        range.setStartColumnIndex(0);
+        range.setStartRowIndex(1);
+        range.setSheetId(sheetId);
+        deleteRangeRequest.set("range", range);
+        request.set("deleteRange", deleteRangeRequest);
+        return request;
+    }
+
+    public static Request getCategoriesSheetsRequest(List<Category> categories) {
+        Request request = new Request();
+        AppendCellsRequest appendCellsRequest = new AppendCellsRequest();
+        appendCellsRequest.setFields("*");
+        appendCellsRequest.setSheetId(CATEGORIES_SHEET_ID);
+        List<RowData> rows = new ArrayList<>();
+        for (Category category : categories) {
+            RowData rowData = new RowData();
+            List<CellData> row = new ArrayList<>();
+
+            CellData cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(category.getId())));
+            row.add(cellData);
+
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(category.getName()));
+            row.add(cellData);
+
+            rowData.setValues(row);
+            rows.add(rowData);
+        }
+        appendCellsRequest.setRows(rows);
+        request.setAppendCells(appendCellsRequest);
+        return request;
+    }
+
+    public static Request getPaymentMethodsSheetsRequest(List<PaymentMethod> paymentMethods) {
+        Request request = new Request();
+        AppendCellsRequest appendCellsRequest = new AppendCellsRequest();
+        appendCellsRequest.setFields("*");
+        appendCellsRequest.setSheetId(PAYMENT_METHOD_SHEET_ID);
+        List<RowData> rows = new ArrayList<>();
+        for (PaymentMethod paymentMethod : paymentMethods) {
+            RowData rowData = new RowData();
+            List<CellData> row = new ArrayList<>();
+
+            CellData cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(paymentMethod.getId())));
+            row.add(cellData);
+
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(paymentMethod.getName()));
+            row.add(cellData);
+
+            rowData.setValues(row);
+            rows.add(rowData);
+        }
+        appendCellsRequest.setRows(rows);
+        request.setAppendCells(appendCellsRequest);
+        return request;
+    }
+
+    public static Request getAddNamedRangeRequest(int sheetId, String namedRangeId,
+            String namedRangeName) {
+        Request request = new Request();
+        AddNamedRangeRequest addNamedRangeRequest = new AddNamedRangeRequest();
+        NamedRange namedRange = new NamedRange();
+        namedRange.setNamedRangeId(namedRangeId);
+        namedRange.setName(namedRangeName);
+        GridRange range = new GridRange();
+        range.setSheetId(sheetId);
+        range.setStartColumnIndex(0);
+        range.setStartRowIndex(1);
+        namedRange.setRange(range);
+        addNamedRangeRequest.setNamedRange(namedRange);
+        request.setAddNamedRange(addNamedRangeRequest);
         return request;
     }
 }

@@ -212,10 +212,11 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<LoaderResponse> loader, LoaderResponse data) {
-        if (data.getResponseCode() == 1) {
+        if (data.getResponseCode() == LoaderResponse.SUCCESS) {
             AppHelper.setSheetsId(data.getSheetId());
+            AppHelper.setFirstBackupComplete(false);
             scheduleJob();
-        } else if (data.getResponseCode() == 2) {
+        } else if (data.getResponseCode() == LoaderResponse.REQUEST_ACCESS) {
             startActivityForResult(data.getIntent(), Others.REQUEST_AUTHORIZATION);
         }
     }

@@ -3,6 +3,9 @@ package com.ramitsuri.expensemanager.entities;
 import android.content.Intent;
 
 public class LoaderResponse {
+    public static final int SUCCESS = 1;
+    public static final int REQUEST_ACCESS = 2;
+    public static final int FAILURE = 3;
     private int mResponseCode;
     private Intent mIntent;
     private String mSheetId;

@@ -58,6 +58,7 @@ public class EditTextDialogFragment extends DialogFragment implements View.OnCli
         mTitle = (TextView) v.findViewById(R.id.title);
         mValue = (EditText) v.findViewById(R.id.edit_text_value);
         mValue.setText(mValueToEdit);
+        mValue.setSelection(mValueToEdit.length());
         if(mValueToEdit.isEmpty()){
             mTitle.setText(getString(R.string.add_new));
         } else {
