@@ -5,6 +5,7 @@ import android.app.job.JobService;
 
 import com.ramitsuri.expensemanager.async.SheetsBackupTask;
 import com.ramitsuri.expensemanager.entities.LoaderResponse;
+import com.ramitsuri.expensemanager.helper.AppHelper;
 
 public class BackupService extends JobService {
     public BackupService() {
@@ -18,6 +19,7 @@ public class BackupService extends JobService {
             protected void onPostExecute(LoaderResponse loaderResponse) {
                 super.onPostExecute(loaderResponse);
                 if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                    AppHelper.setLastBackupTime(System.currentTimeMillis());
                     jobFinished(params, false);
                 } else {
                     jobFinished(params, true);
