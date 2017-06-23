@@ -117,7 +117,7 @@ public class DateHelper {
     }
 
     public static String getDateTimeFromTimeInMillis(long timeInMillis){
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm");
         Date date = new Date(timeInMillis);
         return sdf.format(date);
     }

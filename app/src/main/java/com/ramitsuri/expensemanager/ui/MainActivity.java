@@ -40,7 +40,7 @@ public class MainActivity extends BaseNavigationViewActivity
 
         switchFragments(R.id.tab_today);
 
-        //debug();
+        debug();
     }
 
     private void setupViews() {
@@ -193,11 +193,11 @@ public class MainActivity extends BaseNavigationViewActivity
             CategoryHelper.addCategory("Rent");
             CategoryHelper.addCategory("Home");
             CategoryHelper.addCategory("Groceries");
-            CategoryHelper.addCategory("Tech");
-            CategoryHelper.addCategory("Miscellaneous");
-            CategoryHelper.addCategory("Fun");
-            CategoryHelper.addCategory("Personal");
-            CategoryHelper.addCategory("Shopping");
+            //CategoryHelper.addCategory("Tech");
+            //CategoryHelper.addCategory("Miscellaneous");
+            //CategoryHelper.addCategory("Fun");
+            //CategoryHelper.addCategory("Personal");
+            //CategoryHelper.addCategory("Shopping");
 
             PaymentMethodHelper.addPaymentMethod("Discover");
             PaymentMethodHelper.addPaymentMethod("Cash");

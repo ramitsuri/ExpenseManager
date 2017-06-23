@@ -1,37 +1,19 @@
 package com.ramitsuri.expensemanager.ui;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
-import android.view.MenuItem;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.async.SheetsBackupTask;
+import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.DateHelper;
 
-import java.util.Date;
-import java.util.List;
-
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    public interface PreferenceClickCallbacks{
-        void onBackupNowClicked();
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +40,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     getString(R.string.preference_key_sheets_id));
             mBackupNow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-
+                    new SheetsBackupTask(getContext()){
+                        @Override
+                        protected void onPostExecute(LoaderResponse loaderResponse) {
+                            super.onPostExecute(loaderResponse);
+                            if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                                AppHelper.setLastBackupTime(System.currentTimeMillis());
+                                updatePreferenceSummaries();
+                            }
+                        }
+                    }.execute();
                     return false;
                 }
             });

@@ -228,11 +228,11 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
 
     private void scheduleJob() {
         ComponentName serviceComponent = new ComponentName(this, BackupService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(1, serviceComponent);
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED);
-        builder.setRequiresCharging(true);
-        builder.setRequiresDeviceIdle(true);
-        builder.setPeriodic(86400000);
+        JobInfo.Builder builder = new JobInfo.Builder(1, serviceComponent)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                .setRequiresCharging(true)
+                .setPeriodic(86400000)
+                .setPersisted(true);
         JobScheduler scheduler = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
         scheduler.schedule(builder.build());
     }
