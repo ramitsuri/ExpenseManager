@@ -1,7 +1,6 @@
 package com.ramitsuri.expensemanager.helper;
 
 import com.google.api.client.json.GenericJson;
-import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.ramitsuri.expensemanager.db.DBConstants;
@@ -183,7 +182,9 @@ public class SheetsHelper {
 
             CellData cellData = new CellData();
             cellData.setUserEnteredValue(
-                    new ExtendedValue().setStringValue(DateHelper.getDate(expense.getDateTime())));
+                    new ExtendedValue().setNumberValue(DateHelper.getDateForSheet(expense.getDateTime())));
+            cellData.setUserEnteredFormat(
+                    new CellFormat().setNumberFormat(new NumberFormat().setType("DATE")));
             row.add(cellData);
 
             cellData = new CellData();
