@@ -11,13 +11,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
+import com.ramitsuri.expensemanager.helper.ActivityHelper;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
+import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 import java.util.List;
 
@@ -51,6 +54,14 @@ public class MainActivity extends BaseNavigationViewActivity
 
         mFabAddExpense = (FloatingActionButton)findViewById(R.id.fab_add);
         mFabAddExpense.setOnClickListener(this);
+        mFabAddExpense.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ExpenseHelper.deleteAll();
+                Toast.makeText(MainActivity.this, "Expenses deleted", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         BottomNavigationView bottomNavigation =
                 (BottomNavigationView)findViewById(R.id.bottom_navigation);
@@ -193,18 +204,21 @@ public class MainActivity extends BaseNavigationViewActivity
             CategoryHelper.addCategory("Rent");
             CategoryHelper.addCategory("Home");
             CategoryHelper.addCategory("Groceries");
-            //CategoryHelper.addCategory("Tech");
-            //CategoryHelper.addCategory("Miscellaneous");
-            //CategoryHelper.addCategory("Fun");
-            //CategoryHelper.addCategory("Personal");
-            //CategoryHelper.addCategory("Shopping");
+            CategoryHelper.addCategory("Tech");
+            CategoryHelper.addCategory("Miscellaneous");
+            CategoryHelper.addCategory("Fun");
+            CategoryHelper.addCategory("Personal");
+            CategoryHelper.addCategory("Shopping");
 
             PaymentMethodHelper.addPaymentMethod("Discover");
             PaymentMethodHelper.addPaymentMethod("Cash");
+            PaymentMethodHelper.addPaymentMethod("Chase");
             PaymentMethodHelper.addPaymentMethod("WF Checking");
             PaymentMethodHelper.addPaymentMethod("WF Savings");
             PaymentMethodHelper.addPaymentMethod("Amazon");
-
+            PaymentMethodHelper.addPaymentMethod("Chase CH");
+            PaymentMethodHelper.addPaymentMethod("Master 53");
+            PaymentMethodHelper.addPaymentMethod("AMEX");
 
             AppHelper.setFirstRunComplete();
         }

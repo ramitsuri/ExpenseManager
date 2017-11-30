@@ -510,7 +510,10 @@ public class ExpenseDB extends BaseDB {
     }
 
     public void deleteAllExpense() {
+        open();
 
+        mDatabase.execSQL("delete from "+ DBConstants.TABLE_EXPENSES);
+        close();
     }
 
     public List<Expense> getAllExpensesRequiringBackup() {

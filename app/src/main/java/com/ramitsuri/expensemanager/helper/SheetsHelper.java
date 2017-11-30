@@ -16,7 +16,9 @@ public class SheetsHelper {
 
     private static String SPREADSHEET_TITLE = "Expense Manager Expenses";
     private static String LOCALE = "en";
-    public static int EXPENSES_SHEET_ID = 1;
+    //public static int EXPENSES_SHEET_ID = 1;
+
+    public static int EXPENSES_SHEET_ID = 2092936052;
     public static int PAYMENT_METHOD_SHEET_ID = 2;
     public static int CATEGORIES_SHEET_ID = 3;
     public static int BUDGET_SHEET_ID = 4;
@@ -178,42 +180,37 @@ public class SheetsHelper {
         for (Expense expense : expensesToBackup) {
             RowData rowData = new RowData();
             List<CellData> row = new ArrayList<>();
+
             CellData cellData = new CellData();
             cellData.setUserEnteredValue(
-                    new ExtendedValue().setStringValue(expense.getRowIdentifier()));
+                    new ExtendedValue().setStringValue(DateHelper.getDate(expense.getDateTime())));
             row.add(cellData);
-            cellData = new CellData();
-            cellData.setUserEnteredValue(
-                    new ExtendedValue().setStringValue(String.valueOf(expense.getDateTime())));
-            row.add(cellData);
-            cellData = new CellData();
-            cellData.setUserEnteredValue(
-                    new ExtendedValue().setStringValue(String.valueOf(expense.getAmount())));
-            row.add(cellData);
-            cellData = new CellData();
-            cellData.setUserEnteredValue(new ExtendedValue()
-                    .setStringValue(String.valueOf(expense.getPaymentMethod().getId())));
-            row.add(cellData);
-            cellData = new CellData();
-            cellData.setUserEnteredValue(new ExtendedValue()
-                    .setStringValue(String.valueOf(expense.getCategory().getId())));
-            row.add(cellData);
+
             cellData = new CellData();
             cellData.setUserEnteredValue(
                     new ExtendedValue().setStringValue(String.valueOf(expense.getDescription())));
             row.add(cellData);
+
             cellData = new CellData();
             cellData.setUserEnteredValue(
                     new ExtendedValue().setStringValue(String.valueOf(expense.getStore())));
             row.add(cellData);
+
             cellData = new CellData();
             cellData.setUserEnteredValue(
-                    new ExtendedValue()
-                            .setStringValue(String.valueOf(expense.isFlagged() ? 1 : 0)));
+                    new ExtendedValue().setNumberValue(expense.getAmount().doubleValue()));
             row.add(cellData);
+
             cellData = new CellData();
-            cellData.setUserEnteredValue(new ExtendedValue().setStringValue(String.valueOf(1)));
+            cellData.setUserEnteredValue(new ExtendedValue()
+                    .setStringValue(String.valueOf(expense.getPaymentMethod().getName())));
             row.add(cellData);
+
+            cellData = new CellData();
+            cellData.setUserEnteredValue(new ExtendedValue()
+                    .setStringValue(String.valueOf(expense.getCategory().getName())));
+            row.add(cellData);
+
             rowData.setValues(row);
             rows.add(rowData);
         }

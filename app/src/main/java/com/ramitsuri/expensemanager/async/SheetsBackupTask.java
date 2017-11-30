@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -35,6 +36,7 @@ public class SheetsBackupTask extends AsyncTask<Void, Void, LoaderResponse> {
     private com.google.api.services.sheets.v4.Sheets mService;
     private HttpTransport mTransport;
     private JsonFactory mJsonFactory;
+    private static String SHEETS_ID = "1pzDFprwHn6pbh6lRC8_emFEvQSa3MDnnU6baOAPwgcQ";
 
     public SheetsBackupTask(Context context) {
         mCredential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(Others.SCOPES)).
@@ -55,7 +57,7 @@ public class SheetsBackupTask extends AsyncTask<Void, Void, LoaderResponse> {
         List<Expense> expensesToBackup = ExpenseHelper.getExpensesRequiringBackup();
         Request expensesRequest = SheetsHelper.getExpenseSheetsRequest(expensesToBackup);
         requests.add(expensesRequest);
-        if (AppHelper.isFirstBackupComplete()) {
+        /*if (AppHelper.isFirstBackupComplete()) {
             requests.add(SheetsHelper
                     .getDeleteRangeRequest(SheetsHelper.CATEGORIES_SHEET_ID));
             requests.add(SheetsHelper
@@ -66,20 +68,22 @@ public class SheetsBackupTask extends AsyncTask<Void, Void, LoaderResponse> {
                     DBConstants.TABLE_CATEGORIES));
             requests.add(SheetsHelper.getAddNamedRangeRequest(SheetsHelper.PAYMENT_METHOD_SHEET_ID,
                     SheetsHelper.PAYMENT_METHODS_NAMED_RANGE_ID, DBConstants.TABLE_PAYMENT_METHOD));
-        }
-        requests.add(SheetsHelper.getCategoriesSheetsRequest(CategoryHelper.getAllCategories()));
-        requests.add(SheetsHelper
-                .getPaymentMethodsSheetsRequest(PaymentMethodHelper.getAllPaymentMethods()));
-        content.setIncludeSpreadsheetInResponse(true);
-        content.setResponseIncludeGridData(true);
+        }*/
+        //requests.add(SheetsHelper.getCategoriesSheetsRequest(CategoryHelper.getAllCategories()));
+        /*requests.add(SheetsHelper
+                .getPaymentMethodsSheetsRequest(PaymentMethodHelper.getAllPaymentMethods()));*/
+        //content.setIncludeSpreadsheetInResponse(true);
+        //content.setResponseIncludeGridData(true);
         content.setRequests(requests);
         Sheets.Spreadsheets.BatchUpdate batchUpdate;
         try {
-            batchUpdate = mService.spreadsheets().batchUpdate(AppHelper.getSheetsId(), content);
+            batchUpdate = mService.spreadsheets().batchUpdate(SHEETS_ID, content);
             BatchUpdateSpreadsheetResponse response = batchUpdate.execute();
             ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
             AppHelper.setFirstBackupComplete(true);
             return new LoaderResponse(LoaderResponse.SUCCESS, null, null);
+        } catch (UserRecoverableAuthIOException e) {
+            return new LoaderResponse(LoaderResponse.FAILURE, e.getIntent(), null);
         } catch (IOException e) {
             return new LoaderResponse(LoaderResponse.FAILURE, null, null);
         }

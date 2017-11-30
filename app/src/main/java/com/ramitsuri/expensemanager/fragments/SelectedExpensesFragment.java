@@ -63,7 +63,7 @@ public class SelectedExpensesFragment extends Fragment {
         if (mExpenses == null) {
             mExpenses = new ArrayList<>();
         }
-        mExpenseAdapter = new ExpenseAdapter(mExpenses);
+        mExpenseAdapter = new ExpenseAdapter(mExpenses, getActivity());
         recyclerViewExpenses.setHasFixedSize(true);
         recyclerViewExpenses.setLayoutManager(recyclerViewLManager);
         recyclerViewExpenses.setAdapter(mExpenseAdapter);

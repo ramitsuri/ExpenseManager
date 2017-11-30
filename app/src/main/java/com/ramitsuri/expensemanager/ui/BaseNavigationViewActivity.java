@@ -175,8 +175,8 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                         AppHelper.setAccountName(accountName);
                         mAccountText.setText(accountName);
                         mCredential.setSelectedAccountName(accountName);
-                        getSupportLoaderManager().restartLoader(LoaderIDs.SHEETS_CREATE, null, this)
-                                .forceLoad();
+                        /*getSupportLoaderManager().restartLoader(LoaderIDs.SHEETS_CREATE, null, this)
+                                .forceLoad();*/
                     }
                 }
                 break;
@@ -227,13 +227,13 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
     }
 
     private void scheduleJob() {
-        ComponentName serviceComponent = new ComponentName(this, BackupService.class);
+        /*ComponentName serviceComponent = new ComponentName(this, BackupService.class);
         JobInfo.Builder builder = new JobInfo.Builder(1, serviceComponent)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .setRequiresCharging(true)
                 .setPeriodic(86400000)
                 .setPersisted(true);
         JobScheduler scheduler = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        scheduler.schedule(builder.build());
+        scheduler.schedule(builder.build());*/
     }
 }

@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.adapter;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import java.util.List;
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomViewHolder>   {
 
     private List<Expense> mExpenses;
+    private Context mContext;
 
     private static final int mItemViewTypeTop = 0;
 
@@ -39,6 +42,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
         public void onClick(View view) {
 
         }
+    }
+
+    public ExpenseAdapter(List<Expense> expenses, Context context){
+        mContext = context;
+        mExpenses = expenses;
     }
 
     public ExpenseAdapter(List<Expense> expenses){
@@ -66,6 +74,12 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
             holder.mStore.setVisibility(View.GONE);
         } else {
             holder.mStore.setText(mExpenses.get(position).getStore());
+        }
+
+        if(mExpenses.get(position).isSynced()){
+            holder.mFieldAmount.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+        } else {
+            holder.mFieldAmount.setTextColor(ContextCompat.getColor(mContext, R.color.red));
         }
     }
 

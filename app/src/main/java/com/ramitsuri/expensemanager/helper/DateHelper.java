@@ -17,6 +17,15 @@ public class DateHelper {
         return df.format(calendar.getTime());
     }
 
+    public static String getDate(long date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, getDayFromLongDate(date));
+        calendar.set(Calendar.MONTH, getMonthFromLongDate(date));
+        calendar.set(Calendar.YEAR, getYearFromLongDate(date));
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        return df.format(calendar.getTime());
+    }
+
     public static String getPrettyDate(int year1, int month1, int day1,
                                        int year2, int month2, int day2){
         String date1 = getPrettyDate(year1, month1, day1);

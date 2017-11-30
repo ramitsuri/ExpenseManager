@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -12,8 +13,10 @@ import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.DateHelper;
 
-public class SettingsActivity extends AppCompatPreferenceActivity {
+import static com.ramitsuri.expensemanager.constants.Others.REQUEST_AUTHORIZATION;
 
+public class SettingsActivity extends AppCompatPreferenceActivity {
+    SettingsFragment mFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,8 +25,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        mFragment = new SettingsFragment();
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment()).commit();
+                .replace(android.R.id.content, mFragment).commit();
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -40,16 +44,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     getString(R.string.preference_key_sheets_id));
             mBackupNow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    new SheetsBackupTask(getContext()){
-                        @Override
-                        protected void onPostExecute(LoaderResponse loaderResponse) {
-                            super.onPostExecute(loaderResponse);
-                            if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
-                                AppHelper.setLastBackupTime(System.currentTimeMillis());
-                                updatePreferenceSummaries();
-                            }
-                        }
-                    }.execute();
+                    ((SettingsActivity)getActivity()).backup();
                     return false;
                 }
             });
@@ -71,6 +66,33 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (lastBackupTime != 0) {
                 mBackupNow.setSummary(DateHelper.getDateTimeFromTimeInMillis(lastBackupTime));
             }
+        }
+    }
+
+    private void backup() {
+        new SheetsBackupTask(this){
+            @Override
+            protected void onPostExecute(LoaderResponse loaderResponse) {
+                super.onPostExecute(loaderResponse);
+                if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                    AppHelper.setLastBackupTime(System.currentTimeMillis());
+                    mFragment.updatePreferenceSummaries();
+                } else if(loaderResponse.getResponseCode() == LoaderResponse.FAILURE){
+                    startActivityForResult(loaderResponse.getIntent(), REQUEST_AUTHORIZATION);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK && data != null) {
+                    backup();
+                }
         }
     }
 }
