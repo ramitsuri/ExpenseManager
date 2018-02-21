@@ -22,15 +22,18 @@ import com.ramitsuri.expensemanager.helper.CategoryHelper;
 import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
+
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
-        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener{
+        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener {
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private FloatingActionButton mFabAddExpense;
+
+    private static final String ACTION_ADD_EXPENSE = "com.ramitsuri.expensemanager.ui.ADD_EXPENSE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,11 @@ public class MainActivity extends BaseNavigationViewActivity
         switchFragments(R.id.tab_today);
 
         debug();
+
+        if (ACTION_ADD_EXPENSE.equals(getIntent().getAction())) {
+            // Invoked via the manifest shortcut.
+            startActivity(new Intent(this, ExpenseDetailActivity.class));
+        }
     }
 
     private void setupViews() {
@@ -128,7 +136,7 @@ public class MainActivity extends BaseNavigationViewActivity
 
     @Override
     public void onClick(View view) {
-        if(view == mFabAddExpense){
+        if (view == mFabAddExpense) {
             startActivity(new Intent(this, ExpenseDetailActivity.class));
         }
     }
@@ -193,7 +201,6 @@ public class MainActivity extends BaseNavigationViewActivity
     public void onPermissionsDenied(int requestCode, List<String> perms) {
 
     }
-
 
     public static void debug() {
         if (!AppHelper.isFirstRunComplete()) {

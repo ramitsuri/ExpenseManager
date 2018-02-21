@@ -23,6 +23,8 @@
     <string name="undo">UNDO</string>
     <string name="add_new">Add New</string>
     <string name="edit">Edit</string>
+    <string name="shortcut_add_expense_short_label">Add Expense</string>
+    <string name="shortcut_add_expense_long_label">Add Expense</string>
 
     <string name="all_expenses_search">FIND</string>
 
