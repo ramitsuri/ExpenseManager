@@ -65,6 +65,7 @@ public class BackupWorker extends Worker {
             BatchUpdateSpreadsheetResponse response = batchUpdate.execute();
             ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
             AppHelper.setFirstBackupComplete(true);
+            AppHelper.setLastBackupTime(System.currentTimeMillis());
             return new LoaderResponse(LoaderResponse.SUCCESS, null, null);
         } catch (UserRecoverableAuthIOException e) {
             return new LoaderResponse(LoaderResponse.FAILURE, e.getIntent(), null);
