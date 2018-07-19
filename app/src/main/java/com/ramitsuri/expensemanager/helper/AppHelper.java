@@ -60,4 +60,12 @@ public class AppHelper {
     public static boolean isFirstBackupComplete(){
         return PrefHelper.get(PrefKeys.IS_FIRST_BACKUP_DONE, false);
     }
+
+    public static void setBackupWorkerEnqueued(boolean isBackupWorkerEnqueued) {
+        PrefHelper.set(PrefKeys.IS_BACKUP_WORKER_ENQUEQUED, isBackupWorkerEnqueued);
+    }
+
+    public static boolean isBackupWorkerEnqueued(){
+        return PrefHelper.get(PrefKeys.IS_BACKUP_WORKER_ENQUEQUED, false);
+    }
 }

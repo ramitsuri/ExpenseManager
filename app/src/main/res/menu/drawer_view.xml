@@ -31,4 +31,11 @@
             android:icon="@drawable/ic_settings"
             android:title="@string/nav_menu_settings" />
     </group>
+
+    <group>
+        <item
+            android:id="@+id/nav_sync"
+            android:title="Sync and Delete"/>
+    </group>
+
 </menu>

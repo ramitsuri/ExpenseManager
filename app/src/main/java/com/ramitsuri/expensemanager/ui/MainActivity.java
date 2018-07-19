@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.ui;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,8 +15,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.async.SheetsBackupTask;
+import com.ramitsuri.expensemanager.backup.BackupWorker;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
+import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.ActivityHelper;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
@@ -24,12 +28,21 @@ import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkStatus;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.ramitsuri.expensemanager.constants.Others.REQUEST_AUTHORIZATION;
 
 public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
-        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener {
+        SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener,
+        BaseNavigationViewActivity.NavigationDrawerCallbacks{
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private FloatingActionButton mFabAddExpense;
 
@@ -47,6 +60,24 @@ public class MainActivity extends BaseNavigationViewActivity
         switchFragments(R.id.tab_today);
 
         debug();
+       /* WorkManager.getInstance().cancelAllWorkByTag("Backup");
+        AppHelper.setBackupWorkerEnqueued(false);*/
+
+
+        if (!AppHelper.isBackupWorkerEnqueued()) {
+            Constraints myConstraints = new Constraints.Builder()
+                    .setRequiresCharging(true)
+                    .setRequiredNetworkType(NetworkType.UNMETERED)
+                    .build();
+
+            PeriodicWorkRequest.Builder periodicWorkRequestBuilder =
+                    new PeriodicWorkRequest.Builder(BackupWorker.class, 24, TimeUnit.HOURS)
+                            .setConstraints(myConstraints)
+                    .addTag("Backup");
+            PeriodicWorkRequest request = periodicWorkRequestBuilder.build();
+            WorkManager.getInstance().enqueue(request);
+            AppHelper.setBackupWorkerEnqueued(true);
+        }
 
         if (ACTION_ADD_EXPENSE.equals(getIntent().getAction())) {
             // Invoked via the manifest shortcut.
@@ -65,8 +96,7 @@ public class MainActivity extends BaseNavigationViewActivity
         mFabAddExpense.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ExpenseHelper.deleteAll();
-                Toast.makeText(MainActivity.this, "Expenses deleted", Toast.LENGTH_SHORT).show();
+                deleteAllExpenses();
                 return true;
             }
         });
@@ -74,6 +104,11 @@ public class MainActivity extends BaseNavigationViewActivity
         BottomNavigationView bottomNavigation =
                 (BottomNavigationView)findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private void deleteAllExpenses() {
+        ExpenseHelper.deleteAll();
+        Toast.makeText(MainActivity.this, "Expenses deleted", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -232,5 +267,25 @@ public class MainActivity extends BaseNavigationViewActivity
         /*if(isStoragePermissionGranted()){
             getDb();
         }*/
+    }
+
+    private void backup() {
+        new SheetsBackupTask(this){
+            @Override
+            protected void onPostExecute(LoaderResponse loaderResponse) {
+                super.onPostExecute(loaderResponse);
+                if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                    AppHelper.setLastBackupTime(System.currentTimeMillis());
+                    deleteAllExpenses();
+                } else if(loaderResponse.getResponseCode() == LoaderResponse.FAILURE){
+                    startActivityForResult(loaderResponse.getIntent(), REQUEST_AUTHORIZATION);
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void onSyncClicked() {
+        backup();
     }
 }

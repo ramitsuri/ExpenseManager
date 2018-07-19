@@ -48,6 +48,22 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
     private LinearLayout mAccount;
     private TextView mAccountText;
     private GoogleAccountCredential mCredential;
+    private NavigationDrawerCallbacks mCallbacks;
+
+    public interface NavigationDrawerCallbacks{
+        void onSyncClicked();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        try {
+            mCallbacks = (NavigationDrawerCallbacks)this;
+        }
+        catch (Exception e){
+
+        }
+    }
 
     @Override
     public void setContentView(int layoutResID) {
@@ -113,6 +129,11 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                                 break;
                             case R.id.nav_settings:
                                 startSettingsActivity();
+                                break;
+                            case R.id.nav_sync:
+                                if(mCallbacks!=null){
+                                    mCallbacks.onSyncClicked();
+                                }
                                 break;
                         }
                         return onOptionsItemSelected(menuItem);

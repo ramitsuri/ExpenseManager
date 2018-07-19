@@ -15,4 +15,6 @@ public class PrefKeys {
 
     public static final String IS_FIRST_BACKUP_DONE = "is_first_backup_done";
 
+    public static final String IS_BACKUP_WORKER_ENQUEQUED = "is_backup_worker_enqueued";
+
 }
