@@ -26,17 +26,19 @@ public class ListPickerAdapter<T> extends RecyclerView.Adapter<ListPickerAdapter
     }
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+        private ViewGroup mContainer;
         private TextView mValue;
 
         public CustomViewHolder(View view){
             super(view);
+            mContainer = view.findViewById(R.id.container);
             mValue = (TextView)view.findViewById(R.id.value);
-            mValue.setOnClickListener(this);
+            mContainer.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if(view == mValue){
+            if(view == mContainer){
                 mCallbacks.onItemSelected(mValues.get(getAdapterPosition()));
             }
         }
