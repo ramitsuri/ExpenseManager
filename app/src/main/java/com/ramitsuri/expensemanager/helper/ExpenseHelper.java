@@ -76,6 +76,9 @@ public class ExpenseHelper {
     public static void deleteAll(){
         getDB().deleteAllExpense();
     }
+    public static void deleteBackedUpExpenses(){
+        getDB().deleteBackedUpExpense();
+    }
 
     public static ExpenseWrapper getExpenseWrapper(int expenseType){
         ExpenseWrapper expenseWrapper = new ExpenseWrapper();

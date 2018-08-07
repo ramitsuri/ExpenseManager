@@ -1,15 +1,18 @@
 package com.ramitsuri.expensemanager.ui;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -71,14 +74,26 @@ public class MainActivity extends BaseNavigationViewActivity
                     .build();
 
             PeriodicWorkRequest.Builder periodicWorkRequestBuilder =
-                    new PeriodicWorkRequest.Builder(BackupWorker.class, 24, TimeUnit.HOURS)
+                    new PeriodicWorkRequest.Builder(BackupWorker.class, 12, TimeUnit.HOURS)
                             .setConstraints(myConstraints)
                     .addTag("Backup");
             PeriodicWorkRequest request = periodicWorkRequestBuilder.build();
             WorkManager.getInstance().enqueue(request);
             AppHelper.setBackupWorkerEnqueued(true);
+            Log.w("wirk", "enqueed");
         }
 
+        WorkManager.getInstance().getStatusesByTag("Backup").observe(this,
+                new Observer<List<WorkStatus>>() {
+                    @Override
+                    public void onChanged(@Nullable List<WorkStatus> workStatuses) {
+                        if(workStatuses==null||workStatuses.isEmpty()){
+                            Log.w("wirk ", "empty");
+                            return;
+                        }
+                        Log.w("wirk: ", workStatuses.get(0).toString());
+                    }
+                });
         if (ACTION_ADD_EXPENSE.equals(getIntent().getAction())) {
             // Invoked via the manifest shortcut.
             startActivity(new Intent(this, ExpenseDetailActivity.class));

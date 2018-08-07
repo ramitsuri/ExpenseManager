@@ -509,6 +509,24 @@ public class ExpenseDB extends BaseDB {
         return result > 0;
     }
 
+    public synchronized boolean deleteBackedUpExpense() {
+        open();
+        String selection = DBConstants.COLUMN_EXPENSE_SYNC_STATUS + " = ?";
+        String[] selectionArgs = new String[] {
+                String.valueOf(1)
+        };
+
+        int result = mDatabase.delete(
+                DBConstants.TABLE_EXPENSES,
+                selection,
+                selectionArgs
+        );
+
+        close();
+
+        return result > 0;
+    }
+
     public void deleteAllExpense() {
         open();
 

@@ -64,6 +64,7 @@ public class BackupWorker extends Worker {
             batchUpdate = service.spreadsheets().batchUpdate(SHEETS_ID, content);
             BatchUpdateSpreadsheetResponse response = batchUpdate.execute();
             ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
+            ExpenseHelper.deleteBackedUpExpenses();
             AppHelper.setFirstBackupComplete(true);
             AppHelper.setLastBackupTime(System.currentTimeMillis());
             return new LoaderResponse(LoaderResponse.SUCCESS, null, null);
