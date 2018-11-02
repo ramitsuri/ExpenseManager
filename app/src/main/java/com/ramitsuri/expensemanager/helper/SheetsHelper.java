@@ -182,7 +182,7 @@ public class SheetsHelper {
 
             CellData cellData = new CellData();
             cellData.setUserEnteredValue(new ExtendedValue()
-                    .setNumberValue(DateHelper.getDateForSheet(expense.getDateTime() + 86400000)));
+                    .setNumberValue(DateHelper.getDateForSheet(expense.getDateTime())));
             cellData.setUserEnteredFormat(
                     new CellFormat().setNumberFormat(new NumberFormat().setType("DATE")));
             row.add(cellData);

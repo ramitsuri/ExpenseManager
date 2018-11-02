@@ -24,7 +24,7 @@ public class DateHelper {
         calendar1.set(Calendar.MONTH, 11);
         calendar1.set(Calendar.YEAR, 1899);
         Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(Calendar.DAY_OF_MONTH, getDayFromLongDate(date));
+        calendar2.set(Calendar.DAY_OF_MONTH, getDayFromLongDate(date)+1);
         calendar2.set(Calendar.MONTH, getMonthFromLongDate(date)-1);
         calendar2.set(Calendar.YEAR, getYearFromLongDate(date));
         return TimeUnit.MILLISECONDS.toDays(calendar2.getTimeInMillis() - calendar1.getTimeInMillis());
