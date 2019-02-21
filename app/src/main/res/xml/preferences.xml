@@ -6,11 +6,11 @@
 
         <EditTextPreference
             android:key="@string/preference_key_sheets_id"
-            android:title="Expense Manager Expenses Sheets ID"
-            android:summary="Enter Expense Manager Sheets ID from Google Drive"
+            android:title="Current Sheet ID"
+            android:summary="Enter ID for sheet expenses would go in"
             android:dialogTitle="ID"
-            android:dialogMessage="Enter Sheets ID"
-            android:inputType="textCapWords"/>
+            android:dialogMessage="Enter ID"
+            android:inputType="text|number"/>
 
         <Preference
             android:key="@string/preference_key_backup_now"

@@ -174,7 +174,14 @@ public class SheetsHelper {
         Request request = new Request();
         AppendCellsRequest appendCellsRequest = new AppendCellsRequest();
         appendCellsRequest.setFields("*");
-        appendCellsRequest.setSheetId(EXPENSES_SHEET_ID);
+        int sheetsId = EXPENSES_SHEET_ID;
+        try {
+            sheetsId = Integer.parseInt(AppHelper.getSheetsId());
+        } catch (NumberFormatException ex) {
+        }
+        if (sheetsId != EXPENSES_SHEET_ID) {
+            appendCellsRequest.setSheetId(sheetsId);
+        }
         List<RowData> rows = new ArrayList<>();
         for (Expense expense : expensesToBackup) {
             RowData rowData = new RowData();

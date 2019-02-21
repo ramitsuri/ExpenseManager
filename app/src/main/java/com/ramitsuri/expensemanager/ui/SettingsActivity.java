@@ -2,9 +2,11 @@ package com.ramitsuri.expensemanager.ui;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import static com.ramitsuri.expensemanager.constants.Others.REQUEST_AUTHORIZATIO
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
     SettingsFragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +40,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 .replace(android.R.id.content, mFragment).commit();
 
         LiveData<List<WorkStatus>> statuses = WorkManager.getInstance().getStatusesByTag("Backup");
-        if(statuses.getValue()!=null) {
+        if (statuses.getValue() != null) {
             for (WorkStatus status : statuses.getValue()) {
                 Toast.makeText(this, status.toString(), Toast.LENGTH_SHORT).show();
             }
@@ -84,14 +87,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     private void backup() {
-        new SheetsBackupTask(this){
+        new SheetsBackupTask(this) {
             @Override
             protected void onPostExecute(LoaderResponse loaderResponse) {
                 super.onPostExecute(loaderResponse);
-                if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                if (loaderResponse.getResponseCode() == LoaderResponse.SUCCESS) {
                     AppHelper.setLastBackupTime(System.currentTimeMillis());
                     mFragment.updatePreferenceSummaries();
-                } else if(loaderResponse.getResponseCode() == LoaderResponse.FAILURE){
+                } else if (loaderResponse.getResponseCode() == LoaderResponse.FAILURE) {
                     startActivityForResult(loaderResponse.getIntent(), REQUEST_AUTHORIZATION);
                 }
             }
