@@ -188,35 +188,55 @@ public class SheetsHelper {
             List<CellData> row = new ArrayList<>();
 
             CellData cellData = new CellData();
+
+            // Date
             cellData.setUserEnteredValue(new ExtendedValue()
                     .setNumberValue(DateHelper.getDateForSheet(expense.getDateTime())));
             cellData.setUserEnteredFormat(
-                    new CellFormat().setNumberFormat(new NumberFormat().setType("DATE")));
+                    new CellFormat().setNumberFormat(
+                            new NumberFormat().setType("DATE").setPattern("M/d/yyyy")));
+            cellData.setDataValidation(new DataValidationRule()
+                    .setCondition(new BooleanCondition().setType("DATE_IS_VALID")));
             row.add(cellData);
 
+            // Description
             cellData = new CellData();
             cellData.setUserEnteredValue(
                     new ExtendedValue().setStringValue(String.valueOf(expense.getDescription())));
             row.add(cellData);
 
+            // Store
             cellData = new CellData();
             cellData.setUserEnteredValue(
                     new ExtendedValue().setStringValue(String.valueOf(expense.getStore())));
             row.add(cellData);
 
+            // Amount
             cellData = new CellData();
             cellData.setUserEnteredValue(
                     new ExtendedValue().setNumberValue(expense.getAmount().doubleValue()));
             row.add(cellData);
 
+            // Payment Method
             cellData = new CellData();
             cellData.setUserEnteredValue(new ExtendedValue()
                     .setStringValue(String.valueOf(expense.getPaymentMethod().getName())));
+            cellData.setDataValidation(new DataValidationRule()
+                    .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
+                            .setValues(getPaymentMethodConditionValues()))
+                    .setStrict(true)
+                    .setShowCustomUi(true));
             row.add(cellData);
 
+            // Category
             cellData = new CellData();
             cellData.setUserEnteredValue(new ExtendedValue()
                     .setStringValue(String.valueOf(expense.getCategory().getName())));
+            cellData.setDataValidation(new DataValidationRule()
+                    .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
+                            .setValues(getCategoryConditionValues()))
+                    .setStrict(true)
+                    .setShowCustomUi(true));
             row.add(cellData);
 
             rowData.setValues(row);
@@ -225,6 +245,113 @@ public class SheetsHelper {
         appendCellsRequest.setRows(rows);
         request.setAppendCells(appendCellsRequest);
         return request;
+    }
+
+    private static ArrayList<ConditionValue> getPaymentMethodConditionValues() {
+        ArrayList<ConditionValue> conditionValues = new ArrayList<>();
+
+        // Discover
+        ConditionValue value = new ConditionValue();
+        value.setUserEnteredValue("Discover");
+        conditionValues.add(value);
+
+        // Cash
+        value = new ConditionValue();
+        value.setUserEnteredValue("Cash");
+        conditionValues.add(value);
+
+        // Chase
+        value = new ConditionValue();
+        value.setUserEnteredValue("Chase");
+        conditionValues.add(value);
+
+        // Amazon
+        value = new ConditionValue();
+        value.setUserEnteredValue("Amazon");
+        conditionValues.add(value);
+
+        // Chase CH
+        value = new ConditionValue();
+        value.setUserEnteredValue("Chase CH");
+        conditionValues.add(value);
+
+        // Master 53
+        value = new ConditionValue();
+        value.setUserEnteredValue("Master 53");
+        conditionValues.add(value);
+
+        // AMEX
+        value = new ConditionValue();
+        value.setUserEnteredValue("AMEX");
+        conditionValues.add(value);
+
+        return conditionValues;
+    }
+
+    private static ArrayList<ConditionValue> getCategoryConditionValues() {
+        ArrayList<ConditionValue> conditionValues = new ArrayList<>();
+
+        // Car
+        ConditionValue value = new ConditionValue();
+        value.setUserEnteredValue("Car");
+        conditionValues.add(value);
+
+        // Rent
+        value = new ConditionValue();
+        value.setUserEnteredValue("Rent");
+        conditionValues.add(value);
+
+        // Utilities
+        value = new ConditionValue();
+        value.setUserEnteredValue("Utilities");
+        conditionValues.add(value);
+
+        // Groceries
+        value = new ConditionValue();
+        value.setUserEnteredValue("Groceries");
+        conditionValues.add(value);
+
+        // Home
+        value = new ConditionValue();
+        value.setUserEnteredValue("Home");
+        conditionValues.add(value);
+
+        // Food
+        value = new ConditionValue();
+        value.setUserEnteredValue("Food");
+        conditionValues.add(value);
+
+        // Tech
+        value = new ConditionValue();
+        value.setUserEnteredValue("Tech");
+        conditionValues.add(value);
+
+        // Entertainment
+        value = new ConditionValue();
+        value.setUserEnteredValue("Entertainment");
+        conditionValues.add(value);
+
+        // Miscellaneous
+        value = new ConditionValue();
+        value.setUserEnteredValue("Miscellaneous");
+        conditionValues.add(value);
+
+        // Personal
+        value = new ConditionValue();
+        value.setUserEnteredValue("Personal");
+        conditionValues.add(value);
+
+        // Shopping
+        value = new ConditionValue();
+        value.setUserEnteredValue("Shopping");
+        conditionValues.add(value);
+
+        // Tech
+        value = new ConditionValue();
+        value.setUserEnteredValue("Fun");
+        conditionValues.add(value);
+
+        return conditionValues;
     }
 
     public static Request getDeleteRangeRequest(int sheetId) {
