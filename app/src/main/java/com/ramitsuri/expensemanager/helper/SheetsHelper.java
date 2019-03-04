@@ -351,6 +351,11 @@ public class SheetsHelper {
         value.setUserEnteredValue("Fun");
         conditionValues.add(value);
 
+        // Travel
+        value = new ConditionValue();
+        value.setUserEnteredValue("Travel");
+        conditionValues.add(value);
+
         return conditionValues;
     }
 

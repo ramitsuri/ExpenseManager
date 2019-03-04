@@ -266,12 +266,11 @@ public class MainActivity extends BaseNavigationViewActivity
             CategoryHelper.addCategory("Fun");
             CategoryHelper.addCategory("Personal");
             CategoryHelper.addCategory("Shopping");
+            CategoryHelper.addCategory("Car");
 
             PaymentMethodHelper.addPaymentMethod("Discover");
             PaymentMethodHelper.addPaymentMethod("Cash");
             PaymentMethodHelper.addPaymentMethod("Chase");
-            PaymentMethodHelper.addPaymentMethod("WF Checking");
-            PaymentMethodHelper.addPaymentMethod("WF Savings");
             PaymentMethodHelper.addPaymentMethod("Amazon");
             PaymentMethodHelper.addPaymentMethod("Chase CH");
             PaymentMethodHelper.addPaymentMethod("Master 53");
