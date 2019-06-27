@@ -11,21 +11,19 @@ import android.widget.DatePicker;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Others;
 
-
 public class DatePickerDialogFragment extends DialogFragment {
 
     public static String TAG = DatePickerDialogFragment.class.getName();
     private DatePickerCallbacks mCallbacks;
-    private DatePicker mDatePicker;
     private int mYear;
     private int mMonth;
     private int mDay;
 
-    public interface DatePickerCallbacks{
+    public interface DatePickerCallbacks {
         void onDatePicked(int year, int month, int day);
     }
 
-    public static DatePickerDialogFragment newInstance(){
+    public static DatePickerDialogFragment newInstance() {
         return new DatePickerDialogFragment();
     }
 
@@ -39,10 +37,10 @@ public class DatePickerDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_fragment_date_picker, container, false);
-        mDatePicker = (DatePicker) v.findViewById(R.id.date_picker);
-        mDatePicker.init(mYear, mMonth, mDay, mListener);
+        DatePicker datePicker = (DatePicker)v.findViewById(R.id.date_picker);
+        datePicker.init(mYear, mMonth, mDay, mListener);
         return v;
     }
 
@@ -55,8 +53,8 @@ public class DatePickerDialogFragment extends DialogFragment {
     };
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        mCallbacks = (DatePickerCallbacks) context;
+        mCallbacks = (DatePickerCallbacks)context;
     }
 }

@@ -16,16 +16,18 @@ public class CurrencyPickerDialogFragment extends DialogFragment {
 
     public static String TAG = CurrencyPickerDialogFragment.class.getName();
 
-    public static CurrencyPickerDialogFragment newInstance(){
+    public static CurrencyPickerDialogFragment newInstance() {
         return new CurrencyPickerDialogFragment();
     }
+
     private CurrencyPickerCallbacks mCallbacks;
-    public interface CurrencyPickerCallbacks{
+
+    public interface CurrencyPickerCallbacks {
         void onCurrencyPicked(String currency);
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         mCallbacks = (CurrencyPickerCallbacks)context;
     }
@@ -49,7 +51,7 @@ public class CurrencyPickerDialogFragment extends DialogFragment {
         //getDialog().getWindow().setLayout(840, 1360);
     }
 
-    public List<String> getCurrencies(){
+    public List<String> getCurrencies() {
         List currencies = new ArrayList<>();
         currencies.add("INR - ₹");
         currencies.add("USD - $");

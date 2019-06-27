@@ -14,11 +14,11 @@ public class BackupService extends JobService {
     //if you start asynchronous processing in this method, return true
     @Override
     public boolean onStartJob(final JobParameters params) {
-        new SheetsBackupTask(getApplicationContext()){
+        new SheetsBackupTask(getApplicationContext()) {
             @Override
             protected void onPostExecute(LoaderResponse loaderResponse) {
                 super.onPostExecute(loaderResponse);
-                if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                if (loaderResponse.getResponseCode() == LoaderResponse.SUCCESS) {
                     AppHelper.setLastBackupTime(System.currentTimeMillis());
                     jobFinished(params, false);
                 } else {

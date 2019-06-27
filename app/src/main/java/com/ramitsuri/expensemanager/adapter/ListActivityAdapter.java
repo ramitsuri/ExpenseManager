@@ -11,18 +11,18 @@ import com.ramitsuri.expensemanager.R;
 
 import java.util.List;
 
-public class ListActivityAdapter<T> extends RecyclerView.Adapter<ListActivityAdapter.CustomViewHolder>{
+public class ListActivityAdapter<T>
+        extends RecyclerView.Adapter<ListActivityAdapter.CustomViewHolder> {
 
     private List<T> mValues;
     private ListActivityAdapterCallbacks<T> mCallbacks;
-    private T mSelectedItem;
     private Context mContext;
 
-    public interface ListActivityAdapterCallbacks<T>{
+    public interface ListActivityAdapterCallbacks<T> {
         void onItemClicked(T item);
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mValue;
 
@@ -38,13 +38,13 @@ public class ListActivityAdapter<T> extends RecyclerView.Adapter<ListActivityAda
 
         @Override
         public void onClick(View view) {
-            if(view == mValue){
+            if (view == mValue) {
                 mCallbacks.onItemClicked(mValues.get(getAdapterPosition()));
             }
         }
     }
 
-    public ListActivityAdapter(Context context, List<T> values){
+    public ListActivityAdapter(Context context, List<T> values) {
         mValues = values;
         mContext = context;
         mCallbacks = (ListActivityAdapterCallbacks)context;

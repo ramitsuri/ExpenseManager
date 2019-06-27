@@ -17,22 +17,17 @@ import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
 
 public class CategoryPickerDialogFragment extends DialogFragment
-        implements ListPickerAdapter.ListPickerAdapterCallbacks{
-
+        implements ListPickerAdapter.ListPickerAdapterCallbacks {
 
     public static String TAG = CategoryPickerDialogFragment.class.getName();
 
-    private Context mContext;
-    private ListPickerAdapter<Category> mAdapter;
     private CategoryPickerCallbacks mCallbacks;
-    private TextView mTitle;
-    private RecyclerView mCategoriesRecyclerView;
 
-    public interface CategoryPickerCallbacks{
+    public interface CategoryPickerCallbacks {
         void onCategoryPicked(Category category);
     }
 
-    public static CategoryPickerDialogFragment newInstance(){
+    public static CategoryPickerDialogFragment newInstance() {
         return new CategoryPickerDialogFragment();
     }
 
@@ -43,27 +38,26 @@ public class CategoryPickerDialogFragment extends DialogFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_fragment_list_picker, container, false);
-        mTitle = (TextView) v.findViewById(R.id.title);
-        mTitle.setText(getString(R.string.category_picker_title));
-        mAdapter = new ListPickerAdapter<>(this, CategoryHelper.getAllCategories(),
-                (Category)getArguments().getParcelable(Others.CATEGORY_PICKER_CATEGORY));
-        mCategoriesRecyclerView = (RecyclerView) v.findViewById(R.id.values);
-        mCategoriesRecyclerView.setHasFixedSize(false);
+        TextView title = (TextView)v.findViewById(R.id.title);
+        title.setText(getString(R.string.category_picker_title));
+        ListPickerAdapter<Category> adapter =
+                new ListPickerAdapter<>(this, CategoryHelper.getAllCategories(),
+                        (Category)getArguments().getParcelable(Others.CATEGORY_PICKER_CATEGORY));
+        RecyclerView categoriesRecyclerView = (RecyclerView)v.findViewById(R.id.values);
+        categoriesRecyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getContext());
-        mCategoriesRecyclerView.setLayoutManager(recyclerViewLManager);
-        mCategoriesRecyclerView.setAdapter(mAdapter);
+        categoriesRecyclerView.setLayoutManager(recyclerViewLManager);
+        categoriesRecyclerView.setAdapter(adapter);
         return v;
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        mCallbacks = (CategoryPickerCallbacks) context;
-        mContext = context;
+        mCallbacks = (CategoryPickerCallbacks)context;
     }
-
 
     @Override
     public void onItemSelected(Object item) {

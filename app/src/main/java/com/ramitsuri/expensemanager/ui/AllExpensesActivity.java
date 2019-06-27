@@ -1,9 +1,9 @@
 package com.ramitsuri.expensemanager.ui;
 
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.adapter.ExpenseAdapter;
@@ -20,7 +19,6 @@ import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.dialog.DatePickerDialogFragment;
 import com.ramitsuri.expensemanager.entities.Category;
-import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.helper.AppHelper;
@@ -29,13 +27,12 @@ import com.ramitsuri.expensemanager.helper.DateHelper;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class AllExpensesActivity extends AppCompatActivity
         implements AdapterView.OnItemSelectedListener, DatePickerDialogFragment.DatePickerCallbacks,
-        View.OnClickListener{
+        View.OnClickListener {
 
     private ExpenseAdapter mExpenseAdapter;
     private ExpenseWrapper mExpenseWrapper;
@@ -72,21 +69,21 @@ public class AllExpensesActivity extends AppCompatActivity
     }
 
     private void setupActionBar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         final ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setupViews(){
-        mDatePicker1 = (TextView) findViewById(R.id.search_date1);
+    private void setupViews() {
+        mDatePicker1 = (TextView)findViewById(R.id.search_date1);
         mDatePicker1.setOnClickListener(this);
-        mDatePicker2 = (TextView) findViewById(R.id.search_date2);
+        mDatePicker2 = (TextView)findViewById(R.id.search_date2);
         mDatePicker2.setOnClickListener(this);
         RecyclerView recyclerViewExpenses =
                 (RecyclerView)findViewById(R.id.recycler_view_expenses);
-        mTotal = (TextView) findViewById(R.id.expense_total);
+        mTotal = (TextView)findViewById(R.id.expense_total);
         mTotal.setText(AppHelper.getCurrency().split("-")[1] + mExpenseWrapper.getTotal());
 
         mExpenseAdapter = new ExpenseAdapter(mExpenseWrapper.getExpenses());
@@ -95,9 +92,9 @@ public class AllExpensesActivity extends AppCompatActivity
         recyclerViewExpenses.setLayoutManager(recyclerViewLManager);
         recyclerViewExpenses.setAdapter(mExpenseAdapter);
 
-        mCategorySpinner = (Spinner) findViewById(R.id.spinner_categories);
+        mCategorySpinner = (Spinner)findViewById(R.id.spinner_categories);
         mCategorySpinner.setOnItemSelectedListener(this);
-        mPaymentMethodSpinner = (Spinner) findViewById(R.id.spinner_payment_methods);
+        mPaymentMethodSpinner = (Spinner)findViewById(R.id.spinner_payment_methods);
         mPaymentMethodSpinner.setOnItemSelectedListener(this);
 
         mCategories = CategoryHelper.getAllCategories();
@@ -114,15 +111,15 @@ public class AllExpensesActivity extends AppCompatActivity
         mPaymentMethodSpinner.setAdapter(mPaymentMethodsAdapter);
     }
 
-    private ExpenseWrapper getExpenseWrapper(){
+    private ExpenseWrapper getExpenseWrapper() {
         return ExpenseHelper.getExpenseWrapper(ExpenseViewType.ALL);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if(adapterView == mCategorySpinner){
+        if (adapterView == mCategorySpinner) {
 
-        } else if(adapterView == mPaymentMethodSpinner) {
+        } else if (adapterView == mPaymentMethodSpinner) {
 
         }
     }
@@ -134,7 +131,7 @@ public class AllExpensesActivity extends AppCompatActivity
 
     @Override
     public void onDatePicked(int year, int month, int day) {
-        if(mDatePicker1.isSelected()){
+        if (mDatePicker1.isSelected()) {
             handleDatePicked(year, month, day, true);
         } else {
             handleDatePicked(year, month, day, false);
@@ -143,11 +140,11 @@ public class AllExpensesActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        if(view == mDatePicker1){
+        if (view == mDatePicker1) {
             mDatePicker1.setSelected(true);
             mDatePicker2.setSelected(false);
             showDatePicker(true);
-        } else if(view == mDatePicker2){
+        } else if (view == mDatePicker2) {
             mDatePicker1.setSelected(false);
             mDatePicker2.setSelected(true);
             showDatePicker(false);
@@ -156,7 +153,7 @@ public class AllExpensesActivity extends AppCompatActivity
 
     private void showDatePicker(boolean isFirstDate) {
         Bundle args = new Bundle();
-        if(isFirstDate) {
+        if (isFirstDate) {
             args.putInt(Others.DATE_PICKER_YEAR, mYear1);
             args.putInt(Others.DATE_PICKER_MONTH, mMonth1);
             args.putInt(Others.DATE_PICKER_DAY, mDay1);
@@ -172,7 +169,7 @@ public class AllExpensesActivity extends AppCompatActivity
     }
 
     private void handleDatePicked(int year, int month, int day, boolean isFirstDate) {
-        if(isFirstDate){
+        if (isFirstDate) {
             mYear1 = year;
             mMonth1 = month;
             mDay1 = day;

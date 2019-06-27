@@ -2,13 +2,11 @@ package com.ramitsuri.expensemanager.ui;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.ActionBar;
 import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;

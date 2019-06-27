@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Others;
 
-public class EditTextDialogFragment extends DialogFragment implements View.OnClickListener{
+public class EditTextDialogFragment extends DialogFragment implements View.OnClickListener {
 
     public static String TAG = EditTextDialogFragment.class.getName();
 
@@ -31,7 +31,7 @@ public class EditTextDialogFragment extends DialogFragment implements View.OnCli
         void onItemEdited(String value);
     }
 
-    public static EditTextDialogFragment newInstance(){
+    public static EditTextDialogFragment newInstance() {
         return new EditTextDialogFragment();
     }
 
@@ -39,32 +39,32 @@ public class EditTextDialogFragment extends DialogFragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mValueToEdit = getArguments().getString(Others.CATEGORY_PICKER_CATEGORY);
-        if(mValueToEdit == null){
+        if (mValueToEdit == null) {
             mValueToEdit = getArguments().getString(Others.PAYMENT_METHOD_PICKER_METHOD);
         }
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        mCallbacks = (EditTextDialogCallbacks) context;
+        mCallbacks = (EditTextDialogCallbacks)context;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.dialog_fragment_edit_text, container, false);
-        mTitle = (TextView) v.findViewById(R.id.title);
-        mValue = (EditText) v.findViewById(R.id.edit_text_value);
+        mTitle = (TextView)v.findViewById(R.id.title);
+        mValue = (EditText)v.findViewById(R.id.edit_text_value);
         mValue.setText(mValueToEdit);
         mValue.setSelection(mValueToEdit.length());
-        if(mValueToEdit.isEmpty()){
+        if (mValueToEdit.isEmpty()) {
             mTitle.setText(getString(R.string.add_new));
         } else {
             mTitle.setText(getString(R.string.edit));
         }
-        mSave = (TextView) v.findViewById(R.id.button_save);
+        mSave = (TextView)v.findViewById(R.id.button_save);
         mSave.setOnClickListener(this);
         return v;
     }

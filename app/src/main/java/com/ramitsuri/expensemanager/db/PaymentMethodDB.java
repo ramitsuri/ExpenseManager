@@ -11,19 +11,18 @@ import java.util.List;
 
 public class PaymentMethodDB extends BaseDB {
 
-
-    public PaymentMethodDB(Context context){
+    public PaymentMethodDB(Context context) {
         super(context);
     }
 
-    private String[] getAllColumns(){
-        return new String[]{
+    private String[] getAllColumns() {
+        return new String[] {
                 DBConstants.COLUMN_PAYMENT_METHOD_ID,
                 DBConstants.COLUMN_PAYMENT_METHOD_NAME
         };
     }
 
-    private ContentValues getPaymentMethodContentValues(PaymentMethod paymentMethod){
+    private ContentValues getPaymentMethodContentValues(PaymentMethod paymentMethod) {
         int id = paymentMethod.getId();
         String name = paymentMethod.getName();
 
@@ -34,14 +33,14 @@ public class PaymentMethodDB extends BaseDB {
         return contentValues;
     }
 
-    private PaymentMethod getPaymentMethodFromCursor(Cursor cursor){
+    private PaymentMethod getPaymentMethodFromCursor(Cursor cursor) {
         PaymentMethod paymentMethod = new PaymentMethod();
-        for(String column: cursor.getColumnNames()){
-            if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_ID)){
+        for (String column : cursor.getColumnNames()) {
+            if (column.equals(DBConstants.COLUMN_PAYMENT_METHOD_ID)) {
                 int value =
                         cursor.getInt(cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_ID));
                 paymentMethod.setId(value);
-            } else if(column.equals(DBConstants.COLUMN_PAYMENT_METHOD_NAME)){
+            } else if (column.equals(DBConstants.COLUMN_PAYMENT_METHOD_NAME)) {
                 String value = cursor.getString(
                         cursor.getColumnIndex(DBConstants.COLUMN_PAYMENT_METHOD_NAME));
                 paymentMethod.setName(value);
@@ -50,7 +49,7 @@ public class PaymentMethodDB extends BaseDB {
         return paymentMethod;
     }
 
-    public synchronized boolean setPaymentMethod(String name){
+    public synchronized boolean setPaymentMethod(String name) {
         open();
 
         boolean insertSuccess = true;
@@ -58,7 +57,7 @@ public class PaymentMethodDB extends BaseDB {
         contentValues.put(DBConstants.COLUMN_PAYMENT_METHOD_NAME, name);
         long result = mDatabase.insertOrThrow(DBConstants.TABLE_PAYMENT_METHOD, null,
                 contentValues);
-        if(result <= 0){
+        if (result <= 0) {
             insertSuccess = false;
         }
         close();
@@ -75,13 +74,13 @@ public class PaymentMethodDB extends BaseDB {
 
         List<PaymentMethod> paymentMethods = new ArrayList<>();
         try {
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 do {
                     PaymentMethod paymentMethod = getPaymentMethodFromCursor(cursor);
                     paymentMethods.add(paymentMethod);
                 } while (cursor.moveToNext());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -91,7 +90,7 @@ public class PaymentMethodDB extends BaseDB {
         return paymentMethods;
     }
 
-    public PaymentMethod getFirstPaymentMethod(){
+    public PaymentMethod getFirstPaymentMethod() {
         open();
 
         String[] columns = getAllColumns();
@@ -101,7 +100,7 @@ public class PaymentMethodDB extends BaseDB {
 
         PaymentMethod paymentMethod = null;
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             paymentMethod = getPaymentMethodFromCursor(cursor);
         }
 
@@ -109,13 +108,13 @@ public class PaymentMethodDB extends BaseDB {
     }
 
     //TODO don't delete if payment method has corresponding rows in expense table
-    public synchronized boolean deletePaymentMethod(int paymentMethodId){
-        if(paymentMethodId <= 0){
+    public synchronized boolean deletePaymentMethod(int paymentMethodId) {
+        if (paymentMethodId <= 0) {
             throw new IllegalArgumentException();
         }
         open();
         String selection1 = DBConstants.COLUMN_PAYMENT_METHOD_ID + " = ?";
-        String[] selectionArgs1 = new String[]{
+        String[] selectionArgs1 = new String[] {
                 String.valueOf(paymentMethodId)
         };
 
@@ -130,14 +129,14 @@ public class PaymentMethodDB extends BaseDB {
         return result1 > 0;
     }
 
-    public synchronized boolean setPaymentMethodName(int paymentMethodId, String newName){
-        if(paymentMethodId <= 0){
+    public synchronized boolean setPaymentMethodName(int paymentMethodId, String newName) {
+        if (paymentMethodId <= 0) {
             throw new IllegalArgumentException();
         }
         open();
 
         String selection = DBConstants.COLUMN_PAYMENT_METHOD_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 String.valueOf(paymentMethodId)
         };
 

@@ -14,14 +14,12 @@ import com.ramitsuri.expensemanager.helper.DateHelper;
 
 import java.util.List;
 
-public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomViewHolder>   {
+public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomViewHolder> {
 
     private List<Expense> mExpenses;
     private Context mContext;
 
-    private static final int mItemViewTypeTop = 0;
-
-    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mFieldDate, mFieldCategory, mFieldPaymentMethod, mFieldDescription,
                 mFieldAmount, mStore, mStoreDivider;
@@ -35,7 +33,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
             mFieldAmount = (TextView)itemView.findViewById(R.id.expense_amount);
             mStore = (TextView)itemView.findViewById(R.id.expense_store);
             mStoreDivider = (TextView)itemView.findViewById(R.id.expense_text_divider2);
-            //mTopDate = (TextView)itemView.findViewById(R.id.date);
         }
 
         @Override
@@ -44,12 +41,12 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
         }
     }
 
-    public ExpenseAdapter(List<Expense> expenses, Context context){
+    public ExpenseAdapter(List<Expense> expenses, Context context) {
         mContext = context;
         mExpenses = expenses;
     }
 
-    public ExpenseAdapter(List<Expense> expenses){
+    public ExpenseAdapter(List<Expense> expenses) {
         mExpenses = expenses;
     }
 
@@ -68,7 +65,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
         holder.mFieldAmount.setText(String.valueOf(mExpenses.get(position).getAmount()));
         holder.mFieldDate.setText(DateHelper.
                 getJustTheDayOfMonth(mExpenses.get(position).getDateTime()));
-        if(mExpenses.get(position).getStore().equals("<EMPTY>") ||
+        if (mExpenses.get(position).getStore().equals("<EMPTY>") ||
                 mExpenses.get(position).getStore().isEmpty()) {
             holder.mStoreDivider.setVisibility(View.GONE);
             holder.mStore.setVisibility(View.GONE);
@@ -76,7 +73,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
             holder.mStore.setText(mExpenses.get(position).getStore());
         }
 
-        if(mExpenses.get(position).isSynced()){
+        if (mExpenses.get(position).isSynced()) {
             holder.mFieldAmount.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
         } else {
             holder.mFieldAmount.setTextColor(ContextCompat.getColor(mContext, R.color.red));
@@ -87,12 +84,4 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CustomVi
     public int getItemCount() {
         return mExpenses.size();
     }
-
-    /*@Override
-    public int getItemViewType(int position) {
-        if(position == 0){
-            return mItemViewTypeTop;
-        }
-        return 1;
-    }*/
 }

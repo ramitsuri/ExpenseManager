@@ -1,6 +1,5 @@
 package com.ramitsuri.expensemanager.ui;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,10 +22,9 @@ import com.ramitsuri.expensemanager.backup.BackupWorker;
 import com.ramitsuri.expensemanager.constants.ExpenseViewType;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.LoaderResponse;
-import com.ramitsuri.expensemanager.helper.ActivityHelper;
+import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 import com.ramitsuri.expensemanager.helper.CategoryHelper;
-import com.ramitsuri.expensemanager.fragments.SelectedExpensesFragment;
 import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
@@ -45,7 +43,7 @@ import static com.ramitsuri.expensemanager.constants.Others.REQUEST_AUTHORIZATIO
 public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
         SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener,
-        BaseNavigationViewActivity.NavigationDrawerCallbacks{
+        BaseNavigationViewActivity.NavigationDrawerCallbacks {
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private FloatingActionButton mFabAddExpense;
 
@@ -66,7 +64,6 @@ public class MainActivity extends BaseNavigationViewActivity
        /* WorkManager.getInstance().cancelAllWorkByTag("Backup");
         AppHelper.setBackupWorkerEnqueued(false);*/
 
-
         if (!AppHelper.isBackupWorkerEnqueued()) {
             Constraints myConstraints = new Constraints.Builder()
                     .setRequiresCharging(false)
@@ -76,7 +73,7 @@ public class MainActivity extends BaseNavigationViewActivity
             PeriodicWorkRequest.Builder periodicWorkRequestBuilder =
                     new PeriodicWorkRequest.Builder(BackupWorker.class, 12, TimeUnit.HOURS)
                             .setConstraints(myConstraints)
-                    .addTag("Backup");
+                            .addTag("Backup");
             PeriodicWorkRequest request = periodicWorkRequestBuilder.build();
             WorkManager.getInstance().enqueue(request);
             AppHelper.setBackupWorkerEnqueued(true);
@@ -87,7 +84,7 @@ public class MainActivity extends BaseNavigationViewActivity
                 new Observer<List<WorkStatus>>() {
                     @Override
                     public void onChanged(@Nullable List<WorkStatus> workStatuses) {
-                        if(workStatuses==null||workStatuses.isEmpty()){
+                        if (workStatuses == null || workStatuses.isEmpty()) {
                             Log.w("wirk ", "empty");
                             return;
                         }
@@ -285,14 +282,14 @@ public class MainActivity extends BaseNavigationViewActivity
     }
 
     private void backup() {
-        new SheetsBackupTask(this){
+        new SheetsBackupTask(this) {
             @Override
             protected void onPostExecute(LoaderResponse loaderResponse) {
                 super.onPostExecute(loaderResponse);
-                if(loaderResponse.getResponseCode() == LoaderResponse.SUCCESS){
+                if (loaderResponse.getResponseCode() == LoaderResponse.SUCCESS) {
                     AppHelper.setLastBackupTime(System.currentTimeMillis());
                     deleteAllExpenses();
-                } else if(loaderResponse.getResponseCode() == LoaderResponse.FAILURE){
+                } else if (loaderResponse.getResponseCode() == LoaderResponse.FAILURE) {
                     startActivityForResult(loaderResponse.getIntent(), REQUEST_AUTHORIZATION);
                 }
             }

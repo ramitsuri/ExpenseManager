@@ -60,7 +60,7 @@ public class Category implements Parcelable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return mName;
     }
 
@@ -69,7 +69,7 @@ public class Category implements Parcelable {
         if (!(other instanceof Category)) {
             return false;
         }
-        return this.getId() == ((Category) other).getId();
+        return this.getId() == ((Category)other).getId();
     }
 
     @Override

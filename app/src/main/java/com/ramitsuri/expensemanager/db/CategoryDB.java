@@ -9,20 +9,20 @@ import com.ramitsuri.expensemanager.entities.Category;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryDB extends BaseDB{
+public class CategoryDB extends BaseDB {
 
-    public CategoryDB(Context context){
+    public CategoryDB(Context context) {
         super(context);
     }
 
-    public String[] getAllColumns(){
-        return new String[]{
+    public String[] getAllColumns() {
+        return new String[] {
                 DBConstants.COLUMN_CATEGORIES_ID,
                 DBConstants.COLUMN_CATEGORIES_NAME
         };
     }
 
-    public ContentValues getCategoryContentValues(Category category){
+    public ContentValues getCategoryContentValues(Category category) {
         int id = category.getId();
         String name = category.getName();
 
@@ -33,13 +33,13 @@ public class CategoryDB extends BaseDB{
         return contentValues;
     }
 
-    public Category getCategoryFromCursor(Cursor cursor){
+    public Category getCategoryFromCursor(Cursor cursor) {
         Category category = new Category();
-        for(String column: cursor.getColumnNames()){
-            if(column.equals(DBConstants.COLUMN_CATEGORIES_ID)){
+        for (String column : cursor.getColumnNames()) {
+            if (column.equals(DBConstants.COLUMN_CATEGORIES_ID)) {
                 int value = cursor.getInt(cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_ID));
                 category.setId(value);
-            } else if(column.equals(DBConstants.COLUMN_CATEGORIES_NAME)){
+            } else if (column.equals(DBConstants.COLUMN_CATEGORIES_NAME)) {
                 String value =
                         cursor.getString(cursor.getColumnIndex(DBConstants.COLUMN_CATEGORIES_NAME));
                 category.setName(value);
@@ -48,7 +48,7 @@ public class CategoryDB extends BaseDB{
         return category;
     }
 
-    public synchronized boolean setCategory(String name){
+    public synchronized boolean setCategory(String name) {
         open();
 
         boolean insertSuccess = true;
@@ -56,7 +56,7 @@ public class CategoryDB extends BaseDB{
         contentValues.put(DBConstants.COLUMN_CATEGORIES_NAME, name);
         long result = mDatabase.insertOrThrow(DBConstants.TABLE_CATEGORIES, null,
                 contentValues);
-        if(result <= 0){
+        if (result <= 0) {
             insertSuccess = false;
         }
         close();
@@ -73,13 +73,13 @@ public class CategoryDB extends BaseDB{
 
         List<Category> categories = new ArrayList<>();
         try {
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 do {
                     Category category = getCategoryFromCursor(cursor);
                     categories.add(category);
                 } while (cursor.moveToNext());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -89,7 +89,7 @@ public class CategoryDB extends BaseDB{
         return categories;
     }
 
-    public Category getFirstCategory(){
+    public Category getFirstCategory() {
         open();
 
         String[] columns = getAllColumns();
@@ -97,7 +97,7 @@ public class CategoryDB extends BaseDB{
         Cursor cursor = getCursor(DBConstants.TABLE_CATEGORIES, columns, null, null, null, null,
                 null, null);
         Category category = null;
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             category = getCategoryFromCursor(cursor);
         }
         cursor.close();
@@ -106,13 +106,13 @@ public class CategoryDB extends BaseDB{
     }
 
     //TODO don't delete if category has corresponding rows in expense table
-    public synchronized boolean deleteCategory(int categoryId){
-        if(categoryId <= 0){
+    public synchronized boolean deleteCategory(int categoryId) {
+        if (categoryId <= 0) {
             throw new IllegalArgumentException();
         }
         open();
         String selection1 = DBConstants.COLUMN_CATEGORIES_ID + " = ?";
-        String[] selectionArgs1 = new String[]{
+        String[] selectionArgs1 = new String[] {
                 String.valueOf(categoryId)
         };
 
@@ -127,14 +127,14 @@ public class CategoryDB extends BaseDB{
         return result1 > 0;
     }
 
-    public synchronized boolean setCategoryName(int categoryId, String newName){
-        if(categoryId <= 0){
+    public synchronized boolean setCategoryName(int categoryId, String newName) {
+        if (categoryId <= 0) {
             throw new IllegalArgumentException();
         }
         open();
 
         String selection = DBConstants.COLUMN_CATEGORIES_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 String.valueOf(categoryId)
         };
 

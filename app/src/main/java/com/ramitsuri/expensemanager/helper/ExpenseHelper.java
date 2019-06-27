@@ -13,76 +13,77 @@ import java.util.List;
 
 public class ExpenseHelper {
 
-    private static ExpenseDB getDB(){
+    private static ExpenseDB getDB() {
         return new ExpenseDB(MainApplication.getInstance());
     }
 
-    public static Expense getExpense(String rowID){
+    public static Expense getExpense(String rowID) {
         return getDB().getExpense(rowID);
     }
 
-    public static List<Expense> getExpenses(){
+    public static List<Expense> getExpenses() {
         return getDB().getAllExpense(null, null);
     }
 
-    public static List<Expense> getExpensesRequiringBackup(){
+    public static List<Expense> getExpensesRequiringBackup() {
         return getDB().getAllExpensesRequiringBackup();
     }
 
-    public static boolean updateSyncStatusAfterBackup(List<Expense> expenses){
+    public static boolean updateSyncStatusAfterBackup(List<Expense> expenses) {
         return getDB().updateExpensesSyncStatus(expenses);
     }
 
-    public static boolean addExpense(Expense expense){
+    public static boolean addExpense(Expense expense) {
         return getDB().setExpense(expense);
     }
 
-    public static boolean editDateTime(String id, long dateTime){
+    public static boolean editDateTime(String id, long dateTime) {
         return getDB().editExpenseDateTime(id, dateTime);
     }
 
-    public static boolean editAmount(String id, BigDecimal amount){
+    public static boolean editAmount(String id, BigDecimal amount) {
         return getDB().editExpenseAmount(id, amount);
     }
 
-    public static boolean editStore(String id, String store){
+    public static boolean editStore(String id, String store) {
         return getDB().editExpenseStore(id, store);
     }
 
-    public static boolean editDescription(String id, String description){
+    public static boolean editDescription(String id, String description) {
         return getDB().editExpenseDescription(id, description);
     }
 
-    public static boolean editSyncStatus(String id, boolean syncStatus){
+    public static boolean editSyncStatus(String id, boolean syncStatus) {
         return getDB().editExpenseSyncStatus(id, syncStatus);
     }
 
-    public static boolean editFlagged(String id, boolean flag){
+    public static boolean editFlagged(String id, boolean flag) {
         return getDB().editExpenseFlag(id, flag);
     }
 
-    public static boolean editCategory(String id, int categoryId){
+    public static boolean editCategory(String id, int categoryId) {
         return getDB().editExpenseCategoryId(id, categoryId);
     }
 
-    public static boolean editPaymentMethodId(String id, int paymentMethodId){
+    public static boolean editPaymentMethodId(String id, int paymentMethodId) {
         return getDB().editExpensePaymentMethodId(id, paymentMethodId);
     }
 
-    public static boolean deleteExpense(String id){
+    public static boolean deleteExpense(String id) {
         return getDB().deleteExpense(id);
     }
 
-    public static void deleteAll(){
+    public static void deleteAll() {
         getDB().deleteAllExpense();
     }
-    public static void deleteBackedUpExpenses(){
+
+    public static void deleteBackedUpExpenses() {
         getDB().deleteBackedUpExpense();
     }
 
-    public static ExpenseWrapper getExpenseWrapper(int expenseType){
+    public static ExpenseWrapper getExpenseWrapper(int expenseType) {
         ExpenseWrapper expenseWrapper = new ExpenseWrapper();
-        switch (expenseType){
+        switch (expenseType) {
             case ExpenseViewType.ALL:
                 expenseWrapper = getExpenseWrapperAll();
                 break;
@@ -161,7 +162,7 @@ public class ExpenseHelper {
 
         //Expense topExpense = getDB().getTopExpenseOnDay(date);
         //expenseWrapper.setTopExpense(topExpense.getDescription() + ", " +
-                //AppHelper.getCurrency().split("-")[1]+ topExpense.getAmount());
+        //AppHelper.getCurrency().split("-")[1]+ topExpense.getAmount());
         expenseWrapper.setTotal(String.valueOf(getTotal(expenseWrapper.getExpenses())));
 
         expenseWrapper.setDate(DateHelper.getPrettyDate(year, month, day));
@@ -171,7 +172,7 @@ public class ExpenseHelper {
 
     private static String getTotal(List<Expense> expenses) {
         BigDecimal total = new BigDecimal("0");
-        for(Expense expense: expenses){
+        for (Expense expense : expenses) {
             total = total.add(expense.getAmount());
         }
         return String.valueOf(total);

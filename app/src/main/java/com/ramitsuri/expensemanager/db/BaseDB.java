@@ -9,45 +9,45 @@ public class BaseDB {
     private SQLHelper mSQLHelper;
     protected SQLiteDatabase mDatabase;
 
-    public BaseDB(Context context){
+    public BaseDB(Context context) {
         mSQLHelper = SQLHelper.getInstance(context.getApplicationContext());
     }
 
-    protected void open(){
+    protected void open() {
         mDatabase = mSQLHelper.getWritableDatabase();
     }
 
-    protected void close(){
+    protected void close() {
 
     }
 
     public Cursor getCursor(String table, String[] columns, String selection,
-                            String[] selectionArgs, String groupBy, String having, String orderBy,
-                            String limit){
+            String[] selectionArgs, String groupBy, String having, String orderBy,
+            String limit) {
         open();
         return mDatabase.query(table, columns, selection, selectionArgs, groupBy, having, orderBy,
                 limit);
     }
 
-    public Cursor getCursor(String sql, String[] selectionArgs){
+    public Cursor getCursor(String sql, String[] selectionArgs) {
         open();
         return mDatabase.rawQuery(sql, selectionArgs);
     }
 
-    protected boolean isTrue(int dbBoolean){
+    protected boolean isTrue(int dbBoolean) {
         return dbBoolean == 1;
     }
 
-    protected String getCol(String table, String column){
+    protected String getCol(String table, String column) {
         return table + "." + column;
     }
 
-    protected String getCol(String table, String column, String as){
+    protected String getCol(String table, String column, String as) {
         return table + "." + column + " As " + as;
     }
 
     protected String getJoinTable(String table1, String table1Column, String table2,
-                                  String table2Column){
+            String table2Column) {
         return new StringBuilder()
                 .append(table1)
                 .append(" JOIN ")
@@ -60,8 +60,8 @@ public class BaseDB {
     }
 
     protected String getJoinTable(String table1, String table1Column1, String table1Column2,
-                                  String table2, String table2Column,
-                                  String table3, String table3Column){
+            String table2, String table2Column,
+            String table3, String table3Column) {
         return new StringBuilder()
                 .append(table1)
                 .append(" JOIN ")

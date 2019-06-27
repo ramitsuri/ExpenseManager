@@ -16,23 +16,18 @@ import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
-
 public class PaymentMethodPickerDialogFragment extends DialogFragment
-        implements ListPickerAdapter.ListPickerAdapterCallbacks{
+        implements ListPickerAdapter.ListPickerAdapterCallbacks {
 
     public static String TAG = PaymentMethodPickerDialogFragment.class.getName();
 
-    private Context mContext;
-    private ListPickerAdapter<PaymentMethod> mAdapter;
     private PaymentMethodPickerCallbacks mCallbacks;
-    private TextView mTitle;
-    private RecyclerView mPaymentMethodsRecyclerView;
 
-    public interface PaymentMethodPickerCallbacks{
+    public interface PaymentMethodPickerCallbacks {
         void onPaymentMethodPicked(PaymentMethod paymentMethod);
     }
 
-    public static PaymentMethodPickerDialogFragment newInstance(){
+    public static PaymentMethodPickerDialogFragment newInstance() {
         return new PaymentMethodPickerDialogFragment();
     }
 
@@ -43,31 +38,32 @@ public class PaymentMethodPickerDialogFragment extends DialogFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_fragment_list_picker, container, false);
-        mTitle = (TextView) v.findViewById(R.id.title);
-        mTitle.setText(getString(R.string.payment_method_picker_title));
-        mAdapter = new ListPickerAdapter<>(this, PaymentMethodHelper.getAllPaymentMethods(),
-                (PaymentMethod) getArguments().getParcelable(Others.PAYMENT_METHOD_PICKER_METHOD));
-        mPaymentMethodsRecyclerView = (RecyclerView) v.findViewById(R.id.values);
-        mPaymentMethodsRecyclerView.setHasFixedSize(false);
+        TextView title = (TextView)v.findViewById(R.id.title);
+        title.setText(getString(R.string.payment_method_picker_title));
+        ListPickerAdapter<PaymentMethod> adapter =
+                new ListPickerAdapter<>(this, PaymentMethodHelper.getAllPaymentMethods(),
+                        (PaymentMethod)getArguments()
+                                .getParcelable(Others.PAYMENT_METHOD_PICKER_METHOD));
+        RecyclerView paymentMethodsRecyclerView = (RecyclerView)v.findViewById(R.id.values);
+        paymentMethodsRecyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager recyclerViewLManager = new LinearLayoutManager(getContext());
-        mPaymentMethodsRecyclerView.setLayoutManager(recyclerViewLManager);
-        mPaymentMethodsRecyclerView.setAdapter(mAdapter);
+        paymentMethodsRecyclerView.setLayoutManager(recyclerViewLManager);
+        paymentMethodsRecyclerView.setAdapter(adapter);
 
         return v;
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         mCallbacks = (PaymentMethodPickerCallbacks)context;
-        mContext = context;
     }
 
     @Override
     public void onItemSelected(Object item) {
         dismiss();
-        mCallbacks.onPaymentMethodPicked((PaymentMethod) item);
+        mCallbacks.onPaymentMethodPicked((PaymentMethod)item);
     }
 }

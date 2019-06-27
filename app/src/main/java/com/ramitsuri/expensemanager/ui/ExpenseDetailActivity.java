@@ -1,10 +1,10 @@
 package com.ramitsuri.expensemanager.ui;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -14,17 +14,17 @@ import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Others;
-import com.ramitsuri.expensemanager.entities.PaymentMethod;
-import com.ramitsuri.expensemanager.helper.AppHelper;
-import com.ramitsuri.expensemanager.helper.CategoryHelper;
-import com.ramitsuri.expensemanager.helper.DateHelper;
-import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.dialog.CategoryPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.CurrencyPickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.DatePickerDialogFragment;
 import com.ramitsuri.expensemanager.dialog.PaymentMethodPickerDialogFragment;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.helper.AppHelper;
+import com.ramitsuri.expensemanager.helper.CategoryHelper;
+import com.ramitsuri.expensemanager.helper.DateHelper;
+import com.ramitsuri.expensemanager.helper.ExpenseHelper;
 import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 
 import java.math.BigDecimal;
@@ -34,7 +34,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         PaymentMethodPickerDialogFragment.PaymentMethodPickerCallbacks,
         DatePickerDialogFragment.DatePickerCallbacks,
         CategoryPickerDialogFragment.CategoryPickerCallbacks,
-        CurrencyPickerDialogFragment.CurrencyPickerCallbacks{
+        CurrencyPickerDialogFragment.CurrencyPickerCallbacks {
 
     EditText mFieldAmount, mFieldDescription, mFieldStore;
     RelativeLayout mDatePicker, mCategoryPicker, mPaymentMethodPicker;
@@ -69,7 +69,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void setupActionBar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         final ActionBar ab = getSupportActionBar();
@@ -77,7 +77,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void setupView() {
-        mDatePicker = (RelativeLayout) findViewById(R.id.date_picker);
+        mDatePicker = (RelativeLayout)findViewById(R.id.date_picker);
         mCategoryPicker = (RelativeLayout)findViewById(R.id.category_picker);
         mPaymentMethodPicker = (RelativeLayout)findViewById(R.id.payment_method_picker);
         mCurrencyPicker = (Button)findViewById(R.id.currency_picker);
@@ -103,16 +103,16 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
-        if(view == mDatePicker){
+        if (view == mDatePicker) {
             showDatePicker();
-        } else if(view == mCategoryPicker){
+        } else if (view == mCategoryPicker) {
             showCategoryPicker();
-        } else if(view == mPaymentMethodPicker){
+        } else if (view == mPaymentMethodPicker) {
             showPaymentMethodPicker();
-        } else if(view == mCurrencyPicker){
+        } else if (view == mCurrencyPicker) {
             DialogFragment newFragment = CurrencyPickerDialogFragment.newInstance();
             newFragment.show(getSupportFragmentManager(), CurrencyPickerDialogFragment.TAG);
-        } else if(view == mFabDone){
+        } else if (view == mFabDone) {
             createExpense();
             finish();
         }
@@ -149,7 +149,7 @@ public class ExpenseDetailActivity extends AppCompatActivity implements View.OnC
         mExpense.setStore(mFieldStore.getEditableText().toString());
         mExpense.setDescription(mFieldDescription.getEditableText().toString());
         String amount = mFieldAmount.getEditableText().toString();
-        if(amount.isEmpty()){
+        if (amount.isEmpty()) {
             amount = "0";
         }
         mExpense.setAmount(new BigDecimal(amount));

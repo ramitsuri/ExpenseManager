@@ -21,7 +21,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     }
 
     public SQLHelper(Context context, String name,
-                     SQLiteDatabase.CursorFactory factory, int version) {
+            SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 

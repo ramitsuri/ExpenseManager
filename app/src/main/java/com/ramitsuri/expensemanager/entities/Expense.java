@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.math.BigDecimal;
 
-public class Expense implements Parcelable{
+public class Expense implements Parcelable {
     private String mRowIdentifier;
     private long mDateTime;
     private BigDecimal mAmount;
@@ -20,8 +20,8 @@ public class Expense implements Parcelable{
     }
 
     public Expense(String rowIdentifier, String dateTime, String amount, int paymentMethod,
-                   int category, String description, String store,
-                   boolean isSynced, boolean isFlagged){
+            int category, String description, String store,
+            boolean isSynced, boolean isFlagged) {
         mRowIdentifier = rowIdentifier;
         mDateTime = Long.parseLong(dateTime);
         mAmount = new BigDecimal(amount);
@@ -33,9 +33,10 @@ public class Expense implements Parcelable{
         mIsFlagged = isFlagged;
     }
 
-    public Expense(String rowIdentifier, long dateTime, BigDecimal amount, PaymentMethod paymentMethod,
-                   Category category, String description, String store,
-                   boolean isSynced, boolean isFlagged) {
+    public Expense(String rowIdentifier, long dateTime, BigDecimal amount,
+            PaymentMethod paymentMethod,
+            Category category, String description, String store,
+            boolean isSynced, boolean isFlagged) {
         mRowIdentifier = rowIdentifier;
         mDateTime = dateTime;
         mAmount = amount;
@@ -85,8 +86,8 @@ public class Expense implements Parcelable{
         parcel.writeParcelable(mCategory, i);
         parcel.writeString(mDescription);
         parcel.writeString(mStore);
-        parcel.writeByte((byte) (mIsSynced ? 1 : 0));
-        parcel.writeByte((byte) (mIsFlagged ? 1 : 0));
+        parcel.writeByte((byte)(mIsSynced ? 1 : 0));
+        parcel.writeByte((byte)(mIsFlagged ? 1 : 0));
     }
 
     public String getRowIdentifier() {
@@ -145,11 +146,11 @@ public class Expense implements Parcelable{
         mIsSynced = syncStatus;
     }
 
-    public boolean isFlagged(){
+    public boolean isFlagged() {
         return mIsFlagged;
     }
 
-    public void setIsFlagged(boolean isFlagged){
+    public void setIsFlagged(boolean isFlagged) {
         mIsFlagged = isFlagged;
     }
 

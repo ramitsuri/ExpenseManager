@@ -1,8 +1,5 @@
 package com.ramitsuri.expensemanager.helper;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Others;

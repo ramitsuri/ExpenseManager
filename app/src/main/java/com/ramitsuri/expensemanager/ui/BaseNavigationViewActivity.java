@@ -2,10 +2,6 @@ package com.ramitsuri.expensemanager.ui;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,7 +28,6 @@ import com.ramitsuri.expensemanager.constants.LoaderIDs;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.AppHelper;
-import com.ramitsuri.expensemanager.service.BackupService;
 
 import java.util.Arrays;
 
@@ -50,17 +45,16 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
     private GoogleAccountCredential mCredential;
     private NavigationDrawerCallbacks mCallbacks;
 
-    public interface NavigationDrawerCallbacks{
+    public interface NavigationDrawerCallbacks {
         void onSyncClicked();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
             mCallbacks = (NavigationDrawerCallbacks)this;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -131,7 +125,7 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                                 startSettingsActivity();
                                 break;
                             case R.id.nav_sync:
-                                if(mCallbacks!=null){
+                                if (mCallbacks != null) {
                                     mCallbacks.onSyncClicked();
                                 }
                                 break;

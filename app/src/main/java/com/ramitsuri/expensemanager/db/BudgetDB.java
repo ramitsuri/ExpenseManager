@@ -62,7 +62,7 @@ public class BudgetDB extends BaseDB {
         return budget;
     }
 
-    public synchronized boolean setCategory(String name){
+    public synchronized boolean setCategory(String name) {
         open();
 
         boolean insertSuccess = true;
@@ -70,7 +70,7 @@ public class BudgetDB extends BaseDB {
         contentValues.put(DBConstants.COLUMN_CATEGORIES_NAME, name);
         long result = mDatabase.insertOrThrow(DBConstants.TABLE_CATEGORIES, null,
                 contentValues);
-        if(result <= 0){
+        if (result <= 0) {
             insertSuccess = false;
         }
         close();
@@ -87,14 +87,14 @@ public class BudgetDB extends BaseDB {
 
         List<Budget> budgets = new ArrayList<>();
         try {
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 List<Category> categories = CategoryHelper.getAllCategories();
                 do {
                     Budget budget = getBudgetFromCursor(cursor, categories);
                     budgets.add(budget);
                 } while (cursor.moveToNext());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -104,13 +104,13 @@ public class BudgetDB extends BaseDB {
         return budgets;
     }
 
-    public synchronized boolean deleteBudget(int budgetId){
-        if(budgetId <= 0){
+    public synchronized boolean deleteBudget(int budgetId) {
+        if (budgetId <= 0) {
             throw new IllegalArgumentException();
         }
         open();
         String selection1 = DBConstants.COLUMN_BUDGET_ID + " = ?";
-        String[] selectionArgs1 = new String[]{
+        String[] selectionArgs1 = new String[] {
                 String.valueOf(budgetId)
         };
 
@@ -125,14 +125,14 @@ public class BudgetDB extends BaseDB {
         return result1 > 0;
     }
 
-    public synchronized boolean setBudgetAmount(int budgetId, BigDecimal newBudget){
-        if(budgetId <= 0){
+    public synchronized boolean setBudgetAmount(int budgetId, BigDecimal newBudget) {
+        if (budgetId <= 0) {
             throw new IllegalArgumentException();
         }
         open();
 
         String selection = DBConstants.COLUMN_BUDGET_ID + " = ?";
-        String[] selectionArgs = new String[]{
+        String[] selectionArgs = new String[] {
                 String.valueOf(budgetId)
         };
 
