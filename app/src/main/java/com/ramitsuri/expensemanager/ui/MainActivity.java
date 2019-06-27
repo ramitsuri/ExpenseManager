@@ -274,6 +274,7 @@ public class MainActivity extends BaseNavigationViewActivity
             PaymentMethodHelper.addPaymentMethod("Amazon");
             PaymentMethodHelper.addPaymentMethod("Chase CH");
             PaymentMethodHelper.addPaymentMethod("Master 53");
+            PaymentMethodHelper.addPaymentMethod("Disney");
             PaymentMethodHelper.addPaymentMethod("AMEX");
 
             AppHelper.setFirstRunComplete();
