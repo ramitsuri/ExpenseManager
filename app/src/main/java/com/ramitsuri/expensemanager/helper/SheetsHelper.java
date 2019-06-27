@@ -174,14 +174,14 @@ public class SheetsHelper {
         Request request = new Request();
         AppendCellsRequest appendCellsRequest = new AppendCellsRequest();
         appendCellsRequest.setFields("*");
-        int sheetsId = EXPENSES_SHEET_ID;
+        int sheetsId;
         try {
             sheetsId = Integer.parseInt(AppHelper.getSheetsId());
         } catch (NumberFormatException ex) {
+            sheetsId = EXPENSES_SHEET_ID;
         }
-        if (sheetsId != EXPENSES_SHEET_ID) {
-            appendCellsRequest.setSheetId(sheetsId);
-        }
+        appendCellsRequest.setSheetId(sheetsId);
+
         List<RowData> rows = new ArrayList<>();
         for (Expense expense : expensesToBackup) {
             RowData rowData = new RowData();
@@ -250,40 +250,13 @@ public class SheetsHelper {
     private static ArrayList<ConditionValue> getPaymentMethodConditionValues() {
         ArrayList<ConditionValue> conditionValues = new ArrayList<>();
 
-        // Discover
-        ConditionValue value = new ConditionValue();
-        value.setUserEnteredValue("Discover");
-        conditionValues.add(value);
+        List<PaymentMethod> methods = PaymentMethodHelper.getAllPaymentMethods();
 
-        // Cash
-        value = new ConditionValue();
-        value.setUserEnteredValue("Cash");
-        conditionValues.add(value);
-
-        // Chase
-        value = new ConditionValue();
-        value.setUserEnteredValue("Chase");
-        conditionValues.add(value);
-
-        // Amazon
-        value = new ConditionValue();
-        value.setUserEnteredValue("Amazon");
-        conditionValues.add(value);
-
-        // Chase CH
-        value = new ConditionValue();
-        value.setUserEnteredValue("Chase CH");
-        conditionValues.add(value);
-
-        // Master 53
-        value = new ConditionValue();
-        value.setUserEnteredValue("Master 53");
-        conditionValues.add(value);
-
-        // AMEX
-        value = new ConditionValue();
-        value.setUserEnteredValue("AMEX");
-        conditionValues.add(value);
+        for (PaymentMethod method : methods) {
+            ConditionValue value = new ConditionValue();
+            value.setUserEnteredValue(method.getName());
+            conditionValues.add(value);
+        }
 
         return conditionValues;
     }
@@ -291,70 +264,13 @@ public class SheetsHelper {
     private static ArrayList<ConditionValue> getCategoryConditionValues() {
         ArrayList<ConditionValue> conditionValues = new ArrayList<>();
 
-        // Car
-        ConditionValue value = new ConditionValue();
-        value.setUserEnteredValue("Car");
-        conditionValues.add(value);
+        List<Category> categories = CategoryHelper.getAllCategories();
 
-        // Rent
-        value = new ConditionValue();
-        value.setUserEnteredValue("Rent");
-        conditionValues.add(value);
-
-        // Utilities
-        value = new ConditionValue();
-        value.setUserEnteredValue("Utilities");
-        conditionValues.add(value);
-
-        // Groceries
-        value = new ConditionValue();
-        value.setUserEnteredValue("Groceries");
-        conditionValues.add(value);
-
-        // Home
-        value = new ConditionValue();
-        value.setUserEnteredValue("Home");
-        conditionValues.add(value);
-
-        // Food
-        value = new ConditionValue();
-        value.setUserEnteredValue("Food");
-        conditionValues.add(value);
-
-        // Tech
-        value = new ConditionValue();
-        value.setUserEnteredValue("Tech");
-        conditionValues.add(value);
-
-        // Entertainment
-        value = new ConditionValue();
-        value.setUserEnteredValue("Entertainment");
-        conditionValues.add(value);
-
-        // Miscellaneous
-        value = new ConditionValue();
-        value.setUserEnteredValue("Miscellaneous");
-        conditionValues.add(value);
-
-        // Personal
-        value = new ConditionValue();
-        value.setUserEnteredValue("Personal");
-        conditionValues.add(value);
-
-        // Shopping
-        value = new ConditionValue();
-        value.setUserEnteredValue("Shopping");
-        conditionValues.add(value);
-
-        // Tech
-        value = new ConditionValue();
-        value.setUserEnteredValue("Fun");
-        conditionValues.add(value);
-
-        // Travel
-        value = new ConditionValue();
-        value.setUserEnteredValue("Travel");
-        conditionValues.add(value);
+        for (Category category : categories) {
+            ConditionValue value = new ConditionValue();
+            value.setUserEnteredValue(category.getName());
+            conditionValues.add(value);
+        }
 
         return conditionValues;
     }

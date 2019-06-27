@@ -69,7 +69,7 @@ public class MainActivity extends BaseNavigationViewActivity
 
         if (!AppHelper.isBackupWorkerEnqueued()) {
             Constraints myConstraints = new Constraints.Builder()
-                    .setRequiresCharging(true)
+                    .setRequiresCharging(false)
                     .setRequiredNetworkType(NetworkType.UNMETERED)
                     .build();
 
