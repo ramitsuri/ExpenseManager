@@ -44,6 +44,7 @@ public class MainActivity extends BaseNavigationViewActivity
         implements EasyPermissions.PermissionCallbacks,
         SelectedExpensesFragment.OnFragmentInteractionListener, View.OnClickListener,
         BaseNavigationViewActivity.NavigationDrawerCallbacks {
+
     private SelectedExpensesFragment mTodayFragment, mWeekFragment, mMonthFragment;
     private FloatingActionButton mFabAddExpense;
 

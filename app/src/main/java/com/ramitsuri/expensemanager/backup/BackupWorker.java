@@ -29,8 +29,6 @@ import androidx.work.Worker;
 
 public class BackupWorker extends Worker {
 
-    private static String SHEETS_ID = "1pzDFprwHn6pbh6lRC8_emFEvQSa3MDnnU6baOAPwgcQ";
-
     @NonNull
     @Override
     public WorkerResult doWork() {
@@ -61,7 +59,7 @@ public class BackupWorker extends Worker {
         content.setRequests(requests);
         Sheets.Spreadsheets.BatchUpdate batchUpdate;
         try {
-            batchUpdate = service.spreadsheets().batchUpdate(SHEETS_ID, content);
+            batchUpdate = service.spreadsheets().batchUpdate(AppHelper.SPREADSHEET_ID, content);
             BatchUpdateSpreadsheetResponse response = batchUpdate.execute();
             ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
             ExpenseHelper.deleteBackedUpExpenses();

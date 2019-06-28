@@ -7,6 +7,8 @@ import com.ramitsuri.expensemanager.constants.PrefKeys;
 
 public class AppHelper {
 
+    public static String SPREADSHEET_ID = "1pzDFprwHn6pbh6lRC8_emFEvQSa3MDnnU6baOAPwgcQ";
+
     public static boolean isFirstRunComplete() {
         return PrefHelper.get(PrefKeys.IS_FIRST_RUN_COMPLETE, false);
     }

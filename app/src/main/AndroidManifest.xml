@@ -55,6 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ramitsuri.expensemanager.ui.MainActivity" />
         </activity>
+        <activity android:name=".ui.LogActivity" />
 
         <service
             android:name=".service.BackupService"

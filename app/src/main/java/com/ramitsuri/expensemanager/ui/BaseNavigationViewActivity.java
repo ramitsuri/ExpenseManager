@@ -21,7 +21,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.constants.LoaderIDs;
 import com.ramitsuri.expensemanager.constants.Others;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 
@@ -117,6 +116,9 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                             case R.id.nav_settings:
                                 startSettingsActivity();
                                 break;
+                            case R.id.nav_log:
+                                startLogActivity();
+                                break;
                             case R.id.nav_sync:
                                 if (mCallbacks != null) {
                                     mCallbacks.onSyncClicked();
@@ -126,6 +128,10 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                         return onOptionsItemSelected(menuItem);
                     }
                 });
+    }
+
+    private void startLogActivity() {
+        startActivity(new Intent(this, LogActivity.class));
     }
 
     private void startSettingsActivity() {

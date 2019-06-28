@@ -9,6 +9,7 @@
     <string name="nav_menu_budget">Budgeting</string>
     <string name="nav_menu_categories">Categories</string>
     <string name="nav_menu_payment_methods">Payment Methods</string>
+    <string name="nav_menu_log">Log</string>
     <string name="nav_menu_settings">Settings</string>
     <string name="currency_picker_title">Currency</string>
     <string name="payment_method_picker_title">Payment Method</string>
