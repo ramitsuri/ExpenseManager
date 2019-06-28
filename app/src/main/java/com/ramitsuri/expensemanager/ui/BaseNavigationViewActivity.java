@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,10 +21,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.async.SheetsCreateLoader;
 import com.ramitsuri.expensemanager.constants.LoaderIDs;
 import com.ramitsuri.expensemanager.constants.Others;
-import com.ramitsuri.expensemanager.entities.LoaderResponse;
 import com.ramitsuri.expensemanager.helper.AppHelper;
 
 import java.util.Arrays;
@@ -34,7 +30,7 @@ import java.util.Arrays;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class BaseNavigationViewActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LoaderResponse> {
+        GoogleApiClient.OnConnectionFailedListener {
 
     protected DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -109,9 +105,6 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                         //menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
                         switch (menuItem.getItemId()) {
-                            case R.id.nav_expenses:
-                                startExpensesActivity();
-                                break;
                             case R.id.nav_all_expenses:
                                 startAllExpenseActivity();
                                 break;
@@ -141,16 +134,6 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
 
     private void startAllExpenseActivity() {
         startActivity(new Intent(this, AllExpensesActivity.class));
-    }
-
-    private void startExpensesActivity() {
-        /*if(mSelectedMenuItem == null || mSelectedMenuItem.getItemId() != R.id.nav_expenses) {
-            Intent intent = new Intent(this, MainActivity.class);
-            //intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            //mSelectedMenuItem = null;
-            finish();
-            //startActivity(intent);
-        }*/
     }
 
     private void startCategoriesActivity() {
@@ -190,16 +173,9 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
                         AppHelper.setAccountName(accountName);
                         mAccountText.setText(accountName);
                         mCredential.setSelectedAccountName(accountName);
-                        /*getSupportLoaderManager().restartLoader(LoaderIDs.SHEETS_CREATE, null, this)
-                                .forceLoad();*/
                     }
                 }
                 break;
-            case Others.REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK && data != null) {
-                    getSupportLoaderManager().restartLoader(LoaderIDs.SHEETS_CREATE, null, this)
-                            .forceLoad();
-                }
         }
     }
 
@@ -218,37 +194,5 @@ public class BaseNavigationViewActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-    @Override
-    public Loader<LoaderResponse> onCreateLoader(int id, Bundle args) {
-        return new SheetsCreateLoader(this, AppHelper.getAccountName());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<LoaderResponse> loader, LoaderResponse data) {
-        if (data.getResponseCode() == LoaderResponse.SUCCESS) {
-            //AppHelper.setSheetsId(data.getSheetId());
-            AppHelper.setFirstBackupComplete(false);
-            scheduleJob();
-        } else if (data.getResponseCode() == LoaderResponse.REQUEST_ACCESS) {
-            startActivityForResult(data.getIntent(), Others.REQUEST_AUTHORIZATION);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<LoaderResponse> loader) {
-
-    }
-
-    private void scheduleJob() {
-        /*ComponentName serviceComponent = new ComponentName(this, BackupService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(1, serviceComponent)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-                .setRequiresCharging(true)
-                .setPeriodic(86400000)
-                .setPersisted(true);
-        JobScheduler scheduler = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        scheduler.schedule(builder.build());*/
     }
 }
