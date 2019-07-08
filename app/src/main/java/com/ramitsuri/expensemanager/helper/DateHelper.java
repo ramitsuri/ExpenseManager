@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.helper;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class DateHelper {
@@ -19,16 +20,32 @@ public class DateHelper {
     }
 
     public static double getDateForSheet(long date) {
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(Calendar.DAY_OF_MONTH, 30);
-        calendar1.set(Calendar.MONTH, 11);
-        calendar1.set(Calendar.YEAR, 1899);
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(Calendar.DAY_OF_MONTH, getDayFromLongDate(date));
-        calendar2.set(Calendar.MONTH, getMonthFromLongDate(date) - 1);
-        calendar2.set(Calendar.YEAR, getYearFromLongDate(date));
-        return TimeUnit.MILLISECONDS
-                .toDays(calendar2.getTimeInMillis() - calendar1.getTimeInMillis());
+        TimeZone timeZone = TimeZone.getDefault();
+
+        Calendar calendar = Calendar.getInstance(timeZone);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // Start date time
+        calendar.set(Calendar.DAY_OF_MONTH, 30);
+        calendar.set(Calendar.MONTH, 11);
+        calendar.set(Calendar.YEAR, 1899);
+        long timeStart = calendar.getTimeInMillis();
+
+        // End date time
+        calendar.set(Calendar.DAY_OF_MONTH, getDayFromLongDate(date));
+        calendar.set(Calendar.MONTH, getMonthFromLongDate(date) - 1);
+        calendar.set(Calendar.YEAR, getYearFromLongDate(date));
+        long timeEnd = calendar.getTimeInMillis();
+
+        long offset = 0;
+        if (timeZone.observesDaylightTime()) {
+            offset = timeZone.getOffset(calendar.getTimeInMillis());
+        }
+
+        return TimeUnit.MILLISECONDS.toDays(timeEnd - timeStart - offset);
     }
 
     public static String getPrettyDate(int year1, int month1, int day1,
