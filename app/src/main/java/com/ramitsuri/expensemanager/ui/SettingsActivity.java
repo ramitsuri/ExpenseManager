@@ -1,12 +1,10 @@
 package com.ramitsuri.expensemanager.ui;
 
-import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.v7.app.ActionBar;
 import android.widget.Toast;
 
 import com.ramitsuri.expensemanager.R;
@@ -17,8 +15,10 @@ import com.ramitsuri.expensemanager.helper.DateHelper;
 
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.lifecycle.LiveData;
+import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkStatus;
 
 import static com.ramitsuri.expensemanager.constants.Others.REQUEST_AUTHORIZATION;
 
@@ -37,9 +37,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, mFragment).commit();
 
-        LiveData<List<WorkStatus>> statuses = WorkManager.getInstance().getStatusesByTag("Backup");
-        if (statuses.getValue() != null) {
-            for (WorkStatus status : statuses.getValue()) {
+        LiveData<List<WorkInfo>> infos =
+                WorkManager.getInstance().getWorkInfosByTagLiveData("Backup");
+        if (infos.getValue() != null) {
+            for (WorkInfo status : infos.getValue()) {
                 Toast.makeText(this, status.toString(), Toast.LENGTH_SHORT).show();
             }
         }

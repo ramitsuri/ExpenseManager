@@ -27,7 +27,7 @@
             android:background="@color/gray_dark"
             android:padding="16dp">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/button_save"

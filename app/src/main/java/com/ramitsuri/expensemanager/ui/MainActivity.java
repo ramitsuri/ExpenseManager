@@ -1,21 +1,15 @@
 package com.ramitsuri.expensemanager.ui;
 
-import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.async.SheetsBackupTask;
 import com.ramitsuri.expensemanager.backup.BackupWorker;
@@ -31,11 +25,16 @@ import com.ramitsuri.expensemanager.helper.PaymentMethodHelper;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkStatus;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.ramitsuri.expensemanager.constants.Others.REQUEST_AUTHORIZATION;
@@ -81,15 +80,15 @@ public class MainActivity extends BaseNavigationViewActivity
             Log.w("wirk", "enqueed");
         }
 
-        WorkManager.getInstance().getStatusesByTag("Backup").observe(this,
-                new Observer<List<WorkStatus>>() {
+        WorkManager.getInstance().getWorkInfosByTagLiveData("Backup").observe(this,
+                new Observer<List<WorkInfo>>() {
                     @Override
-                    public void onChanged(@Nullable List<WorkStatus> workStatuses) {
-                        if (workStatuses == null || workStatuses.isEmpty()) {
+                    public void onChanged(List<WorkInfo> workInfos) {
+                        if (workInfos == null || workInfos.isEmpty()) {
                             Log.w("wirk ", "empty");
                             return;
                         }
-                        Log.w("wirk: ", workStatuses.get(0).toString());
+                        Log.w("wirk: ", workInfos.get(0).toString());
                     }
                 });
         if (ACTION_ADD_EXPENSE.equals(getIntent().getAction())) {

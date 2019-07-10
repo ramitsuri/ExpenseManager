@@ -1,6 +1,8 @@
 package com.ramitsuri.expensemanager.backup;
 
-import android.support.annotation.NonNull;
+import android.content.Context;
+
+import androidx.annotation.NonNull;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -26,17 +28,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 public class BackupWorker extends Worker {
 
+    public BackupWorker(@NonNull Context context,
+            @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+    }
+
     @NonNull
     @Override
-    public WorkerResult doWork() {
+    public Result doWork() {
         LoaderResponse response = backup();
         if(response.getResponseCode() == LoaderResponse.FAILURE){
-            return WorkerResult.FAILURE;
+            return Result.failure();
         }else {
-            return WorkerResult.SUCCESS;
+            return Result.success();
         }
     }
 
