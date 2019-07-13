@@ -7,16 +7,23 @@ import java.util.List;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 @Dao
-public interface CategoryDao {
+public abstract class CategoryDao {
 
     @Query("SELECT * FROM category")
-    List<Category> getAll();
+    public abstract List<Category> getAll();
+
+    @Transaction
+    public void setAll(List<Category> categories) {
+        deleteAll();
+        insertAll(categories);
+    }
 
     @Insert
-    void insertAll(List<Category> categories);
+    public abstract void insertAll(List<Category> categories);
 
     @Query("DELETE FROM category")
-    void deleteAll();
+    public abstract void deleteAll();
 }

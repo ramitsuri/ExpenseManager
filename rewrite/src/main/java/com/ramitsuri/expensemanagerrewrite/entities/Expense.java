@@ -158,16 +158,16 @@ public class Expense implements Parcelable {
 
     @Override
     public String toString() {
-        return "Expense{" +
-                "mId=" + mId +
-                ", mDateTime=" + mDateTime +
-                ", mAmount=" + mAmount +
-                ", mPaymentMethod='" + mPaymentMethod + '\'' +
-                ", mCategory='" + mCategory + '\'' +
-                ", mDescription='" + mDescription + '\'' +
-                ", mStore='" + mStore + '\'' +
-                ", mIsSynced=" + mIsSynced +
-                ", mIsStarred=" + mIsStarred +
-                "}\n";
+        return "Expense { " +
+                "mId = " + mId +
+                ", mDateTime = " + mDateTime +
+                ", mAmount = " + mAmount +
+                ", mPaymentMethod = '" + mPaymentMethod + '\'' +
+                ", mCategory = '" + mCategory + '\'' +
+                ", mDescription = '" + mDescription + '\'' +
+                ", mStore = '" + mStore + '\'' +
+                ", mIsSynced = " + mIsSynced +
+                ", mIsStarred = " + mIsStarred +
+                " }\n";
     }
 }

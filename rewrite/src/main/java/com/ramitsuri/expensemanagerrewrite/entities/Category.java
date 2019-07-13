@@ -67,9 +67,9 @@ public class Category implements Parcelable {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "mId=" + mId +
-                ", mName='" + mName + '\'' +
-                "}\n";
+        return "Category { " +
+                "mId = " + mId +
+                ", mName = '" + mName + '\'' +
+                " }";
     }
 }

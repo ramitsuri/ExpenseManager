@@ -7,15 +7,22 @@ import java.util.List;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 @Dao
-public interface PaymentMethodDao {
+public abstract class PaymentMethodDao {
     @Query("SELECT * FROM paymentmethod")
-    List<PaymentMethod> getAll();
+    public abstract List<PaymentMethod> getAll();
+
+    @Transaction
+    public void setAll(List<PaymentMethod> paymentMethods) {
+        deleteAll();
+        insertAll(paymentMethods);
+    }
 
     @Insert
-    void insertAll(List<PaymentMethod> paymentMethods);
+    public abstract void insertAll(List<PaymentMethod> paymentMethods);
 
     @Query("DELETE FROM paymentmethod")
-    void deleteAll();
+    public abstract void deleteAll();
 }

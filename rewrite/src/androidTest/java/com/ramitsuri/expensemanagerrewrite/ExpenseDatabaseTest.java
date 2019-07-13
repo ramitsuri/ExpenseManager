@@ -107,6 +107,10 @@ public class ExpenseDatabaseTest {
         // delete all
         mCategoryDao.deleteAll();
         Assert.assertEquals(0, mCategoryDao.getAll().size());
+
+        // set all
+        mCategoryDao.setAll(TestUtils.getAllCategories());
+        Assert.assertEquals(TestUtils.getCategories().length, mCategoryDao.getAll().size());
     }
 
     @Test
@@ -119,5 +123,10 @@ public class ExpenseDatabaseTest {
         // delete all
         mPaymentMethodDao.deleteAll();
         Assert.assertEquals(0, mPaymentMethodDao.getAll().size());
+
+        // set all
+        mPaymentMethodDao.setAll(TestUtils.getAllPaymentMethods());
+        Assert.assertEquals(TestUtils.getPaymentMethods().length,
+                mPaymentMethodDao.getAll().size());
     }
 }

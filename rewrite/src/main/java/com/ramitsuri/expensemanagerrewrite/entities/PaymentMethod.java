@@ -71,9 +71,9 @@ public class PaymentMethod implements Parcelable {
 
     @Override
     public String toString() {
-        return "PaymentMethod{" +
-                "mId=" + mId +
-                ", mName='" + mName + '\'' +
-                "}\n";
+        return "PaymentMethod { " +
+                "mId = " + mId +
+                ", mName = '" + mName + '\'' +
+                " }";
     }
 }
