@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Expense implements Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int mId;
 
     @ColumnInfo(name = "date_time")
@@ -22,10 +22,10 @@ public class Expense implements Parcelable {
     private BigDecimal mAmount;
 
     @ColumnInfo(name = "payment_method")
-    private PaymentMethod mPaymentMethod;
+    private String mPaymentMethod;
 
     @ColumnInfo(name = "category")
-    private Category mCategory;
+    private String mCategory;
 
     @ColumnInfo(name = "description")
     private String mDescription;
@@ -51,6 +51,9 @@ public class Expense implements Parcelable {
         }
     };
 
+    public Expense() {
+    }
+
     protected Expense(Parcel in) {
         mId = in.readInt();
         mDateTime = in.readLong();
@@ -73,8 +76,8 @@ public class Expense implements Parcelable {
         parcel.writeInt(mId);
         parcel.writeLong(mDateTime);
         parcel.writeString(String.valueOf(mAmount));
-        parcel.writeParcelable(mPaymentMethod, i);
-        parcel.writeParcelable(mCategory, i);
+        parcel.writeString(mPaymentMethod);
+        parcel.writeString(mCategory);
         parcel.writeString(mDescription);
         parcel.writeString(mStore);
         parcel.writeByte((byte)(mIsSynced ? 1 : 0));
@@ -105,19 +108,19 @@ public class Expense implements Parcelable {
         mAmount = amount;
     }
 
-    public PaymentMethod getPaymentMethod() {
+    public String getPaymentMethod() {
         return mPaymentMethod;
     }
 
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
+    public void setPaymentMethod(String paymentMethod) {
         mPaymentMethod = paymentMethod;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return mCategory;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         mCategory = category;
     }
 
@@ -133,7 +136,7 @@ public class Expense implements Parcelable {
         return mIsSynced;
     }
 
-    public void setSynced(boolean syncStatus) {
+    public void setIsSynced(boolean syncStatus) {
         mIsSynced = syncStatus;
     }
 
@@ -141,7 +144,7 @@ public class Expense implements Parcelable {
         return mIsStarred;
     }
 
-    public void setStarred(boolean isFlagged) {
+    public void setIsStarred(boolean isFlagged) {
         mIsStarred = isFlagged;
     }
 
@@ -151,5 +154,20 @@ public class Expense implements Parcelable {
 
     public void setStore(String store) {
         mStore = store;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "mId=" + mId +
+                ", mDateTime=" + mDateTime +
+                ", mAmount=" + mAmount +
+                ", mPaymentMethod='" + mPaymentMethod + '\'' +
+                ", mCategory='" + mCategory + '\'' +
+                ", mDescription='" + mDescription + '\'' +
+                ", mStore='" + mStore + '\'' +
+                ", mIsSynced=" + mIsSynced +
+                ", mIsStarred=" + mIsStarred +
+                "}\n";
     }
 }

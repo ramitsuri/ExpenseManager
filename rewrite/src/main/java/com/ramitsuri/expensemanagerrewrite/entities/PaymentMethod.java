@@ -8,20 +8,19 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class PaymentMethod implements Parcelable{
+public class PaymentMethod implements Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int mId;
-
 
     @ColumnInfo(name = "name")
     private String mName;
 
-    public  PaymentMethod(){
+    public PaymentMethod() {
 
     }
 
-    public PaymentMethod(int id, String name){
+    public PaymentMethod(int id, String name) {
         mId = id;
         mName = name;
     }
@@ -71,22 +70,10 @@ public class PaymentMethod implements Parcelable{
     }
 
     @Override
-    public String toString(){
-        return mName;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof PaymentMethod)) {
-            return false;
-        }
-        return this.getId() == ((PaymentMethod) other).getId();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = hashCode * this.getId() + this.getName().hashCode();
-        return hashCode;
+    public String toString() {
+        return "PaymentMethod{" +
+                "mId=" + mId +
+                ", mName='" + mName + '\'' +
+                "}\n";
     }
 }

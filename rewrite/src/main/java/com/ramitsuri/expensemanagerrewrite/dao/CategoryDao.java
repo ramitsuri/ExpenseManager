@@ -5,7 +5,6 @@ import com.ramitsuri.expensemanagerrewrite.entities.Category;
 import java.util.List;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -16,8 +15,8 @@ public interface CategoryDao {
     List<Category> getAll();
 
     @Insert
-    void insertAll(Category... categories);
+    void insertAll(List<Category> categories);
 
-    @Delete
+    @Query("DELETE FROM category")
     void deleteAll();
 }

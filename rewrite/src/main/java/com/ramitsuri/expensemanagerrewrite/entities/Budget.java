@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 
 public class Budget {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int mId;
 
     @ColumnInfo(name = "limit")
