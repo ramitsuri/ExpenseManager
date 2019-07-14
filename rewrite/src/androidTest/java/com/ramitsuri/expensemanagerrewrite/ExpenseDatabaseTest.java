@@ -12,14 +12,16 @@ import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -28,6 +30,8 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
  */
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class ExpenseDatabaseTest {
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     private static final String TAG = ExpenseDatabaseTest.class.getName();
 
@@ -38,19 +42,19 @@ public class ExpenseDatabaseTest {
 
     @Before
     public void createDb() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        Context appContext = getContext();
         mDb = Room.inMemoryDatabaseBuilder(appContext, ExpenseManagerDatabase.class).build();
         mExpenseDao = mDb.expenseDao();
         mCategoryDao = mDb.categoryDao();
         mPaymentMethodDao = mDb.paymentMethodDao();
 
-        for (Expense expense : TestUtils.getExpenses()) {
+        for (Expense expense : ExpenseManagerTestUtils.getExpenses()) {
             mExpenseDao.insert(expense);
         }
 
-        mCategoryDao.insertAll(TestUtils.getAllCategories());
+        mCategoryDao.insertAll(ExpenseManagerTestUtils.getAllCategories());
 
-        mPaymentMethodDao.insertAll(TestUtils.getAllPaymentMethods());
+        mPaymentMethodDao.insertAll(ExpenseManagerTestUtils.getAllPaymentMethods());
     }
 
     @After
@@ -58,50 +62,61 @@ public class ExpenseDatabaseTest {
         mDb.close();
     }
 
+    private Context getContext() {
+        return InstrumentationRegistry.getInstrumentation().getTargetContext();
+    }
+
     @Test
     public void expenseTest() throws Exception {
         // Get all
-        Assert.assertEquals(TestUtils.getExpenses().size(), mExpenseDao.getAll().size());
+        Assert.assertEquals(ExpenseManagerTestUtils.getExpenses().size(),
+                mExpenseDao.getAll().size());
         Log.d(TAG, mExpenseDao.getAll().toString());
 
         // Get all starred
-        Assert.assertEquals(TestUtils.getAllStarred().size(), mExpenseDao.getAllStarred().size());
+        Assert.assertEquals(
+                ExpenseManagerTestUtils.getAllStarred().size(), mExpenseDao.getAllStarred().size());
 
         // get All unsynced
-        Assert.assertEquals(TestUtils.getAllUnsynced().size(), mExpenseDao.getAllUnsynced().size());
+        Assert.assertEquals(ExpenseManagerTestUtils.getAllUnsynced().size(),
+                LiveDataTestUtil.getValue(mExpenseDao.getAllUnsynced()).size());
 
         // delete synced
         mExpenseDao.deleteSynced();
-        Assert.assertEquals(0, mExpenseDao.getAll().size() - mExpenseDao.getAllUnsynced().size());
+        Assert.assertEquals(0, mExpenseDao.getAll().size() -
+                LiveDataTestUtil.getValue(mExpenseDao.getAllUnsynced()).size());
 
         // delete all
         mExpenseDao.deleteAll();
         Assert.assertEquals(0, mExpenseDao.getAll().size());
 
         // add all
-        for (Expense expense : TestUtils.getExpenses()) {
+        for (Expense expense : ExpenseManagerTestUtils.getExpenses()) {
             mExpenseDao.insert(expense);
         }
-        Assert.assertEquals(TestUtils.getExpenses().size(), mExpenseDao.getAll().size());
+        Assert.assertEquals(ExpenseManagerTestUtils.getExpenses().size(),
+                mExpenseDao.getAll().size());
 
         // update unsynced
         mExpenseDao.updateUnsynced();
-        Assert.assertEquals(0, mExpenseDao.getAllUnsynced().size());
+        Assert.assertEquals(0, LiveDataTestUtil.getValue(mExpenseDao.getAllUnsynced()).size());
 
         // set starred
         mExpenseDao.setStarred(mExpenseDao.getAll().get(3).getId());
-        Assert.assertEquals(TestUtils.getAllStarred().size() + 1,
+        Assert.assertEquals(ExpenseManagerTestUtils.getAllStarred().size() + 1,
                 mExpenseDao.getAllStarred().size());
 
         // set unstarred
         mExpenseDao.setUnstarred(mExpenseDao.getAll().get(3).getId());
-        Assert.assertEquals(TestUtils.getAllStarred().size(), mExpenseDao.getAllStarred().size());
+        Assert.assertEquals(
+                ExpenseManagerTestUtils.getAllStarred().size(), mExpenseDao.getAllStarred().size());
     }
 
     @Test
     public void categoryTest() {
         // get all
-        Assert.assertEquals(TestUtils.getCategories().length, mCategoryDao.getAll().size());
+        Assert.assertEquals(ExpenseManagerTestUtils.getCategories().length,
+                mCategoryDao.getAll().size());
         Log.d(TAG, mCategoryDao.getAll().toString());
 
         // delete all
@@ -109,14 +124,15 @@ public class ExpenseDatabaseTest {
         Assert.assertEquals(0, mCategoryDao.getAll().size());
 
         // set all
-        mCategoryDao.setAll(TestUtils.getAllCategories());
-        Assert.assertEquals(TestUtils.getCategories().length, mCategoryDao.getAll().size());
+        mCategoryDao.setAll(ExpenseManagerTestUtils.getAllCategories());
+        Assert.assertEquals(ExpenseManagerTestUtils.getCategories().length,
+                mCategoryDao.getAll().size());
     }
 
     @Test
     public void paymentMethodTest() {
         // get all
-        Assert.assertEquals(TestUtils.getPaymentMethods().length,
+        Assert.assertEquals(ExpenseManagerTestUtils.getPaymentMethods().length,
                 mPaymentMethodDao.getAll().size());
         Log.d(TAG, mPaymentMethodDao.getAll().toString());
 
@@ -125,8 +141,8 @@ public class ExpenseDatabaseTest {
         Assert.assertEquals(0, mPaymentMethodDao.getAll().size());
 
         // set all
-        mPaymentMethodDao.setAll(TestUtils.getAllPaymentMethods());
-        Assert.assertEquals(TestUtils.getPaymentMethods().length,
+        mPaymentMethodDao.setAll(ExpenseManagerTestUtils.getAllPaymentMethods());
+        Assert.assertEquals(ExpenseManagerTestUtils.getPaymentMethods().length,
                 mPaymentMethodDao.getAll().size());
     }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TestUtils {
+public class ExpenseManagerTestUtils {
     public static String[] getCategories() {
         return new String[] {
                 "Food",

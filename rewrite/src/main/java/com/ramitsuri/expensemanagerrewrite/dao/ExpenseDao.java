@@ -4,6 +4,7 @@ import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -17,7 +18,7 @@ public interface ExpenseDao {
     List<Expense> getAllStarred();
 
     @Query("SELECT * FROM expense WHERE is_synced = 0")
-    List<Expense> getAllUnsynced();
+    LiveData<List<Expense>> getAllUnsynced();
 
     @Insert
     void insert(Expense expense);
