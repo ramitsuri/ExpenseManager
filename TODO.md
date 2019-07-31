@@ -1,0 +1,4 @@
+- Background threads
+- Repositories
+- ViewModels
+- UI
