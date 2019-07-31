@@ -1,69 +1,59 @@
 package com.ramitsuri.expensemanagerrewrite.data.repository;
 
-import android.app.Application;
-import android.os.AsyncTask;
-
+import com.ramitsuri.expensemanagerrewrite.data.AppExecutors;
 import com.ramitsuri.expensemanagerrewrite.data.ExpenseManagerDatabase;
-import com.ramitsuri.expensemanagerrewrite.data.dao.ExpenseDao;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class ExpenseRepository {
-    private ExpenseDao mDao;
-    private LiveData<List<Expense>> mExpenses;
-    private LiveData<List<Expense>> mAllStarred;
-    private LiveData<List<Expense>> mAllUnsynced;
 
-    public ExpenseRepository(Application application) {
-        ExpenseManagerDatabase database = ExpenseManagerDatabase.getInstance(application);
-        mDao = database.expenseDao();
-        mExpenses = mDao.getAll();
+    private AppExecutors mExecutors;
+    private ExpenseManagerDatabase mDatabase;
+
+    private LiveData<List<Expense>> mExpenses;
+
+    public ExpenseRepository(AppExecutors executors, ExpenseManagerDatabase database) {
+        mExecutors = executors;
+        mDatabase = database;
+        mExpenses = mDatabase.expenseDao().getAll();
     }
 
     public LiveData<List<Expense>> getExpenses() {
         return mExpenses;
     }
 
-    /*public List<Expense> getStarredExpenses() {
-        return mExpenses;
+    public LiveData<List<Expense>> getStarredExpenses() {
+        final MutableLiveData<List<Expense>> expenses = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                expenses.postValue(mDatabase.expenseDao().getAllStarred());
+            }
+        });
+        return expenses;
     }
 
-    public List<Expense> getUnsyncedExpenses() {
-        return new getUnsyncedTask(mDao).execute();
-    }*/
-
-    public void insertExpense(Expense expense){
-
+    public LiveData<List<Expense>> getUnsyncedExpenses() {
+        final MutableLiveData<List<Expense>> expenses = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                expenses.postValue(mDatabase.expenseDao().getAllUnsynced());
+            }
+        });
+        return expenses;
     }
 
-    /*private static class getStarredTask extends AsyncTask<Void, Void, List<Expense>> {
-
-        private ExpenseDao mAsyncTaskDao;
-
-        public getStarredTask(ExpenseDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected List<Expense> doInBackground(Void... voids) {
-            return mAsyncTaskDao.getAllStarred();
-        }
-    }*/
-
-    /*private static class getUnsyncedTask extends AsyncTask<Void, Void, List<Expense>> {
-
-        private ExpenseDao mAsyncTaskDao;
-
-        public getUnsyncedTask(ExpenseDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected List<Expense> doInBackground(Void... voids) {
-            return mAsyncTaskDao.getAllUnsynced();
-        }
-    }*/
+    public void insertExpense(final Expense expense) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.expenseDao().insert(expense);
+            }
+        });
+    }
 }

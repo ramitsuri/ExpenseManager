@@ -14,7 +14,7 @@ import androidx.room.Transaction;
 public abstract class CategoryDao {
 
     @Query("SELECT * FROM category")
-    public abstract LiveData<List<Category>> getAll();
+    public abstract List<Category> getAll();
 
     @Transaction
     public void setAll(List<Category> categories) {

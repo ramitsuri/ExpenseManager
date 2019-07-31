@@ -13,7 +13,7 @@ import androidx.room.Transaction;
 @Dao
 public abstract class PaymentMethodDao {
     @Query("SELECT * FROM paymentmethod")
-    public abstract LiveData<List<PaymentMethod>> getAll();
+    public abstract List<PaymentMethod> getAll();
 
     @Transaction
     public void setAll(List<PaymentMethod> paymentMethods) {

@@ -76,19 +76,19 @@ public class ExpenseDatabaseTest {
         // Get all starred
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getAllStarred().size(),
-                LiveDataTestUtil.getValue(mExpenseDao.getAllStarred()).size());
+                mExpenseDao.getAllStarred().size());
 
         // get All unsynced
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getAllUnsynced().size(),
-                LiveDataTestUtil.getValue(mExpenseDao.getAllUnsynced()).size());
+                mExpenseDao.getAllUnsynced().size());
 
         // delete synced
         mExpenseDao.deleteSynced();
         Assert.assertEquals(
                 0,
                 LiveDataTestUtil.getValue(mExpenseDao.getAll()).size() -
-                        LiveDataTestUtil.getValue(mExpenseDao.getAllUnsynced()).size());
+                        mExpenseDao.getAllUnsynced().size());
 
         // delete all
         mExpenseDao.deleteAll();
@@ -108,19 +108,19 @@ public class ExpenseDatabaseTest {
         mExpenseDao.updateUnsynced();
         Assert.assertEquals(
                 0,
-                LiveDataTestUtil.getValue(mExpenseDao.getAllUnsynced()).size());
+                mExpenseDao.getAllUnsynced().size());
 
         // set starred
         mExpenseDao.setStarred(LiveDataTestUtil.getValue(mExpenseDao.getAll()).get(3).getId());
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getAllStarred().size() + 1,
-                LiveDataTestUtil.getValue(mExpenseDao.getAllStarred()).size());
+                mExpenseDao.getAllStarred().size());
 
         // set unstarred
         mExpenseDao.setUnstarred(LiveDataTestUtil.getValue(mExpenseDao.getAll()).get(3).getId());
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getAllStarred().size(),
-                LiveDataTestUtil.getValue(mExpenseDao.getAllStarred()).size());
+                mExpenseDao.getAllStarred().size());
     }
 
     @Test
@@ -128,20 +128,20 @@ public class ExpenseDatabaseTest {
         // get all
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getCategories().length,
-                LiveDataTestUtil.getValue(mCategoryDao.getAll()).size());
-        Log.d(TAG, LiveDataTestUtil.getValue(mCategoryDao.getAll()).toString());
+                mCategoryDao.getAll().size());
+        Log.d(TAG, mCategoryDao.getAll().toString());
 
         // delete all
         mCategoryDao.deleteAll();
         Assert.assertEquals(
                 0,
-                LiveDataTestUtil.getValue(mCategoryDao.getAll()).size());
+                mCategoryDao.getAll().size());
 
         // set all
         mCategoryDao.setAll(ExpenseManagerTestUtils.getAllCategories());
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getCategories().length,
-                LiveDataTestUtil.getValue(mCategoryDao.getAll()).size());
+                mCategoryDao.getAll().size());
     }
 
     @Test
@@ -149,19 +149,19 @@ public class ExpenseDatabaseTest {
         // get all
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getPaymentMethods().length,
-                LiveDataTestUtil.getValue(mPaymentMethodDao.getAll()).size());
+                mPaymentMethodDao.getAll().size());
         Log.d(TAG, mPaymentMethodDao.getAll().toString());
 
         // delete all
         mPaymentMethodDao.deleteAll();
         Assert.assertEquals(
                 0,
-                LiveDataTestUtil.getValue(mPaymentMethodDao.getAll()).size());
+                mPaymentMethodDao.getAll().size());
 
         // set all
         mPaymentMethodDao.setAll(ExpenseManagerTestUtils.getAllPaymentMethods());
         Assert.assertEquals(
                 ExpenseManagerTestUtils.getPaymentMethods().length,
-                LiveDataTestUtil.getValue(mPaymentMethodDao.getAll()).size());
+                mPaymentMethodDao.getAll().size());
     }
 }

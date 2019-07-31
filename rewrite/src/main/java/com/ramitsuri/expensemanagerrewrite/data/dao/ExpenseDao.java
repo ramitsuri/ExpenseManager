@@ -15,10 +15,10 @@ public interface ExpenseDao {
     LiveData<List<Expense>> getAll();
 
     @Query("SELECT * FROM expense WHERE is_starred = 1")
-    LiveData<List<Expense>> getAllStarred();
+    List<Expense> getAllStarred();
 
     @Query("SELECT * FROM expense WHERE is_synced = 0")
-    LiveData<List<Expense>> getAllUnsynced();
+    List<Expense> getAllUnsynced();
 
     @Insert
     void insert(Expense expense);
