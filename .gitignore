@@ -32,3 +32,5 @@ build/
 .navigation
 output.json
 
+debug
+

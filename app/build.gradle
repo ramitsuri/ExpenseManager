@@ -10,7 +10,22 @@ android {
         versionName "0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        nonprod {
+            storeFile file("debug")
+            storePassword "3F4#Agu9iZ"
+            keyAlias "key0"
+            keyPassword "3F4#Agu9iZ"
+        }
+    }
+
     buildTypes {
+        /*debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.nonprod
+        }*/
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

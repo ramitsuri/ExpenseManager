@@ -1,9 +1,10 @@
-package com.ramitsuri.expensemanagerrewrite.dao;
+package com.ramitsuri.expensemanagerrewrite.data.dao;
 
 import com.ramitsuri.expensemanagerrewrite.entities.PaymentMethod;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -12,7 +13,7 @@ import androidx.room.Transaction;
 @Dao
 public abstract class PaymentMethodDao {
     @Query("SELECT * FROM paymentmethod")
-    public abstract List<PaymentMethod> getAll();
+    public abstract LiveData<List<PaymentMethod>> getAll();
 
     @Transaction
     public void setAll(List<PaymentMethod> paymentMethods) {

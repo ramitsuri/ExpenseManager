@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanagerrewrite.dao;
+package com.ramitsuri.expensemanagerrewrite.data.dao;
 
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 
@@ -12,10 +12,10 @@ import androidx.room.Query;
 @Dao
 public interface ExpenseDao {
     @Query("SELECT * FROM expense")
-    List<Expense> getAll();
+    LiveData<List<Expense>> getAll();
 
     @Query("SELECT * FROM expense WHERE is_starred = 1")
-    List<Expense> getAllStarred();
+    LiveData<List<Expense>> getAllStarred();
 
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     LiveData<List<Expense>> getAllUnsynced();

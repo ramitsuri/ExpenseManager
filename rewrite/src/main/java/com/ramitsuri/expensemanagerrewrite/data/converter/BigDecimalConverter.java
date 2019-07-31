@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanagerrewrite.converter;
+package com.ramitsuri.expensemanagerrewrite.data.converter;
 
 import android.text.TextUtils;
 
