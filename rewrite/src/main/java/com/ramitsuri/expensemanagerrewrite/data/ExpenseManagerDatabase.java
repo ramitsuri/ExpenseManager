@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanagerrewrite.data;
 
 import android.content.Context;
 
+import com.ramitsuri.expensemanagerrewrite.MainApplication;
 import com.ramitsuri.expensemanagerrewrite.data.converter.BigDecimalConverter;
 import com.ramitsuri.expensemanagerrewrite.data.dao.CategoryDao;
 import com.ramitsuri.expensemanagerrewrite.data.dao.ExpenseDao;
@@ -22,11 +23,11 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
     private static volatile ExpenseManagerDatabase INSTANCE;
     private static final String DB_NAME = "expense_manager_db";
 
-    public static ExpenseManagerDatabase getInstance(Context context){
+    public static ExpenseManagerDatabase getInstance(){
         if (INSTANCE == null) {
             synchronized (ExpenseManagerDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                    INSTANCE = Room.databaseBuilder(MainApplication.getInstance(),
                             ExpenseManagerDatabase.class, DB_NAME)
                             .build();
                 }

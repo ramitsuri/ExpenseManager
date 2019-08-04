@@ -1,6 +1,8 @@
 package com.ramitsuri.expensemanagerrewrite.data.repository;
 
-import com.ramitsuri.expensemanagerrewrite.data.AppExecutors;
+import com.ramitsuri.expensemanagerrewrite.AppExecutors;
+import com.ramitsuri.expensemanagerrewrite.IntDefs.SourceType;
+import com.ramitsuri.expensemanagerrewrite.data.DummyData;
 import com.ramitsuri.expensemanagerrewrite.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 
@@ -11,15 +13,23 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ExpenseRepository {
 
+    @SourceType
+    private int mSourceType;
     private AppExecutors mExecutors;
     private ExpenseManagerDatabase mDatabase;
 
     private LiveData<List<Expense>> mExpenses;
 
-    public ExpenseRepository(AppExecutors executors, ExpenseManagerDatabase database) {
+    public ExpenseRepository(AppExecutors executors, ExpenseManagerDatabase database,
+            @SourceType int sourceType) {
         mExecutors = executors;
         mDatabase = database;
-        mExpenses = mDatabase.expenseDao().getAll();
+        mSourceType = sourceType;
+        if (mSourceType == SourceType.LOCAL) {
+            //mExpenses  = DummyData.get();
+        } else if (mSourceType == SourceType.DB) {
+            mExpenses = mDatabase.expenseDao().getAll();
+        }
     }
 
     public LiveData<List<Expense>> getExpenses() {
@@ -31,7 +41,13 @@ public class ExpenseRepository {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                expenses.postValue(mDatabase.expenseDao().getAllStarred());
+                List<Expense> values = null;
+                if (mSourceType == SourceType.LOCAL) {
+                    values = DummyData.getAllStarred();
+                } else if (mSourceType == SourceType.DB) {
+                    values = mDatabase.expenseDao().getAllStarred();
+                }
+                expenses.postValue(values);
             }
         });
         return expenses;
@@ -42,7 +58,13 @@ public class ExpenseRepository {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                expenses.postValue(mDatabase.expenseDao().getAllUnsynced());
+                List<Expense> values = null;
+                if (mSourceType == SourceType.LOCAL) {
+                    values = DummyData.getAllUnsynced();
+                } else if (mSourceType == SourceType.DB) {
+                    values = mDatabase.expenseDao().getAllUnsynced();
+                }
+                expenses.postValue(values);
             }
         });
         return expenses;

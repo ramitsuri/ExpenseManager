@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanagerrewrite.data;
+package com.ramitsuri.expensemanagerrewrite;
 
 import android.os.Handler;
 import android.os.Looper;

@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanagerrewrite;
+package com.ramitsuri.expensemanagerrewrite.data;
 
 import com.ramitsuri.expensemanagerrewrite.entities.Category;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ExpenseManagerTestUtils {
+public class DummyData {
     public static String[] getCategories() {
         return new String[] {
                 "Food",

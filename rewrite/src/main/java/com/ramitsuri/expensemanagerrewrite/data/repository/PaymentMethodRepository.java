@@ -1,6 +1,8 @@
 package com.ramitsuri.expensemanagerrewrite.data.repository;
 
-import com.ramitsuri.expensemanagerrewrite.data.AppExecutors;
+import com.ramitsuri.expensemanagerrewrite.AppExecutors;
+import com.ramitsuri.expensemanagerrewrite.IntDefs.SourceType;
+import com.ramitsuri.expensemanagerrewrite.data.DummyData;
 import com.ramitsuri.expensemanagerrewrite.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanagerrewrite.entities.PaymentMethod;
 
@@ -12,12 +14,16 @@ import androidx.lifecycle.MutableLiveData;
 
 public class PaymentMethodRepository {
 
+    @SourceType
+    private int mSourceType;
     private AppExecutors mExecutors;
     private ExpenseManagerDatabase mDatabase;
 
-    public PaymentMethodRepository(AppExecutors executors, ExpenseManagerDatabase database) {
+    public PaymentMethodRepository(AppExecutors executors, ExpenseManagerDatabase database,
+            @SourceType int sourceType) {
         mExecutors = executors;
         mDatabase = database;
+        mSourceType = sourceType;
     }
 
     public LiveData<List<PaymentMethod>> getPaymentMethods() {
@@ -25,7 +31,13 @@ public class PaymentMethodRepository {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                paymentMethods.postValue(mDatabase.paymentMethodDao().getAll());
+                List<PaymentMethod> values = null;
+                if (mSourceType == SourceType.LOCAL) {
+                    values = DummyData.getAllPaymentMethods();
+                } else if (mSourceType == SourceType.DB) {
+                    values = mDatabase.paymentMethodDao().getAll();
+                }
+                paymentMethods.postValue(values);
             }
         });
         return paymentMethods;
