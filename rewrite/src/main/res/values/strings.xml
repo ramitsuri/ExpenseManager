@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Expense Manager Rewrite</string>
+
+    <string name="hello_add_fragment">Hello Add fragment</string>
+    <string name="hello_settings_fragment">Hello Settings fragment</string>
+    <string name="hello_expenses_fragment">Hello Expenses fragment</string>
 </resources>
