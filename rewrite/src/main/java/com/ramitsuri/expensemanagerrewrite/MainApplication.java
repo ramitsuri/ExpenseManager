@@ -3,10 +3,12 @@ package com.ramitsuri.expensemanagerrewrite;
 import android.app.Application;
 
 import com.ramitsuri.expensemanagerrewrite.IntDefs.SourceType;
+import com.ramitsuri.expensemanagerrewrite.data.DummyData;
 import com.ramitsuri.expensemanagerrewrite.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanagerrewrite.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanagerrewrite.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanagerrewrite.data.repository.PaymentMethodRepository;
+import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 import com.ramitsuri.expensemanagerrewrite.logging.ReleaseTree;
 
 import timber.log.Timber;
@@ -49,6 +51,10 @@ public class MainApplication extends Application {
         mCategoryRepo = new CategoryRepository(appExecutors, database, source);
         mPaymentMethodRepo = new PaymentMethodRepository(appExecutors, database, source);
         mExpenseRepo = new ExpenseRepository(appExecutors, database, source);
+
+        for (Expense expense : DummyData.getExpenses()) {
+            mExpenseRepo.insertExpense(expense);
+        }
     }
 
     public CategoryRepository getCategoryRepo() {

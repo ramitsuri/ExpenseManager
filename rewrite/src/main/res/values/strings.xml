@@ -4,4 +4,5 @@
     <string name="hello_add_fragment">Hello Add fragment</string>
     <string name="hello_settings_fragment">Hello Settings fragment</string>
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
+    <string name="sync_now">Sync Now</string>
 </resources>

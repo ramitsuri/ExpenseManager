@@ -1,4 +1,3 @@
-- Background threads
-- Repositories
-- ViewModels
 - UI
+- LogHelper
+- Crashlytics

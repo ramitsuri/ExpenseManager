@@ -11,13 +11,13 @@
         tools:layout="@layout/fragment_expenses">
 
         <action
-            android:id="@+id/action_fragment_expenses_to_fragment_settings"
+            android:id="@+id/nav_action_settings"
             app:destination="@id/fragment_settings"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
 
         <action
-            android:id="@+id/action_fragment_expenses_to_fragment_add_expense"
+            android:id="@+id/nav_action_add_expense"
             app:destination="@id/fragment_add_expense"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"  />
@@ -30,7 +30,7 @@
         tools:layout="@layout/fragment_settings">
 
         <action
-            android:id="@+id/back_from_settings"
+            android:id="@+id/nav_action_back_settings"
             app:destination="@+id/fragment_expenses"
             app:popUpTo="@+id/fragment_expenses"
             app:popUpToInclusive="true" />
@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_add_expense">
 
         <action
-            android:id="@+id/back_from_add_expense"
+            android:id="@+id/nav_action_back_add_expense"
             app:destination="@+id/fragment_expenses"
             app:popUpTo="@+id/fragment_expenses"
             app:popUpToInclusive="true" />

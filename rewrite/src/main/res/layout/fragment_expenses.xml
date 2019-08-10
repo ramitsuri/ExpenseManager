@@ -4,34 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/padding_medium"
     tools:context=".ui.fragments.ExpensesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/txt"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_vertical"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:text="@string/hello_expenses_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".6" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".1" />
+
+    <TextView
+        android:id="@+id/txt_unsynced"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/txt_unsynced_help"
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_sync_now"
+        tools:text="10 expenses not synced" />
+
+    <TextView
+        android:id="@+id/txt_unsynced_help"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/btn_sync_now"
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_unsynced"
+        tools:text="10 expenses not synced" />
+
+    <Button
+        android:id="@+id/btn_sync_now"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/sync_now"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guide_vertical"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_expenses"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="ADD"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt" />
-
-    <Button
-        android:id="@+id/btn_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SETTINGS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_add" />
+        app:layout_constraintTop_toBottomOf="@id/guide_horizontal"
+        tools:itemCount="20" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
