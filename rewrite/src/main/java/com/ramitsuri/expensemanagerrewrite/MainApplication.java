@@ -7,6 +7,9 @@ import com.ramitsuri.expensemanagerrewrite.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanagerrewrite.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanagerrewrite.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanagerrewrite.data.repository.PaymentMethodRepository;
+import com.ramitsuri.expensemanagerrewrite.logging.ReleaseTree;
+
+import timber.log.Timber;
 
 public class MainApplication extends Application {
 
@@ -21,6 +24,16 @@ public class MainApplication extends Application {
         super.onCreate();
 
         sInstance = this;
+
+        initTimber();
+    }
+
+    private void initTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new ReleaseTree());
+        }
     }
 
     public static MainApplication getInstance() {
