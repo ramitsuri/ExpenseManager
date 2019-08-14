@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager.async;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -36,7 +37,6 @@ public class SheetsBackupTask extends AsyncTask<Void, Void, LoaderResponse> {
     private com.google.api.services.sheets.v4.Sheets mService;
     private HttpTransport mTransport;
     private JsonFactory mJsonFactory;
-    private static String SHEETS_ID = "1pzDFprwHn6pbh6lRC8_emFEvQSa3MDnnU6baOAPwgcQ";
 
     public SheetsBackupTask(Context context) {
         mCredential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(Others.SCOPES)).
@@ -77,11 +77,16 @@ public class SheetsBackupTask extends AsyncTask<Void, Void, LoaderResponse> {
         content.setRequests(requests);
         Sheets.Spreadsheets.BatchUpdate batchUpdate;
         try {
-            batchUpdate = mService.spreadsheets().batchUpdate(SHEETS_ID, content);
-            BatchUpdateSpreadsheetResponse response = batchUpdate.execute();
-            ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
-            AppHelper.setFirstBackupComplete(true);
-            return new LoaderResponse(LoaderResponse.SUCCESS, null, null);
+            String spreadSheetId = AppHelper.getSpreadsheetId();
+            if (!TextUtils.isEmpty(spreadSheetId)) {
+                batchUpdate = mService.spreadsheets().batchUpdate(spreadSheetId, content);
+                BatchUpdateSpreadsheetResponse response = batchUpdate.execute();
+                ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
+                AppHelper.setFirstBackupComplete(true);
+                return new LoaderResponse(LoaderResponse.SUCCESS, null, null);
+            } else {
+                return new LoaderResponse(LoaderResponse.FAILURE, null, null);
+            }
         } catch (UserRecoverableAuthIOException e) {
             return new LoaderResponse(LoaderResponse.FAILURE, e.getIntent(), null);
         } catch (IOException e) {

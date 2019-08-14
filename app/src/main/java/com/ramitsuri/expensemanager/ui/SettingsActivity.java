@@ -49,6 +49,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     public static class SettingsFragment extends PreferenceFragment {
 
         private Preference mBackupNow;
+        private EditTextPreference mSpreadsheetId;
         private EditTextPreference mSheetsId;
 
         @Override
@@ -56,11 +57,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             mBackupNow = findPreference(getString(R.string.preference_key_backup_now));
+
+            mSpreadsheetId = (EditTextPreference)findPreference(
+                    getString(R.string.preference_key_spreadsheet_id));
             mSheetsId = (EditTextPreference)findPreference(
                     getString(R.string.preference_key_sheets_id));
             mBackupNow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     ((SettingsActivity)getActivity()).backup();
+                    return false;
+                }
+            });
+            mSpreadsheetId.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
                     return false;
                 }
             });
@@ -74,6 +84,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         private void updatePreferenceSummaries() {
+            String spreadsheetId = AppHelper.getSpreadsheetId();
+            if (spreadsheetId != null) {
+                mSpreadsheetId.setSummary(spreadsheetId);
+            }
             String sheetsId = AppHelper.getSheetsId();
             if (sheetsId != null) {
                 mSheetsId.setSummary(sheetsId);

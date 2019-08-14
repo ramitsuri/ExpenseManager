@@ -5,10 +5,17 @@
         android:key="sync_category">
 
         <EditTextPreference
+            android:key="@string/preference_key_spreadsheet_id"
+            android:title="Spreadsheet ID"
+            android:summary="Enter Spreadsheet ID"
+            android:dialogTitle="Spreadsheet ID"
+            android:dialogMessage="Enter ID"/>
+
+        <EditTextPreference
             android:key="@string/preference_key_sheets_id"
             android:title="Current Sheet ID"
-            android:summary="Enter ID for sheet expenses would go in"
-            android:dialogTitle="ID"
+            android:summary="Enter ID for sheet, expenses would go in"
+            android:dialogTitle="Sheet ID"
             android:dialogMessage="Enter ID"
             android:inputType="text|number"/>
 

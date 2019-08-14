@@ -7,8 +7,6 @@ import com.ramitsuri.expensemanager.constants.PrefKeys;
 
 public class AppHelper {
 
-    public static String SPREADSHEET_ID = "1pzDFprwHn6pbh6lRC8_emFEvQSa3MDnnU6baOAPwgcQ";
-
     public static boolean isFirstRunComplete() {
         return PrefHelper.get(PrefKeys.IS_FIRST_RUN_COMPLETE, false);
     }
@@ -39,6 +37,15 @@ public class AppHelper {
 
     public static void setAccountName(String name) {
         PrefHelper.set(PrefKeys.ACCOUNT_NAME, name);
+    }
+
+    public static void setSpreadsheetId(String id) {
+        PrefHelper.set(PrefKeys.SPREADSHEET_ID, id);
+    }
+
+    public static String getSpreadsheetId() {
+        return PrefHelper.get(MainApplication.getInstance()
+                .getString(R.string.preference_key_spreadsheet_id), null);
     }
 
     public static void setSheetsId(String id) {

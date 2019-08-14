@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.backup;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -41,23 +43,25 @@ public class BackupWorker extends Worker {
     @Override
     public Result doWork() {
         LoaderResponse response = backup();
-        if(response.getResponseCode() == LoaderResponse.FAILURE){
+        if (response.getResponseCode() == LoaderResponse.FAILURE) {
             return Result.failure();
-        }else {
+        } else {
             return Result.success();
         }
     }
 
     private LoaderResponse backup() {
-        GoogleAccountCredential credential= GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(
-                Others.SCOPES)).setBackOff(new ExponentialBackOff());
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(
+                        Others.SCOPES)).setBackOff(new ExponentialBackOff());
         credential.setSelectedAccountName(AppHelper.getAccountName());
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
-        JsonFactory jsonFactory= JacksonFactory.getDefaultInstance();
-        com.google.api.services.sheets.v4.Sheets service = new com.google.api.services.sheets.v4.Sheets.Builder(
-                transport, jsonFactory, credential)
-                .setApplicationName(getApplicationContext().getString(R.string.app_name))
-                .build();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        com.google.api.services.sheets.v4.Sheets service =
+                new com.google.api.services.sheets.v4.Sheets.Builder(
+                        transport, jsonFactory, credential)
+                        .setApplicationName(getApplicationContext().getString(R.string.app_name))
+                        .build();
 
         BatchUpdateSpreadsheetRequest content = new BatchUpdateSpreadsheetRequest();
         List<Request> requests = new ArrayList<>();
@@ -67,13 +71,19 @@ public class BackupWorker extends Worker {
         content.setRequests(requests);
         Sheets.Spreadsheets.BatchUpdate batchUpdate;
         try {
-            batchUpdate = service.spreadsheets().batchUpdate(AppHelper.SPREADSHEET_ID, content);
-            BatchUpdateSpreadsheetResponse response = batchUpdate.execute();
-            ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
-            ExpenseHelper.deleteBackedUpExpenses();
-            AppHelper.setFirstBackupComplete(true);
-            AppHelper.setLastBackupTime(System.currentTimeMillis());
-            return new LoaderResponse(LoaderResponse.SUCCESS, null, null);
+            String spreadsheetId = AppHelper.getSpreadsheetId();
+            if (!TextUtils.isEmpty(spreadsheetId)) {
+                batchUpdate = service.spreadsheets().batchUpdate(spreadsheetId, content);
+                batchUpdate.execute();
+
+                ExpenseHelper.updateSyncStatusAfterBackup(expensesToBackup);
+                ExpenseHelper.deleteBackedUpExpenses();
+                AppHelper.setFirstBackupComplete(true);
+                AppHelper.setLastBackupTime(System.currentTimeMillis());
+                return new LoaderResponse(LoaderResponse.SUCCESS, null, null);
+            } else {
+                return new LoaderResponse(LoaderResponse.FAILURE, null, null);
+            }
         } catch (UserRecoverableAuthIOException e) {
             return new LoaderResponse(LoaderResponse.FAILURE, e.getIntent(), null);
         } catch (IOException e) {
