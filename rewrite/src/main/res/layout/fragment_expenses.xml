@@ -21,7 +21,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".1" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txt_unsynced"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="@id/btn_sync_now"
         tools:text="10 expenses not synced" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txt_unsynced_help"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toStartOf="@id/guide_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_unsynced"
-        tools:text="10 expenses not synced" />
+        tools:text="Auto sync is ON" />
 
     <Button
         android:id="@+id/btn_sync_now"
