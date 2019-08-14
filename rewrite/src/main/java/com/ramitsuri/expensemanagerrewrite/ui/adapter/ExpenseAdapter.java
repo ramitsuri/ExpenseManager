@@ -12,10 +12,13 @@ import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
+    @Nullable
     private List<Expense> mExpenses;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -63,8 +66,17 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     }
 
     public void setExpenses(List<Expense> expenses) {
-        mExpenses = expenses;
-        notifyDataSetChanged();
+        if (mExpenses != null) {
+            ExpenseDiffCallback callback = new ExpenseDiffCallback(mExpenses, expenses);
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
+
+            mExpenses.clear();
+            mExpenses.addAll(expenses);
+            diffResult.dispatchUpdatesTo(this);
+        } else {
+            // first initialization
+            mExpenses = expenses;
+        }
     }
 
     @NonNull
@@ -77,12 +89,48 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Expense expense = mExpenses.get(position);
-        holder.bind(expense);
+        if (mExpenses != null) {
+            Expense expense = mExpenses.get(position);
+            holder.bind(expense);
+        }
     }
 
     @Override
     public int getItemCount() {
+        if (mExpenses == null) {
+            return 0;
+        }
         return mExpenses.size();
+    }
+
+    class ExpenseDiffCallback extends DiffUtil.Callback {
+
+        private final List<Expense> oldExpenses, newExpenses;
+
+        public ExpenseDiffCallback(List<Expense> oldExpenses, List<Expense> newExpenses) {
+            this.oldExpenses = oldExpenses;
+            this.newExpenses = newExpenses;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldExpenses.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newExpenses.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldExpenses.get(oldItemPosition).getId() ==
+                    newExpenses.get(newItemPosition).getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldExpenses.get(oldItemPosition).equals(newExpenses.get(newItemPosition));
+        }
     }
 }
