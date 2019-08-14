@@ -4,117 +4,107 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/padding_medium">
-
-    <!-- <LinearLayout
-         android:id="@+id/expense_date_container"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_centerVertical="true"
-         android:background="@drawable/circle_background"
-         android:gravity="center"
-         android:orientation="vertical">-->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".6" />
+        app:layout_constraintGuide_percent=".75" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/expense_date"
+        android:id="@+id/txt_expense_category"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_circle"
         android:gravity="center"
+        android:textSize="@dimen/text_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="F" />
+        tools:text="F" />
 
-    <!--    </LinearLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_expense_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textSize="@dimen/text_medium"
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical"
+        app:layout_constraintStart_toEndOf="@id/txt_expense_category"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Potato, tomato, cucumber, lemon, onion, oranges" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_expense_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/txt_expense_description"
+        app:layout_constraintTop_toBottomOf="@id/txt_expense_description"
+        tools:text="Aug 7th" />
 
-        <LinearLayout
-            android:id="@+id/expense_detail_top_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/expense_date_container"
-            android:orientation="horizontal">
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_expense_divider1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_extra_small"
+        android:text="@string/expense_divider"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintBottom_toBottomOf="@id/txt_expense_date"
+        app:layout_constraintStart_toEndOf="@id/txt_expense_date"
+        app:layout_constraintTop_toTopOf="@id/txt_expense_date" />
 
-            <TextView
-                android:id="@+id/expense_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Food"
-                android:textColor="@color/gray_text"
-                android:textSize="12sp" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_expense_payment_method"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_extra_small"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintBottom_toBottomOf="@id/txt_expense_date"
+        app:layout_constraintStart_toEndOf="@id/txt_expense_divider1"
+        app:layout_constraintTop_toTopOf="@id/txt_expense_date"
+        tools:text="Discover" />
 
-            <TextView
-                android:id="@+id/expense_text_divider1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:text="•"
-                android:textColor="@color/gray_text"
-                android:textSize="12sp" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_expense_divider2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_extra_small"
+        android:text="@string/expense_divider"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintBottom_toBottomOf="@id/txt_expense_date"
+        app:layout_constraintStart_toEndOf="@id/txt_expense_payment_method"
+        app:layout_constraintTop_toTopOf="@id/txt_expense_date" />
 
-            <TextView
-                android:id="@+id/expense_payment_mode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:text="Discover"
-                android:textColor="@color/gray_text"
-                android:textSize="12sp" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_expense_store"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_extra_small"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintBottom_toBottomOf="@id/txt_expense_date"
+        app:layout_constraintStart_toEndOf="@id/txt_expense_divider2"
+        app:layout_constraintTop_toTopOf="@id/txt_expense_date"
+        tools:text="Publix" />
 
-            <TextView
-                android:id="@+id/expense_text_divider2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:text="•"
-                android:textColor="@color/gray_text"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/expense_store"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
-                android:text="Subway"
-                android:textColor="@color/gray_text"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/expense_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/expense_detail_top_container"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/expense_date_container"
-            android:text="Curd"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/expense_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:padding="8dp"
-            android:text="$52"
-            android:textColor="@color/red"
-            android:textSize="16sp" />
-
-    </RelativeLayout>
--->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_expense_amount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_small"
+        android:textSize="@dimen/text_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="end"
+        app:layout_constraintStart_toEndOf="@id/guide_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="$45" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

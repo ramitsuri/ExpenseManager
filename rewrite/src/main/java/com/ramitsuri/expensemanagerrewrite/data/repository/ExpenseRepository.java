@@ -78,4 +78,13 @@ public class ExpenseRepository {
             }
         });
     }
+
+    public void deleteExpenses() {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.expenseDao().deleteAll();
+            }
+        });
+    }
 }

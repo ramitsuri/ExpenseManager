@@ -119,7 +119,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("10.00"));
         expense.setCategory(getCategories()[1]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[2]);
@@ -130,7 +130,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("7.43"));
         expense.setCategory(getCategories()[4]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[0]);
@@ -141,7 +141,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("17.56"));
         expense.setCategory(getCategories()[2]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[8]);
@@ -152,7 +152,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("123.98"));
         expense.setCategory(getCategories()[7]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[3]);
@@ -163,7 +163,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("45"));
         expense.setCategory(getCategories()[6]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[4]);
@@ -174,7 +174,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("1399"));
         expense.setCategory(getCategories()[0]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[11]);
@@ -196,7 +196,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("13.45"));
         expense.setCategory(getCategories()[5]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[5]);
@@ -207,7 +207,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("15"));
         expense.setCategory(getCategories()[3]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[3]);
@@ -218,7 +218,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("15.45"));
         expense.setCategory(getCategories()[5]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[10]);
@@ -229,7 +229,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("1.40"));
         expense.setCategory(getCategories()[8]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[5]);
@@ -240,7 +240,7 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
-        expense.setAmount(BigDecimal.ZERO);
+        expense.setAmount(new BigDecimal("31.90"));
         expense.setCategory(getCategories()[2]);
         expense.setDateTime(new Date().getTime());
         expense.setPaymentMethod(getPaymentMethods()[2]);

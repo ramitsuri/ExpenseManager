@@ -44,26 +44,26 @@ public class ExpensesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final RecyclerView listExpenses = view.findViewById(R.id.list_expenses);
-        listExpenses.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ExpenseAdapter adapter = new ExpenseAdapter(DummyData.getExpenses());
-       
         mExpenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
-        mExpenseViewModel.getExpenses().observe(this, new Observer<List<Expense>>() {
-            @Override
-            public void onChanged(List<Expense> expenses) {
-                if (listExpenses.getAdapter() == null) {
-                    ExpenseAdapter adapter = new ExpenseAdapter(expenses);
-                    listExpenses.setAdapter(adapter);
-                } else {
-                    ((ExpenseAdapter)listExpenses.getAdapter()).setExpenses(expenses);
-                }
-            }
-        });
 
+        setupListExpenses(view);
 
         /*        NavHostFragment.findNavController(ExpensesFragment.this)
                         .navigate(R.id.nav_action_add_expense, null);*/
 
+    }
+
+    private void setupListExpenses(View view) {
+        final RecyclerView listExpenses = view.findViewById(R.id.list_expenses);
+        listExpenses.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        final ExpenseAdapter adapter = new ExpenseAdapter();
+        listExpenses.setAdapter(adapter);
+        mExpenseViewModel.getExpenses().observe(this, new Observer<List<Expense>>() {
+            @Override
+            public void onChanged(List<Expense> expenses) {
+                adapter.setExpenses(expenses);
+            }
+        });
     }
 }

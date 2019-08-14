@@ -52,6 +52,9 @@ public class MainApplication extends Application {
         mPaymentMethodRepo = new PaymentMethodRepository(appExecutors, database, source);
         mExpenseRepo = new ExpenseRepository(appExecutors, database, source);
 
+
+        // DEBUG Only
+        mExpenseRepo.deleteExpenses();
         for (Expense expense : DummyData.getExpenses()) {
             mExpenseRepo.insertExpense(expense);
         }
