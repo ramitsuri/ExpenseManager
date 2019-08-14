@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.ramitsuri.expensemanagerrewrite.R;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
+import com.ramitsuri.expensemanagerrewrite.utils.DateHelper;
 
 import java.util.List;
 
@@ -42,9 +43,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
             txtPaymentMethod.setText(expense.getPaymentMethod());
             txtDescription.setText(expense.getDescription());
             txtAmount.setText(String.valueOf(expense.getAmount()));
-        /*txtDate.setText(DateHelper.
-                getJustTheDayOfMonth(expense.getDateTime()));*/
-            txtDate.setText("Aug 7th");
+            txtDate.setText(DateHelper.getFriendlyDate(expense.getDateTime()));
             if (TextUtils.isEmpty(expense.getStore())) {
                 txtStoreDivider.setVisibility(View.GONE);
                 txtStore.setVisibility(View.GONE);
