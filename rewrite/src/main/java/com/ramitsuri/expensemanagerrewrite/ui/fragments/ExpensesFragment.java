@@ -1,14 +1,11 @@
 package com.ramitsuri.expensemanagerrewrite.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.ramitsuri.expensemanagerrewrite.R;
-import com.ramitsuri.expensemanagerrewrite.data.DummyData;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 import com.ramitsuri.expensemanagerrewrite.ui.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanagerrewrite.viewModel.ExpenseViewModel;
@@ -19,9 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
