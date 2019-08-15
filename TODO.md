@@ -1,5 +1,5 @@
-- Toolbar
 - Settings
 - Full screen
 - Colors
 - Selectors
+- Menu

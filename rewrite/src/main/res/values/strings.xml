@@ -7,7 +7,14 @@
     <string name="sync_now">Sync Now</string>
     <string name="expense_divider">•</string>
 
+    <!-- Expenses -->
+    <string name="expenses">Expenses</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+
     <!-- Add/Edit Expense -->
+    <string name="add_expense">Add Expense</string>
     <string name="add_expense_description">Description</string>
     <string name="add_expense_amount">Amount</string>
     <string name="add_expense_additional_info">Store</string>
@@ -16,4 +23,7 @@
     <string name="add_expense_content_description_payment_method_selector">Payment Method
         Selector</string>
     <string name="add_expense_today">Today</string>
+
+    <!-- Menu -->
+    <string name="action_settings">Settings</string>
 </resources>
