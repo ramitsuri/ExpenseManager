@@ -14,4 +14,7 @@
     <dimen name="text_large">20sp</dimen>
 
     <dimen name="bg_circle_size">32dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="layout_pickers_height">56dp</dimen>
+    <dimen name="divider_width">2dp</dimen>
 </resources>

@@ -13,10 +13,6 @@ public class AddExpenseFragment extends Fragment {
     public AddExpenseFragment() {
         // Required empty public constructor
     }
-    public static AddExpenseFragment newInstance(String param1, String param2) {
-        AddExpenseFragment fragment = new AddExpenseFragment();
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

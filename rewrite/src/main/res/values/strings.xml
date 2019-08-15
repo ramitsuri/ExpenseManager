@@ -6,4 +6,14 @@
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
     <string name="sync_now">Sync Now</string>
     <string name="expense_divider">•</string>
+
+    <!-- Add/Edit Expense -->
+    <string name="add_expense_description">Description</string>
+    <string name="add_expense_amount">Amount</string>
+    <string name="add_expense_additional_info">Store</string>
+    <string name="add_expense_content_description_date_selector">Date Selector</string>
+    <string name="add_expense_content_description_category_selector">Category Selector</string>
+    <string name="add_expense_content_description_payment_method_selector">Payment Method
+        Selector</string>
+    <string name="add_expense_today">Today</string>
 </resources>

@@ -1,3 +1,5 @@
-- UI
-- LogHelper
-- Crashlytics
+- Toolbar
+- Settings
+- Full screen
+- Colors
+- Selectors
