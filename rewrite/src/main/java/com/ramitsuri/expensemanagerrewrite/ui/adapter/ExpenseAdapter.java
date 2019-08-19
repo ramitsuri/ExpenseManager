@@ -29,9 +29,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
         ViewHolder(View itemView) {
             super(itemView);
-            txtDate = itemView.findViewById(R.id.txt_expense_date);
-            txtCategory = itemView.findViewById(R.id.txt_expense_category);
-            txtPaymentMethod = itemView.findViewById(R.id.txt_expense_payment_method);
+            txtDate = itemView.findViewById(R.id.text_expense_date);
+            txtCategory = itemView.findViewById(R.id.text_expense_category);
+            txtPaymentMethod = itemView.findViewById(R.id.text_expense_payment_method);
             txtDescription = itemView.findViewById(R.id.txt_expense_description);
             txtAmount = itemView.findViewById(R.id.txt_expense_amount);
             txtStore = itemView.findViewById(R.id.txt_expense_store);

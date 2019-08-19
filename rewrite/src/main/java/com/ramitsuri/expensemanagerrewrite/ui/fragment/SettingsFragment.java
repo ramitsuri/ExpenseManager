@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanagerrewrite.ui.fragments;
+package com.ramitsuri.expensemanagerrewrite.ui.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/fragment_expenses"
         android:label="@string/expenses"
-        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragments.ExpensesFragment"
+        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.ExpensesFragment"
         tools:layout="@layout/fragment_expenses">
 
         <action
@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/fragment_settings"
         android:label="@string/settings"
-        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragments.SettingsFragment"
+        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.SettingsFragment"
         tools:layout="@layout/fragment_settings">
 
         <action
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/fragment_add_expense"
-        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragments.AddExpenseFragment"
+        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.AddExpenseFragment"
         android:label="@string/add_expense"
         tools:layout="@layout/fragment_add_expense">
 
