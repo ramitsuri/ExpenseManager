@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import com.ramitsuri.expensemanagerrewrite.R;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BaseFragment {
 
     public SettingsFragment() {
         // Required empty public constructor
     }
+
     public static SettingsFragment newInstance(String param1, String param2) {
         SettingsFragment fragment = new SettingsFragment();
         return fragment;
@@ -25,5 +25,17 @@ public class SettingsFragment extends Fragment {
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_settings, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideActionBar();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        showActionBar();
     }
 }

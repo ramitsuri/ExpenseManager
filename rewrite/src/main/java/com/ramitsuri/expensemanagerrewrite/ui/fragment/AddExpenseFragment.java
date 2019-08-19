@@ -20,10 +20,10 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import timber.log.Timber;
 
-public class AddExpenseFragment extends Fragment implements View.OnClickListener,
+public class AddExpenseFragment extends BaseFragment implements View.OnClickListener,
         ListPickerDialog.ListPickerDialogCallback,
         DatePickerDialog.DatePickerDialogCallback {
 
@@ -40,6 +40,18 @@ public class AddExpenseFragment extends Fragment implements View.OnClickListener
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_expense, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideActionBar();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        showActionBar();
     }
 
     @Override
