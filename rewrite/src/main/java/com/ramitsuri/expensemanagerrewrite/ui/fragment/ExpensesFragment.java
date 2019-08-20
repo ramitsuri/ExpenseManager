@@ -9,7 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ramitsuri.expensemanagerrewrite.R;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 import com.ramitsuri.expensemanagerrewrite.ui.adapter.ExpenseAdapter;
-import com.ramitsuri.expensemanagerrewrite.viewModel.ExpenseViewModel;
+import com.ramitsuri.expensemanagerrewrite.viewModel.ExpensesViewModel;
 
 import java.util.List;
 
@@ -20,10 +20,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import timber.log.Timber;
 
 public class ExpensesFragment extends BaseFragment {
 
-    private ExpenseViewModel mExpenseViewModel;
+    private ExpensesViewModel mExpensesViewModel;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -40,7 +41,7 @@ public class ExpensesFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mExpenseViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
+        mExpensesViewModel = ViewModelProviders.of(this).get(ExpensesViewModel.class);
 
         FloatingActionButton btnAdd = view.findViewById(R.id.btn_add);
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -60,9 +61,10 @@ public class ExpensesFragment extends BaseFragment {
 
         final ExpenseAdapter adapter = new ExpenseAdapter();
         listExpenses.setAdapter(adapter);
-        mExpenseViewModel.getExpenses().observe(this, new Observer<List<Expense>>() {
+        mExpensesViewModel.getExpenses().observe(this, new Observer<List<Expense>>() {
             @Override
             public void onChanged(List<Expense> expenses) {
+                Timber.i("Refreshing expenses");
                 adapter.setExpenses(expenses);
             }
         });

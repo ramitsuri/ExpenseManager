@@ -106,7 +106,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
         private final List<Expense> oldExpenses, newExpenses;
 
-        public ExpenseDiffCallback(List<Expense> oldExpenses, List<Expense> newExpenses) {
+        ExpenseDiffCallback(List<Expense> oldExpenses, List<Expense> newExpenses) {
             this.oldExpenses = oldExpenses;
             this.newExpenses = newExpenses;
         }

@@ -23,7 +23,7 @@ public class PaymentMethodRepository {
             @SourceType int sourceType) {
         mExecutors = executors;
         mDatabase = database;
-        mSourceType = sourceType;
+        mSourceType = SourceType.DB;
     }
 
     public LiveData<List<PaymentMethod>> getPaymentMethods() {

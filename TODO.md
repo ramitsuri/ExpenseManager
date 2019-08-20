@@ -4,3 +4,4 @@
 - Selectors
 - Menu
 - Textview style
+- More tables for categories, payment methods, stores, items

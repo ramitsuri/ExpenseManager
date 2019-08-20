@@ -59,10 +59,10 @@ public class ListPickerDialog extends BottomSheetDialogFragment implements
         if (getArguments() != null) {
             List<String> values =
                     getArguments().getStringArrayList(Constants.BundleKeys.PICKER_VALUES);
-            if (values != null) {
+            /*if (values != null) {
                 ListPickerAdapter adapter = new ListPickerAdapter(values, this);
                 listValues.setAdapter(adapter);
-            }
+            }*/
 
             mPickedItem = getArguments().getInt(Constants.BundleKeys.PICKED_ITEM);
         }

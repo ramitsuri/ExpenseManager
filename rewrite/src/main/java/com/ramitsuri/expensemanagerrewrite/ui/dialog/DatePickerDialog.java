@@ -12,8 +12,9 @@ import com.ramitsuri.expensemanagerrewrite.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
-public class DatePickerDialog extends BottomSheetDialogFragment {
+public class DatePickerDialog extends DialogFragment {
 
     public static final String TAG = DatePickerDialog.class.getName();
 

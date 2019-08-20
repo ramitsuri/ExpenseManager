@@ -25,7 +25,6 @@
 
     <fragment
         android:id="@+id/fragment_settings"
-        android:label="@string/settings"
         android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.SettingsFragment"
         tools:layout="@layout/fragment_settings">
 
@@ -40,7 +39,6 @@
     <fragment
         android:id="@+id/fragment_add_expense"
         android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.AddExpenseFragment"
-        android:label="@string/add_expense"
         tools:layout="@layout/fragment_add_expense">
 
         <action

@@ -24,7 +24,7 @@ public class ExpenseRepository {
             @SourceType int sourceType) {
         mExecutors = executors;
         mDatabase = database;
-        mSourceType = sourceType;
+        mSourceType = SourceType.DB;
         if (mSourceType == SourceType.LOCAL) {
             //mExpenses  = DummyData.get();
         } else if (mSourceType == SourceType.DB) {

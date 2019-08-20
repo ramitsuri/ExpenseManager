@@ -1,35 +1,40 @@
 package com.ramitsuri.expensemanagerrewrite.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.ramitsuri.expensemanagerrewrite.Constants;
-import com.ramitsuri.expensemanagerrewrite.IntDefs.PickedItem;
 import com.ramitsuri.expensemanagerrewrite.R;
-import com.ramitsuri.expensemanagerrewrite.data.DummyData;
+import com.ramitsuri.expensemanagerrewrite.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanagerrewrite.ui.dialog.DatePickerDialog;
-import com.ramitsuri.expensemanagerrewrite.ui.dialog.ListPickerDialog;
+import com.ramitsuri.expensemanagerrewrite.viewModel.AddExpenseViewModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import timber.log.Timber;
 
 public class AddExpenseFragment extends BaseFragment implements View.OnClickListener,
-        ListPickerDialog.ListPickerDialogCallback,
         DatePickerDialog.DatePickerDialogCallback {
 
+    // Data
+    private AddExpenseViewModel mViewModel;
+
+    // Views
+    private ImageView mBtnClose;
     private EditText mEditStore, mEditAmount, mEditDescription;
-    private TextView mTxtDate, mTxtCategory, mTxtPaymentMethod;
-    private ImageView mImgDate, mImgCategory, mImgPaymentMethod;
+    private ViewGroup mLayoutDate;
 
     public AddExpenseFragment() {
         // Required empty public constructor
@@ -58,36 +63,89 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mViewModel = ViewModelProviders.of(this).get(AddExpenseViewModel.class);
+
+        setupViews(view);
+
+        setupRecyclerViews(view);
+    }
+
+    private void setupViews(View view) {
+        // Close
+        mBtnClose = view.findViewById(R.id.btn_close);
+        mBtnClose.setOnClickListener(this);
+
         // EditTexts
         mEditStore = view.findViewById(R.id.edit_text_store);
         mEditAmount = view.findViewById(R.id.edit_text_amount);
         mEditDescription = view.findViewById(R.id.edit_text_description);
 
-        // TextViews
-        mTxtDate = view.findViewById(R.id.text_date);
-        mTxtDate.setOnClickListener(this);
-        mTxtCategory = view.findViewById(R.id.text_category);
-        mTxtCategory.setOnClickListener(this);
-        mTxtPaymentMethod = view.findViewById(R.id.text_payment_method);
-        mTxtPaymentMethod.setOnClickListener(this);
+        // ViewGroups
+        mLayoutDate = view.findViewById(R.id.layout_date);
+        mLayoutDate.setOnClickListener(this);
+    }
 
-        // ImageViews
-        mImgDate = view.findViewById(R.id.image_date);
-        mImgDate.setOnClickListener(this);
-        mImgCategory = view.findViewById(R.id.image_category);
-        mImgCategory.setOnClickListener(this);
-        mImgPaymentMethod = view.findViewById(R.id.image_payment_method);
-        mImgPaymentMethod.setOnClickListener(this);
+    private void setupRecyclerViews(View view) {
+        // Categories
+        RecyclerView listCategories = view.findViewById(R.id.list_categories);
+        listCategories.setLayoutManager(new StaggeredGridLayoutManager(
+                getResources().getInteger(R.integer.values_grid_view_rows),
+                StaggeredGridLayoutManager.HORIZONTAL));
+        listCategories.setHasFixedSize(true);
+        final ListPickerAdapter categoriesAdapter = new ListPickerAdapter();
+        categoriesAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
+            @Override
+            public void onItemPicked(String value) {
+                onCategoryPicked(value);
+            }
+        });
+        listCategories.setAdapter(categoriesAdapter);
+        mViewModel.getCategories().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> categories) {
+                Timber.i("Categories received " + categories);
+                categoriesAdapter.setValues(categories);
+            }
+        });
+
+        // Payment Methods
+        RecyclerView listPaymentMethods = view.findViewById(R.id.list_payment_methods);
+        listPaymentMethods.setLayoutManager(new StaggeredGridLayoutManager(
+                getResources().getInteger(R.integer.values_grid_view_rows),
+                StaggeredGridLayoutManager.HORIZONTAL));
+        listPaymentMethods.setHasFixedSize(true);
+        final ListPickerAdapter paymentMethodsAdapter = new ListPickerAdapter();
+        paymentMethodsAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
+            @Override
+            public void onItemPicked(String value) {
+                onPaymentMethodPicked(value);
+            }
+        });
+        listPaymentMethods.setAdapter(paymentMethodsAdapter);
+        mViewModel.getPaymentMethods().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> paymentMethods) {
+                Timber.i("Payment Methods received " + paymentMethods);
+                paymentMethodsAdapter.setValues(paymentMethods);
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
-        if (view == mTxtDate || view == mImgDate) {
+        if (view == mLayoutDate) {
             handleDateClicked();
-        } else if (view == mTxtCategory || view == mImgCategory) {
-            handleCategoryClicked();
-        } else if (view == mTxtPaymentMethod || view == mImgPaymentMethod) {
-            handlePaymentMethodClicked();
+        } else if (view == mBtnClose) {
+            handleCloseFragmentClicked();
+        }
+    }
+
+    private void handleCloseFragmentClicked() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            ((AppCompatActivity)activity).onSupportNavigateUp();
+        } else {
+            Timber.i("handleCloseFragmentClicked() -> Activity is null");
         }
     }
 
@@ -102,26 +160,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         if (getActivity() != null) {
             dialog.show(getActivity().getSupportFragmentManager(), DatePickerDialog.TAG);
         } else {
-            Timber.e("getActivity() returned null when showing date picker dialog");
-        }
-    }
-
-    private void handleCategoryClicked() {
-        ArrayList<String> values = new ArrayList<>(Arrays.asList(DummyData.getCategories()));
-        showListPickerDialog(PickedItem.CATEGORY, values);
-    }
-
-    private void handlePaymentMethodClicked() {
-        ArrayList<String> values = new ArrayList<>(Arrays.asList(DummyData.getPaymentMethods()));
-        showListPickerDialog(PickedItem.PAYMENT_METHOD, values);
-    }
-
-    @Override
-    public void onItemPicked(@PickedItem int pickedItem, String value) {
-        if (pickedItem == PickedItem.CATEGORY) {
-            onCategoryPicked(value);
-        } else if (pickedItem == PickedItem.PAYMENT_METHOD) {
-            onPaymentMethodPicked(value);
+            Timber.e("handleDateClicked -> getActivity() " +
+                    "returned null when showing date picker dialog");
         }
     }
 
@@ -133,22 +173,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         Timber.i("Payment method picked: %s", value);
     }
 
-    private void showListPickerDialog(@PickedItem int pickedItem, ArrayList<String> values) {
-        ListPickerDialog dialog = ListPickerDialog.newInstance();
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.BundleKeys.PICKED_ITEM, pickedItem);
-        bundle.putStringArrayList(Constants.BundleKeys.PICKER_VALUES, values);
-        dialog.setArguments(bundle);
-        dialog.setCallback(this);
-        if (getActivity() != null) {
-            dialog.show(getActivity().getSupportFragmentManager(), ListPickerDialog.TAG);
-        } else {
-            Timber.e("getActivity() returned null when showing picker dialog");
-        }
-    }
-
     @Override
     public void onDatePicked(int year, int month, int day) {
-
+        Timber.i("Date picked: %s/%s/%s", month + 1, day, year);
     }
 }

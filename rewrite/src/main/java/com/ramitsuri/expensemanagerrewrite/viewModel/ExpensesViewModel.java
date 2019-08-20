@@ -9,13 +9,14 @@ import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ExpenseViewModel extends ViewModel {
+public class ExpensesViewModel extends ViewModel {
 
     private ExpenseRepository mExpenseRepo;
     private LiveData<List<Expense>> mExpenses;
 
-    public ExpenseViewModel() {
+    public ExpensesViewModel() {
         super();
+
         MainApplication.getInstance().initRepos();
         mExpenseRepo = MainApplication.getInstance().getExpenseRepo();
         mExpenses = mExpenseRepo.getExpenses();
