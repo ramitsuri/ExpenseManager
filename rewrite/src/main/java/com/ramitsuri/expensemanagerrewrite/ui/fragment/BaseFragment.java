@@ -41,80 +41,80 @@ public class BaseFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Timber.i(this.getClass().getSimpleName() + " OnAttach");
+        Timber.i("%s OnAttach", this.getClass().getSimpleName());
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.i(this.getClass().getSimpleName() + " OnCreate");
+        Timber.i("%s OnCreate", this.getClass().getSimpleName());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        Timber.i(this.getClass().getSimpleName() + " OnCreateView");
+        Timber.i("%s OnCreateView", this.getClass().getSimpleName());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Timber.i(this.getClass().getSimpleName() + " OnViewCreated");
+        Timber.i("%s OnViewCreated", this.getClass().getSimpleName());
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        Timber.i(this.getClass().getSimpleName() + " OnViewStateRestored");
+        Timber.i("%s OnViewStateRestored", this.getClass().getSimpleName());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Timber.i(this.getClass().getSimpleName() + " OnAttach");
+        Timber.i("%s OnAttach", this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Timber.i(this.getClass().getSimpleName() + " OnResume");
+        Timber.i("%s OnResume", this.getClass().getSimpleName());
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Timber.i(this.getClass().getSimpleName() + " OnSaveInstanceState");
+        Timber.i("%s OnSaveInstanceState", this.getClass().getSimpleName());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Timber.i(this.getClass().getSimpleName() + " OnPause");
+        Timber.i("%s OnPause", this.getClass().getSimpleName());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Timber.i(this.getClass().getSimpleName() + " OnStop");
+        Timber.i("%s OnStop", this.getClass().getSimpleName());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Timber.i(this.getClass().getSimpleName() + " OnDestroyView");
+        Timber.i("%s OnDestroyView", this.getClass().getSimpleName());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Timber.i(this.getClass().getSimpleName() + " OnDestroy");
+        Timber.i("%s OnDestroy", this.getClass().getSimpleName());
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Timber.i(this.getClass().getSimpleName() + " OnDetach");
+        Timber.i("%s OnDetach", this.getClass().getSimpleName());
     }
 }

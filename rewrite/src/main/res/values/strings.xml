@@ -15,6 +15,18 @@
 
     <!-- Settings -->
     <string name="settings">Settings</string>
+    <string name="settings_key_spreadsheet_id">settings_spreadsheet_id</string>
+    <string name="settings_key_sheet_id">settings_sheet_id</string>
+    <string name="settings_key_auto_backup">settings_auto_backup</string>
+    <string name="settings_key_theme">settings_theme</string>
+    <string name="settings_title_spreadsheet_id">Spreadsheet ID</string>
+    <string name="settings_title_sheet_id">Current sheet ID</string>
+    <string name="settings_title_auto_backup">Auto backup new expenses</string>
+    <string name="settings_title_theme">Choose theme</string>
+    <string name="settings_summary_spreadsheet_id">Spreadsheet ID</string>
+    <string name="settings_summary_sheet_id">Current sheet ID</string>
+    <string name="settings_summary_auto_backup">Auto backup new expenses</string>
+    <string name="settings_summary_theme">Theme</string>
 
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>

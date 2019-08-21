@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        app:key="copyable"
-        app:title="@string/title_copyable_preference"
-        app:summary="@string/summary_copyable_preference"
-        app:selectable="false"
-        app:enableCopying="true"/>
-    
+    <EditTextPreference
+        android:dialogTitle="@string/settings_title_spreadsheet_id"
+        android:key="@string/settings_key_spreadsheet_id"
+        android:title="@string/settings_title_spreadsheet_id"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        android:dialogTitle="@string/settings_title_sheet_id"
+        android:key="@string/settings_key_sheet_id"
+        android:title="@string/settings_title_sheet_id"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        android:dialogTitle="@string/settings_title_theme"
+        android:entries="@array/theme_titles"
+        android:entryValues="@array/theme_values"
+        android:key="@string/settings_key_theme"
+        android:title="@string/settings_title_theme"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreferenceCompat
+        android:key="@string/settings_key_auto_backup"
+        android:summary="@string/settings_summary_auto_backup"
+        android:title="@string/settings_title_auto_backup" />
+
 </androidx.preference.PreferenceScreen>
