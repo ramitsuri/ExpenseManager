@@ -1,15 +1,13 @@
 package com.ramitsuri.expensemanagerrewrite.ui.fragment;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.ramitsuri.expensemanagerrewrite.R;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceFragmentCompat;
 
-public class SettingsFragment extends BaseFragment {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -21,10 +19,8 @@ public class SettingsFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
     @Override
