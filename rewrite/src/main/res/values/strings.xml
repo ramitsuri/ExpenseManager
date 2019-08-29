@@ -5,6 +5,7 @@
     <string name="hello_settings_fragment">Hello Settings fragment</string>
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
     <string name="sync_now">Sync Now</string>
+    <string name="edit">Edit</string>
     <string name="expense_divider">•</string>
     <string name="content_description_close_fragment">Close view</string>
     <string name="category">Category</string>

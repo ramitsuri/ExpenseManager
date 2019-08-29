@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/padding_medium">
+        android:padding="@dimen/padding_small">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_vertical_1"
@@ -34,8 +34,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_extra_small"
+            android:layout_marginTop="@dimen/margin_medium"
             android:gravity="center"
             android:nextFocusForward="@+id/edit_text_store"
             app:layout_constraintEnd_toStartOf="@id/guide_vertical_1"
@@ -56,7 +56,8 @@
             android:id="@+id/layout_date"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_extra_small"
+            app:cardUseCompatPadding="true"
             app:layout_constraintBottom_toBottomOf="@id/layout_amount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guide_vertical_1"
@@ -67,23 +68,16 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/padding_small">
-
-                <ImageView
-                    android:id="@+id/image_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="@dimen/margin_medium"
-                    android:contentDescription="@string/add_expense_content_description_date_selector"
-                    android:src="@drawable/ic_date"
-                    android:tint="?attr/colorControlNormal" />
+                android:padding="@dimen/padding_extra_small">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/text_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:drawablePadding="@dimen/padding_extra_extra_small"
+                    android:drawableStart="@drawable/ic_date"
+                    android:drawableTint="?attr/colorControlNormal"
                     android:text="@string/add_expense_today"
                     android:textSize="@dimen/text_large" />
 
@@ -96,7 +90,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
             android:nextFocusForward="@+id/edit_text_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +111,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_store"
@@ -136,7 +130,7 @@
             android:id="@+id/text_header_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/category"
             android:textAllCaps="true"
             android:textSize="@dimen/text_medium"
@@ -157,7 +151,7 @@
             android:id="@+id/text_header_payment_methods"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/payment_method"
             android:textAllCaps="true"
             android:textSize="@dimen/text_medium"
@@ -181,7 +175,7 @@
         android:layout_width="@dimen/button_size_medium"
         android:layout_height="@dimen/button_size_medium"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/margin_medium"
+        android:layout_margin="@dimen/margin_small"
         app:srcCompat="@drawable/ic_done" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

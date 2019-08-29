@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ramitsuri.expensemanagerrewrite.R;
@@ -21,35 +22,68 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
     @Nullable
     private List<Expense> mExpenses;
+    private int mExpandedPosition = -1;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView txtDate, txtCategory, txtPaymentMethod, txtDescription, txtAmount,
-                txtStore, txtStoreDivider;
+        private ViewGroup containerDetails, containerExpand;
+        private TextView txtDate, txtDescription, txtAmount, txtDetail1, txtDetail2, txtDetail3,
+                btnEdit;
+        private ImageView btnExpand;
 
         ViewHolder(View itemView) {
             super(itemView);
-            txtDate = itemView.findViewById(R.id.text_expense_date);
-            txtCategory = itemView.findViewById(R.id.text_expense_category);
-            txtPaymentMethod = itemView.findViewById(R.id.text_expense_payment_method);
+            containerDetails = itemView.findViewById(R.id.container_details);
+            containerExpand = itemView.findViewById(R.id.container_expand);
+            containerExpand.setOnClickListener(this);
+
             txtDescription = itemView.findViewById(R.id.txt_expense_description);
             txtAmount = itemView.findViewById(R.id.txt_expense_amount);
-            txtStore = itemView.findViewById(R.id.txt_expense_store);
-            txtStoreDivider = itemView.findViewById(R.id.txt_expense_divider2);
+            txtDate = itemView.findViewById(R.id.text_expense_date);
+            txtDetail1 = itemView.findViewById(R.id.text_expense_detail_1);
+            txtDetail2 = itemView.findViewById(R.id.text_expense_detail_2);
+            txtDetail3 = itemView.findViewById(R.id.txt_expense_detail_3);
+
+            btnEdit = itemView.findViewById(R.id.btn_edit);
+            btnEdit.setOnClickListener(this);
+
+            btnExpand = itemView.findViewById(R.id.btn_expand);
         }
 
         private void bind(final Expense expense) {
-            txtCategory.setText(String.valueOf(expense.getCategory().charAt(0)));
-            txtPaymentMethod.setText(expense.getPaymentMethod());
+            txtDetail1.setText(expense.getPaymentMethod());
+            txtDetail2.setText(expense.getCategory());
             txtDescription.setText(expense.getDescription());
             txtAmount.setText(String.valueOf(expense.getAmount()));
             txtDate.setText(DateHelper.getFriendlyDate(expense.getDateTime()));
             if (TextUtils.isEmpty(expense.getStore())) {
-                txtStoreDivider.setVisibility(View.GONE);
-                txtStore.setVisibility(View.GONE);
+                txtDetail3.setVisibility(View.GONE);
             } else {
-                txtStore.setText(expense.getStore());
+                txtDetail3.setText(expense.getStore());
             }
+
+            final boolean isExpanded = getAdapterPosition() == mExpandedPosition;
+            if (isExpanded) {
+                containerDetails.setVisibility(View.VISIBLE);
+                btnExpand.setImageResource(R.drawable.ic_up);
+            } else {
+                containerDetails.setVisibility(View.GONE);
+                btnExpand.setImageResource(R.drawable.ic_down);
+            }
+
+            btnExpand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    handleExpandClicked(isExpanded);
+                }
+            });
+            containerExpand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    handleExpandClicked(isExpanded);
+                }
+            });
+
 
        /* if (expense.isSynced()) {
             txtAmount.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
@@ -60,7 +94,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 
         @Override
         public void onClick(View view) {
+            if (view == btnEdit) {
+            }
+        }
 
+        private void handleExpandClicked(boolean isExpanded) {
+            mExpandedPosition = isExpanded ? -1 : getAdapterPosition();
+            notifyDataSetChanged();
         }
     }
 
