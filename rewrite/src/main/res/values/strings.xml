@@ -13,6 +13,9 @@
 
     <!-- Expenses -->
     <string name="expenses">Expenses</string>
+    <string name="paid_using_payment">paid using %1s</string>
+    <string name="at_store">at %1s</string>
+    <string name="amount_with_currency">$%1s</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_small">
+    android:id="@+id/container"
+    android:padding="@dimen/padding_extra_small">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_vertical"
@@ -34,35 +34,39 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_extra_small"
         android:textSize="@dimen/text_small"
-        app:layout_constraintBottom_toTopOf="@id/container_details"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/txt_expense_description"
         app:layout_constraintTop_toBottomOf="@id/txt_expense_description"
         tools:text="Aug 7th" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/txt_expense_divider1"
+        android:id="@+id/txt_expense_detail_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_extra_extra_small"
-        android:text="@string/expense_divider"
+        android:layout_marginTop="@dimen/margin_extra_extra_small"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
         android:textSize="@dimen/text_small"
-        app:layout_constraintBottom_toBottomOf="@id/text_expense_date"
-        app:layout_constraintStart_toEndOf="@id/text_expense_date"
-        app:layout_constraintTop_toTopOf="@id/text_expense_date" />
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/txt_expense_description"
+        app:layout_constraintTop_toBottomOf="@id/txt_expense_description"
+        tools:text="paid using Discover" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_expense_detail_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_extra_extra_small"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:textSize="@dimen/text_small"
-        app:layout_constraintBottom_toBottomOf="@id/text_expense_date"
-        app:layout_constraintStart_toEndOf="@id/txt_expense_divider1"
-        app:layout_constraintTop_toTopOf="@id/text_expense_date"
-        tools:text="Publix" />
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/txt_expense_description"
+        app:layout_constraintTop_toBottomOf="@id/txt_expense_detail_3"
+        tools:text="at Publix" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txt_expense_amount"
@@ -73,101 +77,23 @@
         android:textSize="@dimen/text_medium"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/container_expand"
+        app:layout_constraintStart_toEndOf="@id/guide_vertical"
         app:layout_constraintTop_toTopOf="@id/txt_expense_description"
         tools:text="$45" />
 
-    <LinearLayout
-        android:id="@+id/container_expand"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_expense_detail_2"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:paddingEnd="@dimen/padding_extra_extra_small"
-        android:paddingStart="@dimen/padding_extra_extra_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/txt_expense_amount"
-        app:layout_constraintStart_toEndOf="@id/guide_vertical"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/btn_expand"
-            android:layout_width="@dimen/button_size_extra_small"
-            android:layout_height="@dimen/button_size_extra_small"
-            android:contentDescription="@string/content_description_close_fragment"
-            android:tint="@color/grey"
-            app:srcCompat="@drawable/ic_down" />
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_details"
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_extra_small"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/txt_expense_description"
-        app:layout_constraintTop_toBottomOf="@id/text_expense_date"
-        tools:visibility="visible">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/text_expense_detail_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0"
-            tools:text="Food" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_expense_detail_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_extra_small"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/text_expense_detail_2"
-            app:layout_constraintTop_toBottomOf="@id/text_expense_detail_2"
-            tools:text="Discover" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/margin_extra_small"
-            android:background="@color/grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_expense_detail_3" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/btn_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_extra_small"
-            android:gravity="start"
-            android:paddingBottom="@dimen/padding_extra_small"
-            android:paddingEnd="@dimen/padding_small"
-            android:paddingTop="@dimen/padding_extra_small"
-            android:text="@string/edit"
-            android:textSize="@dimen/text_small"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            tools:ignore="RtlSymmetry" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintEnd_toEndOf="@id/txt_expense_amount"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/guide_vertical"
+        app:layout_constraintTop_toBottomOf="@id/txt_expense_amount"
+        tools:text="Food" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
