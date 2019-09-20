@@ -7,7 +7,7 @@
         android:shortcutLongLabel="@string/shortcut_add_expense_long_label">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.ramitsuri.expensemanager"
-            android:targetClass="com.ramitsuri.expensemanager.ui.ExpenseDetailActivity" />
+            android:targetPackage="com.ramitsuri.expensemanagerlegacy"
+            android:targetClass="com.ramitsuri.expensemanagerlegacy.ui.ExpenseDetailActivity" />
     </shortcut>
 </shortcuts>
