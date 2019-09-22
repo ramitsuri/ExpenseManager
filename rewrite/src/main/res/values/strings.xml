@@ -1,20 +1,21 @@
 <resources>
-    <string name="app_name">Expense Manager Rewrite</string>
+    <string name="app_name">Expenses</string>
 
     <string name="hello_add_fragment">Hello Add fragment</string>
     <string name="hello_settings_fragment">Hello Settings fragment</string>
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
-    <string name="sync_now">Sync Now</string>
-    <string name="edit">Edit</string>
+    <string name="common_sync_now">Sync Now</string>
+    <string name="common_edit">Edit Expense</string>
     <string name="expense_divider">•</string>
     <string name="content_description_close_fragment">Close view</string>
-    <string name="category">Category</string>
-    <string name="payment_method">Payment Method</string>
+    <string name="common_category">Category</string>
+    <string name="common_payment_method">Payment Method</string>
 
     <!-- Expenses -->
-    <string name="expenses">Expenses</string>
+    <string name="common_expenses">Expenses</string>
     <string name="paid_using_payment">paid using %1s</string>
     <string name="at_store">at %1s</string>
+    <string name="in_category">in category %1s</string>
     <string name="amount_with_currency">$%1s</string>
 
     <!-- Settings -->

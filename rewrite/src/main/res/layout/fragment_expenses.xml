@@ -41,7 +41,7 @@
             android:id="@+id/btn_sync_now"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/sync_now"
+            android:text="@string/common_sync_now"
             app:layout_constraintBottom_toTopOf="@id/guide_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guide_vertical"

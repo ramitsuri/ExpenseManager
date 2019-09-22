@@ -35,7 +35,7 @@ public class AddExpenseViewModel extends ViewModel {
         mPaymentMethodRepo = MainApplication.getInstance().getPaymentMethodRepo();
 
         mExpense = new Expense();
-        mCategories = Transformations.map( mCategoryRepo.getCategories(),
+        mCategories = Transformations.map(mCategoryRepo.getCategories(),
                 new Function<List<Category>, List<String>>() {
                     @Override
                     public List<String> apply(List<Category> categories) {

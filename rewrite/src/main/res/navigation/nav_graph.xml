@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_expenses"
-        android:label="@string/expenses"
+        android:label="@string/common_expenses"
         android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.ExpensesFragment"
         tools:layout="@layout/fragment_expenses">
 

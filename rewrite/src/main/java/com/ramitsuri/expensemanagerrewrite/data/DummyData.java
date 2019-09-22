@@ -106,11 +106,13 @@ public class DummyData {
 
     public static List<Expense> getExpenses() {
         List<Expense> expenses = new ArrayList<>();
+        long base = 1565818852014L;
+        long oneDay = 86400000;
 
         Expense expense = new Expense();
         expense.setAmount(BigDecimal.ZERO);
         expense.setCategory(getCategories()[0]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base);
         expense.setPaymentMethod(getPaymentMethods()[0]);
         expense.setDescription(getDescriptions()[0]);
         expense.setStore(getStores()[0]);
@@ -121,7 +123,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("10.00"));
         expense.setCategory(getCategories()[1]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base);
         expense.setPaymentMethod(getPaymentMethods()[2]);
         expense.setDescription(getDescriptions()[4]);
         expense.setStore(getStores()[5]);
@@ -132,7 +134,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("7.43"));
         expense.setCategory(getCategories()[4]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base + oneDay);
         expense.setPaymentMethod(getPaymentMethods()[0]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[9]);
@@ -143,7 +145,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("17.56"));
         expense.setCategory(getCategories()[2]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base + oneDay);
         expense.setPaymentMethod(getPaymentMethods()[8]);
         expense.setDescription(getDescriptions()[12]);
         expense.setStore(getStores()[13]);
@@ -154,7 +156,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("123.98"));
         expense.setCategory(getCategories()[7]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base - oneDay);
         expense.setPaymentMethod(getPaymentMethods()[3]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[7]);
@@ -165,7 +167,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("45"));
         expense.setCategory(getCategories()[6]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base + 3 * oneDay);
         expense.setPaymentMethod(getPaymentMethods()[4]);
         expense.setDescription(getDescriptions()[4]);
         expense.setStore(getStores()[3]);
@@ -176,7 +178,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1399"));
         expense.setCategory(getCategories()[0]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base - 2 * oneDay);
         expense.setPaymentMethod(getPaymentMethods()[11]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[10]);
@@ -187,7 +189,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(BigDecimal.ZERO);
         expense.setCategory(getCategories()[3]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base + 3 * oneDay);
         expense.setPaymentMethod(getPaymentMethods()[11]);
         expense.setDescription(getDescriptions()[2]);
         expense.setStore(getStores()[5]);
@@ -198,7 +200,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("13.45"));
         expense.setCategory(getCategories()[5]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base - oneDay);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[3]);
         expense.setStore(getStores()[1]);
@@ -209,7 +211,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("15"));
         expense.setCategory(getCategories()[3]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base + 2 * oneDay);
         expense.setPaymentMethod(getPaymentMethods()[3]);
         expense.setDescription(getDescriptions()[9]);
         expense.setStore(getStores()[2]);
@@ -220,7 +222,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("15.45"));
         expense.setCategory(getCategories()[5]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base - 2 * oneDay);
         expense.setPaymentMethod(getPaymentMethods()[10]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[13]);
@@ -231,7 +233,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1.40"));
         expense.setCategory(getCategories()[8]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base - 2 * oneDay);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[10]);
@@ -242,7 +244,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("31.90"));
         expense.setCategory(getCategories()[2]);
-        expense.setDateTime(new Date().getTime());
+        expense.setDateTime(base + 2 * oneDay);
         expense.setPaymentMethod(getPaymentMethods()[2]);
         expense.setDescription(getDescriptions()[9]);
         expense.setStore(getStores()[2]);

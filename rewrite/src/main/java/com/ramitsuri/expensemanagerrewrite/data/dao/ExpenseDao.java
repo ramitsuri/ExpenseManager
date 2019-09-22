@@ -11,7 +11,7 @@ import androidx.room.Query;
 
 @Dao
 public interface ExpenseDao {
-    @Query("SELECT * FROM expense")
+    @Query("SELECT * FROM expense ORDER BY date_time DESC")
     LiveData<List<Expense>> getAll();
 
     @Query("SELECT * FROM expense WHERE is_starred = 1")
