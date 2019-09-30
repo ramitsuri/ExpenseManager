@@ -1,6 +1,9 @@
 package com.ramitsuri.expensemanagerrewrite.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
 
 public class DateHelper {
@@ -29,8 +32,13 @@ public class DateHelper {
         return format.format(date) + " " + DAY_SUFFIXES[day];
     }
 
-    public static double toSheetsDate(long date) {
-        return (double)date / MILLI_SECONDS_IN_DAY + SHEETS_DATE_OFFSET;
+    public static String getJustDay(long date) {
+        SimpleDateFormat formatDayOfMonth = new SimpleDateFormat(FORMAT_DAY, Locale.getDefault());
+        return formatDayOfMonth.format(date);
+    }
+
+    public static long toSheetsDate(long date) {
+        return date / MILLI_SECONDS_IN_DAY + SHEETS_DATE_OFFSET;
     }
 
     public static long fromSheetsDate(long sheetsDate) {
@@ -43,5 +51,32 @@ public class DateHelper {
 
     public static long toDay(long daysFromStartOfTime) {
         return daysFromStartOfTime * MILLI_SECONDS_IN_DAY;
+    }
+
+    public static int getYearFromDate(LocalDate localDate) {
+        return localDate.getYear();
+    }
+
+    /**
+     * return month in range 1-12
+     */
+    public static int getMonthFromDate(LocalDate localDate) {
+        return localDate.getMonthValue() - 1;
+    }
+
+    public static int getDayFromDate(LocalDate localDate) {
+        return localDate.getDayOfMonth();
+    }
+
+    public static LocalDate getLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * Takes in month in range 1-12
+     */
+    public static long getDateFromYearMonthDay(int year, int month, int day) {
+        LocalDate localDate = LocalDate.of(year, month + 1, day);
+        return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 }

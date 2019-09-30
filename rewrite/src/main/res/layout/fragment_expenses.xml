@@ -7,6 +7,7 @@
     tools:context=".ui.fragment.ExpensesFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/padding_small">
@@ -73,7 +74,8 @@
         android:id="@+id/btn_add"
         android:layout_width="@dimen/button_size_medium"
         android:layout_height="@dimen/button_size_medium"
-        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/margin_small"
+        app:layout_anchor="@id/list_expenses"
+        app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/ic_add" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

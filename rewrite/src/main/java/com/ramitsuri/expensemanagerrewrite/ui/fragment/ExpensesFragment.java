@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
@@ -28,6 +27,7 @@ import timber.log.Timber;
 public class ExpensesFragment extends BaseFragment {
 
     private ExpensesViewModel mExpensesViewModel;
+    private FloatingActionButton mBtnAdd;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -46,8 +46,8 @@ public class ExpensesFragment extends BaseFragment {
 
         mExpensesViewModel = ViewModelProviders.of(this).get(ExpensesViewModel.class);
 
-        FloatingActionButton btnAdd = view.findViewById(R.id.btn_add);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        mBtnAdd = view.findViewById(R.id.btn_add);
+        mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(ExpensesFragment.this)
@@ -69,6 +69,16 @@ public class ExpensesFragment extends BaseFragment {
             public void onChanged(List<ExpenseWrapper> expenses) {
                 Timber.i("Refreshing expenses");
                 adapter.setExpenses(expenses);
+            }
+        });
+        listExpenses.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    mBtnAdd.hide();
+                } else if (dy < 0) {
+                    mBtnAdd.show();
+                }
             }
         });
 
