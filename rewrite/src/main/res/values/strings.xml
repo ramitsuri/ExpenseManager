@@ -10,6 +10,9 @@
     <string name="content_description_close_fragment">Close view</string>
     <string name="common_category">Category</string>
     <string name="common_payment_method">Payment Method</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="warning">Warning</string>
 
     <!-- Expenses -->
     <string name="common_expenses">Expenses</string>
@@ -43,6 +46,10 @@
     <string name="add_expense_content_description_payment_method_selector">Payment Method
         Selector</string>
     <string name="add_expense_today">Today</string>
+    <string name="exit_while_editing_warning_message">You have unsaved changes.
+        Are you sure you want to exit?
+    </string>
+    <string name="you_have_unsaved_changes">You have unsaved changes</string>
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>

@@ -8,9 +8,12 @@ import com.ramitsuri.expensemanagerrewrite.entities.Category;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 import com.ramitsuri.expensemanagerrewrite.entities.PaymentMethod;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -26,6 +29,8 @@ public class AddExpenseViewModel extends ViewModel {
     private LiveData<List<String>> mCategories;
     private LiveData<List<String>> mPaymentMethods;
 
+    private boolean mChangesMade;
+
     public AddExpenseViewModel() {
         super();
 
@@ -34,7 +39,6 @@ public class AddExpenseViewModel extends ViewModel {
         mCategoryRepo = MainApplication.getInstance().getCategoryRepo();
         mPaymentMethodRepo = MainApplication.getInstance().getPaymentMethodRepo();
 
-        mExpense = new Expense();
         mCategories = Transformations.map(mCategoryRepo.getCategories(),
                 new Function<List<Category>, List<String>>() {
                     @Override
@@ -57,6 +61,8 @@ public class AddExpenseViewModel extends ViewModel {
                         return paymentMethodStrings;
                     }
                 });
+
+        reset();
     }
 
     public LiveData<List<String>> getCategories() {
@@ -68,7 +74,55 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void addExpense() {
-        mExpenseRepo.insertExpense(mExpense);
+        Expense expense = mExpense;
+        mExpenseRepo.insertExpense(expense);
+        reset();
+    }
+
+    public long getExpenseDate() {
+        return mExpense.getDateTime();
+    }
+
+    public void setExpenseDate(long date) {
+        mExpense.setDateTime(date);
+        setChangesMade();
+    }
+
+    public void setExpenseCategory(@NonNull String category) {
+        mExpense.setCategory(category);
+        setChangesMade();
+    }
+
+    public void setExpensePaymentMethod(@NonNull String paymentMethod) {
+        mExpense.setPaymentMethod(paymentMethod);
+        setChangesMade();
+    }
+
+    public void setExpenseAmount(@NonNull String amount) {
+        mExpense.setAmount(new BigDecimal(amount));
+        setChangesMade();
+    }
+
+    public void setExpenseStore(@NonNull String store) {
+        mExpense.setStore(store);
+        setChangesMade();
+    }
+
+    public void setExpenseDescription(@NonNull String description) {
+        mExpense.setDescription(description);
+        setChangesMade();
+    }
+
+    public boolean isChangesMade() {
+        return mChangesMade;
+    }
+
+    private void setChangesMade() {
+        mChangesMade = true;
+    }
+
+    private void reset() {
         mExpense = new Expense();
+        mExpense.setDateTime(new Date().getTime());
     }
 }

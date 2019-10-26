@@ -35,16 +35,17 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setExpenses(List<ExpenseWrapper> expenses) {
         if (mExpenses != null) {
-            ExpenseDiffCallback callback = new ExpenseDiffCallback(mExpenses, expenses);
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
+            /*ExpenseDiffCallback callback = new ExpenseDiffCallback(mExpenses, expenses);
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);*/
 
             mExpenses.clear();
             mExpenses.addAll(expenses);
-            diffResult.dispatchUpdatesTo(this);
+            //diffResult.dispatchUpdatesTo(this);
         } else {
             // first initialization
             mExpenses = expenses;
         }
+        notifyDataSetChanged();
     }
 
     public void setCallback(@Nullable ItemClickListener callback) {

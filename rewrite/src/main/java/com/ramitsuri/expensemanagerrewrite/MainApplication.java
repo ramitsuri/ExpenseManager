@@ -53,10 +53,10 @@ public class MainApplication extends Application {
         mExpenseRepo = new ExpenseRepository(appExecutors, database, source);
 
         // TODO DEBUG Only
-        mExpenseRepo.deleteExpenses();
+        /*mExpenseRepo.deleteExpenses();
         for (Expense expense : DummyData.getExpenses()) {
             mExpenseRepo.insertExpense(expense);
-        }
+        }*/
 
         mCategoryRepo.setCategories(DummyData.getCategories());
         mPaymentMethodRepo.setPaymentMethods(DummyData.getPaymentMethods());

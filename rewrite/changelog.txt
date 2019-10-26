@@ -1,0 +1,6 @@
+- Show warning before exit when changes are made to an expense
+    - added DialogHelper to show Material dialogs
+- Comment out DiffUtil for now as it results in unnecessary refresh
+- Added a way to hide keyboard to BaseFragment
+- Saving expense on Done click
+- Disabled dummy data insertion
