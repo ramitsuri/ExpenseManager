@@ -1,12 +1,1 @@
-- SetupFragment to setup sheet sync
-- Modified nav graph to have conditional starting point
-- Added PrefHelper
-- Added Backup Worker
-- Added Work and Sheets library implementation to build.gradle
-- Added SheetRepository
-- Added SheetRequestHelper
-- Added new Constants
-- Added log work status mechanism to BaseFragment
-- Initialize SheetRepo in MainApplication
-- Commented out dummy categories and payment methods insertion
-- Changed input parameter to List<String> from String[] for categories and payment method insertion
+- Renamed rewrite package to com.ramitsuri.expensemanager
