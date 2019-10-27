@@ -10,9 +10,10 @@
     <string name="content_description_close_fragment">Close view</string>
     <string name="common_category">Category</string>
     <string name="common_payment_method">Payment Method</string>
-    <string name="discard">Discard</string>
-    <string name="keep_editing">Keep editing</string>
-    <string name="warning">Warning</string>
+    <string name="common_discard">Discard</string>
+    <string name="common_keep_editing">Keep editing</string>
+    <string name="common_warning">Warning</string>
+    <string name="common_setup">Setup</string>
 
     <!-- Expenses -->
     <string name="common_expenses">Expenses</string>
@@ -35,6 +36,8 @@
     <string name="settings_summary_sheet_id">Current sheet ID</string>
     <string name="settings_summary_auto_backup">Auto backup new expenses</string>
     <string name="settings_summary_theme">Theme</string>
+    <string name="settings_key_account_name">settings_account_name</string>
+    <string name="settings_key_account_type">settings_account_type</string>
 
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>
@@ -50,6 +53,9 @@
         Are you sure you want to exit?
     </string>
     <string name="you_have_unsaved_changes">You have unsaved changes</string>
+
+    <!-- Setup -->
+    <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>

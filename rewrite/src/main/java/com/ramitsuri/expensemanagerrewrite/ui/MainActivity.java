@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
@@ -27,6 +29,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        NavInflater navInflater = navController.getNavInflater();
+        NavGraph graph = navInflater.inflate(R.navigation.nav_graph);
+
+        if (true) {
+            graph.setStartDestination(R.id.fragment_expenses);
+        } else {
+            graph.setStartDestination(R.id.fragment_setup);
+        }
+        navController.setGraph(graph);
+
         NavigationUI.setupWithNavController(toolbar, navController);
     }
 

@@ -3,7 +3,6 @@ package com.ramitsuri.expensemanagerrewrite.ui.fragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -173,9 +171,9 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                             }
                         };
                 DialogHelper.showAlert(getContext(),
-                        R.string.warning, R.string.exit_while_editing_warning_message,
-                        R.string.keep_editing, null,
-                        R.string.discard, negativeListener);
+                        R.string.common_warning, R.string.exit_while_editing_warning_message,
+                        R.string.common_keep_editing, null,
+                        R.string.common_discard, negativeListener);
                 return;
             }
         }

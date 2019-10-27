@@ -43,7 +43,7 @@ public class PaymentMethodRepository {
         return paymentMethods;
     }
 
-    public void setPaymentMethods(final String[] paymentMethods) {
+    public void setPaymentMethods(final List<String> paymentMethods) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {

@@ -43,7 +43,7 @@ public class CategoryRepository {
         return categories;
     }
 
-    public void setCategories(final String[] categories) {
+    public void setCategories(final List<String> categories) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {

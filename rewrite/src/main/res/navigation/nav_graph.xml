@@ -2,38 +2,36 @@
 <navigation android:id="@+id/nav_graph"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/fragment_expenses">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <fragment
         android:id="@+id/fragment_expenses"
-        android:label="@string/common_expenses"
         android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.ExpensesFragment"
+        android:label="@string/common_expenses"
         tools:layout="@layout/fragment_expenses">
 
         <action
             android:id="@+id/nav_action_settings"
-            app:destination="@id/fragment_settings"
-            />
+            app:destination="@id/fragment_settings" />
 
         <action
             android:id="@+id/nav_action_add_expense"
-            app:destination="@id/fragment_add_expense"
-            />
+            app:destination="@id/fragment_add_expense" />
 
     </fragment>
 
     <fragment
         android:id="@+id/fragment_settings"
-        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.SettingsFragment"
-        tools:layout="@layout/fragment_settings">
-
-    </fragment>
+        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.SettingsFragment" />
 
     <fragment
         android:id="@+id/fragment_add_expense"
         android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.AddExpenseFragment"
-        tools:layout="@layout/fragment_add_expense">
+        tools:layout="@layout/fragment_add_expense" />
 
-    </fragment>
+    <fragment
+        android:id="@+id/fragment_setup"
+        android:name="com.ramitsuri.expensemanagerrewrite.ui.fragment.SetupFragment"
+        tools:layout="@layout/fragment_setup" />
+
 </navigation>

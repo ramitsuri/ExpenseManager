@@ -7,13 +7,17 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ramitsuri.expensemanagerrewrite.Constants;
+import com.ramitsuri.expensemanagerrewrite.MainApplication;
 import com.ramitsuri.expensemanagerrewrite.R;
 import com.ramitsuri.expensemanagerrewrite.entities.Expense;
 import com.ramitsuri.expensemanagerrewrite.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanagerrewrite.ui.adapter.ExpenseAdapter;
+import com.ramitsuri.expensemanagerrewrite.utils.PrefHelper;
 import com.ramitsuri.expensemanagerrewrite.viewModel.ExpensesViewModel;
+import com.ramitsuri.expensemanagerrewrite.work.BackupWorker;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +26,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import timber.log.Timber;
 
 public class ExpensesFragment extends BaseFragment {
@@ -112,5 +123,50 @@ public class ExpensesFragment extends BaseFragment {
 
     private void handleExpenseEditRequested() {
 
+    }
+
+
+    private void initiateBackup(String accountName, String accountType, boolean periodic) {
+        Timber.i("Initiating backup");
+        String workTag = Constants.Tag.SCHEDULED_BACKUP;
+
+        // Input data
+        String spreadsheetId =
+                PrefHelper.get(getString(R.string.settings_key_spreadsheet_id), null);
+        String sheetId = PrefHelper.get(getString(R.string.settings_key_sheet_id), null);
+        Data.Builder builder = new Data.Builder();
+        builder.putString(Constants.Work.APP_NAME, getString(R.string.app_name));
+        builder.putString(Constants.Work.ACCOUNT_NAME, accountName);
+        builder.putString(Constants.Work.ACCOUNT_TYPE, accountType);
+        builder.putString(Constants.Work.SPREADSHEET_ID, spreadsheetId);
+        builder.putString(Constants.Work.SHEET_ID, sheetId);
+        Constraints myConstraints = new Constraints.Builder()
+                .setRequiresCharging(false)
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .build();
+
+        if (periodic) {
+            // Request
+            PeriodicWorkRequest.Builder periodicWorkRequestBuilder =
+                    new PeriodicWorkRequest.Builder(BackupWorker.class, 12, TimeUnit.HOURS)
+                            .setConstraints(myConstraints)
+                            .setInputData(builder.build())
+                            .addTag(workTag);
+            PeriodicWorkRequest request = periodicWorkRequestBuilder.build();
+
+            // Enqueue
+            WorkManager.getInstance(MainApplication.getInstance())
+                    .enqueueUniquePeriodicWork(workTag,
+                            ExistingPeriodicWorkPolicy.REPLACE, request);
+        } else {
+            OneTimeWorkRequest backupRequest = new OneTimeWorkRequest.Builder(BackupWorker.class)
+                    .addTag(Constants.Tag.ONE_TIME_BACKUP)
+                    .setInputData(builder.build())
+                    .build();
+            WorkManager.getInstance(MainApplication.getInstance()).enqueue(backupRequest);
+        }
+
+        // Status
+        logWorkStatus(workTag);
     }
 }
