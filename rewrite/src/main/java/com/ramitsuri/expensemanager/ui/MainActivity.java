@@ -1,10 +1,12 @@
 package com.ramitsuri.expensemanager.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.utils.PrefHelper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
         NavInflater navInflater = navController.getNavInflater();
         NavGraph graph = navInflater.inflate(R.navigation.nav_graph);
 
-        if (true) {
-            graph.setStartDestination(R.id.fragment_expenses);
-        } else {
+        if (TextUtils
+                .isEmpty(PrefHelper.get(getString(R.string.settings_key_spreadsheet_id), null))) {
+            // First time setup
             graph.setStartDestination(R.id.fragment_setup);
+        } else { // First time setup already done
+            graph.setStartDestination(R.id.fragment_expenses);
         }
         navController.setGraph(graph);
 

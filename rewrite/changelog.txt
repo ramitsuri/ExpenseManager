@@ -1,1 +1,2 @@
-- Renamed rewrite package to com.ramitsuri.expensemanager
+- starting setup fragment when spreadsheet id empty
+- hid action bar on SetupFragment

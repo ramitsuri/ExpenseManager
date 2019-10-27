@@ -62,6 +62,18 @@ public class SetupFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideActionBar();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        showActionBar();
+    }
+
     private void handleSetupClicked() {
         if (!TextUtils.isEmpty(getSpreadsheetId())) {
             signIn();
@@ -77,6 +89,8 @@ public class SetupFragment extends BaseFragment {
         if (accountName != null && accountType != null) {
             setupEntities(accountName, accountType);
             return;
+        } else {
+            Timber.w("AccountType or Name null. Name " + accountName + ", Type " + accountType);
         }
 
         AccountManager accountManager = new AccountManager();
