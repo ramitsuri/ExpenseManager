@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:84360496661:android:8848fa719d55b9ba",
+        "mobilesdk_app_id": "1:84360496661:android:f3d76040836e19a5a4b01c",
         "android_client_info": {
-          "package_name": "com.ramitsuri.expensemanagerrewrite"
+          "package_name": "com.ramitsuri.expensemanager"
         }
       },
       "oauth_client": [
