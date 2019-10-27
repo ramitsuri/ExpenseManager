@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ramitsuri.expensemanager.Constants;
@@ -38,7 +39,10 @@ import timber.log.Timber;
 public class ExpensesFragment extends BaseFragment {
 
     private ExpensesViewModel mExpensesViewModel;
+
+    // Views
     private FloatingActionButton mBtnAdd;
+    private Button mBtnSyncNow;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -63,6 +67,23 @@ public class ExpensesFragment extends BaseFragment {
             public void onClick(View view) {
                 NavHostFragment.findNavController(ExpensesFragment.this)
                         .navigate(R.id.nav_action_add_expense, null);
+            }
+        });
+
+        mBtnSyncNow = view.findViewById(R.id.btn_sync_now);
+        mBtnSyncNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String accountName =
+                        PrefHelper.get(getString(R.string.settings_key_account_name), null);
+                String accountType =
+                        PrefHelper.get(getString(R.string.settings_key_account_type), null);
+                if (accountName != null && accountType != null) {
+                    initiateBackup(accountName, accountType, false);
+                } else {
+                    Timber.w("AccountType or Name null. Name " + accountName + ", Type " +
+                            accountType);
+                }
             }
         });
 
@@ -124,7 +145,6 @@ public class ExpensesFragment extends BaseFragment {
     private void handleExpenseEditRequested() {
 
     }
-
 
     private void initiateBackup(String accountName, String accountType, boolean periodic) {
         Timber.i("Initiating backup");

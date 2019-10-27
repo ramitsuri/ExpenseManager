@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.ui.fragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -243,21 +244,30 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private String getExpenseAmount() {
         if (mEditAmount != null) {
-            return mEditAmount.getText().toString().trim();
+            String text = mEditAmount.getText().toString().trim();
+            if (!TextUtils.isEmpty(text)) {
+                return text;
+            }
         }
-        return EMPTY;
+        return "0.00";
     }
 
     private String getExpenseStore() {
         if (mEditStore != null) {
-            return mEditStore.getText().toString().trim();
+            String text = mEditStore.getText().toString().trim();
+            if (!TextUtils.isEmpty(text)) {
+                return text;
+            }
         }
         return EMPTY;
     }
 
     private String getExpenseDescription() {
         if (mEditDescription != null) {
-            return mEditDescription.getText().toString().trim();
+            String text = mEditDescription.getText().toString().trim();
+            if (!TextUtils.isEmpty(text)) {
+                return text;
+            }
         }
         return EMPTY;
     }

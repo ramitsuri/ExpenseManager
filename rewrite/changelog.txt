@@ -1,2 +1,7 @@
-- starting setup fragment when spreadsheet id empty
-- hid action bar on SetupFragment
+- Save spreadsheet id during setup
+- Save categories and payment methods during setup to db
+- Added Navigation safe args plugin to generate navigation directions
+- Update Fragment, Navigation-Fragment, Navigation-UI, Material Components, Room artifacts to latest
+- Changed default empty text for store, description, amount
+- Disabled Edit Expense button
+- Added proper sheets request for upload

@@ -2,8 +2,13 @@ package com.ramitsuri.expensemanager.utils;
 
 import com.google.api.services.sheets.v4.model.AppendCellsRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
+import com.google.api.services.sheets.v4.model.BooleanCondition;
 import com.google.api.services.sheets.v4.model.CellData;
+import com.google.api.services.sheets.v4.model.CellFormat;
 import com.google.api.services.sheets.v4.model.ConditionValue;
+import com.google.api.services.sheets.v4.model.DataValidationRule;
+import com.google.api.services.sheets.v4.model.ExtendedValue;
+import com.google.api.services.sheets.v4.model.NumberFormat;
 import com.google.api.services.sheets.v4.model.Request;
 import com.google.api.services.sheets.v4.model.RowData;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -40,38 +45,56 @@ public class SheetRequestHelper {
             List<CellData> cellDataList = new ArrayList<>();
             CellData cellData;
 
-            /*// Day
-            cellData = new CellData();
-            cellData.setUserEnteredValue(new ExtendedValue().setNumberValue(
-                    (double)Integer.parseInt(DateHelper.getJustDay(expense.getDateTime()))));
-            cellData.setDataValidation(new DataValidationRule()
-                    .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
-                            .setValues(getDayConditionValues()))
-                    .setStrict(true)
-                    .setShowCustomUi(true));
-            cellDataList.add(cellData);
-
-            // Item Name
-            cellData = new CellData();
-            cellData.setUserEnteredValue(
-                    new ExtendedValue().setStringValue(expense.getItemName()));
-            cellData.setDataValidation(new DataValidationRule()
-                    .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
-                            .setValues(getItemNameConditionValues(items)))
-                    .setStrict(true)
-                    .setShowCustomUi(true));
-            cellDataList.add(cellData);
-
-            // Portion
+            // Date
             cellData = new CellData();
             cellData.setUserEnteredValue(new ExtendedValue()
-                    .setNumberValue(expense.getPortionSize().doubleValue()));
+                    .setNumberValue((double)DateHelper.toSheetsDate(expense.getDateTime())));
+            cellData.setUserEnteredFormat(
+                    new CellFormat().setNumberFormat(
+                            new NumberFormat().setType("DATE").setPattern("M/d/yyyy")));
+            cellData.setDataValidation(new DataValidationRule()
+                    .setCondition(new BooleanCondition().setType("DATE_IS_VALID")));
+            cellDataList.add(cellData);
+
+            // Description
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(expense.getDescription())));
+            cellDataList.add(cellData);
+
+            // Store
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setStringValue(String.valueOf(expense.getStore())));
+            cellDataList.add(cellData);
+
+            // Amount
+            cellData = new CellData();
+            cellData.setUserEnteredValue(
+                    new ExtendedValue().setNumberValue(expense.getAmount().doubleValue()));
+            cellDataList.add(cellData);
+
+            // Payment Method
+            cellData = new CellData();
+            cellData.setUserEnteredValue(new ExtendedValue()
+                    .setStringValue(String.valueOf(expense.getPaymentMethod())));
             cellData.setDataValidation(new DataValidationRule()
                     .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
-                            .setValues(getPortionConditionValues()))
+                            .setValues(getPaymentMethodConditionValues(paymentMethods)))
                     .setStrict(true)
                     .setShowCustomUi(true));
-            cellDataList.add(cellData);*/
+            cellDataList.add(cellData);
+
+            // Category
+            cellData = new CellData();
+            cellData.setUserEnteredValue(new ExtendedValue()
+                    .setStringValue(String.valueOf(expense.getCategory())));
+            cellData.setDataValidation(new DataValidationRule()
+                    .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
+                            .setValues(getCategoriesConditionValues(categories)))
+                    .setStrict(true)
+                    .setShowCustomUi(true));
+            cellDataList.add(cellData);
 
             rowData.setValues(cellDataList);
             rowDataList.add(rowData);

@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
+apply plugin: "androidx.navigation.safeargs"
 
 android {
     compileSdkVersion 29
@@ -35,20 +36,20 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.0.0"
 
     // Fragments
-    implementation "androidx.fragment:fragment:1.2.0-alpha02"
+    implementation "androidx.fragment:fragment:1.2.0-beta02"
     implementation "androidx.preference:preference:1.1.0"
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment:2.2.0-alpha01"
-    implementation "androidx.navigation:navigation-ui:2.2.0-alpha01"
+    implementation "androidx.navigation:navigation-fragment:2.2.0-beta01"
+    implementation "androidx.navigation:navigation-ui:2.2.0-beta01"
 
     // Material Components
-    implementation "com.google.android.material:material:1.1.0-alpha09"
+    implementation "com.google.android.material:material:1.1.0-beta01"
 
     // Room
-    implementation "androidx.room:room-common:2.1.0"
-    implementation "androidx.room:room-runtime:2.1.0"
-    androidTestImplementation "androidx.room:room-testing:2.1.0"
+    implementation "androidx.room:room-common:2.2.0"
+    implementation "androidx.room:room-runtime:2.2.0"
+    androidTestImplementation "androidx.room:room-testing:2.2.0"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     // Lifecycle

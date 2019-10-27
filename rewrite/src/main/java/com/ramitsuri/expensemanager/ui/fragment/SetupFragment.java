@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
 import android.accounts.Account;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import timber.log.Timber;
 
 public class SetupFragment extends BaseFragment {
@@ -114,6 +117,9 @@ public class SetupFragment extends BaseFragment {
     private void setupEntities(String accountName, String accountType) {
         Timber.i("Initiating setup");
 
+        // Init Sheet Repo
+        mViewModel.initSheetRepository(accountName, accountType, getSpreadsheetId());
+
         // Get Categories and PaymentMethods from Google Sheet
         LiveData<EntitiesConsumerResponse> response = mViewModel.getEntitiesFromSheets();
         if (response != null) {
@@ -129,8 +135,27 @@ public class SetupFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestCode.GOOGLE_SIGN_IN) {
+            Account account = AccountManager.getSignInAccountFromIntent(data);
+            if (account != null) {
+                saveAccountDetailsIfNecessary(account);
+                setupEntities(account.name, account.type);
+            } else {
+                Timber.i("Sign-in failed.");
+            }
+        }
+    }
+
     private void onSaveDataRequested(List<List<String>> stringsList) {
         mViewModel.saveEntities(stringsList);
+        PrefHelper.set(getString(R.string.settings_key_spreadsheet_id), getSpreadsheetId());
+
+        NavDirections action = SetupFragmentDirections.navActionSetupDone();
+        Navigation.findNavController(mBtnSetup).popBackStack();
+        Navigation.findNavController(mBtnSetup).navigate(action);
     }
 
     private void saveAccountDetailsIfNecessary(Account account) {

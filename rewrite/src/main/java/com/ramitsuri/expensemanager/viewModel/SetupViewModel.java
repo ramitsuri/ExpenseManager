@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.accounts.Account;
+
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
@@ -7,6 +9,7 @@ import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -25,6 +28,12 @@ public class SetupViewModel extends ViewModel {
         MainApplication.getInstance().initRepos();
         mCategoryRepository = MainApplication.getInstance().getCategoryRepo();
         mPaymentMethodRepository = MainApplication.getInstance().getPaymentMethodRepo();
+    }
+
+    public void initSheetRepository(String accountName, String accountType, String spreadsheetId) {
+        Account account = new Account(accountName, accountType);
+        MainApplication.getInstance()
+                .initSheetRepo(account, spreadsheetId, Arrays.asList(Constants.SCOPES));
         mSheetRepository = MainApplication.getInstance().getSheetRepository();
     }
 

@@ -85,7 +85,8 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
         // Edit button
         Button editButton = view.findViewById(R.id.btn_edit);
-        if (expense.isSynced()) {
+        //if (expense.isSynced()) {
+        if (true) {
             editButton.setEnabled(false);
         }
         editButton.setOnClickListener(new View.OnClickListener() {
