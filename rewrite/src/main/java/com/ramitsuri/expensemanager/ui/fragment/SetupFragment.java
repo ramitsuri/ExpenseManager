@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.PrefHelper;
 import com.ramitsuri.expensemanager.viewModel.SetupViewModel;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
@@ -87,8 +88,8 @@ public class SetupFragment extends BaseFragment {
     }
 
     private void signIn() {
-        String accountName = PrefHelper.get(getString(R.string.settings_key_account_name), null);
-        String accountType = PrefHelper.get(getString(R.string.settings_key_account_type), null);
+        String accountName = AppHelper.getAccountName();
+        String accountType = AppHelper.getAccountType();
         if (accountName != null && accountType != null) {
             setupEntities(accountName, accountType);
             return;
@@ -151,7 +152,7 @@ public class SetupFragment extends BaseFragment {
 
     private void onSaveDataRequested(List<List<String>> stringsList) {
         mViewModel.saveEntities(stringsList);
-        PrefHelper.set(getString(R.string.settings_key_spreadsheet_id), getSpreadsheetId());
+        AppHelper.setSpreadsheetId(getSpreadsheetId());
 
         NavDirections action = SetupFragmentDirections.navActionSetupDone();
         Navigation.findNavController(mBtnSetup).popBackStack();
@@ -159,11 +160,11 @@ public class SetupFragment extends BaseFragment {
     }
 
     private void saveAccountDetailsIfNecessary(Account account) {
-        String accountName = PrefHelper.get(getString(R.string.settings_key_account_name), null);
-        String accountType = PrefHelper.get(getString(R.string.settings_key_account_type), null);
+        String accountName = AppHelper.getAccountName();
+        String accountType = AppHelper.getAccountType();
         if (accountName == null && accountType == null) {
-            PrefHelper.set(getString(R.string.settings_key_account_name), account.name);
-            PrefHelper.set(getString(R.string.settings_key_account_type), account.type);
+            AppHelper.setAccountName(account.name);
+            AppHelper.setAccountType(account.type);
         }
     }
 

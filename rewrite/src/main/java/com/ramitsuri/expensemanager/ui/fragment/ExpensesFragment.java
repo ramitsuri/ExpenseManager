@@ -13,6 +13,7 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.PrefHelper;
 import com.ramitsuri.expensemanager.viewModel.ExpensesViewModel;
 import com.ramitsuri.expensemanager.work.BackupWorker;
@@ -74,10 +75,8 @@ public class ExpensesFragment extends BaseFragment {
         mBtnSyncNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String accountName =
-                        PrefHelper.get(getString(R.string.settings_key_account_name), null);
-                String accountType =
-                        PrefHelper.get(getString(R.string.settings_key_account_type), null);
+                String accountName = AppHelper.getAccountName();
+                String accountType = AppHelper.getAccountType();
                 if (accountName != null && accountType != null) {
                     initiateBackup(accountName, accountType, false);
                 } else {
@@ -151,9 +150,8 @@ public class ExpensesFragment extends BaseFragment {
         String workTag = Constants.Tag.SCHEDULED_BACKUP;
 
         // Input data
-        String spreadsheetId =
-                PrefHelper.get(getString(R.string.settings_key_spreadsheet_id), null);
-        String sheetId = PrefHelper.get(getString(R.string.settings_key_sheet_id), null);
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        String sheetId = AppHelper.getCurrentSheetId();
         Data.Builder builder = new Data.Builder();
         builder.putString(Constants.Work.APP_NAME, getString(R.string.app_name));
         builder.putString(Constants.Work.ACCOUNT_NAME, accountName);
