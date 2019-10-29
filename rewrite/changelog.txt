@@ -1,4 +1,1 @@
-- Changed version name to 1.0.0
-- Changed application id to com.ramitsuri.expensemanager.re
-- Fixed com.google.android.gms.common.api.ApiException: 12500: by adding support email on firebase console
-- Updated gradle version to 3.5.1
+- Cleanup pref access and set mechanism
