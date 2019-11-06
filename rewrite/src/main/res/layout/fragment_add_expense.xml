@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,13 +11,6 @@
         android:layout_height="match_parent"
         android:padding="@dimen/padding_small">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_vertical_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5" />
-
         <ImageView
             android:id="@+id/btn_close"
             android:layout_width="@dimen/button_size_small"
@@ -29,28 +21,28 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_close" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_amount"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_vertical_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_categories"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_small"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:gravity="center"
-            android:nextFocusForward="@+id/edit_text_store"
-            app:layout_constraintEnd_toStartOf="@id/guide_vertical_1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_close"
-            app:startIconDrawable="@drawable/ic_amount">
+            app:layout_constraintTop_toBottomOf="@id/text_header_category" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/add_expense_amount"
-                android:inputType="numberDecimal" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_payment_methods"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_header_payment_methods" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/layout_date"
@@ -84,6 +76,29 @@
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_amount"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_small"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:gravity="center"
+            android:nextFocusForward="@+id/edit_text_store"
+            app:layout_constraintEnd_toStartOf="@id/guide_vertical_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_close"
+            app:startIconDrawable="@drawable/ic_amount">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/add_expense_amount"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_store"
@@ -139,14 +154,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_description" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_categories"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_header_category" />
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_header_payment_methods"
             android:layout_width="wrap_content"
@@ -160,14 +167,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_categories" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_payment_methods"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_header_payment_methods" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -176,6 +175,7 @@
         android:layout_height="@dimen/button_size_medium"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/margin_small"
+        app:backgroundTint="@color/color_teal"
         app:srcCompat="@drawable/ic_done" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

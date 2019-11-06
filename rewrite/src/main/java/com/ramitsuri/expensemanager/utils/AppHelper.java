@@ -60,6 +60,7 @@ public class AppHelper {
                 break;
 
             case Constants.SystemTheme.SYSTEM_DEFAULT:
+            case Constants.SystemTheme.BATTERY_SAVER:
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Q or newer
                     AppCompatDelegate
                             .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);

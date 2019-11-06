@@ -13,6 +13,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -82,6 +83,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void setAppTheme(String theme) {
+        Timber.i("Setting theme to %s", theme);
         AppHelper.setCurrentTheme(theme);
     }
 }

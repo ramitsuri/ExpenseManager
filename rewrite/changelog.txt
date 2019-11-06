@@ -16,3 +16,6 @@
 - Change Activity soft input mode to AdjustResize so FAB goes over keyboard
 - Add views for when expenses empty
 - Add a way to delete all expenses in debug build
+
+- Changed colors for dark and night themes
+- Fix theme by battery saver on Android < Q

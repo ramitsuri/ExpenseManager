@@ -56,9 +56,9 @@
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
         android:text="@string/common_delete"
-        android:textColor="@color/colorRed"
+        android:textColor="@color/color_red"
         app:icon="@drawable/ic_delete"
-        app:iconTint="@color/colorRed"
+        app:iconTint="@color/color_red"
         app:layout_constraintStart_toEndOf="@id/btn_edit"
         app:layout_constraintTop_toBottomOf="@id/divider3" />
 
