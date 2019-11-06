@@ -1,9 +1,13 @@
 package com.ramitsuri.expensemanager.utils;
 
+import android.os.Build;
+
+import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class AppHelper {
 
@@ -37,6 +41,42 @@ public class AppHelper {
 
     public static void setCurrentSheetId(String currentSheetId) {
         PrefHelper.set(getString(R.string.settings_key_sheet_id), currentSheetId);
+    }
+
+    public static String getCurrentTheme() {
+        return PrefHelper.get(getString(R.string.settings_key_theme), null);
+    }
+
+    public static void setCurrentTheme(String theme) {
+        switch (theme) {
+            case Constants.SystemTheme.LIGHT:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                PrefHelper.set(getString(R.string.settings_key_theme), Constants.SystemTheme.LIGHT);
+                break;
+
+            case Constants.SystemTheme.DARK:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                PrefHelper.set(getString(R.string.settings_key_theme), Constants.SystemTheme.DARK);
+                break;
+
+            case Constants.SystemTheme.SYSTEM_DEFAULT:
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Q or newer
+                    AppCompatDelegate
+                            .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                    PrefHelper.set(getString(R.string.settings_key_theme),
+                            Constants.SystemTheme.SYSTEM_DEFAULT);
+                } else { // Older than Q
+                    AppCompatDelegate
+                            .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+                    PrefHelper.set(getString(R.string.settings_key_theme),
+                            Constants.SystemTheme.BATTERY_SAVER);
+                }
+                break;
+        }
+    }
+
+    public static boolean isAutoBackupEnabled() {
+        return PrefHelper.get(getString(R.string.settings_key_auto_backup), false);
     }
 
     private static String getString(@StringRes int resourceId) {

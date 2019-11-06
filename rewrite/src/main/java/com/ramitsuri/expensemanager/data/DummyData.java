@@ -1,7 +1,9 @@
 package com.ramitsuri.expensemanager.data;
 
+import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 
 import java.math.BigDecimal;
@@ -282,5 +284,52 @@ public class DummyData {
             }
         }
         return expenses;
+    }
+
+    public static List<Log> getLogs() {
+        List<Log> logs = new ArrayList<>();
+
+        long base = 1565818852014L;
+        long oneDay = 86400000;
+
+        Log log = new Log();
+        log.setTime(base - 10 * oneDay);
+        log.setType(Constants.LogType.ONE_TIME_BACKUP);
+        log.setResult(Constants.LogResult.SUCCESS);
+        log.setMessage(null);
+        log.setIsAcknowledged(false);
+
+        log = new Log();
+        log.setTime(base - 5 * oneDay);
+        log.setType(Constants.LogType.ONE_TIME_BACKUP);
+        log.setResult(Constants.LogResult.SUCCESS);
+        log.setMessage(null);
+        log.setIsAcknowledged(true);
+
+        log = new Log();
+        log.setTime(base - 6 * oneDay);
+        log.setType(Constants.LogType.PERIODIC_BACKUP);
+        log.setResult(Constants.LogResult.SUCCESS);
+        log.setMessage(null);
+        log.setIsAcknowledged(false);
+
+        log = new Log();
+        log.setTime(base + 10 * oneDay);
+        log.setType(Constants.LogType.PERIODIC_BACKUP);
+        log.setResult(Constants.LogResult.FAILURE);
+        log.setMessage(null);
+        log.setIsAcknowledged(false);
+
+        return logs;
+    }
+
+    public static List<Log> getUnacknowledgedLogs() {
+        List<Log> logs = new ArrayList<>();
+        for (Log log : getLogs()) {
+            if (!log.isAcknowledged()) {
+                logs.add(log);
+            }
+        }
+        return logs;
     }
 }

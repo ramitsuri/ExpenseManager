@@ -14,15 +14,20 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.AddExpenseViewModel;
+import com.ramitsuri.expensemanager.viewModel.ViewModelFactory;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,14 +80,19 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewModel = ViewModelProviders.of(this).get(AddExpenseViewModel.class);
+        Expense expense = null;
+        if (getArguments() != null) {
+            expense = AddExpenseFragmentArgs.fromBundle(getArguments()).getExpense();
+        }
+        mViewModel = ViewModelProviders.of(this, new ViewModelFactory(expense))
+                .get(AddExpenseViewModel.class);
 
-        setupViews(view);
+        setupViews(view, expense);
 
-        setupRecyclerViews(view);
+        setupRecyclerViews(view, expense);
     }
 
-    private void setupViews(View view) {
+    private void setupViews(View view, @Nullable Expense expense) {
         // Close
         mBtnClose = view.findViewById(R.id.btn_close);
         mBtnClose.setOnClickListener(this);
@@ -102,9 +112,34 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         // Done
         mBtnDone = view.findViewById(R.id.btn_done);
         mBtnDone.setOnClickListener(this);
+
+        if (expense != null) {
+            // Store
+            String value = expense.getStore();
+            if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
+                mEditStore.setText(value);
+                mEditStore.setSelection(value.length());
+            }
+            // Description
+            value = expense.getDescription();
+            if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
+                mEditDescription.setText(value);
+                mEditDescription.setSelection(value.length());
+            }
+            // Date
+            long longValue = expense.getDateTime();
+            mTextDate.setText(DateHelper.getFriendlyDate(longValue));
+
+            // Amount
+            BigDecimal bdValue = expense.getAmount();
+            if (bdValue != null) {
+                mEditAmount.setText(String.valueOf(bdValue));
+                mEditAmount.setSelection(String.valueOf(bdValue).length());
+            }
+        }
     }
 
-    private void setupRecyclerViews(View view) {
+    private void setupRecyclerViews(View view, @Nullable final Expense expense) {
         // Categories
         RecyclerView listCategories = view.findViewById(R.id.list_categories);
         listCategories.setLayoutManager(new StaggeredGridLayoutManager(
@@ -123,7 +158,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onChanged(List<String> categories) {
                 Timber.i("Categories received %s", categories);
-                categoriesAdapter.setValues(categories);
+                String selectedValue = null;
+                if (expense != null) {
+                    selectedValue = expense.getCategory();
+                }
+                categoriesAdapter.setValues(categories, selectedValue);
             }
         });
 
@@ -145,7 +184,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onChanged(List<String> paymentMethods) {
                 Timber.i("Payment Methods received %s", paymentMethods);
-                paymentMethodsAdapter.setValues(paymentMethods);
+                String selectedValue = null;
+                if (expense != null) {
+                    selectedValue = expense.getPaymentMethod();
+                }
+                paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
             }
         });
     }
@@ -162,6 +205,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     }
 
     private void handleCloseFragmentClicked() {
+        removeFocusAndHideKeyboard();
         if (mViewModel.isChangesMade()) {
             if (getContext() != null) {
                 DialogInterface.OnClickListener negativeListener =
@@ -209,7 +253,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mViewModel.setExpenseAmount(getExpenseAmount());
         mViewModel.setExpenseStore(getExpenseStore());
         mViewModel.setExpenseDescription(getExpenseDescription());
-        mViewModel.addExpense();
+        if (mViewModel.getAddMode() == Constants.AddExpenseMode.ADD) {
+            mViewModel.addExpense();
+        } else {
+            mViewModel.editExpense();
+        }
         exitToUp();
     }
 

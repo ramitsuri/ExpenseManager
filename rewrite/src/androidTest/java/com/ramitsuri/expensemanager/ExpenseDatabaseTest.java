@@ -3,10 +3,11 @@ package com.ramitsuri.expensemanager;
 import android.content.Context;
 import android.util.Log;
 
-import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.DummyData;
+import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.dao.CategoryDao;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
+import com.ramitsuri.expensemanager.data.dao.LogDao;
 import com.ramitsuri.expensemanager.data.dao.PaymentMethodDao;
 import com.ramitsuri.expensemanager.entities.Expense;
 
@@ -39,6 +40,7 @@ public class ExpenseDatabaseTest {
     private ExpenseDao mExpenseDao;
     private CategoryDao mCategoryDao;
     private PaymentMethodDao mPaymentMethodDao;
+    private LogDao mLogDao;
     private ExpenseManagerDatabase mDb;
 
     @Before
@@ -48,6 +50,7 @@ public class ExpenseDatabaseTest {
         mExpenseDao = mDb.expenseDao();
         mCategoryDao = mDb.categoryDao();
         mPaymentMethodDao = mDb.paymentMethodDao();
+        mLogDao = mDb.logDao();
 
         for (Expense expense : DummyData.getExpenses()) {
             mExpenseDao.insert(expense);
@@ -56,6 +59,10 @@ public class ExpenseDatabaseTest {
         mCategoryDao.insertAll(DummyData.getAllCategories());
 
         mPaymentMethodDao.insertAll(DummyData.getAllPaymentMethods());
+
+        for (com.ramitsuri.expensemanager.entities.Log log : DummyData.getLogs()) {
+            mLogDao.insert(log);
+        }
     }
 
     @After
@@ -164,5 +171,11 @@ public class ExpenseDatabaseTest {
         Assert.assertEquals(
                 DummyData.getPaymentMethods().length,
                 mPaymentMethodDao.getAll().size());
+    }
+
+    @Test
+    public void logsTest() {
+        Assert.assertEquals(DummyData.getUnacknowledgedLogs().size(),
+                mLogDao.getUnacknowledged().size());
     }
 }

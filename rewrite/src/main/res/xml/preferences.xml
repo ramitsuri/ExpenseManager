@@ -24,7 +24,8 @@
 
     <SwitchPreferenceCompat
         android:key="@string/settings_key_auto_backup"
-        android:summary="@string/settings_summary_auto_backup"
+        android:switchTextOff="@string/settings_auto_backup_off"
+        android:switchTextOn="@string/settings_auto_backup_on"
         android:title="@string/settings_title_auto_backup" />
 
 </androidx.preference.PreferenceScreen>

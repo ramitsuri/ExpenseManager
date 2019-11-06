@@ -7,6 +7,7 @@ import com.ramitsuri.expensemanager.IntDefs.SourceType;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
+import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
@@ -21,6 +22,7 @@ public class MainApplication extends Application {
     private CategoryRepository mCategoryRepo;
     private PaymentMethodRepository mPaymentMethodRepo;
     private ExpenseRepository mExpenseRepo;
+    private LogRepository mLogRepo;
 
     private SheetRepository mSheetRepository;
 
@@ -56,6 +58,7 @@ public class MainApplication extends Application {
         mCategoryRepo = new CategoryRepository(appExecutors, database, source);
         mPaymentMethodRepo = new PaymentMethodRepository(appExecutors, database, source);
         mExpenseRepo = new ExpenseRepository(appExecutors, database, source);
+        mLogRepo = new LogRepository(appExecutors, database);
 
         // TODO DEBUG Only
         /*mExpenseRepo.deleteExpenses();
@@ -87,6 +90,10 @@ public class MainApplication extends Application {
 
     public ExpenseRepository getExpenseRepo() {
         return mExpenseRepo;
+    }
+
+    public LogRepository getLogRepo() {
+        return mLogRepo;
     }
 
     public SheetRepository getSheetRepository() {

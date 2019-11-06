@@ -16,6 +16,7 @@
     <dimen name="margin_medium">@dimen/padding_medium</dimen>
     <dimen name="margin_large">@dimen/padding_large</dimen>
     <dimen name="margin_extra_large">@dimen/padding_extra_large</dimen>
+    <dimen name="margin_arrow">72dp</dimen>
 
     <!-- Text Sizes -->
     <dimen name="text_small">12sp</dimen>

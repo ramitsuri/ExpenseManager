@@ -20,19 +20,27 @@ public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.Vi
     private List<String> mValues;
     @Nullable
     private ListPickerAdapterCallback mCallback;
-    private int mSelectedPosition;
+    private String mSelectedValue;
 
     public interface ListPickerAdapterCallback {
         void onItemPicked(String value);
     }
 
     public ListPickerAdapter() {
-        mSelectedPosition = 0;
     }
 
-    public void setValues(@NonNull List<String> values) {
+    public void setValues(@NonNull List<String> values, @Nullable String selectedValue) {
         mValues = values;
-        notifyDataSetChanged();
+        if (selectedValue == null &&
+                values.size() > 0) { // Select first value in case selection is null
+            mSelectedValue = values.get(0);
+            // Send callback with selected value when selected value was sent as null (new expense)
+            Timber.i("Selecting first value from list %s", mSelectedValue);
+            onSelectionMade(mSelectedValue);
+        } else {
+            mSelectedValue = selectedValue;
+            notifyDataSetChanged();
+        }
     }
 
     public void setCallback(@NonNull ListPickerAdapterCallback callback) {
@@ -66,6 +74,16 @@ public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.Vi
         }
     }
 
+    private void onSelectionMade(String selectedValue) {
+        if (mCallback != null) {
+            mSelectedValue = selectedValue;
+            mCallback.onItemPicked(mSelectedValue);
+            notifyDataSetChanged();
+        } else {
+            Timber.w("mCallback is null");
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         private Chip txtValue;
@@ -79,23 +97,21 @@ public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.Vi
 
         private void bind(final String value) {
             txtValue.setText(value);
-            txtValue.setChecked(mSelectedPosition == getAdapterPosition());
+            if (value.equals(mSelectedValue)) {
+                txtValue.setChecked(true);
+            } else {
+                txtValue.setChecked(false);
+            }
         }
 
         @Override
         public void onClick(View view) {
             if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                mSelectedPosition = getAdapterPosition();
-                if (mCallback != null) {
-                    if (mValues != null) {
-                        mCallback.onItemPicked(mValues.get(mSelectedPosition));
-                    } else {
-                        Timber.w("mValues is null");
-                    }
+                if (mValues != null) {
+                    onSelectionMade(mValues.get(getAdapterPosition()));
                 } else {
-                    Timber.w("mCallback is null");
+                    Timber.w("mValues is null");
                 }
-                notifyDataSetChanged();
             } else {
                 Timber.w("getAdapterPosition returned -1");
             }

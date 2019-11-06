@@ -8,6 +8,8 @@ import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -34,5 +36,9 @@ public class ExpensesViewModel extends ViewModel {
 
     public LiveData<List<ExpenseWrapper>> getExpenses() {
         return mExpenses;
+    }
+
+    public void deleteExpense(@Nonnull Expense expense) {
+        mExpenseRepo.deleteExpenses();
     }
 }

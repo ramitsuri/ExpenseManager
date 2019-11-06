@@ -2,39 +2,72 @@ package com.ramitsuri.expensemanager.data.dao;
 
 import com.ramitsuri.expensemanager.entities.Expense;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 @Dao
-public interface ExpenseDao {
+public abstract class ExpenseDao {
     @Query("SELECT * FROM expense ORDER BY date_time DESC")
-    LiveData<List<Expense>> getAll();
+    public abstract LiveData<List<Expense>> getAll();
 
     @Query("SELECT * FROM expense WHERE is_starred = 1")
-    List<Expense> getAllStarred();
+    public abstract List<Expense> getAllStarred();
 
     @Query("SELECT * FROM expense WHERE is_synced = 0")
-    List<Expense> getAllUnsynced();
+    public abstract List<Expense> getAllUnsynced();
 
     @Insert
-    void insert(Expense expense);
+    public abstract void insert(Expense expense);
+
+    @Query("UPDATE expense SET date_time =:dateTime WHERE mId = :id")
+    abstract void updateDateTime(int id, long dateTime);
+
+    @Query("UPDATE expense SET amount =:amount WHERE mId = :id")
+    abstract void updateAmount(int id, BigDecimal amount);
+
+    @Query("UPDATE expense SET payment_method =:paymentMethod WHERE mId = :id")
+    abstract void updatePaymentMethod(int id, String paymentMethod);
+
+    @Query("UPDATE expense SET category =:category WHERE mId = :id")
+    abstract void updateCategory(int id, String category);
+
+    @Query("UPDATE expense SET description =:description WHERE mId = :id")
+    abstract void updateDescription(int id, String description);
+
+    @Query("UPDATE expense SET store =:store WHERE mId = :id")
+    abstract void updateStore(int id, String store);
+
+    @Transaction
+    public void updateExpense(Expense expense) {
+        updateDateTime(expense.getId(), expense.getDateTime());
+        updateAmount(expense.getId(), expense.getAmount());
+        updatePaymentMethod(expense.getId(), expense.getPaymentMethod());
+        updateCategory(expense.getId(), expense.getCategory());
+        updateDescription(expense.getId(), expense.getDescription());
+        updateStore(expense.getId(), expense.getStore());
+    }
 
     @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
-    void updateUnsynced();
+    public abstract void updateUnsynced();
 
     @Query("UPDATE expense SET is_starred = 1 WHERE mId = :id")
-    void setStarred(int id);
+    public abstract void setStarred(int id);
 
     @Query("UPDATE expense SET is_starred = 0 WHERE mId = :id")
-    void setUnstarred(int id);
+    public abstract void setUnstarred(int id);
+
+    @Query("DELETE FROM expense where mId = :id")
+    public abstract void deleteExpense(int id);
 
     @Query("DELETE FROM expense")
-    void deleteAll();
+    public abstract void deleteAll();
 
     @Query("DELETE FROM expense WHERE is_synced = 1")
-    void deleteSynced();
+    public abstract void deleteSynced();
 }

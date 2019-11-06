@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -28,10 +30,11 @@ public class AddExpenseViewModel extends ViewModel {
     private Expense mExpense;
     private LiveData<List<String>> mCategories;
     private LiveData<List<String>> mPaymentMethods;
+    private int mAddMode;
 
     private boolean mChangesMade;
 
-    public AddExpenseViewModel() {
+    public AddExpenseViewModel(Expense expense) {
         super();
 
         MainApplication.getInstance().initRepos();
@@ -44,8 +47,10 @@ public class AddExpenseViewModel extends ViewModel {
                     @Override
                     public List<String> apply(List<Category> categories) {
                         List<String> categoryStrings = new ArrayList<>();
-                        for (Category category : categories) {
-                            categoryStrings.add(category.getName());
+                        if (categories != null) {
+                            for (Category category : categories) {
+                                categoryStrings.add(category.getName());
+                            }
                         }
                         return categoryStrings;
                     }
@@ -55,14 +60,16 @@ public class AddExpenseViewModel extends ViewModel {
                     @Override
                     public List<String> apply(List<PaymentMethod> paymentMethods) {
                         List<String> paymentMethodStrings = new ArrayList<>();
-                        for (PaymentMethod paymentMethod : paymentMethods) {
-                            paymentMethodStrings.add(paymentMethod.getName());
+                        if (paymentMethods != null) {
+                            for (PaymentMethod paymentMethod : paymentMethods) {
+                                paymentMethodStrings.add(paymentMethod.getName());
+                            }
                         }
                         return paymentMethodStrings;
                     }
                 });
 
-        reset();
+        reset(expense);
     }
 
     public LiveData<List<String>> getCategories() {
@@ -76,7 +83,13 @@ public class AddExpenseViewModel extends ViewModel {
     public void addExpense() {
         Expense expense = mExpense;
         mExpenseRepo.insertExpense(expense);
-        reset();
+        reset(null);
+    }
+
+    public void editExpense() {
+        Expense expense = mExpense;
+        mExpenseRepo.editExpense(expense);
+        reset(null);
     }
 
     public long getExpenseDate() {
@@ -89,23 +102,36 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setExpenseCategory(@NonNull String category) {
-        mExpense.setCategory(category);
-        setChangesMade();
+        boolean changesMade = !category.equals(mExpense.getCategory());
+        if (changesMade) {
+            //setChangesMade();
+            mExpense.setCategory(category);
+        }
     }
 
     public void setExpensePaymentMethod(@NonNull String paymentMethod) {
-        mExpense.setPaymentMethod(paymentMethod);
-        setChangesMade();
+        boolean changesMade = !paymentMethod.equals(mExpense.getPaymentMethod());
+        if (changesMade) {
+            //setChangesMade();
+            mExpense.setPaymentMethod(paymentMethod);
+        }
     }
 
     public void setExpenseAmount(@NonNull String amount) {
-        mExpense.setAmount(new BigDecimal(amount));
-        setChangesMade();
+        BigDecimal bdAmount = new BigDecimal(amount);
+        boolean changesMade = !(bdAmount.compareTo(mExpense.getAmount()) == 0);
+        if (changesMade) {
+            setChangesMade();
+            mExpense.setAmount(bdAmount);
+        }
     }
 
     public void setExpenseStore(@NonNull String store) {
-        mExpense.setStore(store);
-        setChangesMade();
+        boolean changesMade = !store.equals(mExpense.getStore());
+        if (changesMade) {
+            setChangesMade();
+            mExpense.setStore(store);
+        }
     }
 
     public void setExpenseDescription(@NonNull String description) {
@@ -121,8 +147,19 @@ public class AddExpenseViewModel extends ViewModel {
         mChangesMade = true;
     }
 
-    private void reset() {
-        mExpense = new Expense();
-        mExpense.setDateTime(new Date().getTime());
+    public int getAddMode() {
+        return mAddMode;
+    }
+
+    private void reset(@Nullable Expense expense) {
+        if (expense != null) {
+            mExpense = expense;
+            mAddMode = Constants.AddExpenseMode.EDIT;
+        } else {
+            mExpense = new Expense();
+            mExpense.setDateTime(new Date().getTime());
+            mExpense.setAmount(BigDecimal.ZERO);
+            mAddMode = Constants.AddExpenseMode.ADD;
+        }
     }
 }

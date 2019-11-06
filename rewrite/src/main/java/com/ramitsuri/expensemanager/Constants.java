@@ -25,6 +25,7 @@ public class Constants {
         public static final String ACCOUNT_TYPE = "account_type";
         public static final String SPREADSHEET_ID = "spreadsheet_id";
         public static final String SHEET_ID = "sheet_id";
+        public static final String TYPE = "type";
     }
 
     public class Tag {
@@ -36,5 +37,27 @@ public class Constants {
         public static final String CATEGORIES = "Entities!C1:C20";
         public static final String PAYMENT_METHODS = "Entities!A1:A20";
         public static final String CATEGORIES_PAYMENT_METHODS = "Entities!A1:C20";
+    }
+
+    public class SystemTheme {
+        public static final String LIGHT = "light";
+        public static final String DARK = "dark";
+        public static final String SYSTEM_DEFAULT = "system_default";
+        public static final String BATTERY_SAVER = "battery_saver";
+    }
+
+    public class AddExpenseMode {
+        public static final int ADD = 0;
+        public static final int EDIT = 1;
+    }
+
+    public class LogType {
+        public static final String PERIODIC_BACKUP = "periodic_backup";
+        public static final String ONE_TIME_BACKUP = "one_time_backup";
+    }
+
+    public class LogResult {
+        public static final String SUCCESS = "success";
+        public static final String FAILURE = "failure";
     }
 }

@@ -1,25 +1,30 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ramitsuri.expensemanager.Constants;
-import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.IntDefs.ListItemType;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.expensemanager.utils.PrefHelper;
+import com.ramitsuri.expensemanager.utils.DialogHelper;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.expensemanager.viewModel.ExpensesViewModel;
-import com.ramitsuri.expensemanager.work.BackupWorker;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,13 +33,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 import timber.log.Timber;
 
 public class ExpensesFragment extends BaseFragment {
@@ -43,7 +41,8 @@ public class ExpensesFragment extends BaseFragment {
 
     // Views
     private FloatingActionButton mBtnAdd;
-    private Button mBtnSyncNow;
+    private TextView mTextInfoEmpty, mTextInfoEmptyHelp, mTextInfo1, mTextInfo2, mTextInfo3;
+    private ImageView mImgDownArrow;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -71,14 +70,24 @@ public class ExpensesFragment extends BaseFragment {
             }
         });
 
-        mBtnSyncNow = view.findViewById(R.id.btn_sync_now);
-        mBtnSyncNow.setOnClickListener(new View.OnClickListener() {
+        // Shown when no expenses
+        mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
+        mTextInfoEmptyHelp = view.findViewById(R.id.txt_expense_empty_help);
+        mImgDownArrow = view.findViewById(R.id.img_down);
+
+        // Shown when there are expenses
+        mTextInfo1 = view.findViewById(R.id.txt_expense_info_1);
+        mTextInfo2 = view.findViewById(R.id.txt_expense_info_2);
+        mTextInfo3 = view.findViewById(R.id.txt_expense_info_3);
+
+        Button btnSyncNow = view.findViewById(R.id.btn_sync_now);
+        btnSyncNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String accountName = AppHelper.getAccountName();
                 String accountType = AppHelper.getAccountType();
                 if (accountName != null && accountType != null) {
-                    initiateBackup(accountName, accountType, false);
+                    initiateBackup();
                 } else {
                     Timber.w("AccountType or Name null. Name " + accountName + ", Type " +
                             accountType);
@@ -86,7 +95,15 @@ public class ExpensesFragment extends BaseFragment {
             }
         });
 
+        //if (AppHelper.isAutoBackupEnabled()) { // Always hidden for now
+        btnSyncNow.setVisibility(View.GONE);
+        //}
+
         setupListExpenses(view);
+
+        // Work Status
+        logWorkStatus(WorkHelper.getOneTimeWorkTag());
+        logWorkStatus(WorkHelper.getPeriodicWorkTag());
     }
 
     private void setupListExpenses(View view) {
@@ -100,6 +117,7 @@ public class ExpensesFragment extends BaseFragment {
             public void onChanged(List<ExpenseWrapper> expenses) {
                 Timber.i("Refreshing expenses");
                 adapter.setExpenses(expenses);
+                setTextInfo(expenses);
             }
         });
         listExpenses.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -121,13 +139,79 @@ public class ExpensesFragment extends BaseFragment {
         });
     }
 
+    private void setTextInfo(List<ExpenseWrapper> expenses) {
+        boolean doCalculation = false;
+        if (expenses.size() == 0) {
+            mTextInfoEmpty.setVisibility(View.VISIBLE);
+            mTextInfoEmptyHelp.setVisibility(View.VISIBLE);
+            mImgDownArrow.setVisibility(View.VISIBLE);
+            mTextInfo1.setVisibility(View.GONE);
+            mTextInfo2.setVisibility(View.GONE);
+            mTextInfo3.setVisibility(View.GONE);
+        } else {
+            doCalculation = true;
+            mTextInfoEmpty.setVisibility(View.GONE);
+            mTextInfoEmptyHelp.setVisibility(View.GONE);
+            mImgDownArrow.setVisibility(View.GONE);
+            mTextInfo1.setVisibility(View.VISIBLE);
+            mTextInfo2.setVisibility(View.VISIBLE);
+            mTextInfo3.setVisibility(View.VISIBLE);
+        }
+
+        // Return when no calculation required (TextInfo 1, 2, 3 are not going to be shown)
+        if (!doCalculation) {
+            return;
+        }
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        int count = 0;
+        int startDateIndex = -1;
+        int endDateIndex = -1;
+        for (int i = 0; i < expenses.size(); i++) {
+            /* List is in descending order of date.
+             * First header encountered is end date.
+             * Last header encountered is the start date
+             */
+            ExpenseWrapper wrapper = expenses.get(i);
+            if (wrapper.getItemType() == ListItemType.ITEM) {
+                count = count + 1;
+                totalAmount = totalAmount.add(expenses.get(i).getExpense().getAmount());
+            } else if (wrapper.getItemType() == ListItemType.HEADER) {
+                if (endDateIndex == -1) {
+                    endDateIndex = i;
+                }
+                startDateIndex = i;
+            }
+        }
+        // Number of expenses
+        mTextInfo1.setText(getResources().getQuantityString(R.plurals.expense_count, count, count));
+
+        // Date range
+        if (startDateIndex == endDateIndex) {
+            mTextInfo2.setText(String.format("(%1s)",
+                    expenses.get(startDateIndex).getDate()));
+        } else {
+            mTextInfo2.setText(String.format("(%1s - %2s)",
+                    expenses.get(startDateIndex).getDate(),
+                    expenses.get(endDateIndex).getDate()));
+        }
+
+        // Total
+        mTextInfo3.setText(getString(R.string.amount_with_currency, String.valueOf(totalAmount)));
+    }
+
     private void showExpenseDetails(ExpenseWrapper wrapper) {
         Timber.i("Showing information for %s", wrapper.toString());
         ExpenseDetailsFragment detailsFragment = ExpenseDetailsFragment.newInstance();
         detailsFragment.setCallback(new ExpenseDetailsFragment.DetailFragmentCallback() {
             @Override
             public void onEditRequested(@NonNull Expense expense) {
-                handleExpenseEditRequested();
+                handleExpenseEditRequested(expense);
+            }
+
+            @Override
+            public void onDeleteRequested(@NonNull Expense expense) {
+                handleExpenseDeleteRequested(expense);
             }
         });
         Bundle bundle = new Bundle();
@@ -141,50 +225,32 @@ public class ExpensesFragment extends BaseFragment {
         }
     }
 
-    private void handleExpenseEditRequested() {
-
+    private void handleExpenseEditRequested(@Nonnull Expense expense) {
+        ExpensesFragmentDirections.NavActionAddExpense addAction
+                = ExpensesFragmentDirections.navActionAddExpense();
+        addAction.setExpense(expense);
+        NavHostFragment.findNavController(this).navigate(addAction);
     }
 
-    private void initiateBackup(String accountName, String accountType, boolean periodic) {
-        Timber.i("Initiating backup");
-        String workTag = Constants.Tag.SCHEDULED_BACKUP;
-
-        // Input data
-        String spreadsheetId = AppHelper.getSpreadsheetId();
-        String sheetId = AppHelper.getCurrentSheetId();
-        Data.Builder builder = new Data.Builder();
-        builder.putString(Constants.Work.APP_NAME, getString(R.string.app_name));
-        builder.putString(Constants.Work.ACCOUNT_NAME, accountName);
-        builder.putString(Constants.Work.ACCOUNT_TYPE, accountType);
-        builder.putString(Constants.Work.SPREADSHEET_ID, spreadsheetId);
-        builder.putString(Constants.Work.SHEET_ID, sheetId);
-        Constraints myConstraints = new Constraints.Builder()
-                .setRequiresCharging(false)
-                .setRequiredNetworkType(NetworkType.UNMETERED)
-                .build();
-
-        if (periodic) {
-            // Request
-            PeriodicWorkRequest.Builder periodicWorkRequestBuilder =
-                    new PeriodicWorkRequest.Builder(BackupWorker.class, 12, TimeUnit.HOURS)
-                            .setConstraints(myConstraints)
-                            .setInputData(builder.build())
-                            .addTag(workTag);
-            PeriodicWorkRequest request = periodicWorkRequestBuilder.build();
-
-            // Enqueue
-            WorkManager.getInstance(MainApplication.getInstance())
-                    .enqueueUniquePeriodicWork(workTag,
-                            ExistingPeriodicWorkPolicy.REPLACE, request);
-        } else {
-            OneTimeWorkRequest backupRequest = new OneTimeWorkRequest.Builder(BackupWorker.class)
-                    .addTag(Constants.Tag.ONE_TIME_BACKUP)
-                    .setInputData(builder.build())
-                    .build();
-            WorkManager.getInstance(MainApplication.getInstance()).enqueue(backupRequest);
+    private void handleExpenseDeleteRequested(@Nonnull final Expense expense) {
+        if (getContext() != null) {
+            DialogInterface.OnClickListener positiveListener =
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mExpensesViewModel.deleteExpense(expense);
+                        }
+                    };
+            DialogHelper.showAlert(getContext(),
+                    R.string.common_warning, R.string.delete_expense_warning_message,
+                    R.string.common_yes, positiveListener,
+                    R.string.common_no, null);
         }
+    }
 
-        // Status
-        logWorkStatus(workTag);
+    private void initiateBackup() {
+        Timber.i("Initiating backup");
+
+        WorkHelper.enqueueOneTimeBackup();
     }
 }

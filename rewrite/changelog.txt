@@ -1,1 +1,18 @@
-- Cleanup pref access and set mechanism
+- Cleanup pref access and set mechanism by adding a AppHelper to read/write prefs
+- Add a WorkHelper to route WorkManager requests
+- Auto backup toggle in settings works now
+- Moved work status logging to onViewCreated in Expenses Fragment
+- Changed backup period to 1 day from 12 hours
+- Theme toggle works now
+- Set default theme according to version code
+- Fix bug where default category and payment method won't get selected in the saved expense
+- Added a way to delete expense
+- Hide Overflow menu button in Settings
+- Added a way to backup now when auto backup is enabled
+- Added Log table to db and its accompanying migration (with test)
+- Added logs for backup success/failure
+- Hid Sync now button and made options menu always available
+- Add information from expenses to text views
+- Change Activity soft input mode to AdjustResize so FAB goes over keyboard
+- Add views for when expenses empty
+- Add a way to delete all expenses in debug build

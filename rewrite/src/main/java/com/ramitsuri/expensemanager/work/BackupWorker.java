@@ -9,7 +9,9 @@ import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
 
 import java.util.ArrayList;
@@ -31,18 +33,22 @@ public class BackupWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        String appName = getInputData().getString(Constants.Work.APP_NAME);
-        String spreadsheetId = getInputData().getString(Constants.Work.SPREADSHEET_ID);
-        String accountName = getInputData().getString(Constants.Work.ACCOUNT_NAME);
-        String accountType = getInputData().getString(Constants.Work.ACCOUNT_TYPE);
-        String sheetId = getInputData().getString(Constants.Work.SHEET_ID);
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        String accountName = AppHelper.getAccountName();
+        String accountType = AppHelper.getAccountType();
+        String sheetId = AppHelper.getCurrentSheetId();
+        String workType = getInputData().getString(Constants.Work.TYPE);
 
-        if (appName == null || TextUtils.isEmpty(spreadsheetId) || TextUtils.isEmpty(sheetId) ||
+        if (TextUtils.isEmpty(spreadsheetId) || TextUtils.isEmpty(sheetId) ||
                 TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
             Timber.i(
-                    "App Name - %s / Spreadsheet Id - %s / Sheet Id - %s / Account Name - %s / Account Type - %s null or empty",
-                    appName, spreadsheetId, sheetId,
-                    accountName, accountType);
+                    "Spreadsheet Id - %s / Sheet Id - %s / Account Name - %s / Account Type - %s null or empty",
+                    spreadsheetId, sheetId, accountName, accountType);
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    String.format("Spreadsheet Id - %s / Sheet Id - %s / Account Name - %s " +
+                                    "/ Account Type - %s null or empty",
+                            spreadsheetId, sheetId, accountName, accountType));
             return Result.failure();
         }
 
@@ -75,6 +81,9 @@ public class BackupWorker extends Worker {
 
         if (expensesToBackup == null) {
             Timber.i("Expenses to backup is null");
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    "Expenses to backup is null");
             return Result.failure();
         }
 
@@ -82,8 +91,20 @@ public class BackupWorker extends Worker {
                 .getInsertRangeResponse(expensesToBackup, categories, paymentMethods, sheetId);
         if (response.isSuccessful()) {
             MainApplication.getInstance().getExpenseRepo().deleteExpenses();
+            insertLog(workType,
+                    Constants.LogResult.SUCCESS,
+                    "Backup and deletion successful");
             return Result.success();
         }
         return Result.failure();
+    }
+
+    private void insertLog(String type, String result, String message) {
+        MainApplication.getInstance().getLogRepo().insertLog(new Log(
+                System.currentTimeMillis(),
+                type,
+                result,
+                message
+        ));
     }
 }

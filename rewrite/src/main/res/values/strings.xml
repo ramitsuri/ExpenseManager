@@ -1,26 +1,37 @@
 <resources>
-    <string name="app_name">Expenses</string>
+    <plurals name="expense_count">
+        <item quantity="one">%d new expense</item>
+        <item quantity="other">%d new expenses</item>
+    </plurals>
 
+    <string name="app_name">Expenses</string>
     <string name="hello_add_fragment">Hello Add fragment</string>
     <string name="hello_settings_fragment">Hello Settings fragment</string>
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
-    <string name="common_sync_now">Sync Now</string>
-    <string name="common_edit">Edit Expense</string>
+    <string name="common_sync_now">Backup now</string>
+    <string name="common_edit">Edit</string>
+    <string name="common_delete">Delete</string>
     <string name="expense_divider">•</string>
     <string name="content_description_close_fragment">Close view</string>
+    <string name="content_description_down_arrow">Down arrow</string>
     <string name="common_category">Category</string>
     <string name="common_payment_method">Payment Method</string>
     <string name="common_discard">Discard</string>
     <string name="common_keep_editing">Keep editing</string>
     <string name="common_warning">Warning</string>
     <string name="common_setup">Setup</string>
+    <string name="common_yes">Yes</string>
 
     <!-- Expenses -->
+    <string name="common_no">No</string>
     <string name="common_expenses">Expenses</string>
     <string name="paid_using_payment">paid using %1s</string>
     <string name="at_store">at %1s</string>
     <string name="in_category">in category %1s</string>
     <string name="amount_with_currency">$%1s</string>
+    <string name="delete_expense_warning_message">Are you sure you want to delete the expense?</string>
+    <string name="expenses_empty_message">No Expenses!</string>
+    <string name="expenses_empty_help_message">tap the + button to add a new expense</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -31,6 +42,8 @@
     <string name="settings_title_spreadsheet_id">Spreadsheet ID</string>
     <string name="settings_title_sheet_id">Current sheet ID</string>
     <string name="settings_title_auto_backup">Auto backup new expenses</string>
+    <string name="settings_auto_backup_on">Automatic backup ON</string>
+    <string name="settings_auto_backup_off">Automatic backup OFF</string>
     <string name="settings_title_theme">Choose theme</string>
     <string name="settings_summary_spreadsheet_id">Spreadsheet ID</string>
     <string name="settings_summary_sheet_id">Current sheet ID</string>
@@ -59,4 +72,5 @@
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>
+    <string name="action_delete">Delete all</string>
 </resources>

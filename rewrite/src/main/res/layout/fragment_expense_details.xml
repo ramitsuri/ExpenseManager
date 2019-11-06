@@ -39,12 +39,27 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_edit"
-        android:layout_width="0dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
         android:text="@string/common_edit"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:icon="@drawable/ic_edit"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_delete"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="@string/common_delete"
+        android:textColor="@color/colorRed"
+        app:icon="@drawable/ic_delete"
+        app:iconTint="@color/colorRed"
+        app:layout_constraintStart_toEndOf="@id/btn_edit"
         app:layout_constraintTop_toBottomOf="@id/divider3" />
 
     <com.google.android.material.textview.MaterialTextView

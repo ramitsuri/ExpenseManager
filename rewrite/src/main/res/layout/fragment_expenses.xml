@@ -6,18 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.ExpensesFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/padding_small">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_vertical"
+        <ImageView
+            android:id="@+id/img_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".6" />
+            android:layout_marginBottom="@dimen/margin_arrow"
+            android:contentDescription="@string/content_description_down_arrow"
+            android:src="@drawable/ic_arrow_down"
+            android:tint="@color/colorAccent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_horizontal"
@@ -25,6 +30,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".6" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_expenses"
@@ -43,32 +55,88 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/common_sync_now"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/guide_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guide_vertical"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_unsynced"
-            android:layout_width="0dp"
+            android:id="@+id/txt_expense_empty"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/txt_unsynced_help"
-            app:layout_constraintEnd_toStartOf="@id/guide_vertical"
+            android:text="@string/expenses_empty_message"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/text_extra_extra_large"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_sync_now"
-            tools:text="10 expenses not synced" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_unsynced_help"
+            android:id="@+id/txt_expense_empty_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/expenses_empty_help_message"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/text_large"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_expense_empty" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_expense_info_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/txt_expense_info_2"
+            app:layout_constraintEnd_toEndOf="@id/guide_vertical"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_sync_now"
+            tools:text="10 new expenses"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_expense_info_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_small"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/btn_sync_now"
+            app:layout_constraintEnd_toEndOf="@id/txt_expense_info_1"
+            app:layout_constraintStart_toStartOf="@id/txt_expense_info_1"
+            app:layout_constraintTop_toBottomOf="@id/txt_expense_info_1"
+            tools:text="(31 Oct - 7 Nov)"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_expense_info_3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/btn_sync_now"
-            app:layout_constraintEnd_toStartOf="@id/guide_vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_unsynced"
-            tools:text="Auto sync is ON" />
+            android:gravity="end"
+            android:padding="@dimen/padding_extra_small"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_large"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/guide_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guide_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="$45"
+            tools:visibility="visible" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"

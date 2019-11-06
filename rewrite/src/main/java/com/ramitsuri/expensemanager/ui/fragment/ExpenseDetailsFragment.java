@@ -14,6 +14,8 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
+import javax.annotation.Nonnull;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -29,6 +31,8 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
     public interface DetailFragmentCallback {
         void onEditRequested(@NonNull Expense expense);
+
+        void onDeleteRequested(@NonNull Expense expense);
     }
 
     public void setCallback(@NonNull DetailFragmentCallback callback) {
@@ -85,8 +89,7 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
         // Edit button
         Button editButton = view.findViewById(R.id.btn_edit);
-        //if (expense.isSynced()) {
-        if (true) {
+        if (expense.isSynced()) {
             editButton.setEnabled(false);
         }
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +98,21 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
                 dismiss();
                 if (mCallback != null) {
                     mCallback.onEditRequested(expense);
+                }
+            }
+        });
+
+        // Edit button
+        Button deleteButton = view.findViewById(R.id.btn_delete);
+        if (expense.isSynced()) {
+            deleteButton.setEnabled(false);
+        }
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                if (mCallback != null) {
+                    mCallback.onDeleteRequested(expense);
                 }
             }
         });

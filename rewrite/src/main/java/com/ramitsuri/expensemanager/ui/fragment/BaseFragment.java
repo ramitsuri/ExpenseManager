@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 import timber.log.Timber;
 
 public class BaseFragment extends Fragment {
@@ -135,14 +134,13 @@ public class BaseFragment extends Fragment {
     }
 
     protected void logWorkStatus(String workTag) {
-        WorkManager.getInstance(MainApplication.getInstance()).getWorkInfosByTagLiveData(workTag)
-                .observe(this, new Observer<List<WorkInfo>>() {
-                    @Override
-                    public void onChanged(List<WorkInfo> workInfos) {
-                        if (workInfos != null && !workInfos.isEmpty()) {
-                            Timber.i("Work status %s", workInfos.get(0).toString());
-                        }
-                    }
-                });
+        WorkHelper.getWorkStatus(workTag).observe(this, new Observer<List<WorkInfo>>() {
+            @Override
+            public void onChanged(List<WorkInfo> workInfos) {
+                if (workInfos != null && !workInfos.isEmpty()) {
+                    Timber.i("Work status %s", workInfos.get(0).toString());
+                }
+            }
+        });
     }
 }
