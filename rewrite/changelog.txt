@@ -24,3 +24,6 @@
 // TODO
 - Smart auto backup
 - Scheduled recurring expense
+- UI enhancements (CardView)
+- UI enhancements (animate arrow)
+- Snackbar

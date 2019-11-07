@@ -12,6 +12,9 @@ import androidx.room.Query;
 public abstract class LogDao {
 
     @Query("SELECT * FROM log")
+    public abstract List<Log> getAll();
+
+    @Query("SELECT * FROM log where acknowledged = 0")
     public abstract List<Log> getUnacknowledged();
 
     @Insert

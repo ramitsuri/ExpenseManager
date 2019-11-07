@@ -40,6 +40,18 @@ public class LogRepository {
         return logs;
     }
 
+    public LiveData<List<Log>> getAllLogs() {
+        final MutableLiveData<List<Log>> logs = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Log> values = mDatabase.logDao().getAll();
+                logs.postValue(values);
+            }
+        });
+        return logs;
+    }
+
     public void deleteAcknowledged() {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
