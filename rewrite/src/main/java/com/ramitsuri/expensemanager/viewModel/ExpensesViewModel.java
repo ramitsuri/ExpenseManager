@@ -39,6 +39,6 @@ public class ExpensesViewModel extends ViewModel {
     }
 
     public void deleteExpense(@Nonnull Expense expense) {
-        mExpenseRepo.deleteExpenses();
+        mExpenseRepo.deleteExpense(expense);
     }
 }

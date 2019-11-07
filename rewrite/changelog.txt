@@ -20,10 +20,10 @@
 - Changed colors for dark and night themes
 - Fix theme by battery saver on Android < Q
 
+- Add card view around expense info textviews in expenses fragment
 
 // TODO
 - Smart auto backup
 - Scheduled recurring expense
-- UI enhancements (CardView)
 - UI enhancements (animate arrow)
 - Snackbar

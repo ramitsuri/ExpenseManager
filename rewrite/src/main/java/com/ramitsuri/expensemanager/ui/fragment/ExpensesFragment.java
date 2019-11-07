@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.IntDefs.ListItemType;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
@@ -41,6 +43,7 @@ public class ExpensesFragment extends BaseFragment {
 
     // Views
     private FloatingActionButton mBtnAdd;
+    private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfoEmptyHelp, mTextInfo1, mTextInfo2, mTextInfo3;
     private ImageView mImgDownArrow;
 
@@ -76,6 +79,7 @@ public class ExpensesFragment extends BaseFragment {
         mImgDownArrow = view.findViewById(R.id.img_down);
 
         // Shown when there are expenses
+        mCardInfo = view.findViewById(R.id.card_info);
         mTextInfo1 = view.findViewById(R.id.txt_expense_info_1);
         mTextInfo2 = view.findViewById(R.id.txt_expense_info_2);
         mTextInfo3 = view.findViewById(R.id.txt_expense_info_3);
@@ -100,6 +104,9 @@ public class ExpensesFragment extends BaseFragment {
         //}
 
         setupListExpenses(view);
+
+        final MotionLayout motionContainer = view.findViewById(R.id.layout);
+        setupAnimations(motionContainer);
 
         // Work Status
         logWorkStatus(WorkHelper.getOneTimeWorkTag());
@@ -139,23 +146,51 @@ public class ExpensesFragment extends BaseFragment {
         });
     }
 
+    private void setupAnimations(final MotionLayout motionContainer) {
+        motionContainer.setTransitionListener(new MotionLayout.TransitionListener() {
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
+
+            }
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
+
+            }
+
+            @Override
+            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
+                if (i == R.id.ending_set) {
+                    motionContainer.transitionToStart();
+                }
+            }
+
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
+
+            }
+        });
+        mImgDownArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                motionContainer.transitionToEnd();
+            }
+        });
+    }
+
     private void setTextInfo(List<ExpenseWrapper> expenses) {
         boolean doCalculation = false;
         if (expenses.size() == 0) {
             mTextInfoEmpty.setVisibility(View.VISIBLE);
             mTextInfoEmptyHelp.setVisibility(View.VISIBLE);
             mImgDownArrow.setVisibility(View.VISIBLE);
-            mTextInfo1.setVisibility(View.GONE);
-            mTextInfo2.setVisibility(View.GONE);
-            mTextInfo3.setVisibility(View.GONE);
+            mCardInfo.setVisibility(View.GONE);
         } else {
             doCalculation = true;
             mTextInfoEmpty.setVisibility(View.GONE);
             mTextInfoEmptyHelp.setVisibility(View.GONE);
             mImgDownArrow.setVisibility(View.GONE);
-            mTextInfo1.setVisibility(View.VISIBLE);
-            mTextInfo2.setVisibility(View.VISIBLE);
-            mTextInfo3.setVisibility(View.VISIBLE);
+            mCardInfo.setVisibility(View.VISIBLE);
         }
 
         // Return when no calculation required (TextInfo 1, 2, 3 are not going to be shown)

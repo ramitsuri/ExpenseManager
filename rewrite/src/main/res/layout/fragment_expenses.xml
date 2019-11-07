@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/padding_small">
+        <!-- TODO Figure why this is causing empty expense views to vanish
+        app:layoutDescription="@xml/motion_arrow" -->
 
         <ImageView
             android:id="@+id/img_down"
@@ -30,13 +32,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".1" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".6" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_expenses"
@@ -58,8 +53,82 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/guide_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guide_vertical"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_info"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/color_teal"
+            app:layout_constraintBottom_toTopOf="@id/guide_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/padding_extra_small">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guide_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".6" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txt_expense_info_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_medium"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/txt_expense_info_2"
+                    app:layout_constraintEnd_toEndOf="@id/guide_vertical"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="10 new expenses"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txt_expense_info_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/txt_expense_info_1"
+                    app:layout_constraintStart_toStartOf="@id/txt_expense_info_1"
+                    app:layout_constraintTop_toBottomOf="@id/txt_expense_info_1"
+                    tools:text="(31 Oct - 7 Nov)"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txt_expense_info_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:padding="@dimen/padding_extra_small"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_large"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/guide_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="$45"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txt_expense_empty"
@@ -88,53 +157,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_expense_empty" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_expense_info_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/color_teal"
-            android:textSize="@dimen/text_medium"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/txt_expense_info_2"
-            app:layout_constraintEnd_toEndOf="@id/guide_vertical"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_sync_now"
-            tools:text="10 new expenses"
-            tools:visibility="visible" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_expense_info_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/color_teal"
-            android:textSize="@dimen/text_small"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/btn_sync_now"
-            app:layout_constraintEnd_toEndOf="@id/txt_expense_info_1"
-            app:layout_constraintStart_toStartOf="@id/txt_expense_info_1"
-            app:layout_constraintTop_toBottomOf="@id/txt_expense_info_1"
-            tools:text="(31 Oct - 7 Nov)"
-            tools:visibility="visible" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_expense_info_3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:padding="@dimen/padding_extra_small"
-            android:textColor="@color/color_teal"
-            android:textSize="@dimen/text_large"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/guide_horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guide_vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="$45"
-            tools:visibility="visible" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
