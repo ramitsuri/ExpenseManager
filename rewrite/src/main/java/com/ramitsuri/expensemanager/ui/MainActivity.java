@@ -1,17 +1,14 @@
 package com.ramitsuri.expensemanager.ui;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
@@ -27,6 +24,8 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
+    private long mLastPressTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("Setting default theme");
             AppHelper.setCurrentTheme(Constants.SystemTheme.SYSTEM_DEFAULT);
         }
+        mLastPressTime = 0;
     }
 
     private void setupNavigation() {
@@ -110,7 +110,13 @@ public class MainActivity extends AppCompatActivity {
     private void deleteExpenses() {
         Timber.i("Deleting expenses");
 
-        MainApplication.getInstance().getExpenseRepo().deleteExpenses();
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastPressTime <= 2000) {
+            MainApplication.getInstance().getExpenseRepo().deleteExpenses();
+            mLastPressTime = 0;
+        } else {
+            mLastPressTime = currentTime;
+        }
     }
 
     private void initiateBackup() {

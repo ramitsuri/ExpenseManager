@@ -19,3 +19,8 @@
 
 - Changed colors for dark and night themes
 - Fix theme by battery saver on Android < Q
+
+
+// TODO
+- Smart auto backup
+- Scheduled recurring expense
