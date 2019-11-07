@@ -21,6 +21,7 @@
 - Fix theme by battery saver on Android < Q
 
 - Add card view around expense info textviews in expenses fragment
+- Fix bug where all expenses will get deleted when single expenses is deleted
 
 // TODO
 - Smart auto backup
