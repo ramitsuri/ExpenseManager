@@ -112,7 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
         long currentTime = System.currentTimeMillis();
         if (currentTime - mLastPressTime <= 2000) {
-            MainApplication.getInstance().getExpenseRepo().deleteExpenses();
+            if (BuildConfig.DEBUG) { // Extra protection, only in debug
+                MainApplication.getInstance().getExpenseRepo().deleteExpenses();
+            }
             mLastPressTime = 0;
         } else {
             mLastPressTime = currentTime;
