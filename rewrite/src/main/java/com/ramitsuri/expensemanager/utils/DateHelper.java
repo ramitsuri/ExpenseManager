@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+
+import androidx.annotation.Nullable;
 
 public class DateHelper {
     private static final String FORMAT_FRIENDLY = "MMM dd"; // Sep 21
@@ -38,7 +41,18 @@ public class DateHelper {
     }
 
     public static long toSheetsDate(long date) {
-        return date / MILLI_SECONDS_IN_DAY + SHEETS_DATE_OFFSET;
+        return toSheetsDate(date, null);
+    }
+
+    public static long toSheetsDate(long date, @Nullable TimeZone timeZone) {
+        if (timeZone == null) {
+            timeZone = TimeZone.getDefault();
+        }
+        long offset = 0;
+        if (timeZone.observesDaylightTime()) {
+            offset = timeZone.getOffset(date);
+        }
+        return (date + offset) / MILLI_SECONDS_IN_DAY + SHEETS_DATE_OFFSET;
     }
 
     public static long fromSheetsDate(long sheetsDate) {

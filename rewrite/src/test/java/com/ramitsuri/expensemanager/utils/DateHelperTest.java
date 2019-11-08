@@ -73,6 +73,79 @@ public class DateHelperTest {
     }
 
     @Test
+    public void testToSheetsDateForDay() {
+        /*
+         * Chicago
+         */
+        TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
+
+        // Wed Feb 20 00:00:00 EST 2019 43516
+        runTest(timeZone, 20, 1, 2019, 43516);
+
+        // Mon Apr 01 00:00:00 EDT 2019 43556
+        runTest(timeZone, 1, 3, 2019, 43556);
+
+        // Fri Oct 11 00:00:00 EDT 2019 43749
+        runTest(timeZone, 11, 9, 2019, 43749);
+
+        // Sat Nov 16 00:00:00 EST 2019 43785
+        runTest(timeZone, 16, 10, 2019, 43785);
+
+        /*
+         * LA Time
+         */
+        timeZone = TimeZone.getTimeZone("America/Los_Angeles");
+
+        // Wed Feb 20 00:00:00 EST 2019 43516
+        runTest(timeZone, 20, 1, 2019, 43516);
+
+        // Mon Apr 01 00:00:00 EDT 2019 43556
+        runTest(timeZone, 1, 3, 2019, 43556);
+
+        // Fri Oct 11 00:00:00 EDT 2019 43749
+        runTest(timeZone, 11, 9, 2019, 43749);
+
+        // Sat Nov 16 00:00:00 EST 2019 43785
+        runTest(timeZone, 16, 10, 2019, 43785);
+
+        /*
+         * IST
+         *//*
+        timeZone = TimeZone.getTimeZone("Asia/Kolkata");
+
+        // Wed Feb 20 00:00:00 EST 2019 43516
+        runTest(timeZone, 20, 1, 2019, 43516);
+
+        // Mon Apr 01 00:00:00 EDT 2019 43556
+        runTest(timeZone, 1, 3, 2019, 43556);
+
+        // Fri Oct 11 00:00:00 EDT 2019 43749
+        runTest(timeZone, 11, 9, 2019, 43749);
+
+        // Sat Nov 16 00:00:00 EST 2019 43785
+        runTest(timeZone, 16, 10, 2019, 43785);*/
+    }
+
+    private void runTest(TimeZone timeZone, int dayOfMonth, int month, int year, int expectedDate) {
+        Calendar calendar = Calendar.getInstance(timeZone);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        System.out.println(calendar.getTime() + " - " + expectedDate);
+
+        for (int i = 0; i < 24 * 60; i++) {
+            assertEquals(expectedDate,
+                    DateHelper.toSheetsDate(calendar.getTime().getTime(), timeZone));
+            calendar.add(Calendar.MINUTE, 1);
+        }
+    }
+
+    @Test
     public void testFromSheetsDate() {
         int startSheetDate = 43466;
         TimeZone timeZone = TimeZone.getDefault();
