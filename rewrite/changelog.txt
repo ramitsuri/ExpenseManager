@@ -23,6 +23,15 @@
 - Add card view around expense info textviews in expenses fragment
 - Fix bug where all expenses will get deleted when single expenses is deleted
 
+- Deleting expenses directly via database class instead of via repository after backup success
+- Made init repo methods private in MainApplication and calling them in onCreate()
+- Add a fragment to view logs and sheets in debug mode (or special access mode)
+- Add currency format helper and route all big decimals via that class
+- Add delete all logs capability
+- Move exitToUp() to BaseFragment
+- Add version info to settings which can be tapped 7 times to enable hidden options
+- Use sheetscore 1.4.0
+
 // TODO
 - Smart auto backup
 - Scheduled recurring expense

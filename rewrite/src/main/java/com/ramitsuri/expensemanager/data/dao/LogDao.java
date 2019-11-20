@@ -22,4 +22,7 @@ public abstract class LogDao {
 
     @Query("DELETE FROM log where acknowledged = 1")
     public abstract void deleteAcknowledged();
+
+    @Query("DELETE FROM log")
+    public abstract void deleteAll();
 }

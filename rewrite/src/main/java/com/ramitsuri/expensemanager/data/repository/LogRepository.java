@@ -60,4 +60,13 @@ public class LogRepository {
             }
         });
     }
+
+    public void deleteAll() {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.logDao().deleteAll();
+            }
+        });
+    }
 }

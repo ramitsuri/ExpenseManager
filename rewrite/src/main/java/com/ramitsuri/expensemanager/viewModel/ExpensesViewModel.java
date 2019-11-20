@@ -23,7 +23,6 @@ public class ExpensesViewModel extends ViewModel {
     public ExpensesViewModel() {
         super();
 
-        MainApplication.getInstance().initRepos();
         mExpenseRepo = MainApplication.getInstance().getExpenseRepo();
         mExpenses = Transformations.map(mExpenseRepo.getExpenses(),
                 new Function<List<Expense>, List<ExpenseWrapper>>() {

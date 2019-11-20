@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_small"
+    tools:context=".ui.fragment.MetadataFragment">
+
+    <ImageView
+        android:id="@+id/btn_close"
+        android:layout_width="@dimen/button_size_small"
+        android:layout_height="@dimen/button_size_small"
+        android:contentDescription="@string/content_description_close_fragment"
+        android:tint="?attr/colorControlNormal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close" />
+
+    <View
+        android:id="@+id/divider_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:background="@color/grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_close" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_sheets"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@id/divider_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_fetch_sheets"
+        tools:itemCount="20"
+        tools:listitem="@layout/metadata_item" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_logs"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@id/btn_delete_logs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_horizontal"
+        tools:itemCount="20"
+        tools:listitem="@layout/metadata_item" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_fetch_sheets"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:text="@string/metadata_fetch_sheets"
+        app:layout_constraintBottom_toTopOf="@id/list_sheets"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_close" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_delete_logs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/metadata_delete_logs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_logs" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

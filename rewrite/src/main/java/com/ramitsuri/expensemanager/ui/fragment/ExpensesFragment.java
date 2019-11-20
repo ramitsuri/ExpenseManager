@@ -18,6 +18,7 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.expensemanager.viewModel.ExpensesViewModel;
@@ -232,7 +233,7 @@ public class ExpensesFragment extends BaseFragment {
         }
 
         // Total
-        mTextInfo3.setText(getString(R.string.amount_with_currency, String.valueOf(totalAmount)));
+        mTextInfo3.setText(CurrencyHelper.formatForDisplay(true, totalAmount));
     }
 
     private void showExpenseDetails(ExpenseWrapper wrapper) {

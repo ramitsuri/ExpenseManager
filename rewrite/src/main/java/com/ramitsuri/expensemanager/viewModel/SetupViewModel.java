@@ -9,7 +9,6 @@ import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -25,15 +24,15 @@ public class SetupViewModel extends ViewModel {
     public SetupViewModel() {
         super();
 
-        MainApplication.getInstance().initRepos();
         mCategoryRepository = MainApplication.getInstance().getCategoryRepo();
         mPaymentMethodRepository = MainApplication.getInstance().getPaymentMethodRepo();
     }
 
     public void initSheetRepository(String accountName, String accountType, String spreadsheetId) {
         Account account = new Account(accountName, accountType);
-        MainApplication.getInstance()
-                .initSheetRepo(account, spreadsheetId, Arrays.asList(Constants.SCOPES));
+        if (MainApplication.getInstance().getSheetRepository() == null) {
+            Timber.e("Sheet repo is null");
+        }
         mSheetRepository = MainApplication.getInstance().getSheetRepository();
     }
 

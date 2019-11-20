@@ -11,6 +11,7 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
+import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.util.List;
@@ -144,8 +145,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             txtDetail2.setText(expense.getCategory());
             txtDescription.setText(expense.getDescription());
-            txtAmount.setText(txtAmount.getContext()
-                    .getString(R.string.amount_with_currency, String.valueOf(expense.getAmount())));
+            txtAmount.setText(CurrencyHelper.formatForDisplay(true, expense.getAmount()));
             txtDate.setText(DateHelper.getFriendlyDate(expense.getDateTime()));
             txtDetail3.setText(expense.getPaymentMethod());
 

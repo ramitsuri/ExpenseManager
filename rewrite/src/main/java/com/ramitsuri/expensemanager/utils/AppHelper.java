@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager.utils;
 
 import android.os.Build;
 
+import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
@@ -78,6 +79,18 @@ public class AppHelper {
 
     public static boolean isAutoBackupEnabled() {
         return PrefHelper.get(getString(R.string.settings_key_auto_backup), false);
+    }
+
+    public static String getVersionInfo() {
+        return BuildConfig.VERSION_NAME;
+    }
+
+    public static void enableDebugOptions() {
+        PrefHelper.set(getString(R.string.settings_key_enable_debug_options), true);
+    }
+
+    public static boolean isDebugOptionEnabled() {
+        return PrefHelper.get(getString(R.string.settings_key_enable_debug_options), false);
     }
 
     private static String getString(@StringRes int resourceId) {

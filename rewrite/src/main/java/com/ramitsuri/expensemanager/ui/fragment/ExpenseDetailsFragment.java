@@ -12,9 +12,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
-
-import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,8 +63,7 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
         // Amount
         TextView txtAmount = view.findViewById(R.id.txt_expense_amount);
-        txtAmount.setText(txtAmount.getContext()
-                .getString(R.string.amount_with_currency, String.valueOf(expense.getAmount())));
+        txtAmount.setText(CurrencyHelper.formatForDisplay(true, expense.getAmount()));
 
         // Date
         TextView txtDate = view.findViewById(R.id.text_expense_date);

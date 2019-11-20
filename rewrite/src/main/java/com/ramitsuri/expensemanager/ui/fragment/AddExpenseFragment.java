@@ -1,6 +1,5 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,21 +16,18 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
+import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.AddExpenseViewModel;
 import com.ramitsuri.expensemanager.viewModel.ViewModelFactory;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -131,10 +127,10 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             mTextDate.setText(DateHelper.getFriendlyDate(longValue));
 
             // Amount
-            BigDecimal bdValue = expense.getAmount();
-            if (bdValue != null) {
-                mEditAmount.setText(String.valueOf(bdValue));
-                mEditAmount.setSelection(String.valueOf(bdValue).length());
+            value = CurrencyHelper.formatForDisplay(true, expense.getAmount());
+            if (value != null) {
+                mEditAmount.setText(value);
+                mEditAmount.setSelection(value.length());
             }
         }
     }
@@ -279,15 +275,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         long pickedDate = DateHelper.getDateFromYearMonthDay(year, month, day);
         mTextDate.setText(DateHelper.getFriendlyDate(pickedDate));
         mViewModel.setExpenseDate(pickedDate);
-    }
-
-    private void exitToUp() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            ((AppCompatActivity)activity).onSupportNavigateUp();
-        } else {
-            Timber.w("handleCloseFragmentClicked() -> Activity is null");
-        }
     }
 
     private String getExpenseAmount() {

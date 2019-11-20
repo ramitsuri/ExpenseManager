@@ -1,8 +1,6 @@
 package com.ramitsuri.expensemanager.work;
 
-import android.accounts.Account;
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
@@ -15,7 +13,6 @@ import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -33,31 +30,23 @@ public class BackupWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        String spreadsheetId = AppHelper.getSpreadsheetId();
-        String accountName = AppHelper.getAccountName();
-        String accountType = AppHelper.getAccountType();
         String sheetId = AppHelper.getCurrentSheetId();
         String workType = getInputData().getString(Constants.Work.TYPE);
 
-        if (TextUtils.isEmpty(spreadsheetId) || TextUtils.isEmpty(sheetId) ||
-                TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
-            Timber.i(
-                    "Spreadsheet Id - %s / Sheet Id - %s / Account Name - %s / Account Type - %s null or empty",
-                    spreadsheetId, sheetId, accountName, accountType);
+        if (sheetId == null) {
+            Timber.i("SheetId is null");
             insertLog(workType,
                     Constants.LogResult.FAILURE,
-                    String.format("Spreadsheet Id - %s / Sheet Id - %s / Account Name - %s " +
-                                    "/ Account Type - %s null or empty",
-                            spreadsheetId, sheetId, accountName, accountType));
+                    "SheetId is null");
             return Result.failure();
         }
 
-        Account account = new Account(accountName, accountType);
-
         if (MainApplication.getInstance().getSheetRepository() == null) {
             Timber.i("Sheet repo null");
-            MainApplication.getInstance()
-                    .initSheetRepo(account, spreadsheetId, Arrays.asList(Constants.SCOPES));
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    "Sheet repo is null");
+            return Result.failure();
         }
 
         // Expenses
@@ -90,7 +79,7 @@ public class BackupWorker extends Worker {
         InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
                 .getInsertRangeResponse(expensesToBackup, categories, paymentMethods, sheetId);
         if (response.isSuccessful()) {
-            MainApplication.getInstance().getExpenseRepo().deleteExpenses();
+            ExpenseManagerDatabase.getInstance().expenseDao().deleteAll();
             insertLog(workType,
                     Constants.LogResult.SUCCESS,
                     "Backup and deletion successful");

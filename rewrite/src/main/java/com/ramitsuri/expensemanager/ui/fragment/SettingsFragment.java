@@ -5,6 +5,7 @@ import android.view.Menu;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.ToastHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,8 @@ import androidx.preference.SwitchPreferenceCompat;
 import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+    private int mPressCount;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -35,6 +38,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+
+        mPressCount = 0;
 
         // Auto backup
         final SwitchPreferenceCompat autoBackupPref =
@@ -63,6 +68,27 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     return true;
                 }
             });
+        }
+
+        // Version info
+        Preference versionInfoPref = findPreference(getString(R.string.settings_key_version_info));
+        if (versionInfoPref != null) {
+            versionInfoPref.setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            mPressCount = mPressCount + 1;
+                            if (mPressCount >= 7) {
+                                AppHelper.enableDebugOptions();
+                                if (getActivity() != null) {
+                                    ToastHelper.showToast(getActivity(),
+                                            R.string.settings_hidden_options_enabled);
+                                }
+                            }
+                            return true;
+                        }
+                    });
+            versionInfoPref.setSummary(AppHelper.getVersionInfo());
         }
     }
 

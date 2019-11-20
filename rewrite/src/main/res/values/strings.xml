@@ -39,18 +39,22 @@
     <string name="settings_key_sheet_id">settings_sheet_id</string>
     <string name="settings_key_auto_backup">settings_auto_backup</string>
     <string name="settings_key_theme">settings_theme</string>
+    <string name="settings_key_version_info">version_info</string>
     <string name="settings_title_spreadsheet_id">Spreadsheet ID</string>
     <string name="settings_title_sheet_id">Current sheet ID</string>
     <string name="settings_title_auto_backup">Auto backup new expenses</string>
     <string name="settings_auto_backup_on">Automatic backup ON</string>
     <string name="settings_auto_backup_off">Automatic backup OFF</string>
     <string name="settings_title_theme">Choose theme</string>
+    <string name="settings_title_version_info">About</string>
     <string name="settings_summary_spreadsheet_id">Spreadsheet ID</string>
     <string name="settings_summary_sheet_id">Current sheet ID</string>
     <string name="settings_summary_auto_backup">Auto backup new expenses</string>
     <string name="settings_summary_theme">Theme</string>
     <string name="settings_key_account_name">settings_account_name</string>
     <string name="settings_key_account_type">settings_account_type</string>
+    <string name="settings_key_enable_debug_options">enable_debug_options</string>
+    <string name="settings_hidden_options_enabled">You have enabled hidden options</string>
 
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>
@@ -73,4 +77,9 @@
     <!-- Menu -->
     <string name="action_settings">Settings</string>
     <string name="action_delete">Delete all</string>
+    <string name="action_meta_data">Sheets</string>
+
+    <!-- Metadata Fragment -->
+    <string name="metadata_fetch_sheets">Fetch Sheets</string>
+    <string name="metadata_delete_logs">Delete Logs</string>
 </resources>

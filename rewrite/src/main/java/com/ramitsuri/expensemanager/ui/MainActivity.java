@@ -69,14 +69,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // Backup now menu item always visible for now
-        /*boolean enableMenuItem = AppHelper.isAutoBackupEnabled();
-        MenuItem menuItem = menu.findItem(R.id.menu_backup_now);
-        if (menuItem != null) {
-            menuItem.setVisible(enableMenuItem);
-        }*/
+        // Hide Delete All
         if (!BuildConfig.DEBUG) {
             MenuItem menuItem = menu.findItem(R.id.menu_delete_all);
+            if (menuItem != null) {
+                menuItem.setVisible(false);
+            }
+        }
+
+        // Hide Sheet metadata
+        if (!AppHelper.isDebugOptionEnabled() && !BuildConfig.DEBUG) {
+            MenuItem menuItem = menu.findItem(R.id.fragment_metadata);
             if (menuItem != null) {
                 menuItem.setVisible(false);
             }

@@ -28,4 +28,8 @@
         android:switchTextOn="@string/settings_auto_backup_on"
         android:title="@string/settings_title_auto_backup" />
 
+    <Preference
+        android:key="@string/settings_key_version_info"
+        android:title="@string/settings_title_version_info"/>
+
 </androidx.preference.PreferenceScreen>

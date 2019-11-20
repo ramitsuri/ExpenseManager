@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager;
 
 import android.accounts.Account;
 import android.app.Application;
+import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.IntDefs.SourceType;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
@@ -11,10 +12,10 @@ import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 
-import java.util.List;
+import java.util.Arrays;
 
-import androidx.annotation.NonNull;
 import timber.log.Timber;
 
 public class MainApplication extends Application {
@@ -35,6 +36,10 @@ public class MainApplication extends Application {
         sInstance = this;
 
         initTimber();
+
+        initDataRepos();
+
+        initSheetRepo();
     }
 
     private void initTimber() {
@@ -49,7 +54,7 @@ public class MainApplication extends Application {
         return sInstance;
     }
 
-    public void initRepos() {
+    private void initDataRepos() {
         @SourceType int source = SourceType.DB;
 
         AppExecutors appExecutors = AppExecutors.getInstance();
@@ -70,14 +75,24 @@ public class MainApplication extends Application {
         mPaymentMethodRepo.setPaymentMethods(DummyData.getPaymentMethods());*/
     }
 
-    public void initSheetRepo(@NonNull Account account,
-            @NonNull String spreadsheetId,
-            @NonNull List<String> scopes) {
+    private void initSheetRepo() {
         AppExecutors appExecutors = AppExecutors.getInstance();
         String appName = getString(R.string.app_name);
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        String accountName = AppHelper.getAccountName();
+        String accountType = AppHelper.getAccountType();
 
-        mSheetRepository =
-                new SheetRepository(this, appName, account, spreadsheetId, scopes, appExecutors);
+        if (TextUtils.isEmpty(spreadsheetId) ||
+                TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
+            Timber.i("Spreadsheet Id - %s / Account Name - %s / Account Type - %s null or empty",
+                    spreadsheetId, accountName, accountType);
+            return;
+        }
+
+        Account account = new Account(accountName, accountType);
+
+        mSheetRepository = new SheetRepository(this, appName, account, spreadsheetId,
+                Arrays.asList(Constants.SCOPES), appExecutors);
     }
 
     public CategoryRepository getCategoryRepo() {

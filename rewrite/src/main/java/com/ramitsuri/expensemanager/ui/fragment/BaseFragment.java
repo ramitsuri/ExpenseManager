@@ -143,4 +143,13 @@ public class BaseFragment extends Fragment {
             }
         });
     }
+
+    protected void exitToUp() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            ((AppCompatActivity)activity).onSupportNavigateUp();
+        } else {
+            Timber.w("handleCloseFragmentClicked() -> Activity is null");
+        }
+    }
 }

@@ -37,7 +37,6 @@ public class AddExpenseViewModel extends ViewModel {
     public AddExpenseViewModel(Expense expense) {
         super();
 
-        MainApplication.getInstance().initRepos();
         mExpenseRepo = MainApplication.getInstance().getExpenseRepo();
         mCategoryRepo = MainApplication.getInstance().getCategoryRepo();
         mPaymentMethodRepo = MainApplication.getInstance().getPaymentMethodRepo();
