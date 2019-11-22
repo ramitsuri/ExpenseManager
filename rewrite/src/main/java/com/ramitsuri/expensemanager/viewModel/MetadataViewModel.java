@@ -8,6 +8,7 @@ import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.arch.core.util.Function;
@@ -36,7 +37,7 @@ public class MetadataViewModel extends ViewModel {
                         List<String> logs = new ArrayList<>();
                         for (Log log : input) {
                             if (log != null) {
-                                String sb = log.getTime() +
+                                String sb = new Date(log.getTime()) +
                                         " | " +
                                         log.getType() +
                                         " | " +
