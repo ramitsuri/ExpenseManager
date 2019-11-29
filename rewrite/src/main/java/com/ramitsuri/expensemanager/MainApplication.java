@@ -76,11 +76,16 @@ public class MainApplication extends Application {
     }
 
     private void initSheetRepo() {
-        AppExecutors appExecutors = AppExecutors.getInstance();
-        String appName = getString(R.string.app_name);
         String spreadsheetId = AppHelper.getSpreadsheetId();
         String accountName = AppHelper.getAccountName();
         String accountType = AppHelper.getAccountType();
+
+        initSheetRepo(spreadsheetId, accountName, accountType);
+    }
+
+    public void initSheetRepo(String spreadsheetId, String accountName, String accountType) {
+        AppExecutors appExecutors = AppExecutors.getInstance();
+        String appName = getString(R.string.app_name);
 
         if (TextUtils.isEmpty(spreadsheetId) ||
                 TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {

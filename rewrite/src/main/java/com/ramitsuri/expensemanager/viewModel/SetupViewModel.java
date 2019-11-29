@@ -1,7 +1,5 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import android.accounts.Account;
-
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
@@ -11,6 +9,7 @@ import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import timber.log.Timber;
@@ -29,15 +28,19 @@ public class SetupViewModel extends ViewModel {
     }
 
     public void initSheetRepository(String accountName, String accountType, String spreadsheetId) {
-        Account account = new Account(accountName, accountType);
         if (MainApplication.getInstance().getSheetRepository() == null) {
             Timber.e("Sheet repo is null");
+            MainApplication.getInstance().initSheetRepo(spreadsheetId, accountName, accountType);
         }
         mSheetRepository = MainApplication.getInstance().getSheetRepository();
     }
 
+    @Nullable
     public LiveData<EntitiesConsumerResponse> getEntitiesFromSheets() {
-        return mSheetRepository.getEntityData(Constants.Range.CATEGORIES_PAYMENT_METHODS);
+        if (mSheetRepository != null) {
+            return mSheetRepository.getEntityData(Constants.Range.CATEGORIES_PAYMENT_METHODS);
+        }
+        return null;
     }
 
     public void saveEntities(List<List<String>> stringsList) {
