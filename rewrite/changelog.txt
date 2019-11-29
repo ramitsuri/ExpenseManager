@@ -32,6 +32,8 @@
 - Add version info to settings which can be tapped 7 times to enable hidden options
 - Use sheetscore 1.4.0
 
+- Enabled nav and status bar transparency in theme for API 29
+
 // TODO
 - Smart auto backup
 - Scheduled recurring expense
