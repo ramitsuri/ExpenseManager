@@ -151,6 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/expenses_empty_help_message"
+            android:textAlignment="center"
             android:textColor="@color/color_red"
             android:textSize="@dimen/text_large"
             android:visibility="gone"
@@ -160,13 +161,15 @@
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btn_add"
-        android:layout_width="@dimen/button_size_medium"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/button_size_medium"
         android:layout_margin="@dimen/margin_small"
+        android:contentDescription="@string/add_expense"
+        android:text="@string/add_expense"
         app:backgroundTint="@color/color_teal"
         app:layout_anchor="@id/list_expenses"
-        app:layout_anchorGravity="bottom|right|end"
-        app:srcCompat="@drawable/ic_add" />
+        app:layout_anchorGravity="bottom|right|end" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

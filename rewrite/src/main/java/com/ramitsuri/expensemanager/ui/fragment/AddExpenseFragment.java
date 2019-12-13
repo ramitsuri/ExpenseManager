@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -47,7 +47,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private EditText mEditStore, mEditAmount, mEditDescription;
     private ViewGroup mLayoutDate;
     private TextView mTextDate;
-    private FloatingActionButton mBtnDone;
+    private ExtendedFloatingActionButton mBtnDone;
 
     public AddExpenseFragment() {
         // Required empty public constructor

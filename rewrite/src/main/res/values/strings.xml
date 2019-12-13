@@ -21,6 +21,7 @@
     <string name="common_warning">Warning</string>
     <string name="common_setup">Setup</string>
     <string name="common_yes">Yes</string>
+    <string name="common_save">Save Expense</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>
@@ -31,7 +32,7 @@
     <string name="amount_with_currency">$%1s</string>
     <string name="delete_expense_warning_message">Are you sure you want to delete the expense?</string>
     <string name="expenses_empty_message">No Expenses!</string>
-    <string name="expenses_empty_help_message">tap the + button to add a new expense</string>
+    <string name="expenses_empty_help_message">tap the ADD EXPENSE button to add a new expense</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -70,6 +71,7 @@
         Are you sure you want to exit?
     </string>
     <string name="you_have_unsaved_changes">You have unsaved changes</string>
+    <string name="add_expense_save_expense">Save expense</string>
 
     <!-- Setup -->
     <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>

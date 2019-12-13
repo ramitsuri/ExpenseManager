@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.IntDefs.ListItemType;
 import com.ramitsuri.expensemanager.R;
@@ -43,7 +43,7 @@ public class ExpensesFragment extends BaseFragment {
     private ExpensesViewModel mExpensesViewModel;
 
     // Views
-    private FloatingActionButton mBtnAdd;
+    private ExtendedFloatingActionButton mBtnAdd;
     private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfoEmptyHelp, mTextInfo1, mTextInfo2, mTextInfo3;
     private ImageView mImgDownArrow;
@@ -184,13 +184,11 @@ public class ExpensesFragment extends BaseFragment {
         if (expenses.size() == 0) {
             mTextInfoEmpty.setVisibility(View.VISIBLE);
             mTextInfoEmptyHelp.setVisibility(View.VISIBLE);
-            mImgDownArrow.setVisibility(View.VISIBLE);
             mCardInfo.setVisibility(View.GONE);
         } else {
             doCalculation = true;
             mTextInfoEmpty.setVisibility(View.GONE);
             mTextInfoEmptyHelp.setVisibility(View.GONE);
-            mImgDownArrow.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.VISIBLE);
         }
 

@@ -37,7 +37,11 @@
 - Fix crash due to SheetRepo null in SetupFragment.
 - Add a new public method in MainApp to initialize SheetRepo
 
+- Use extended fab for add expense and save expense
+- made visibility gone on "down arrow to indicate add expense button"
+
 // TODO
+- Save to sheet
 - Smart auto backup
 - Scheduled recurring expense
 - UI enhancements (animate arrow)
