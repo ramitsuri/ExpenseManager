@@ -17,7 +17,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {Category.class, Expense.class, PaymentMethod.class,
-        Log.class}, version = 2, exportSchema = true)
+        Log.class}, version = 3, exportSchema = true)
 @TypeConverters({BigDecimalConverter.class})
 public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
@@ -31,6 +31,7 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(MainApplication.getInstance(),
                             ExpenseManagerDatabase.class, DB_NAME)
                             .addMigrations(DatabaseMigration.MIGRATION_1_2)
+                            .addMigrations(DatabaseMigration.MIGRATION_2_3)
                             .build();
                 }
             }

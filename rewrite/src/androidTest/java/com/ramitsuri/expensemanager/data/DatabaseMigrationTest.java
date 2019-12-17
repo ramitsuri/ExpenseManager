@@ -45,4 +45,25 @@ public class DatabaseMigrationTest {
         db.execSQL(
                 "INSERT INTO Log(time,type,result,message,acknowledged) VALUES(4673483849, 'periodic_backup', 'success',null,'0')");
     }
+
+    @Test
+    public void migrate2To3() throws IOException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 2);
+
+        // db has schema version 2. insert some data using SQL queries.
+        // You cannot use DAO classes because they expect the latest schema.
+        db.execSQL("SELECT * FROM Expense");
+
+        // Prepare for the next version.
+        db.close();
+
+        // Re-open the database with version 3 and provide
+        // MIGRATION_2_3 as the migration process.
+        db = helper.runMigrationsAndValidate(TEST_DB, 3, true, DatabaseMigration.MIGRATION_2_3);
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+        db.execSQL(
+                "INSERT INTO Expense(amount,payment_method,category,description,store,sheet_id,date_time,is_synced,is_starred) VALUES('20.00','chase','fun','movie','sunray',1544454,7843,1,1)");
+    }
 }

@@ -39,6 +39,9 @@ public class Expense implements Parcelable {
     @ColumnInfo(name = "is_starred")
     private boolean mIsStarred;
 
+    @ColumnInfo(name = "sheet_id")
+    private int mSheetId;
+
     public static final Creator<Expense> CREATOR = new Creator<Expense>() {
         @Override
         public Expense createFromParcel(Parcel in) {
@@ -64,6 +67,7 @@ public class Expense implements Parcelable {
         mStore = in.readString();
         mIsSynced = in.readByte() != 0;
         mIsStarred = in.readByte() != 0;
+        mSheetId = in.readInt();
     }
 
     @Override
@@ -82,6 +86,7 @@ public class Expense implements Parcelable {
         parcel.writeString(mStore);
         parcel.writeByte((byte)(mIsSynced ? 1 : 0));
         parcel.writeByte((byte)(mIsStarred ? 1 : 0));
+        parcel.writeInt(mSheetId);
     }
 
     public int getId() {
@@ -156,6 +161,14 @@ public class Expense implements Parcelable {
         mStore = store;
     }
 
+    public int getSheetId() {
+        return mSheetId;
+    }
+
+    public void setSheetId(int sheetId) {
+        mSheetId = sheetId;
+    }
+
     @Override
     public String toString() {
         return "Expense { " +
@@ -168,6 +181,7 @@ public class Expense implements Parcelable {
                 ", mStore = '" + mStore + '\'' +
                 ", mIsSynced = " + mIsSynced +
                 ", mIsStarred = " + mIsStarred +
+                ", mSheetId = " + mSheetId +
                 " }\n";
     }
 }

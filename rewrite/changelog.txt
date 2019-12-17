@@ -38,7 +38,8 @@
 - Add a new public method in MainApp to initialize SheetRepo
 
 - Use extended fab for add expense and save expense
-- made visibility gone on "down arrow to indicate add expense button"
+- Made visibility gone on "down arrow to indicate add expense button"
+- Add new column "sheet_id" to Expense (with migration and tests)
 
 // TODO
 - Save to sheet

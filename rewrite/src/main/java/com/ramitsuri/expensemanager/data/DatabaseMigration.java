@@ -19,4 +19,13 @@ public class DatabaseMigration {
                     ")");
         }
     };
+
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `Expense` " +
+                    "ADD COLUMN " +
+                    "'sheet_id' INTEGER NOT NULL DEFAULT -1");
+        }
+    };
 }
