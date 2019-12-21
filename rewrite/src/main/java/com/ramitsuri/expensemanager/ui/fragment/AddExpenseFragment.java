@@ -127,8 +127,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             mTextDate.setText(DateHelper.getFriendlyDate(longValue));
 
             // Amount
-            value = CurrencyHelper.formatForDisplay(true, expense.getAmount());
-            if (value != null) {
+            if (expense.getAmount() != null) {
+                value = expense.getAmount().toString();
                 mEditAmount.setText(value);
                 mEditAmount.setSelection(value.length());
             }

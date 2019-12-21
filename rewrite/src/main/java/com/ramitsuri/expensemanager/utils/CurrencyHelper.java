@@ -6,6 +6,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class CurrencyHelper {
@@ -55,5 +56,19 @@ public class CurrencyHelper {
         } else {
             return sCurrencyFormatterNoSymbol.format(roundForCalculation(amount));
         }
+    }
+
+    @NonNull
+    public static BigDecimal string2Decimal(String amountString) {
+        if (amountString.trim().startsWith("(") && amountString.trim().endsWith(")")) {
+            return new BigDecimal(clearFormatting(amountString)).negate();
+        } else {
+            return new BigDecimal(clearFormatting(amountString));
+        }
+    }
+
+    @NonNull
+    public static String clearFormatting(String amountString) {
+        return amountString.replaceAll("[^\\d.-]", "");
     }
 }

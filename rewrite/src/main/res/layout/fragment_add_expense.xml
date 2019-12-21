@@ -85,6 +85,7 @@
             android:layout_marginEnd="@dimen/margin_extra_small"
             android:layout_marginTop="@dimen/margin_medium"
             android:gravity="center"
+            android:hint="@string/add_expense_amount"
             android:nextFocusForward="@+id/edit_text_store"
             app:layout_constraintEnd_toStartOf="@id/guide_vertical_1"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +96,6 @@
                 android:id="@+id/edit_text_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_expense_amount"
                 android:inputType="numberDecimal|numberSigned" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -106,6 +106,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
+            android:hint="@string/add_expense_additional_info"
             android:nextFocusForward="@+id/edit_text_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -116,7 +117,6 @@
                 android:id="@+id/edit_text_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_expense_additional_info"
                 android:inputType="textCapSentences" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -127,6 +127,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
+            android:hint="@string/add_expense_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_store"
@@ -136,7 +137,6 @@
                 android:id="@+id/edit_text_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_expense_description"
                 android:inputType="textCapSentences" />
 
         </com.google.android.material.textfield.TextInputLayout>
