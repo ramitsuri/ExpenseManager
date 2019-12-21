@@ -28,4 +28,16 @@ public class DatabaseMigration {
                     "'sheet_id' INTEGER NOT NULL DEFAULT -1");
         }
     };
+
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `SheetInfo` " +
+                    "(" +
+                    "`mId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`sheet_name` TEXT, " +
+                    "`sheet_id` INTEGER NOT NULL " +
+                    ")");
+        }
+    };
 }

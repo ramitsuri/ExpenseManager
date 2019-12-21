@@ -7,7 +7,6 @@ import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
@@ -16,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import timber.log.Timber;
 
-public class BackupWorker extends Worker {
+public class BackupWorker extends BaseWorker {
 
     public BackupWorker(@NonNull Context context,
             @NonNull WorkerParameters workerParams) {
@@ -86,14 +84,5 @@ public class BackupWorker extends Worker {
             return Result.success();
         }
         return Result.failure();
-    }
-
-    private void insertLog(String type, String result, String message) {
-        MainApplication.getInstance().getLogRepo().insertLog(new Log(
-                System.currentTimeMillis(),
-                type,
-                result,
-                message
-        ));
     }
 }

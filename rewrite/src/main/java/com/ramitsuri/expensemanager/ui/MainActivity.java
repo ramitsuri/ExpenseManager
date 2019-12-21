@@ -10,6 +10,7 @@ import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.PrefHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,24 @@ public class MainActivity extends AppCompatActivity {
             AppHelper.setCurrentTheme(Constants.SystemTheme.SYSTEM_DEFAULT);
         }
         mLastPressTime = 0;
+
+        migrateCurrentToDefaultSheetId();
+    }
+
+    private void migrateCurrentToDefaultSheetId() {
+        // Delete current sheet id and migrate it to default sheet id
+        // After which current sheet id is deleted
+        String currentSheetId = AppHelper.getCurrentSheetId();
+        if (TextUtils.isEmpty(currentSheetId)) {
+            return;
+        }
+        try {
+            int defaultSheetId = Integer.parseInt(currentSheetId);
+            AppHelper.setDefaultSheetId(defaultSheetId);
+            PrefHelper.remove(getString(R.string.settings_key_sheet_id));
+        } catch (Exception ex) {
+            Timber.i("Unable to migrate current sheet id to default sheet id");
+        }
     }
 
     private void setupNavigation() {

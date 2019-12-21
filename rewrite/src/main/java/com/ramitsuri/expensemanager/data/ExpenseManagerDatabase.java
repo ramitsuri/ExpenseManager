@@ -6,10 +6,12 @@ import com.ramitsuri.expensemanager.data.dao.CategoryDao;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
 import com.ramitsuri.expensemanager.data.dao.LogDao;
 import com.ramitsuri.expensemanager.data.dao.PaymentMethodDao;
+import com.ramitsuri.expensemanager.data.dao.SheetDao;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -17,7 +19,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {Category.class, Expense.class, PaymentMethod.class,
-        Log.class}, version = 3, exportSchema = true)
+        Log.class, SheetInfo.class}, version = 4, exportSchema = true)
 @TypeConverters({BigDecimalConverter.class})
 public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
@@ -32,6 +34,7 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
                             ExpenseManagerDatabase.class, DB_NAME)
                             .addMigrations(DatabaseMigration.MIGRATION_1_2)
                             .addMigrations(DatabaseMigration.MIGRATION_2_3)
+                            .addMigrations(DatabaseMigration.MIGRATION_3_4)
                             .build();
                 }
             }
@@ -46,4 +49,6 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
     public abstract PaymentMethodDao paymentMethodDao();
 
     public abstract LogDao logDao();
+
+    public abstract SheetDao sheetDao();
 }

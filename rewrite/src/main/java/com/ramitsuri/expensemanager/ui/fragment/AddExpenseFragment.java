@@ -4,17 +4,20 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
+import com.ramitsuri.expensemanager.ui.adapter.SheetPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
@@ -46,8 +49,9 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private ImageView mBtnClose;
     private EditText mEditStore, mEditAmount, mEditDescription;
     private ViewGroup mLayoutDate;
-    private TextView mTextDate;
-    private ExtendedFloatingActionButton mBtnDone;
+    private TextView mTextDate, mTextChangeSheetHelp;
+    private Button mBtnChangeSheet, mBtnDone;
+    private RecyclerView mListSheets;
 
     public AddExpenseFragment() {
         // Required empty public constructor
@@ -58,6 +62,17 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_expense, container, false);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
     }
 
     @Override
@@ -104,10 +119,15 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
         // TextViews
         mTextDate = view.findViewById(R.id.text_date);
+        mTextChangeSheetHelp = view.findViewById(R.id.text_sheet_id_help);
 
         // Done
         mBtnDone = view.findViewById(R.id.btn_done);
         mBtnDone.setOnClickListener(this);
+
+        // Change Sheet
+        mBtnChangeSheet = view.findViewById(R.id.btn_change_sheet);
+        mBtnChangeSheet.setOnClickListener(this);
 
         if (expense != null) {
             // Store
@@ -187,6 +207,32 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
             }
         });
+
+        // Sheets
+        mListSheets = view.findViewById(R.id.list_sheets);
+        mListSheets.setLayoutManager(new StaggeredGridLayoutManager(
+                getResources().getInteger(R.integer.sheets_grid_view_rows),
+                StaggeredGridLayoutManager.HORIZONTAL));
+        mListSheets.setHasFixedSize(true);
+        final SheetPickerAdapter sheetsAdapter = new SheetPickerAdapter();
+        sheetsAdapter.setCallback(new SheetPickerAdapter.SheetPickerAdapterCallback() {
+            @Override
+            public void onItemPicked(SheetInfo value) {
+                onSheetPicked(value);
+            }
+        });
+        mListSheets.setAdapter(sheetsAdapter);
+        mViewModel.getSheetInfos().observe(this, new Observer<List<SheetInfo>>() {
+            @Override
+            public void onChanged(List<SheetInfo> sheetInfos) {
+                Timber.i("SheetInfos received %s", sheetInfos);
+                int selectedValue = Constants.UNDEFINED;
+                if (expense != null) {
+                    selectedValue = expense.getSheetId();
+                }
+                sheetsAdapter.setValues(sheetInfos, selectedValue);
+            }
+        });
     }
 
     @Override
@@ -197,6 +243,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             handleCloseFragmentClicked();
         } else if (view == mBtnDone) {
             handleDoneClicked();
+        } else if (view == mBtnChangeSheet) {
+            handleChangeSheetClicked();
         }
     }
 
@@ -257,6 +305,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         exitToUp();
     }
 
+    private void handleChangeSheetClicked() {
+        mBtnChangeSheet.setVisibility(View.GONE);
+        mListSheets.setVisibility(View.VISIBLE);
+    }
+
     private void onCategoryPicked(String value) {
         Timber.i("Category picked: %s", value);
         mViewModel.setExpenseCategory(value);
@@ -266,6 +319,14 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private void onPaymentMethodPicked(String value) {
         Timber.i("Payment method picked: %s", value);
         mViewModel.setExpensePaymentMethod(value);
+        removeFocusAndHideKeyboard();
+    }
+
+    private void onSheetPicked(SheetInfo value) {
+        Timber.i("Sheet picked: %s", value.toString());
+        mTextChangeSheetHelp
+                .setText(getString(R.string.add_expense_sheet_id_help, value.getSheetName()));
+        mViewModel.setExpenseSheet(value);
         removeFocusAndHideKeyboard();
     }
 

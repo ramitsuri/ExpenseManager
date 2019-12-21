@@ -41,9 +41,27 @@
 - Made visibility gone on "down arrow to indicate add expense button"
 - Add new column "sheet_id" to Expense (with migration and tests)
 
+- Modify SheetRequestHelper to generate multiple requests with sheet ids from expenses
+- Change settings fragment string version info
+- Remove settings pref current sheet id
+- Add AppHelper.defaultSheetId
+- Reduce spacing in add expense fragment layout
+- Hide no expenses help message
+- Add SheetInfo table
+- Add SheetInfo get to SheetRepository with boolean to decide whether to fetch from Google sheet
+- Modify SheetRepo constructor to take in Database object
+- Move Save button to top
+- Add SyncWorker to get info from sheet
+
+
 // TODO
 - Save to sheet
-- Smart auto backup
+- Sync to get latest
+- Flag expense
+- Error messages
+- Test limited scope
+--------------
 - Scheduled recurring expense
-- UI enhancements (animate arrow)
-- Snackbar
+- Snackbar for log
+- Do not close app on back press from fragment
+

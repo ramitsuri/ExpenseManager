@@ -4,8 +4,7 @@ import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Log;
-import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
-import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
+import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,17 +60,17 @@ public class MetadataViewModel extends ViewModel {
     }
 
     public LiveData<List<String>> getSheets() {
-        return Transformations.map(mSheetRepository.getSheetsMetadata(),
-                new Function<SheetsMetadataConsumerResponse, List<String>>() {
+        return Transformations.map(mSheetRepository.getSheetInfos(true),
+                new Function<List<SheetInfo>, List<String>>() {
                     @Override
-                    public List<String> apply(SheetsMetadataConsumerResponse input) {
+                    public List<String> apply(List<SheetInfo> input) {
                         Timber.i("Transforming sheets");
                         List<String> sheets = new ArrayList<>();
-                        for (SheetMetadata sheetMetadata : input.getSheetMetadataList()) {
-                            if (sheetMetadata != null) {
-                                String sb = sheetMetadata.getSheetName() +
+                        for (SheetInfo sheetInfo : input) {
+                            if (sheetInfo != null) {
+                                String sb = sheetInfo.getSheetName() +
                                         " | " +
-                                        sheetMetadata.getSheetId();
+                                        sheetInfo.getSheetId();
                                 sheets.add(sb);
                             }
                         }

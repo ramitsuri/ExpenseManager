@@ -21,7 +21,9 @@
     <string name="common_warning">Warning</string>
     <string name="common_setup">Setup</string>
     <string name="common_yes">Yes</string>
-    <string name="common_save">Save Expense</string>
+    <string name="common_save">Save</string>
+    <string name="common_change">Change</string>
+    <string name="common_empty"> </string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>
@@ -36,26 +38,29 @@
 
     <!-- Settings -->
     <string name="settings">Settings</string>
+    <string name="settings_title_spreadsheet_id">Spreadsheet ID</string>
+    <string name="settings_title_sheet_id">Default sheet ID</string>
+    <string name="settings_title_auto_backup">Auto backup new expenses</string>
+    <string name="settings_auto_backup_on">Automatic backup ON</string>
+    <string name="settings_auto_backup_off">Automatic backup OFF</string>
+    <string name="settings_title_theme">Choose theme</string>
+    <string name="settings_title_version_info">Version Info</string>
+    <string name="settings_summary_spreadsheet_id">Spreadsheet ID</string>
+    <string name="settings_summary_sheet_id">Current sheet ID</string>
+    <string name="settings_summary_auto_backup">Auto backup new expenses</string>
+    <string name="settings_summary_theme">Theme</string>
+    <string name="settings_hidden_options_enabled">You have enabled hidden options</string>
+
+    <!-- Settings Keys-->
     <string name="settings_key_spreadsheet_id">settings_spreadsheet_id</string>
     <string name="settings_key_sheet_id">settings_sheet_id</string>
     <string name="settings_key_auto_backup">settings_auto_backup</string>
     <string name="settings_key_theme">settings_theme</string>
     <string name="settings_key_version_info">version_info</string>
-    <string name="settings_title_spreadsheet_id">Spreadsheet ID</string>
-    <string name="settings_title_sheet_id">Current sheet ID</string>
-    <string name="settings_title_auto_backup">Auto backup new expenses</string>
-    <string name="settings_auto_backup_on">Automatic backup ON</string>
-    <string name="settings_auto_backup_off">Automatic backup OFF</string>
-    <string name="settings_title_theme">Choose theme</string>
-    <string name="settings_title_version_info">About</string>
-    <string name="settings_summary_spreadsheet_id">Spreadsheet ID</string>
-    <string name="settings_summary_sheet_id">Current sheet ID</string>
-    <string name="settings_summary_auto_backup">Auto backup new expenses</string>
-    <string name="settings_summary_theme">Theme</string>
     <string name="settings_key_account_name">settings_account_name</string>
     <string name="settings_key_account_type">settings_account_type</string>
     <string name="settings_key_enable_debug_options">enable_debug_options</string>
-    <string name="settings_hidden_options_enabled">You have enabled hidden options</string>
+    <string name="settings_key_default_sheet_id">default_sheet_id</string>
 
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>
@@ -72,6 +77,7 @@
     </string>
     <string name="you_have_unsaved_changes">You have unsaved changes</string>
     <string name="add_expense_save_expense">Save expense</string>
+    <string name="add_expense_sheet_id_help">Will be saved to %1s</string>
 
     <!-- Setup -->
     <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>

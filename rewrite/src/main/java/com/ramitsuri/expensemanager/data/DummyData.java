@@ -119,6 +119,7 @@ public class DummyData {
         expense.setStore(getStores()[0]);
         expense.setIsStarred(true);
         expense.setIsSynced(false);
+        expense.setSheetId(1);
         expenses.add(expense);
 
         expense = new Expense();
@@ -130,6 +131,7 @@ public class DummyData {
         expense.setStore(getStores()[5]);
         expense.setIsStarred(false);
         expense.setIsSynced(true);
+        expense.setSheetId(2);
         expenses.add(expense);
 
         expense = new Expense();
@@ -141,6 +143,7 @@ public class DummyData {
         expense.setStore(getStores()[9]);
         expense.setIsStarred(true);
         expense.setIsSynced(false);
+        expense.setSheetId(3);
         expenses.add(expense);
 
         expense = new Expense();
@@ -152,6 +155,7 @@ public class DummyData {
         expense.setStore(getStores()[13]);
         expense.setIsStarred(false);
         expense.setIsSynced(false);
+        expense.setSheetId(1);
         expenses.add(expense);
 
         expense = new Expense();
@@ -163,6 +167,7 @@ public class DummyData {
         expense.setStore(getStores()[7]);
         expense.setIsStarred(false);
         expense.setIsSynced(false);
+        expense.setSheetId(2);
         expenses.add(expense);
 
         expense = new Expense();
@@ -174,6 +179,7 @@ public class DummyData {
         expense.setStore(getStores()[3]);
         expense.setIsStarred(true);
         expense.setIsSynced(true);
+        expense.setSheetId(3);
         expenses.add(expense);
 
         expense = new Expense();
@@ -185,6 +191,7 @@ public class DummyData {
         expense.setStore(getStores()[10]);
         expense.setIsStarred(false);
         expense.setIsSynced(false);
+        expense.setSheetId(1);
         expenses.add(expense);
 
         expense = new Expense();
@@ -196,6 +203,7 @@ public class DummyData {
         expense.setStore(getStores()[5]);
         expense.setIsStarred(false);
         expense.setIsSynced(false);
+        expense.setSheetId(1);
         expenses.add(expense);
 
         expense = new Expense();
@@ -207,6 +215,7 @@ public class DummyData {
         expense.setStore(getStores()[1]);
         expense.setIsStarred(false);
         expense.setIsSynced(true);
+        expense.setSheetId(2);
         expenses.add(expense);
 
         expense = new Expense();
@@ -218,6 +227,7 @@ public class DummyData {
         expense.setStore(getStores()[2]);
         expense.setIsStarred(true);
         expense.setIsSynced(false);
+        expense.setSheetId(3);
         expenses.add(expense);
 
         expense = new Expense();
@@ -229,6 +239,7 @@ public class DummyData {
         expense.setStore(getStores()[13]);
         expense.setIsStarred(false);
         expense.setIsSynced(false);
+        expense.setSheetId(2);
         expenses.add(expense);
 
         expense = new Expense();
@@ -240,6 +251,7 @@ public class DummyData {
         expense.setStore(getStores()[10]);
         expense.setIsStarred(false);
         expense.setIsSynced(false);
+        expense.setSheetId(2);
         expenses.add(expense);
 
         expense = new Expense();
@@ -251,6 +263,7 @@ public class DummyData {
         expense.setStore(getStores()[2]);
         expense.setIsStarred(true);
         expense.setIsSynced(true);
+        expense.setSheetId(-1);
         expenses.add(expense);
 
         return expenses;

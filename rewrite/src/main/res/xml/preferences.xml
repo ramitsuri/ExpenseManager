@@ -8,12 +8,6 @@
         android:title="@string/settings_title_spreadsheet_id"
         app:useSimpleSummaryProvider="true" />
 
-    <EditTextPreference
-        android:dialogTitle="@string/settings_title_sheet_id"
-        android:key="@string/settings_key_sheet_id"
-        android:title="@string/settings_title_sheet_id"
-        app:useSimpleSummaryProvider="true" />
-
     <ListPreference
         android:dialogTitle="@string/settings_title_theme"
         android:entries="@array/theme_titles"

@@ -183,7 +183,7 @@ public class ExpensesFragment extends BaseFragment {
         boolean doCalculation = false;
         if (expenses.size() == 0) {
             mTextInfoEmpty.setVisibility(View.VISIBLE);
-            mTextInfoEmptyHelp.setVisibility(View.VISIBLE);
+            mTextInfoEmptyHelp.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.GONE);
         } else {
             doCalculation = true;

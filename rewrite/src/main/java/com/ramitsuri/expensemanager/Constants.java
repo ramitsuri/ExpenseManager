@@ -6,6 +6,8 @@ public class Constants {
 
     public static final String[] SCOPES = {SheetsScopes.SPREADSHEETS, SheetsScopes.DRIVE};
 
+    public static final int UNDEFINED = -1;
+
     public class BundleKeys {
         public static final String PICKER_VALUES = "picker_values";
         public static final String PICKED_ITEM = "picked_item";
@@ -31,6 +33,7 @@ public class Constants {
     public class Tag {
         public static final String ONE_TIME_BACKUP = "one_time_backup";
         public static final String SCHEDULED_BACKUP = "scheduled_backup";
+        public static final String ONE_TIME_SYNC = "one_time_sync";
     }
 
     public class Range {
@@ -54,6 +57,7 @@ public class Constants {
     public class LogType {
         public static final String PERIODIC_BACKUP = "periodic_backup";
         public static final String ONE_TIME_BACKUP = "one_time_backup";
+        public static final String ONE_TIME_SYNC = "one_time_sync";
     }
 
     public class LogResult {

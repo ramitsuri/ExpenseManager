@@ -6,7 +6,9 @@ import android.content.Context;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.ramitsuri.expensemanager.AppExecutors;
+import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.SheetRequestHelper;
 import com.ramitsuri.sheetscore.SheetsProcessor;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
@@ -23,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,29 +36,54 @@ public class SheetRepository {
 
     private SheetsProcessor mSheetsProcessor;
     private AppExecutors mExecutors;
+    private ExpenseManagerDatabase mDatabase;
 
     public SheetRepository(@NonNull Context context, @NonNull String appName,
             @NonNull Account account, @NonNull String spreadsheetId, @NonNull List<String> scopes,
-            @NonNull AppExecutors executors) {
+            @NonNull AppExecutors executors, @Nonnull ExpenseManagerDatabase database) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, spreadsheetId, scopes);
         mExecutors = executors;
+        mDatabase = database;
     }
 
     /**
      * Method that runs in a background thread and prepares sheet metadata response with names and
      * ids of all the sheets present in a spreadsheet
      */
-    public LiveData<SheetsMetadataConsumerResponse> getSheetsMetadata() {
-        final MutableLiveData<SheetsMetadataConsumerResponse> responseLiveData =
+    public LiveData<List<SheetInfo>> getSheetInfos(boolean fetch) {
+        final MutableLiveData<List<SheetInfo>> sheetInfosLiveData =
                 new MutableLiveData<>();
-        mExecutors.networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                SheetsMetadataConsumerResponse response = getSheetsMetadataResponse();
-                responseLiveData.postValue(response);
-            }
-        });
-        return responseLiveData;
+        if (fetch) {
+            Timber.i("Getting sheet infos from Google Sheet");
+            mExecutors.networkIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    SheetsMetadataConsumerResponse response = getSheetsMetadataResponse();
+                    List<SheetInfo> sheetInfos = new ArrayList<>();
+                    if (response.getSheetMetadataList() != null) {
+                        for (SheetMetadata sheetMetadata : response.getSheetMetadataList()) {
+                            sheetInfos.add(new SheetInfo(sheetMetadata));
+                        }
+                    }
+                    sheetInfosLiveData.postValue(sheetInfos);
+                    mDatabase.sheetDao().setAll(sheetInfos);
+                }
+            });
+        } else {
+            Timber.i("Getting sheet infos from local db");
+            mExecutors.diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    List<SheetInfo> sheetInfos = new ArrayList<>();
+                    List<SheetInfo> values = mDatabase.sheetDao().getAll();
+                    if (values != null) {
+                        sheetInfos.addAll(mDatabase.sheetDao().getAll());
+                    }
+                    sheetInfosLiveData.postValue(sheetInfos);
+                }
+            });
+        }
+        return sheetInfosLiveData;
     }
 
     /**
@@ -119,7 +148,7 @@ public class SheetRepository {
         return responseLiveData;
     }
 
-    private SheetsMetadataConsumerResponse getSheetsMetadataResponse() {
+    public SheetsMetadataConsumerResponse getSheetsMetadataResponse() {
         SheetsMetadataConsumerResponse consumerResponse = new SheetsMetadataConsumerResponse();
         try {
             BaseSpreadsheetResponse response = mSheetsProcessor.getSheetsInSpreadsheet();
@@ -143,7 +172,7 @@ public class SheetRepository {
         return consumerResponse;
     }
 
-    private EntitiesConsumerResponse getEntityDataResponse(String range) {
+    public EntitiesConsumerResponse getEntityDataResponse(String range) {
         EntitiesConsumerResponse consumerResponse = new EntitiesConsumerResponse();
         try {
             BaseSpreadsheetResponse response =

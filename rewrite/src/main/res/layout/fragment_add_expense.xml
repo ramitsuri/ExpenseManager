@@ -17,8 +17,9 @@
             android:layout_height="@dimen/button_size_small"
             android:contentDescription="@string/content_description_close_fragment"
             android:tint="?attr/colorControlNormal"
+            app:layout_constraintBottom_toBottomOf="@id/btn_done"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_done"
             app:srcCompat="@drawable/ic_close" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -34,7 +35,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_header_category" />
+            app:layout_constraintTop_toBottomOf="@id/text_header_category"
+            tools:itemCount="2"
+            tools:listitem="@layout/list_picker_item" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_payment_methods"
@@ -42,7 +45,42 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_header_payment_methods" />
+            app:layout_constraintTop_toBottomOf="@id/text_header_payment_methods"
+            tools:itemCount="2"
+            tools:listitem="@layout/list_picker_item" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_sheets"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_sheet_id_help"
+            tools:itemCount="1"
+            tools:listitem="@layout/list_picker_item" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_done"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/common_save"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/color_teal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_change_sheet"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/common_change"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="@id/text_sheet_id_help"
+            app:layout_constraintStart_toEndOf="@id/text_sheet_id_help"
+            app:layout_constraintTop_toTopOf="@id/text_sheet_id_help" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/layout_date"
@@ -83,7 +121,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_small"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:gravity="center"
             android:hint="@string/add_expense_amount"
             android:nextFocusForward="@+id/edit_text_store"
@@ -105,7 +143,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:hint="@string/add_expense_additional_info"
             android:nextFocusForward="@+id/edit_text_description"
             app:layout_constraintEnd_toEndOf="parent"
@@ -126,7 +164,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:hint="@string/add_expense_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +183,7 @@
             android:id="@+id/text_header_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:text="@string/common_category"
             android:textAllCaps="true"
             android:textSize="@dimen/text_medium"
@@ -158,7 +196,7 @@
             android:id="@+id/text_header_payment_methods"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:text="@string/common_payment_method"
             android:textAllCaps="true"
             android:textSize="@dimen/text_medium"
@@ -167,16 +205,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_categories" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_sheet_id_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/list_payment_methods"
+            tools:text="Will be saved to Dec" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/btn_done"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/button_size_medium"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/margin_small"
-        android:text="@string/common_save"
-        app:backgroundTint="@color/color_teal" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

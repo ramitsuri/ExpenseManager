@@ -33,7 +33,8 @@
 
     <fragment
         android:id="@+id/fragment_settings"
-        android:name="com.ramitsuri.expensemanager.ui.fragment.SettingsFragment" />
+        android:name="com.ramitsuri.expensemanager.ui.fragment.SettingsFragment"
+        android:label="@string/common_empty" />
 
     <fragment
         android:id="@+id/fragment_metadata"
@@ -42,6 +43,7 @@
     <fragment
         android:id="@+id/fragment_add_expense"
         android:name="com.ramitsuri.expensemanager.ui.fragment.AddExpenseFragment"
+        android:label="@string/common_empty"
         tools:layout="@layout/fragment_add_expense">
         <argument
             android:name="expense"

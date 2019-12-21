@@ -40,10 +40,6 @@ public class AppHelper {
         return PrefHelper.get(getString(R.string.settings_key_sheet_id), null);
     }
 
-    public static void setCurrentSheetId(String currentSheetId) {
-        PrefHelper.set(getString(R.string.settings_key_sheet_id), currentSheetId);
-    }
-
     public static String getCurrentTheme() {
         return PrefHelper.get(getString(R.string.settings_key_theme), null);
     }
@@ -91,6 +87,15 @@ public class AppHelper {
 
     public static boolean isDebugOptionEnabled() {
         return PrefHelper.get(getString(R.string.settings_key_enable_debug_options), false);
+    }
+
+    public static void setDefaultSheetId(int sheetId) {
+        PrefHelper.set(getString(R.string.settings_key_default_sheet_id), sheetId);
+    }
+
+    public static int getDefaultSheetId() {
+        return PrefHelper
+                .get(getString(R.string.settings_key_default_sheet_id), Constants.UNDEFINED);
     }
 
     private static String getString(@StringRes int resourceId) {
