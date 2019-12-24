@@ -58,6 +58,13 @@
 - Add a way to sync data from Sheets in MainActivity
 - Update ExpenseDao.updateExpense() to update sheet id
 
+- Fix default sheet selection bug
+- Rename AddExpenseViewModel methods to remove expense from name
+- Use expense instance from ViewModel instead of what's received as argument in Add Expense fragment
+- Add landscape support to expenses, add expense
+- Fix status and nav bar color issues
+- Change bottom sheet dialog color
+
 // TODO
 - Flag expense
 - Error messages

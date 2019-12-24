@@ -24,6 +24,7 @@ import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.AddExpenseViewModel;
 import com.ramitsuri.expensemanager.viewModel.ViewModelFactory;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -97,12 +98,12 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mViewModel = ViewModelProviders.of(this, new ViewModelFactory(expense))
                 .get(AddExpenseViewModel.class);
 
-        setupViews(view, expense);
+        setupViews(view);
 
-        setupRecyclerViews(view, expense);
+        setupRecyclerViews(view);
     }
 
-    private void setupViews(View view, @Nullable Expense expense) {
+    private void setupViews(View view) {
         // Close
         mBtnClose = view.findViewById(R.id.btn_close);
         mBtnClose.setOnClickListener(this);
@@ -128,33 +129,32 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mBtnChangeSheet = view.findViewById(R.id.btn_change_sheet);
         mBtnChangeSheet.setOnClickListener(this);
 
-        if (expense != null) {
-            // Store
-            String value = expense.getStore();
-            if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
-                mEditStore.setText(value);
-                mEditStore.setSelection(value.length());
-            }
-            // Description
-            value = expense.getDescription();
-            if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
-                mEditDescription.setText(value);
-                mEditDescription.setSelection(value.length());
-            }
-            // Date
-            long longValue = expense.getDateTime();
-            mTextDate.setText(DateHelper.getFriendlyDate(longValue));
+        // Store
+        String value = mViewModel.getStore();
+        if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
+            mEditStore.setText(value);
+            mEditStore.setSelection(value.length());
+        }
+        // Description
+        value = mViewModel.getDescription();
+        if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
+            mEditDescription.setText(value);
+            mEditDescription.setSelection(value.length());
+        }
+        // Date
+        long longValue = mViewModel.getDate();
+        mTextDate.setText(DateHelper.getFriendlyDate(longValue));
 
-            // Amount
-            if (expense.getAmount() != null) {
-                value = expense.getAmount().toString();
-                mEditAmount.setText(value);
-                mEditAmount.setSelection(value.length());
-            }
+        // Amount
+        if (mViewModel.getAmount() != null &&
+                mViewModel.getAmount().compareTo(BigDecimal.ZERO) != 0) {
+            value = mViewModel.getAmount().toString();
+            mEditAmount.setText(value);
+            mEditAmount.setSelection(value.length());
         }
     }
 
-    private void setupRecyclerViews(View view, @Nullable final Expense expense) {
+    private void setupRecyclerViews(View view) {
         // Categories
         RecyclerView listCategories = view.findViewById(R.id.list_categories);
         listCategories.setLayoutManager(new StaggeredGridLayoutManager(
@@ -174,9 +174,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             public void onChanged(List<String> categories) {
                 Timber.i("Categories received %s", categories);
                 String selectedValue = null;
-                if (expense != null) {
-                    selectedValue = expense.getCategory();
-                }
+                selectedValue = mViewModel.getCategory();
                 categoriesAdapter.setValues(categories, selectedValue);
             }
         });
@@ -200,9 +198,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             public void onChanged(List<String> paymentMethods) {
                 Timber.i("Payment Methods received %s", paymentMethods);
                 String selectedValue = null;
-                if (expense != null) {
-                    selectedValue = expense.getPaymentMethod();
-                }
+                selectedValue = mViewModel.getPaymentMethod();
                 paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
             }
         });
@@ -225,14 +221,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onChanged(List<SheetInfo> sheetInfos) {
                 Timber.i("SheetInfos received %s", sheetInfos);
-                int selectedValue = Constants.UNDEFINED;
-                if (expense != null) {
-                    selectedValue = expense.getSheetId();
-                    for (SheetInfo info : sheetInfos) {
-                        if (selectedValue == info.getSheetId()) {
-                            onSheetPicked(info);
-                            break;
-                        }
+                int selectedValue = mViewModel.getSheetId();
+                for (SheetInfo info : sheetInfos) {
+                    if (selectedValue == info.getSheetId()) {
+                        onSheetPicked(info);
+                        break;
                     }
                 }
                 sheetsAdapter.setValues(sheetInfos, selectedValue);
@@ -276,7 +269,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private void handleDateClicked() {
         removeFocusAndHideKeyboard();
-        LocalDate localDate = DateHelper.getLocalDate(new Date(mViewModel.getExpenseDate()));
+        LocalDate localDate = DateHelper.getLocalDate(new Date(mViewModel.getDate()));
         int year = DateHelper.getYearFromDate(localDate);
         int month = DateHelper.getMonthFromDate(localDate);
         int day = DateHelper.getDayFromDate(localDate);
@@ -299,13 +292,13 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private void handleDoneClicked() {
         Timber.i("Attempting save");
         removeFocusAndHideKeyboard();
-        mViewModel.setExpenseAmount(getExpenseAmount());
-        mViewModel.setExpenseStore(getExpenseStore());
-        mViewModel.setExpenseDescription(getExpenseDescription());
+        mViewModel.setAmount(getExpenseAmount());
+        mViewModel.setStore(getExpenseStore());
+        mViewModel.setDescription(getExpenseDescription());
         if (mViewModel.getAddMode() == Constants.AddExpenseMode.ADD) {
-            mViewModel.addExpense();
+            mViewModel.add();
         } else {
-            mViewModel.editExpense();
+            mViewModel.edit();
         }
         exitToUp();
     }
@@ -317,13 +310,13 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private void onCategoryPicked(String value) {
         Timber.i("Category picked: %s", value);
-        mViewModel.setExpenseCategory(value);
+        mViewModel.setCategory(value);
         removeFocusAndHideKeyboard();
     }
 
     private void onPaymentMethodPicked(String value) {
         Timber.i("Payment method picked: %s", value);
-        mViewModel.setExpensePaymentMethod(value);
+        mViewModel.setPaymentMethod(value);
         removeFocusAndHideKeyboard();
     }
 
@@ -331,7 +324,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         Timber.i("Sheet picked: %s", value.toString());
         mTextChangeSheetHelp
                 .setText(getString(R.string.add_expense_sheet_id_help, value.getSheetName()));
-        mViewModel.setExpenseSheet(value);
+        mViewModel.setSheet(value);
         removeFocusAndHideKeyboard();
     }
 
@@ -340,7 +333,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         Timber.i("Date picked: %s/%s/%s", month + 1, day, year);
         long pickedDate = DateHelper.getDateFromYearMonthDay(year, month, day);
         mTextDate.setText(DateHelper.getFriendlyDate(pickedDate));
-        mViewModel.setExpenseDate(pickedDate);
+        mViewModel.setDate(pickedDate);
     }
 
     private String getExpenseAmount() {

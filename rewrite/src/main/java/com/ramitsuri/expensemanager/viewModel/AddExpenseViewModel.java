@@ -29,9 +29,6 @@ import androidx.lifecycle.ViewModel;
 public class AddExpenseViewModel extends ViewModel {
 
     private ExpenseRepository mExpenseRepo;
-    private CategoryRepository mCategoryRepo;
-    private PaymentMethodRepository mPaymentMethodRepo;
-    private SheetRepository mSheetRepo;
 
     private Expense mExpense;
     private LiveData<List<String>> mCategories;
@@ -45,11 +42,12 @@ public class AddExpenseViewModel extends ViewModel {
         super();
 
         mExpenseRepo = MainApplication.getInstance().getExpenseRepo();
-        mCategoryRepo = MainApplication.getInstance().getCategoryRepo();
-        mPaymentMethodRepo = MainApplication.getInstance().getPaymentMethodRepo();
-        mSheetRepo = MainApplication.getInstance().getSheetRepository();
+        CategoryRepository categoryRepo = MainApplication.getInstance().getCategoryRepo();
+        PaymentMethodRepository paymentMethodRepo =
+                MainApplication.getInstance().getPaymentMethodRepo();
+        SheetRepository sheetRepo = MainApplication.getInstance().getSheetRepository();
 
-        mCategories = Transformations.map(mCategoryRepo.getCategories(),
+        mCategories = Transformations.map(categoryRepo.getCategories(),
                 new Function<List<Category>, List<String>>() {
                     @Override
                     public List<String> apply(List<Category> categories) {
@@ -62,7 +60,7 @@ public class AddExpenseViewModel extends ViewModel {
                         return categoryStrings;
                     }
                 });
-        mPaymentMethods = Transformations.map(mPaymentMethodRepo.getPaymentMethods(),
+        mPaymentMethods = Transformations.map(paymentMethodRepo.getPaymentMethods(),
                 new Function<List<PaymentMethod>, List<String>>() {
                     @Override
                     public List<String> apply(List<PaymentMethod> paymentMethods) {
@@ -76,7 +74,7 @@ public class AddExpenseViewModel extends ViewModel {
                     }
                 });
 
-        mSheetInfos = Transformations.map(mSheetRepo.getSheetInfos(false),
+        mSheetInfos = Transformations.map(sheetRepo.getSheetInfos(false),
                 new Function<List<SheetInfo>, List<SheetInfo>>() {
                     @Override
                     public List<SheetInfo> apply(List<SheetInfo> input) {
@@ -110,29 +108,34 @@ public class AddExpenseViewModel extends ViewModel {
         return mSheetInfos;
     }
 
-    public void addExpense() {
+    public void add() {
         Expense expense = mExpense;
         mExpenseRepo.insertExpense(expense);
         AppHelper.setDefaultSheetId(expense.getSheetId());
         reset(null);
     }
 
-    public void editExpense() {
+    public void edit() {
         Expense expense = mExpense;
         mExpenseRepo.editExpense(expense);
         reset(null);
     }
 
-    public long getExpenseDate() {
+    public long getDate() {
         return mExpense.getDateTime();
     }
 
-    public void setExpenseDate(long date) {
+    public void setDate(long date) {
         mExpense.setDateTime(date);
         setChangesMade();
     }
 
-    public void setExpenseCategory(@NonNull String category) {
+    @Nullable
+    public String getCategory() {
+        return mExpense.getCategory();
+    }
+
+    public void setCategory(@NonNull String category) {
         boolean changesMade = !category.equals(mExpense.getCategory());
         if (changesMade) {
             //setChangesMade();
@@ -140,7 +143,12 @@ public class AddExpenseViewModel extends ViewModel {
         }
     }
 
-    public void setExpensePaymentMethod(@NonNull String paymentMethod) {
+    @Nullable
+    public String getPaymentMethod() {
+        return mExpense.getPaymentMethod();
+    }
+
+    public void setPaymentMethod(@NonNull String paymentMethod) {
         boolean changesMade = !paymentMethod.equals(mExpense.getPaymentMethod());
         if (changesMade) {
             //setChangesMade();
@@ -148,7 +156,7 @@ public class AddExpenseViewModel extends ViewModel {
         }
     }
 
-    public void setExpenseAmount(@NonNull String amount) {
+    public void setAmount(@NonNull String amount) {
         BigDecimal bdAmount = new BigDecimal(amount);
         boolean changesMade = !(bdAmount.compareTo(mExpense.getAmount()) == 0);
         if (changesMade) {
@@ -157,7 +165,12 @@ public class AddExpenseViewModel extends ViewModel {
         }
     }
 
-    public void setExpenseStore(@NonNull String store) {
+    @Nullable
+    public BigDecimal getAmount() {
+        return mExpense.getAmount();
+    }
+
+    public void setStore(@NonNull String store) {
         boolean changesMade = !store.equals(mExpense.getStore());
         if (changesMade) {
             setChangesMade();
@@ -165,16 +178,30 @@ public class AddExpenseViewModel extends ViewModel {
         }
     }
 
-    public void setExpenseDescription(@NonNull String description) {
+    @Nullable
+    public String getStore() {
+        return mExpense.getStore();
+    }
+
+    public void setDescription(@NonNull String description) {
         mExpense.setDescription(description);
         setChangesMade();
     }
 
-    public void setExpenseSheet(@Nonnull SheetInfo sheetInfo) {
+    @Nullable
+    public String getDescription() {
+        return mExpense.getDescription();
+    }
+
+    public void setSheet(@Nonnull SheetInfo sheetInfo) {
         boolean changesMade = sheetInfo.getSheetId() != mExpense.getSheetId();
         if (changesMade) {
             mExpense.setSheetId(sheetInfo.getSheetId());
         }
+    }
+
+    public int getSheetId() {
+        return mExpense.getSheetId();
     }
 
     public boolean isChangesMade() {

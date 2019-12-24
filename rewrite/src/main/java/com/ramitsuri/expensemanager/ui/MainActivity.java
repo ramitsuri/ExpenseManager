@@ -1,9 +1,11 @@
 package com.ramitsuri.expensemanager.ui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.Constants;
@@ -43,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
         mLastPressTime = 0;
 
         migrateCurrentToDefaultSheetId();
+
+        // Set dark nav and status bar if light theme
+        if ((getResources().getConfiguration().uiMode &
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
+            Timber.i("Light theme, setting status and nav bar light flag");
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
+                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        }
     }
 
     private void migrateCurrentToDefaultSheetId() {

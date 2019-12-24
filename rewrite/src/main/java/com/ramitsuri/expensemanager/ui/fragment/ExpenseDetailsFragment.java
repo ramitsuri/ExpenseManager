@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
+import android.app.Dialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
@@ -17,6 +20,7 @@ import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import timber.log.Timber;
 
 public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
@@ -38,11 +42,25 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
         mCallback = callback;
     }
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new BottomSheetDialog(getContext(), R.style.BottomSheetDialogTheme);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_expense_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_expense_details, container, false);
+        if ((getResources().getConfiguration().uiMode &
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
+            Timber.i("Light theme, setting status and nav bar light flag");
+            view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
+                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        }
+
+        return view;
     }
 
     @Override

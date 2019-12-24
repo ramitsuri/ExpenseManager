@@ -9,7 +9,16 @@
     </style>
 
     <style name="BaseTheme" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/dialog_bg</item>
+    </style>
 
+    <style name="BottomSheetDialogTheme" parent="Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="android:colorBackground">@color/dialog_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/dialog_bg</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 
 </resources>

@@ -34,7 +34,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
@@ -116,10 +116,29 @@ public class ExpensesFragment extends BaseFragment {
 
     private void setupListExpenses(View view) {
         final RecyclerView listExpenses = view.findViewById(R.id.list_expenses);
-        listExpenses.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final int numberOfColumns = getResources().getInteger(R.integer.expenses_grid_columns);
+        GridLayoutManager manager = new GridLayoutManager(getActivity(), numberOfColumns);
 
         final ExpenseAdapter adapter = new ExpenseAdapter();
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(
+                    int position) { // Set headers to span the whole width of recycler view
+                @ListItemType
+                int itemType = adapter.getItemViewType(position);
+                switch (itemType) {
+                    case ListItemType.HEADER:
+                        return numberOfColumns;
+
+                    case ListItemType.ITEM:
+
+                    default:
+                        return 1; // Width should span only 1 column for items
+                }
+            }
+        });
         listExpenses.setAdapter(adapter);
+        listExpenses.setLayoutManager(manager);
         mExpensesViewModel.getExpenses().observe(this, new Observer<List<ExpenseWrapper>>() {
             @Override
             public void onChanged(List<ExpenseWrapper> expenses) {

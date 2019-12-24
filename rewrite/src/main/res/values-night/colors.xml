@@ -4,4 +4,6 @@
     <color name="bg_grey">#262626</color>
     <color name="color_red">#ba000d</color>
     <color name="color_teal">#00675b</color>
+
+    <color name="dialog_bg">#121212</color>
 </resources>

@@ -36,4 +36,7 @@
     <!-- Icons -->
     <dimen name="icon_size_small">12dp</dimen>
     <dimen name="icon_size_medium">20dp</dimen>
+
+    <!-- Expenses -->
+    <item name="horizontal_guideline_percent" type="dimen">0.1</item>
 </resources>
