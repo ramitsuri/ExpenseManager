@@ -41,6 +41,9 @@
 - Made visibility gone on "down arrow to indicate add expense button"
 - Add new column "sheet_id" to Expense (with migration and tests)
 
+- Fix crash amount formatting
+- Fix crash with hint on edit text with layout
+
 - Modify SheetRequestHelper to generate multiple requests with sheet ids from expenses
 - Change settings fragment string version info
 - Remove settings pref current sheet id
@@ -52,14 +55,14 @@
 - Modify SheetRepo constructor to take in Database object
 - Move Save button to top
 - Add SyncWorker to get info from sheet
-
+- Add a way to sync data from Sheets in MainActivity
+- Update ExpenseDao.updateExpense() to update sheet id
 
 // TODO
-- Save to sheet
-- Sync to get latest
 - Flag expense
 - Error messages
 - Test limited scope
+- Extract id from url
 --------------
 - Scheduled recurring expense
 - Snackbar for log

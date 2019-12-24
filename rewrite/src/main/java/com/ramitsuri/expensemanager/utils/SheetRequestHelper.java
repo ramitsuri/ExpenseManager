@@ -29,19 +29,11 @@ public class SheetRequestHelper {
             List<Expense> expensesToBackup,
             List<String> categories,
             List<String> paymentMethods,
-            String defaultSheetId) {
+            int defaultSheetId) {
         BatchUpdateSpreadsheetRequest requestBody = new BatchUpdateSpreadsheetRequest();
         List<Request> requests = new ArrayList<>();
 
-        int defaultSheetIdInt;
-        try {
-            defaultSheetIdInt = Integer.parseInt(defaultSheetId);
-        } catch (NumberFormatException ex) {
-            Timber.e("Failed to convert default sheet id to int");
-            return null;
-        }
-
-        SparseArray<List<Expense>> map = getSheetIdExpenseMap(expensesToBackup, defaultSheetIdInt);
+        SparseArray<List<Expense>> map = getSheetIdExpenseMap(expensesToBackup, defaultSheetId);
 
         for (int i = 0; i < map.size(); i++) {
             int sheetId = map.keyAt(i);

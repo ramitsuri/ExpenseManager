@@ -19,7 +19,6 @@ import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanager.ui.adapter.SheetPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
-import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.AddExpenseViewModel;
@@ -229,6 +228,12 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 int selectedValue = Constants.UNDEFINED;
                 if (expense != null) {
                     selectedValue = expense.getSheetId();
+                    for (SheetInfo info : sheetInfos) {
+                        if (selectedValue == info.getSheetId()) {
+                            onSheetPicked(info);
+                            break;
+                        }
+                    }
                 }
                 sheetsAdapter.setValues(sheetInfos, selectedValue);
             }

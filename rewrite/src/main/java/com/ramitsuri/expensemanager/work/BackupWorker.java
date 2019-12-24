@@ -28,16 +28,8 @@ public class BackupWorker extends BaseWorker {
     @NonNull
     @Override
     public Result doWork() {
-        String sheetId = AppHelper.getCurrentSheetId();
+        int sheetId = AppHelper.getDefaultSheetId();
         String workType = getInputData().getString(Constants.Work.TYPE);
-
-        if (sheetId == null) {
-            Timber.i("SheetId is null");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "SheetId is null");
-            return Result.failure();
-        }
 
         if (MainApplication.getInstance().getSheetRepository() == null) {
             Timber.i("Sheet repo null");

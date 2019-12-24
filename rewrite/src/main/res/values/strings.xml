@@ -9,6 +9,7 @@
     <string name="hello_settings_fragment">Hello Settings fragment</string>
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
     <string name="common_sync_now">Backup now</string>
+    <string name="common_sync">Sync</string>
     <string name="common_edit">Edit</string>
     <string name="common_delete">Delete</string>
     <string name="expense_divider">•</string>

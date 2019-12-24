@@ -6,6 +6,10 @@
         android:title="@string/common_sync_now"
         app:showAsAction="never" />
     <item
+        android:id="@+id/menu_sync"
+        android:title="@string/common_sync"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/fragment_metadata"
         android:title="@string/action_meta_data"
         app:showAsAction="never" />

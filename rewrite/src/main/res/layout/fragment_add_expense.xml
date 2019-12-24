@@ -1,222 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.AddExpenseFragment">
+    android:padding="@dimen/padding_small">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/padding_small">
+    <ImageView
+        android:id="@+id/btn_close"
+        android:layout_width="@dimen/button_size_small"
+        android:layout_height="@dimen/button_size_small"
+        android:contentDescription="@string/content_description_close_fragment"
+        android:tint="?attr/colorControlNormal"
+        app:layout_constraintBottom_toBottomOf="@id/btn_done"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_done"
+        app:srcCompat="@drawable/ic_close" />
 
-        <ImageView
-            android:id="@+id/btn_close"
-            android:layout_width="@dimen/button_size_small"
-            android:layout_height="@dimen/button_size_small"
-            android:contentDescription="@string/content_description_close_fragment"
-            android:tint="?attr/colorControlNormal"
-            app:layout_constraintBottom_toBottomOf="@id/btn_done"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_done"
-            app:srcCompat="@drawable/ic_close" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_vertical_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_vertical_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_categories"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_header_category"
+        tools:itemCount="2"
+        tools:listitem="@layout/list_picker_item" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_categories"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_header_category"
-            tools:itemCount="2"
-            tools:listitem="@layout/list_picker_item" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_payment_methods"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_header_payment_methods"
+        tools:itemCount="2"
+        tools:listitem="@layout/list_picker_item" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_payment_methods"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_header_payment_methods"
-            tools:itemCount="2"
-            tools:listitem="@layout/list_picker_item" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_sheets"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_sheet_id_help"
+        tools:itemCount="1"
+        tools:listitem="@layout/list_picker_item" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_sheets"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_sheet_id_help"
-            tools:itemCount="1"
-            tools:listitem="@layout/list_picker_item" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_done"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/common_save"
+        android:textAllCaps="false"
+        app:backgroundTint="@color/color_teal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_done"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/common_save"
-            android:textAllCaps="false"
-            app:backgroundTint="@color/color_teal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_change_sheet"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/common_change"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintBottom_toBottomOf="@id/text_sheet_id_help"
+        app:layout_constraintStart_toEndOf="@id/text_sheet_id_help"
+        app:layout_constraintTop_toTopOf="@id/text_sheet_id_help" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_change_sheet"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/common_change"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintBottom_toBottomOf="@id/text_sheet_id_help"
-            app:layout_constraintStart_toEndOf="@id/text_sheet_id_help"
-            app:layout_constraintTop_toTopOf="@id/text_sheet_id_help" />
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/layout_date"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="@id/layout_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guide_vertical_1"
+        app:layout_constraintTop_toTopOf="@id/layout_amount">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/layout_date"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/margin_extra_small"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintBottom_toBottomOf="@id/layout_amount"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guide_vertical_1"
-            app:layout_constraintTop_toTopOf="@id/layout_amount">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_extra_small">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/text_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:drawablePadding="@dimen/padding_extra_extra_small"
-                    android:drawableStart="@drawable/ic_date"
-                    android:drawableTint="?attr/colorControlNormal"
-                    android:text="@string/add_expense_today"
-                    android:textSize="@dimen/text_large" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_amount"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_small"
-            android:layout_marginTop="@dimen/margin_small"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:hint="@string/add_expense_amount"
-            android:nextFocusForward="@+id/edit_text_store"
-            app:layout_constraintEnd_toStartOf="@id/guide_vertical_1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_close"
-            app:startIconDrawable="@drawable/ic_amount">
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_extra_small">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_amount"
-                android:layout_width="match_parent"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_date"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal|numberSigned" />
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="@dimen/padding_extra_extra_small"
+                android:drawableStart="@drawable/ic_date"
+                android:drawableTint="?attr/colorControlNormal"
+                android:text="@string/add_expense_today"
+                android:textSize="@dimen/text_large" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_store"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_amount"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:gravity="center"
+        android:hint="@string/add_expense_amount"
+        android:nextFocusForward="@+id/edit_text_store"
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_close"
+        app:startIconDrawable="@drawable/ic_amount">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_amount"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:hint="@string/add_expense_additional_info"
-            android:nextFocusForward="@+id/edit_text_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_amount"
-            app:startIconDrawable="@drawable/ic_store">
+            android:inputType="numberDecimal|numberSigned" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_store"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapSentences" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_store"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:hint="@string/add_expense_additional_info"
+        android:nextFocusForward="@+id/edit_text_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_amount"
+        app:startIconDrawable="@drawable/ic_store">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_description"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_store"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:hint="@string/add_expense_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_store"
-            app:startIconDrawable="@drawable/ic_description">
+            android:inputType="textCapSentences" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapSentences" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_description"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:hint="@string/add_expense_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_store"
+        app:startIconDrawable="@drawable/ic_description">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/text_header_category"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_description"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/common_category"
-            android:textAllCaps="true"
-            android:textSize="@dimen/text_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_description" />
+            android:inputType="textCapSentences" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/text_header_payment_methods"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/common_payment_method"
-            android:textAllCaps="true"
-            android:textSize="@dimen/text_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_categories" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/text_sheet_id_help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_payment_methods"
-            tools:text="Will be saved to Dec" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_header_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="@string/common_category"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_description" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_header_payment_methods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="@string/common_payment_method"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_categories" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_sheet_id_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_payment_methods"
+        tools:text="Will be saved to Dec" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

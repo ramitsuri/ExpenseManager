@@ -123,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_delete_all:
                 deleteExpenses();
                 return true;
+
+            case R.id.menu_sync:
+                syncDataFromSheet();
+                return true;
         }
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.onNavDestinationSelected(item, navController);
@@ -147,5 +151,11 @@ public class MainActivity extends AppCompatActivity {
         Timber.i("Initiating backup");
 
         WorkHelper.enqueueOneTimeBackup();
+    }
+
+    private void syncDataFromSheet() {
+        Timber.i("Initiating sync");
+
+        WorkHelper.enqueueOneTimeSync();
     }
 }

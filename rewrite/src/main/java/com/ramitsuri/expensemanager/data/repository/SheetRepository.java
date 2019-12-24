@@ -134,7 +134,7 @@ public class SheetRepository {
             @NonNull final List<Expense> expenses,
             @NonNull final List<String> categories,
             @NonNull final List<String> paymentMethods,
-            @NonNull final String sheetId) {
+            final int sheetId) {
         final MutableLiveData<InsertConsumerResponse> responseLiveData =
                 new MutableLiveData<>();
         mExecutors.networkIO().execute(new Runnable() {
@@ -244,7 +244,7 @@ public class SheetRepository {
     public InsertConsumerResponse getInsertRangeResponse(@NonNull List<Expense> expenses,
             @NonNull List<String> categories,
             @NonNull List<String> paymentMethods,
-            @NonNull String sheetId) {
+            int sheetId) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
             BatchUpdateSpreadsheetRequest requestBody =
