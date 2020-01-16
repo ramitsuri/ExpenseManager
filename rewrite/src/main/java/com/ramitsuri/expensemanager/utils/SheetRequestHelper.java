@@ -21,9 +21,13 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import timber.log.Timber;
-
 public class SheetRequestHelper {
+
+    private static final String DATE = "DATE";
+    private static final String DATE_PATTERN = "M/d/yyyy";
+    private static final String DATE_IS_VALID = "DATE_IS_VALID";
+    private static final String ONE_OF_LIST = "ONE_OF_LIST";
+    private static final String FLAG = "FLAG";
 
     public static BatchUpdateSpreadsheetRequest getUpdateRequestBody(
             List<Expense> expensesToBackup,
@@ -59,9 +63,9 @@ public class SheetRequestHelper {
                         .setNumberValue((double)DateHelper.toSheetsDate(expense.getDateTime())));
                 cellData.setUserEnteredFormat(
                         new CellFormat().setNumberFormat(
-                                new NumberFormat().setType("DATE").setPattern("M/d/yyyy")));
+                                new NumberFormat().setType(DATE).setPattern(DATE_PATTERN)));
                 cellData.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType("DATE_IS_VALID")));
+                        .setCondition(new BooleanCondition().setType(DATE_IS_VALID)));
                 cellDataList.add(cellData);
 
                 // Description
@@ -88,7 +92,7 @@ public class SheetRequestHelper {
                 cellData.setUserEnteredValue(new ExtendedValue()
                         .setStringValue(String.valueOf(expense.getPaymentMethod())));
                 cellData.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
+                        .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
                                 .setValues(getPaymentMethodConditionValues(paymentMethods)))
                         .setStrict(true)
                         .setShowCustomUi(true));
@@ -99,11 +103,24 @@ public class SheetRequestHelper {
                 cellData.setUserEnteredValue(new ExtendedValue()
                         .setStringValue(String.valueOf(expense.getCategory())));
                 cellData.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType("ONE_OF_LIST")
+                        .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
                                 .setValues(getCategoriesConditionValues(categories)))
                         .setStrict(true)
                         .setShowCustomUi(true));
                 cellDataList.add(cellData);
+
+                // Flag
+                if (expense.isStarred()) {
+                    cellData = new CellData();
+                    cellData.setUserEnteredValue(new ExtendedValue()
+                            .setStringValue(FLAG));
+                    cellData.setDataValidation(new DataValidationRule()
+                            .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
+                                    .setValues(getFlagConditionValues()))
+                            .setStrict(true)
+                            .setShowCustomUi(true));
+                    cellDataList.add(cellData);
+                }
 
                 rowData.setValues(cellDataList);
                 rowDataList.add(rowData);
@@ -138,6 +155,16 @@ public class SheetRequestHelper {
             value.setUserEnteredValue(category);
             conditionValues.add(value);
         }
+
+        return conditionValues;
+    }
+
+    private static ArrayList<ConditionValue> getFlagConditionValues() {
+        ArrayList<ConditionValue> conditionValues = new ArrayList<>();
+
+        ConditionValue value = new ConditionValue();
+        value.setUserEnteredValue(FLAG);
+        conditionValues.add(value);
 
         return conditionValues;
     }

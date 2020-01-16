@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -48,9 +49,9 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     // Views
     private ImageView mBtnClose;
     private EditText mEditStore, mEditAmount, mEditDescription;
-    private ViewGroup mLayoutDate;
-    private TextView mTextDate, mTextChangeSheetHelp;
-    private Button mBtnChangeSheet, mBtnDone;
+    private TextView mTextChangeSheetHelp;
+    private Button mBtnChangeSheet, mBtnDone, mBtnDate;
+    private MaterialButton mBtnFlag;
     private RecyclerView mListSheets;
 
     public AddExpenseFragment() {
@@ -113,17 +114,21 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mEditAmount = view.findViewById(R.id.edit_text_amount);
         mEditDescription = view.findViewById(R.id.edit_text_description);
 
-        // ViewGroups
-        mLayoutDate = view.findViewById(R.id.layout_date);
-        mLayoutDate.setOnClickListener(this);
-
         // TextViews
-        mTextDate = view.findViewById(R.id.text_date);
         mTextChangeSheetHelp = view.findViewById(R.id.text_sheet_id_help);
 
         // Done
         mBtnDone = view.findViewById(R.id.btn_done);
         mBtnDone.setOnClickListener(this);
+
+        // Change Date
+        mBtnDate = view.findViewById(R.id.btn_date);
+        mBtnDate.setOnClickListener(this);
+
+        // Flag
+        mBtnFlag = view.findViewById(R.id.btn_flag);
+        mBtnFlag.setOnClickListener(this);
+        updateExpenseFlag();
 
         // Change Sheet
         mBtnChangeSheet = view.findViewById(R.id.btn_change_sheet);
@@ -143,7 +148,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         }
         // Date
         long longValue = mViewModel.getDate();
-        mTextDate.setText(DateHelper.getFriendlyDate(longValue));
+        mBtnDate.setText(DateHelper.getFriendlyDate(longValue));
 
         // Amount
         if (mViewModel.getAmount() != null &&
@@ -235,7 +240,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (view == mLayoutDate) {
+        if (view == mBtnDate) {
             handleDateClicked();
         } else if (view == mBtnClose) {
             handleCloseFragmentClicked();
@@ -243,6 +248,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             handleDoneClicked();
         } else if (view == mBtnChangeSheet) {
             handleChangeSheetClicked();
+        } else if (view == mBtnFlag) {
+            handleFlagClicked();
         }
     }
 
@@ -308,6 +315,19 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mListSheets.setVisibility(View.VISIBLE);
     }
 
+    private void handleFlagClicked() {
+        mViewModel.setFlag(!mViewModel.isFlagged());
+        updateExpenseFlag();
+    }
+
+    private void updateExpenseFlag() {
+        if (mViewModel.isFlagged()) {
+            mBtnFlag.setIcon(getResources().getDrawable(R.drawable.ic_flag_on));
+        } else {
+            mBtnFlag.setIcon(getResources().getDrawable(R.drawable.ic_flag_off));
+        }
+    }
+
     private void onCategoryPicked(String value) {
         Timber.i("Category picked: %s", value);
         mViewModel.setCategory(value);
@@ -332,7 +352,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     public void onDatePicked(int year, int month, int day) {
         Timber.i("Date picked: %s/%s/%s", month + 1, day, year);
         long pickedDate = DateHelper.getDateFromYearMonthDay(year, month, day);
-        mTextDate.setText(DateHelper.getFriendlyDate(pickedDate));
+        mBtnDate.setText(DateHelper.getFriendlyDate(pickedDate));
         mViewModel.setDate(pickedDate);
     }
 

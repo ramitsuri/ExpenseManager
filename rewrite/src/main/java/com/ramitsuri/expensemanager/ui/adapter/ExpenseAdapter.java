@@ -122,6 +122,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private ViewGroup container;
         private TextView txtDate, txtDescription, txtAmount, txtDetail1, txtDetail2, txtDetail3;
+        private View flagStatus;
 
         ItemViewHolder(View itemView) {
             super(itemView);
@@ -135,6 +136,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtDetail1 = itemView.findViewById(R.id.text_expense_detail_1);
             txtDetail2 = itemView.findViewById(R.id.text_expense_detail_2);
             txtDetail3 = itemView.findViewById(R.id.text_expense_detail_3);
+            flagStatus = itemView.findViewById(R.id.flag_status);
         }
 
         private void bind(final Expense expense) {
@@ -143,19 +145,16 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 txtDetail1.setText(expense.getStore());
             }
-            txtDetail2.setText(expense.getCategory());
+            txtDetail2.setText(expense.getPaymentMethod());
             txtDescription.setText(expense.getDescription());
             txtAmount.setText(CurrencyHelper.formatForDisplay(true, expense.getAmount()));
             txtDate.setText(DateHelper.getFriendlyDate(expense.getDateTime()));
-            txtDetail3.setText(expense.getPaymentMethod());
-
-
-
-       /* if (expense.isSynced()) {
-            txtAmount.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-        } else {
-            txtAmount.setTextColor(ContextCompat.getColor(mContext, R.color.red));
-        }*/
+            txtDetail3.setText(expense.getCategory());
+            if (expense.isStarred()) {
+                flagStatus.setVisibility(View.VISIBLE);
+            } else {
+                flagStatus.setVisibility(View.GONE);
+            }
         }
 
         @Override

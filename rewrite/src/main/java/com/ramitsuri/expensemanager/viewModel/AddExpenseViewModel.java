@@ -200,6 +200,15 @@ public class AddExpenseViewModel extends ViewModel {
         }
     }
 
+    public boolean isFlagged() {
+        return mExpense.isStarred();
+    }
+
+    public void setFlag(boolean flagged) {
+        mExpense.setIsStarred(flagged);
+        setChangesMade();
+    }
+
     public int getSheetId() {
         return mExpense.getSheetId();
     }

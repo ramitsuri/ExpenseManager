@@ -46,6 +46,12 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET sheet_id = :sheetId WHERE mId = :id")
     public abstract void updateSheetId(int id, int sheetId);
 
+    @Query("UPDATE expense SET is_starred =:isStarred WHERE mId = :id")
+    abstract void updateIsStarred(int id, boolean isStarred);
+
+    @Query("UPDATE expense SET is_synced =:isSynced WHERE mId = :id")
+    abstract void updateIsSynced(int id, boolean isSynced);
+
     @Transaction
     public void updateExpense(Expense expense) {
         updateDateTime(expense.getId(), expense.getDateTime());
@@ -55,6 +61,8 @@ public abstract class ExpenseDao {
         updateDescription(expense.getId(), expense.getDescription());
         updateStore(expense.getId(), expense.getStore());
         updateSheetId(expense.getId(), expense.getSheetId());
+        updateIsStarred(expense.getId(), expense.isStarred());
+        updateIsSynced(expense.getId(), expense.isSynced());
     }
 
     @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")

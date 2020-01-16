@@ -17,13 +17,6 @@
         app:layout_constraintTop_toTopOf="@id/btn_done"
         app:srcCompat="@drawable/ic_close" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guide_vertical_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent=".5" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_categories"
         android:layout_width="0dp"
@@ -77,58 +70,45 @@
         app:layout_constraintStart_toEndOf="@id/text_sheet_id_help"
         app:layout_constraintTop_toTopOf="@id/text_sheet_id_help" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/layout_date"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_date"
+        style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_extra_small"
-        app:cardUseCompatPadding="true"
+        android:text="@string/add_expense_today"
+        android:textColor="?attr/colorControlNormal"
+        app:iconGravity="textStart"
+        app:backgroundTint="@color/bg_grey"
+        app:icon="@drawable/ic_date"
+        app:iconTint="?attr/colorControlNormal"
         app:layout_constraintBottom_toBottomOf="@id/layout_amount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guide_vertical_1"
-        app:layout_constraintTop_toTopOf="@id/layout_amount">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding_extra_small">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/text_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:drawablePadding="@dimen/padding_extra_extra_small"
-                android:drawableStart="@drawable/ic_date"
-                android:drawableTint="?attr/colorControlNormal"
-                android:text="@string/add_expense_today"
-                android:textSize="@dimen/text_large" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintStart_toEndOf="@id/layout_amount"
+        app:layout_constraintTop_toTopOf="@id/layout_amount"
+        app:layout_constraintWidth_percent="0.33" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_amount"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_small"
         android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_extra_small"
         android:gravity="center"
         android:hint="@string/add_expense_amount"
         android:nextFocusForward="@+id/edit_text_store"
-        app:layout_constraintEnd_toStartOf="@id/guide_vertical_1"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_close"
+        app:layout_constraintWidth_percent="0.45"
         app:startIconDrawable="@drawable/ic_amount">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/margin_extra_extra_small"
             android:inputType="numberDecimal|numberSigned" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -173,6 +153,23 @@
             android:inputType="textCapSentences" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_flag"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:textColor="?attr/colorControlNormal"
+        app:icon="@drawable/ic_flag_off"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconTint="@color/color_red"
+        app:layout_constraintWidth_percent="0.17"
+        app:layout_constraintBottom_toBottomOf="@id/layout_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_date"
+        app:layout_constraintTop_toTopOf="@id/layout_amount" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_header_category"

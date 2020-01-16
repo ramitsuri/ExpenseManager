@@ -65,11 +65,21 @@
 - Fix status and nav bar color issues
 - Change bottom sheet dialog color
 
+- Adapt info height in expenses screen
+- Swap category and payment method positions in expense list
+- Add flag implementation
+- Migrate date layout card to use material button instead
+- Update expense updates sync and star status as well
+- Send flag column value to spreadsheet
+
+
+
 // TODO
-- Flag expense
+- View flagged expenses
 - Error messages
 - Test limited scope
 - Extract id from url
+- Instead of deleting backed up, change sync status
 --------------
 - Scheduled recurring expense
 - Snackbar for log

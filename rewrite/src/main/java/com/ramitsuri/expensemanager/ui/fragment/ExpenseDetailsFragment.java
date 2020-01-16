@@ -103,6 +103,12 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
         TextView txtDetail3 = view.findViewById(R.id.txt_expense_detail_3);
         txtDetail3.setText(expense.getPaymentMethod());
 
+        // Star/Flag
+        TextView txtFlagStatus = view.findViewById(R.id.text_flag_status);
+        if (expense.isStarred()) {
+            txtFlagStatus.setVisibility(View.VISIBLE);
+        }
+
         // Edit button
         Button editButton = view.findViewById(R.id.btn_edit);
         if (expense.isSynced()) {
