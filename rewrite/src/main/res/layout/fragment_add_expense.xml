@@ -78,9 +78,9 @@
         android:layout_marginStart="@dimen/margin_extra_small"
         android:text="@string/add_expense_today"
         android:textColor="?attr/colorControlNormal"
-        app:iconGravity="textStart"
         app:backgroundTint="@color/bg_grey"
         app:icon="@drawable/ic_date"
+        app:iconGravity="textStart"
         app:iconTint="?attr/colorControlNormal"
         app:layout_constraintBottom_toBottomOf="@id/layout_amount"
         app:layout_constraintStart_toEndOf="@id/layout_amount"
@@ -118,7 +118,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:hint="@string/add_expense_additional_info"
         android:nextFocusForward="@+id/edit_text_description"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,6 +130,7 @@
             android:id="@+id/edit_text_store"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_extra_small"
             android:inputType="textCapSentences" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -139,7 +140,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:hint="@string/add_expense_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -150,32 +151,34 @@
             android:id="@+id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_extra_small"
             android:inputType="textCapSentences" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_flag"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_extra_small"
         android:textColor="?attr/colorControlNormal"
+        app:backgroundTint="@color/bg_grey"
         app:icon="@drawable/ic_flag_off"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconTint="@color/color_red"
-        app:layout_constraintWidth_percent="0.17"
         app:layout_constraintBottom_toBottomOf="@id/layout_amount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_date"
-        app:layout_constraintTop_toTopOf="@id/layout_amount" />
+        app:layout_constraintTop_toTopOf="@id/layout_amount"
+        app:layout_constraintWidth_percent="0.17" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_header_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:text="@string/common_category"
         android:textAllCaps="true"
         android:textSize="@dimen/text_medium"
@@ -188,7 +191,7 @@
         android:id="@+id/text_header_payment_methods"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:text="@string/common_payment_method"
         android:textAllCaps="true"
         android:textSize="@dimen/text_medium"
@@ -201,7 +204,7 @@
         android:id="@+id/text_sheet_id_help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:textSize="@dimen/text_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"

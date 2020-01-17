@@ -72,7 +72,11 @@
 - Update expense updates sync and star status as well
 - Send flag column value to spreadsheet
 
-
+- Fix flag icon margin top in expense item
+- Handle back click so app doesn't close in one of the fragments
+- Change "No Expenses" text to "No new expenses"
+- Change flag button's style
+- Fix potential crash due to no changes done for flag functionality in landscape ui in add expense
 
 // TODO
 - View flagged expenses
@@ -83,5 +87,4 @@
 --------------
 - Scheduled recurring expense
 - Snackbar for log
-- Do not close app on back press from fragment
 

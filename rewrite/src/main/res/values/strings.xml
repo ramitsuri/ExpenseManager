@@ -35,7 +35,7 @@
     <string name="in_category">in category %1s</string>
     <string name="amount_with_currency">$%1s</string>
     <string name="delete_expense_warning_message">Are you sure you want to delete the expense?</string>
-    <string name="expenses_empty_message">No Expenses!</string>
+    <string name="expenses_empty_message">No new expenses!</string>
     <string name="expenses_empty_help_message">tap the ADD EXPENSE button to add a new expense</string>
 
     <!-- Settings -->

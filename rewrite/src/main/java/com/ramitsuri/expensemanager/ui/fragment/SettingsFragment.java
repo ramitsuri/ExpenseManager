@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -8,8 +9,10 @@ import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ToastHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -28,6 +31,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Activity activity = getActivity();
+                if (activity != null) {
+                    ((AppCompatActivity)activity).onSupportNavigateUp();
+                } else {
+                    Timber.w("handleCloseFragmentClicked() -> Activity is null");
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
