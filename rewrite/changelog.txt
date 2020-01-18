@@ -78,12 +78,13 @@
 - Change flag button's style
 - Fix potential crash due to no changes done for flag functionality in landscape ui in add expense
 
+- Enable hidden option for Jess
+
 // TODO
 - View flagged expenses
 - Error messages
 - Test limited scope
 - Extract id from url
-- Instead of deleting backed up, change sync status
 --------------
 - Scheduled recurring expense
 - Snackbar for log

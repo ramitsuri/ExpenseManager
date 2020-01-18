@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Hide Sheet metadata
-        if (!AppHelper.isDebugOptionEnabled() && !BuildConfig.DEBUG) {
+        if (!enableHidden()) {
             MenuItem menuItem = menu.findItem(R.id.fragment_metadata);
             if (menuItem != null) {
                 menuItem.setVisible(false);
@@ -167,5 +167,11 @@ public class MainActivity extends AppCompatActivity {
         Timber.i("Initiating sync");
 
         WorkHelper.enqueueOneTimeSync();
+    }
+
+    private boolean enableHidden() {
+        String accountName = AppHelper.getAccountName();
+        return (AppHelper.isDebugOptionEnabled() || BuildConfig.DEBUG) ||
+                (!TextUtils.isEmpty(accountName) && accountName.toLowerCase().contains("jess"));
     }
 }
