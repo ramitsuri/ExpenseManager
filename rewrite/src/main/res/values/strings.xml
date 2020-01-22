@@ -26,6 +26,9 @@
     <string name="common_change">Change</string>
     <string name="common_flagged">Flagged</string>
     <string name="common_empty"> </string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_store">Store</string>
+    <string name="common_expense">Expense</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>
@@ -68,7 +71,6 @@
     <string name="add_expense">Add Expense</string>
     <string name="add_expense_description">Description</string>
     <string name="add_expense_amount">Amount</string>
-    <string name="add_expense_additional_info">Store</string>
     <string name="add_expense_content_description_date_selector">Date Selector</string>
     <string name="add_expense_content_description_category_selector">Category Selector</string>
     <string name="add_expense_content_description_payment_method_selector">Payment Method

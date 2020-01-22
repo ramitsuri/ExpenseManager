@@ -42,8 +42,6 @@ import timber.log.Timber;
 public class AddExpenseFragment extends BaseFragment implements View.OnClickListener,
         DatePickerDialog.DatePickerDialogCallback {
 
-    private static final String EMPTY = "<empty>";
-
     // Data
     private AddExpenseViewModel mViewModel;
 
@@ -144,13 +142,13 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
         // Store
         String value = mViewModel.getStore();
-        if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
+        if (!TextUtils.isEmpty(value) && !value.equals(getDefaultStoreValue())) {
             mEditStore.setText(value);
             mEditStore.setSelection(value.length());
         }
         // Description
         value = mViewModel.getDescription();
-        if (!TextUtils.isEmpty(value) && !value.equals(EMPTY)) {
+        if (!TextUtils.isEmpty(value) && !value.equals(getDefaultDescriptionValue())) {
             mEditDescription.setText(value);
             mEditDescription.setSelection(value.length());
         }
@@ -273,7 +271,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                             }
                         };
                 DialogHelper.showAlert(getContext(),
-                        R.string.common_warning, R.string.exit_while_editing_warning_message,
+                        R.string.exit_while_editing_warning_message,
                         R.string.common_keep_editing, null,
                         R.string.common_discard, negativeListener);
                 return;
@@ -381,7 +379,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 return text;
             }
         }
-        return EMPTY;
+        return getDefaultStoreValue();
     }
 
     private String getExpenseDescription() {
@@ -391,7 +389,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 return text;
             }
         }
-        return EMPTY;
+        return getDefaultDescriptionValue();
     }
 
     private void removeFocusAndHideKeyboard() {
@@ -416,5 +414,13 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 hideKeyboardFrom(getActivity(), mEditDescription);
             }
         }
+    }
+
+    private String getDefaultStoreValue() {
+        return getString(R.string.common_store);
+    }
+
+    private String getDefaultDescriptionValue() {
+        return getString(R.string.common_expense);
     }
 }

@@ -295,9 +295,9 @@ public class ExpensesFragment extends BaseFragment {
                         }
                     };
             DialogHelper.showAlert(getContext(),
-                    R.string.common_warning, R.string.delete_expense_warning_message,
-                    R.string.common_yes, positiveListener,
-                    R.string.common_no, null);
+                    R.string.delete_expense_warning_message,
+                    R.string.common_delete, positiveListener,
+                    R.string.common_cancel, null);
         }
     }
 

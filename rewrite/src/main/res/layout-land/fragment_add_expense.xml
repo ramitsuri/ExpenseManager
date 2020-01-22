@@ -153,7 +153,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_small"
         android:layout_marginEnd="@dimen/margin_extra_small"
-        android:hint="@string/add_expense_additional_info"
+        android:hint="@string/common_store"
         android:nextFocusForward="@+id/edit_text_description"
         app:layout_constraintEnd_toStartOf="@id/guide_vertical_2"
         app:layout_constraintStart_toEndOf="@id/guide_vertical_1"
