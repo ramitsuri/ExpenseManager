@@ -83,6 +83,7 @@
 - Update warning dialogs to have no title and change buttons for delete warning
 - Adjust expense list header ui
 - Change default store and description value
+- Remove hidden option Jess
 
 // TODO
 - View flagged expenses

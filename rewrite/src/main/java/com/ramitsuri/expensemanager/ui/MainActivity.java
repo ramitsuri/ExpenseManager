@@ -170,8 +170,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean enableHidden() {
-        String accountName = AppHelper.getAccountName();
-        return (AppHelper.isDebugOptionEnabled() || BuildConfig.DEBUG) ||
-                (!TextUtils.isEmpty(accountName) && accountName.toLowerCase().contains("jess"));
+        return AppHelper.isDebugOptionEnabled() || BuildConfig.DEBUG;
     }
 }
