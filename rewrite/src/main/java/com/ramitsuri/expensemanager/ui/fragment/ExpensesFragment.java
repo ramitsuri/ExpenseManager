@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -30,7 +29,6 @@ import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
@@ -46,7 +44,6 @@ public class ExpensesFragment extends BaseFragment {
     private ExtendedFloatingActionButton mBtnAdd;
     private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfoEmptyHelp, mTextInfo1, mTextInfo2, mTextInfo3;
-    private ImageView mImgDownArrow;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -77,7 +74,6 @@ public class ExpensesFragment extends BaseFragment {
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
         mTextInfoEmptyHelp = view.findViewById(R.id.txt_expense_empty_help);
-        mImgDownArrow = view.findViewById(R.id.img_down);
 
         // Shown when there are expenses
         mCardInfo = view.findViewById(R.id.card_info);
@@ -105,9 +101,6 @@ public class ExpensesFragment extends BaseFragment {
         //}
 
         setupListExpenses(view);
-
-        final MotionLayout motionContainer = view.findViewById(R.id.layout);
-        setupAnimations(motionContainer);
 
         // Work Status
         logWorkStatus(WorkHelper.getOneTimeWorkTag());
@@ -162,38 +155,6 @@ public class ExpensesFragment extends BaseFragment {
             @Override
             public void onItemClicked(@NonNull ExpenseWrapper wrapper) {
                 showExpenseDetails(wrapper);
-            }
-        });
-    }
-
-    private void setupAnimations(final MotionLayout motionContainer) {
-        motionContainer.setTransitionListener(new MotionLayout.TransitionListener() {
-            @Override
-            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
-
-            }
-
-            @Override
-            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
-
-            }
-
-            @Override
-            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
-                if (i == R.id.ending_set) {
-                    motionContainer.transitionToStart();
-                }
-            }
-
-            @Override
-            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
-
-            }
-        });
-        mImgDownArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                motionContainer.transitionToEnd();
             }
         });
     }

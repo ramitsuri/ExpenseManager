@@ -22,6 +22,7 @@
     <dimen name="text_small">12sp</dimen>
     <dimen name="text_medium">14sp</dimen>
     <dimen name="text_large">18sp</dimen>
+    <dimen name="text_extra_large">22sp</dimen>
     <dimen name="text_extra_extra_large">26sp</dimen>
     <dimen name="text_extra_extra_extra_large">32sp</dimen>
 

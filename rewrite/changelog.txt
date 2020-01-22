@@ -85,6 +85,8 @@
 - Change default store and description value
 - Remove hidden option Jess
 
+- Remove way to get sheets in MetadataFrag
+
 // TODO
 - View flagged expenses
 - Error messages

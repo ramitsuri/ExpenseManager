@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.ExpensesFragment">
 
-    <androidx.constraintlayout.motion.widget.MotionLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/padding_small">
-        <!-- TODO Figure why this is causing empty expense views to vanish
-        app:layoutDescription="@xml/motion_arrow" -->
 
         <ImageView
             android:id="@+id/img_down"
@@ -55,6 +53,7 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
             android:visibility="gone"
             app:cardBackgroundColor="@color/color_teal"
@@ -152,7 +151,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_expense_empty" />
 
-    </androidx.constraintlayout.motion.widget.MotionLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btn_add"

@@ -73,35 +73,12 @@ public class MetadataFragment extends BaseFragment {
             }
         });
 
-        // Sheets
-        final RecyclerView listSheets = view.findViewById(R.id.list_sheets);
-        listSheets.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        final MetadataAdapter sheetsAdapter = new MetadataAdapter();
-        listSheets.setAdapter(sheetsAdapter);
-
         // Button delete logs
         Button btnDeleteLogs = view.findViewById(R.id.btn_delete_logs);
         btnDeleteLogs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mViewModel.deleteLogs();
-            }
-        });
-
-        // Button fetch sheets
-        Button btnFetchSheets = view.findViewById(R.id.btn_fetch_sheets);
-        btnFetchSheets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewModel.getSheets().observe(getViewLifecycleOwner(),
-                        new Observer<List<String>>() {
-                            @Override
-                            public void onChanged(List<String> strings) {
-                                Timber.i("Refreshing sheets");
-                                sheetsAdapter.setMetadataItems(strings);
-                            }
-                        });
             }
         });
 
