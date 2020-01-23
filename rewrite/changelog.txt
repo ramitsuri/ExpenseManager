@@ -90,6 +90,8 @@
 - Remove backup button from expenses frag (was already hidden)
 - Cleanup
 
+- Modify text sizes
+
 // TODO
 - Duplicate expense (with edit snackbar)
 - View flagged expenses

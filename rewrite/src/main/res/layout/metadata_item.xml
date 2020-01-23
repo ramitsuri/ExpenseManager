@@ -15,7 +15,7 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:textIsSelectable="true"
-        android:textSize="@dimen/text_medium"
+        android:textSize="@dimen/text_body1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
