@@ -12,6 +12,7 @@ import com.ramitsuri.expensemanager.utils.WorkHelper;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -25,6 +26,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     public SettingsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showActionBar();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        hideActionBar();
     }
 
     @Override
@@ -126,5 +139,27 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void setAppTheme(String theme) {
         Timber.i("Setting theme to %s", theme);
         AppHelper.setCurrentTheme(theme);
+    }
+
+    private void showActionBar() {
+        Activity activity = getActivity();
+        ActionBar actionBar = null;
+        if (activity != null) {
+            actionBar = ((AppCompatActivity)activity).getSupportActionBar();
+        }
+        if (actionBar != null) {
+            actionBar.show();
+        }
+    }
+
+    private void hideActionBar() {
+        Activity activity = getActivity();
+        ActionBar actionBar = null;
+        if (activity != null) {
+            actionBar = ((AppCompatActivity)activity).getSupportActionBar();
+        }
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 }

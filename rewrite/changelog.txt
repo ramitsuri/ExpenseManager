@@ -87,7 +87,11 @@
 
 - Remove way to get sheets in MetadataFrag
 
+- Remove backup button from expenses frag (was already hidden)
+- Cleanup
+
 // TODO
+- Duplicate expense (with edit snackbar)
 - View flagged expenses
 - Error messages
 - Test limited scope

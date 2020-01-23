@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -16,7 +15,6 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
-import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
@@ -80,25 +78,6 @@ public class ExpensesFragment extends BaseFragment {
         mTextInfo1 = view.findViewById(R.id.txt_expense_info_1);
         mTextInfo2 = view.findViewById(R.id.txt_expense_info_2);
         mTextInfo3 = view.findViewById(R.id.txt_expense_info_3);
-
-        Button btnSyncNow = view.findViewById(R.id.btn_sync_now);
-        btnSyncNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String accountName = AppHelper.getAccountName();
-                String accountType = AppHelper.getAccountType();
-                if (accountName != null && accountType != null) {
-                    initiateBackup();
-                } else {
-                    Timber.w("AccountType or Name null. Name " + accountName + ", Type " +
-                            accountType);
-                }
-            }
-        });
-
-        //if (AppHelper.isAutoBackupEnabled()) { // Always hidden for now
-        btnSyncNow.setVisibility(View.GONE);
-        //}
 
         setupListExpenses(view);
 
@@ -260,11 +239,5 @@ public class ExpensesFragment extends BaseFragment {
                     R.string.common_delete, positiveListener,
                     R.string.common_cancel, null);
         }
-    }
-
-    private void initiateBackup() {
-        Timber.i("Initiating backup");
-
-        WorkHelper.enqueueOneTimeBackup();
     }
 }
