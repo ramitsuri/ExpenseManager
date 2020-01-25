@@ -92,7 +92,6 @@
 
 - Modify text sizes
 
-dev-all-expenses
 - Bottom Nav - add new, all and extra tab
 - Remove toolbar in fragments except settings, do not show it in some frags in onStop
 - Delete motion layout transition stuff
