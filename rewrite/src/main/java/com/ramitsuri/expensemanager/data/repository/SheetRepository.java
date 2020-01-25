@@ -77,7 +77,7 @@ public class SheetRepository {
                     List<SheetInfo> sheetInfos = new ArrayList<>();
                     List<SheetInfo> values = mDatabase.sheetDao().getAll();
                     if (values != null) {
-                        sheetInfos.addAll(mDatabase.sheetDao().getAll());
+                        sheetInfos.addAll(values);
                     }
                     sheetInfosLiveData.postValue(sheetInfos);
                 }
@@ -208,7 +208,7 @@ public class SheetRepository {
         return consumerResponse;
     }
 
-    private RangeConsumerResponse getRangeDataResponse(String range) {
+    public RangeConsumerResponse getRangeDataResponse(String range) {
         RangeConsumerResponse consumerResponse = new RangeConsumerResponse();
         try {
             BaseSpreadsheetResponse response =

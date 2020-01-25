@@ -41,7 +41,7 @@ public class ExpensesFragment extends BaseFragment {
     // Views
     private ExtendedFloatingActionButton mBtnAdd;
     private MaterialCardView mCardInfo;
-    private TextView mTextInfoEmpty, mTextInfoEmptyHelp, mTextInfo1, mTextInfo2, mTextInfo3;
+    private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -52,6 +52,12 @@ public class ExpensesFragment extends BaseFragment {
             Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_expenses, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideActionBar();
     }
 
     @Override
@@ -71,7 +77,6 @@ public class ExpensesFragment extends BaseFragment {
 
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
-        mTextInfoEmptyHelp = view.findViewById(R.id.txt_expense_empty_help);
 
         // Shown when there are expenses
         mCardInfo = view.findViewById(R.id.card_info);
@@ -142,12 +147,10 @@ public class ExpensesFragment extends BaseFragment {
         boolean doCalculation = false;
         if (expenses.size() == 0) {
             mTextInfoEmpty.setVisibility(View.VISIBLE);
-            mTextInfoEmptyHelp.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.GONE);
         } else {
             doCalculation = true;
             mTextInfoEmpty.setVisibility(View.GONE);
-            mTextInfoEmptyHelp.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.VISIBLE);
         }
 

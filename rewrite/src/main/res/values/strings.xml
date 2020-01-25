@@ -15,6 +15,7 @@
     <string name="expense_divider">•</string>
     <string name="content_description_close_fragment">Close view</string>
     <string name="content_description_down_arrow">Down arrow</string>
+    <string name="content_description_icon">Icon</string>
     <string name="common_category">Category</string>
     <string name="common_payment_method">Payment Method</string>
     <string name="common_discard">Discard</string>
@@ -29,6 +30,10 @@
     <string name="common_cancel">Cancel</string>
     <string name="common_store">Store</string>
     <string name="common_expense">Expense</string>
+
+    <string name="common_new_tab">New</string>
+    <string name="common_all_tab">All</string>
+    <string name="common_extra_tab">Extra</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>
@@ -89,10 +94,14 @@
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>
-    <string name="action_delete">Delete all</string>
-    <string name="action_meta_data">Sheets</string>
+    <string name="action_delete">Delete all expenses</string>
+    <string name="action_meta_data">Logs</string>
 
     <!-- Metadata Fragment -->
     <string name="metadata_fetch_sheets">Fetch Sheets</string>
     <string name="metadata_delete_logs">Delete Logs</string>
+
+    <!-- All Expenses -->
+    <string name="all_expenses_select_sheet">Select Sheet</string>
+
 </resources>

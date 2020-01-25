@@ -72,12 +72,6 @@ public class SetupFragment extends BaseFragment {
         hideActionBar();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        showActionBar();
-    }
-
     private void handleSetupClicked() {
         if (!TextUtils.isEmpty(getSpreadsheetId())) {
             signIn();

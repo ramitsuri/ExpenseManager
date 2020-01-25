@@ -21,13 +21,13 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class SheetRequestHelper {
+import static com.ramitsuri.expensemanager.Constants.Sheets.DATE;
+import static com.ramitsuri.expensemanager.Constants.Sheets.DATE_IS_VALID;
+import static com.ramitsuri.expensemanager.Constants.Sheets.DATE_PATTERN;
+import static com.ramitsuri.expensemanager.Constants.Sheets.FLAG;
+import static com.ramitsuri.expensemanager.Constants.Sheets.ONE_OF_LIST;
 
-    private static final String DATE = "DATE";
-    private static final String DATE_PATTERN = "M/d/yyyy";
-    private static final String DATE_IS_VALID = "DATE_IS_VALID";
-    private static final String ONE_OF_LIST = "ONE_OF_LIST";
-    private static final String FLAG = "FLAG";
+public class SheetRequestHelper {
 
     public static BatchUpdateSpreadsheetRequest getUpdateRequestBody(
             List<Expense> expensesToBackup,

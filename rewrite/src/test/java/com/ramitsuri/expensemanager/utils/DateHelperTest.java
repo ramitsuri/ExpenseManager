@@ -158,9 +158,11 @@ public class DateHelperTest {
         calendar1.set(Calendar.SECOND, 0);
         calendar1.set(Calendar.MILLISECOND, 0);
 
-        for (int i = 1; i <= 3650; i++) {
+        for (int i = 1; i <= 730; i++) {
             assertTrue(calendar1.getTime().getTime() - DateHelper.fromSheetsDate(startSheetDate) <=
                     86400000);
+            System.out.println(startSheetDate + " " +
+                    new Date(DateHelper.fromSheetsDate(startSheetDate)));
             calendar1.add(Calendar.DAY_OF_MONTH, 1);
             startSheetDate = startSheetDate + 1;
         }

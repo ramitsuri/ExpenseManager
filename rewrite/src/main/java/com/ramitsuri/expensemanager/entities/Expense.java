@@ -3,11 +3,16 @@ package com.ramitsuri.expensemanager.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ramitsuri.expensemanager.utils.DateHelper;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import static com.ramitsuri.expensemanager.Constants.Sheets.FLAG;
 
 @Entity
 public class Expense implements Parcelable {
@@ -61,13 +66,27 @@ public class Expense implements Parcelable {
         mId = in.readInt();
         mDateTime = in.readLong();
         mAmount = new BigDecimal(in.readString());
-        mPaymentMethod = in.readParcelable(PaymentMethod.class.getClassLoader());
-        mCategory = in.readParcelable(Category.class.getClassLoader());
+        mPaymentMethod = in.readString();
+        mCategory = in.readString();
         mDescription = in.readString();
         mStore = in.readString();
         mIsSynced = in.readByte() != 0;
         mIsStarred = in.readByte() != 0;
         mSheetId = in.readInt();
+    }
+
+    public Expense(List<Object> objects, int sheetId) {
+        mDateTime = DateHelper.fromSheetsDate(((BigDecimal)objects.get(0)).intValue());
+        mDescription = (String)objects.get(1);
+        mStore = (String)objects.get(2);
+        mAmount = (BigDecimal)objects.get(3);
+        mPaymentMethod = (String)objects.get(4);
+        mCategory = (String)objects.get(5);
+        if (objects.size() >= 7) {
+            mIsStarred = objects.get(6).equals(FLAG);
+        }
+        mIsSynced = true;
+        mSheetId = sheetId;
     }
 
     @Override

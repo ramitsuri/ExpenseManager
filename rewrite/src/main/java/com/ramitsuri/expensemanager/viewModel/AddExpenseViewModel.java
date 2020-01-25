@@ -11,6 +11,7 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -78,18 +79,7 @@ public class AddExpenseViewModel extends ViewModel {
                 new Function<List<SheetInfo>, List<SheetInfo>>() {
                     @Override
                     public List<SheetInfo> apply(List<SheetInfo> input) {
-                        List<SheetInfo> sheetInfos = new ArrayList<>();
-                        if (input != null) {
-                            for (SheetInfo sheetInfo : input) {
-                                if (sheetInfo.getSheetName().equals("Entities") ||
-                                        sheetInfo.getSheetName().equals("Template") ||
-                                        sheetInfo.getSheetName().equals("Calculator")) {
-                                    continue;
-                                }
-                                sheetInfos.add(sheetInfo);
-                            }
-                        }
-                        return sheetInfos;
+                        return TransformationHelper.filterSheetInfos(input);
                     }
                 });
 

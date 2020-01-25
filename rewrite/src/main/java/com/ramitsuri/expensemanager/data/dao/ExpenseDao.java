@@ -22,6 +22,9 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract List<Expense> getAllUnsynced();
 
+    @Query("SELECT * FROM expense WHERE is_synced = 0")
+    public abstract LiveData<List<Expense>> getAllUnsyncedLiveData();
+
     @Insert
     public abstract void insert(Expense expense);
 

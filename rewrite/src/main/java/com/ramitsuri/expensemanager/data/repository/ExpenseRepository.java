@@ -28,11 +28,11 @@ public class ExpenseRepository {
         if (mSourceType == SourceType.LOCAL) {
             //mExpenses  = DummyData.get();
         } else if (mSourceType == SourceType.DB) {
-            mExpenses = mDatabase.expenseDao().getAll();
+            mExpenses = mDatabase.expenseDao().getAllUnsyncedLiveData();
         }
     }
 
-    public LiveData<List<Expense>> getExpenses() {
+    public LiveData<List<Expense>> getUnsyncedExpensesLiveData() {
         return mExpenses;
     }
 

@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation android:id="@+id/nav_graph"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph">
 
     <fragment
         android:id="@+id/fragment_expenses"
         android:name="com.ramitsuri.expensemanager.ui.fragment.ExpensesFragment"
         android:label="@string/common_expenses"
         tools:layout="@layout/fragment_expenses">
-
-        <action
-            android:id="@+id/nav_action_settings"
-            app:destination="@id/fragment_settings" />
-
-        <action
-            android:id="@+id/nav_action_sheets"
-            app:destination="@id/fragment_metadata" />
 
         <action
             android:id="@+id/nav_action_add_expense"
@@ -28,6 +20,26 @@
                 app:nullable="true" />
 
         </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_all_expenses"
+        android:name="com.ramitsuri.expensemanager.ui.fragment.AllExpensesFragment"
+        android:label="@string/common_expenses" />
+
+    <fragment
+        android:id="@+id/fragment_miscellaneous"
+        android:name="com.ramitsuri.expensemanager.ui.fragment.MiscellaneousFragment"
+        android:label="@string/common_empty">
+
+        <action
+            android:id="@+id/nav_action_settings"
+            app:destination="@id/fragment_settings" />
+
+        <action
+            android:id="@+id/nav_action_sheets"
+            app:destination="@id/fragment_metadata" />
 
     </fragment>
 

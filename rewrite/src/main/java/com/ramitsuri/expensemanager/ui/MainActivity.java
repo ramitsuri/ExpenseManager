@@ -3,22 +3,20 @@ package com.ramitsuri.expensemanager.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.ramitsuri.expensemanager.BuildConfig;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ramitsuri.expensemanager.Constants;
-import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.PrefHelper;
-import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.NavGraph;
 import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
@@ -26,8 +24,6 @@ import androidx.navigation.ui.NavigationUI;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
-
-    private long mLastPressTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("Setting default theme");
             AppHelper.setCurrentTheme(Constants.SystemTheme.SYSTEM_DEFAULT);
         }
-        mLastPressTime = 0;
 
         migrateCurrentToDefaultSheetId();
 
@@ -89,87 +84,28 @@ public class MainActivity extends AppCompatActivity {
         navController.setGraph(graph);
 
         NavigationUI.setupWithNavController(toolbar, navController);
+
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        navController.addOnDestinationChangedListener(
+                new NavController.OnDestinationChangedListener() {
+                    @Override
+                    public void onDestinationChanged(@NonNull NavController controller,
+                            @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                        if (destination.getId() == R.id.fragment_expenses ||
+                                destination.getId() == R.id.fragment_all_expenses ||
+                                destination.getId() == R.id.fragment_miscellaneous) {
+                            bottomNavigationView.setVisibility(View.VISIBLE);
+                        } else {
+                            bottomNavigationView.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // Hide Delete All
-        if (!BuildConfig.DEBUG) {
-            MenuItem menuItem = menu.findItem(R.id.menu_delete_all);
-            if (menuItem != null) {
-                menuItem.setVisible(false);
-            }
-        }
-
-        // Hide Sheet metadata
-        if (!enableHidden()) {
-            MenuItem menuItem = menu.findItem(R.id.fragment_metadata);
-            if (menuItem != null) {
-                menuItem.setVisible(false);
-            }
-        }
-        super.onPrepareOptionsMenu(menu);
-        return true;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_backup_now:
-                initiateBackup();
-                return true;
-
-            case R.id.menu_delete_all:
-                deleteExpenses();
-                return true;
-
-            case R.id.menu_sync:
-                syncDataFromSheet();
-                return true;
-        }
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.onNavDestinationSelected(item, navController);
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void deleteExpenses() {
-        Timber.i("Deleting expenses");
-
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - mLastPressTime <= 2000) {
-            if (BuildConfig.DEBUG) { // Extra protection, only in debug
-                MainApplication.getInstance().getExpenseRepo().deleteExpenses();
-            }
-            mLastPressTime = 0;
-        } else {
-            mLastPressTime = currentTime;
-        }
-    }
-
-    private void initiateBackup() {
-        Timber.i("Initiating backup");
-
-        WorkHelper.enqueueOneTimeBackup();
-    }
-
-    private void syncDataFromSheet() {
-        Timber.i("Initiating sync");
-
-        WorkHelper.enqueueOneTimeSync();
-    }
-
-    private boolean enableHidden() {
-        return AppHelper.isDebugOptionEnabled() || BuildConfig.DEBUG;
     }
 }

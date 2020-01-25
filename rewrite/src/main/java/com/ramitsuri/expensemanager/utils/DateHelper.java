@@ -56,7 +56,19 @@ public class DateHelper {
     }
 
     public static long fromSheetsDate(long sheetsDate) {
-        return (sheetsDate - SHEETS_DATE_OFFSET) * MILLI_SECONDS_IN_DAY;
+        return fromSheetsDate(sheetsDate, null);
+    }
+
+    public static long fromSheetsDate(long sheetsDate, @Nullable TimeZone timeZone) {
+        long potentialDate = (sheetsDate - SHEETS_DATE_OFFSET) * MILLI_SECONDS_IN_DAY;
+        if (timeZone == null) {
+            timeZone = TimeZone.getDefault();
+        }
+        long offset = 0;
+        if (timeZone.observesDaylightTime()) {
+            offset = timeZone.getOffset(potentialDate);
+        }
+        return potentialDate - offset;
     }
 
     public static long toDaysSinceStartOfTime(long date) {

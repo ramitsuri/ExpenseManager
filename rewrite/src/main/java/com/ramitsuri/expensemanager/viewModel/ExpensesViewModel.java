@@ -24,7 +24,7 @@ public class ExpensesViewModel extends ViewModel {
         super();
 
         mExpenseRepo = MainApplication.getInstance().getExpenseRepo();
-        mExpenses = Transformations.map(mExpenseRepo.getExpenses(),
+        mExpenses = Transformations.map(mExpenseRepo.getUnsyncedExpensesLiveData(),
                 new Function<List<Expense>, List<ExpenseWrapper>>() {
                     @Override
                     public List<ExpenseWrapper> apply(List<Expense> input) {

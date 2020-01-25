@@ -5,6 +5,7 @@ import android.util.LongSparseArray;
 import com.ramitsuri.expensemanager.IntDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
+import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +46,20 @@ public class TransformationHelper {
             }
         }
         return expenseWrappers;
+    }
+
+    public static List<SheetInfo> filterSheetInfos(List<SheetInfo> input) {
+        List<SheetInfo> sheetInfos = new ArrayList<>();
+        if (input != null) {
+            for (SheetInfo sheetInfo : input) {
+                if (sheetInfo.getSheetName().equals("Entities") ||
+                        sheetInfo.getSheetName().equals("Template") ||
+                        sheetInfo.getSheetName().equals("Calculator")) {
+                    continue;
+                }
+                sheetInfos.add(sheetInfo);
+            }
+        }
+        return sheetInfos;
     }
 }

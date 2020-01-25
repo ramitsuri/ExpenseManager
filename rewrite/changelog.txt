@@ -92,6 +92,21 @@
 
 - Modify text sizes
 
+dev-all-expenses
+- Bottom Nav - add new, all and extra tab
+- Remove toolbar in fragments except settings, do not show it in some frags in onStop
+- Delete motion layout transition stuff
+- Delete unneeded views in ExpensesFrag
+- Center align no expenses message
+- Update unsynced to synced on backup
+- Get unsynced in expenses fragment
+- Get expenses from sheets
+- Fix (from sheets date) in DateHelper
+- Add ExpenseSheets repo to do both expense db and sheets stuff
+- Add new Expense constructor to create object from List<Object>
+- Fix reconstructing payment method and category from parcel
+- Move overflow menu options to new Frag (Miscellaneous)
+
 // TODO
 - Duplicate expense (with edit snackbar)
 - View flagged expenses

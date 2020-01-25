@@ -89,12 +89,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        showActionBar();
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

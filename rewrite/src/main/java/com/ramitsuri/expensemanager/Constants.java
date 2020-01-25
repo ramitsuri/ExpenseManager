@@ -64,4 +64,13 @@ public class Constants {
         public static final String SUCCESS = "success";
         public static final String FAILURE = "failure";
     }
+
+    public class Sheets {
+        public static final String DATE = "DATE";
+        public static final String DATE_PATTERN = "M/d/yyyy";
+        public static final String DATE_IS_VALID = "DATE_IS_VALID";
+        public static final String ONE_OF_LIST = "ONE_OF_LIST";
+        public static final String FLAG = "FLAG";
+        public static final String EXPENSE_RANGE = "!A:G";
+    }
 }

@@ -69,7 +69,7 @@ public class BackupWorker extends BaseWorker {
         InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
                 .getInsertRangeResponse(expensesToBackup, categories, paymentMethods, sheetId);
         if (response.isSuccessful()) {
-            ExpenseManagerDatabase.getInstance().expenseDao().deleteAll();
+            ExpenseManagerDatabase.getInstance().expenseDao().updateUnsynced();
             insertLog(workType,
                     Constants.LogResult.SUCCESS,
                     "Backup and deletion successful");
