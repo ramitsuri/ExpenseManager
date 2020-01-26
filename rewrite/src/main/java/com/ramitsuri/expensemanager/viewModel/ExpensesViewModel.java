@@ -40,4 +40,9 @@ public class ExpensesViewModel extends ViewModel {
     public void deleteExpense(@Nonnull Expense expense) {
         mExpenseRepo.deleteExpense(expense);
     }
+
+    public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
+        Expense duplicate = new Expense(expense);
+        return mExpenseRepo.insertAndGetExpense(duplicate);
+    }
 }

@@ -8,6 +8,8 @@ import com.ramitsuri.expensemanager.entities.Expense;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -104,5 +106,17 @@ public class ExpenseRepository {
                 mDatabase.expenseDao().deleteAll();
             }
         });
+    }
+
+    public LiveData<Expense> insertAndGetExpense(@Nonnull final Expense expense) {
+        final MutableLiveData<Expense> duplicate = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Expense value = mDatabase.expenseDao().insertAndGetExpense(expense);
+                duplicate.postValue(value);
+            }
+        });
+        return duplicate;
     }
 }

@@ -51,6 +51,20 @@
         app:layout_constraintTop_toBottomOf="@id/divider3" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_duplicate"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="@string/common_duplicate"
+        android:textColor="@color/color_teal"
+        app:icon="@drawable/ic_copy"
+        app:iconTint="@color/color_teal"
+        app:layout_constraintStart_toEndOf="@id/btn_edit"
+        app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_delete"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
         android:layout_width="wrap_content"
@@ -61,7 +75,7 @@
         android:textColor="@color/color_red"
         app:icon="@drawable/ic_detail_delete"
         app:iconTint="@color/color_red"
-        app:layout_constraintStart_toEndOf="@id/btn_edit"
+        app:layout_constraintStart_toEndOf="@id/btn_duplicate"
         app:layout_constraintTop_toBottomOf="@id/divider3" />
 
     <com.google.android.material.textview.MaterialTextView

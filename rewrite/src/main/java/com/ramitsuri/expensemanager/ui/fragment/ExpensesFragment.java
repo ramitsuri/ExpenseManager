@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.IntDefs.ListItemType;
 import com.ramitsuri.expensemanager.R;
@@ -209,6 +210,11 @@ public class ExpensesFragment extends BaseFragment {
             public void onDeleteRequested(@NonNull Expense expense) {
                 handleExpenseDeleteRequested(expense);
             }
+
+            @Override
+            public void onDuplicateRequested(@Nonnull Expense expense) {
+                handleExpenseDuplicateRequested(expense);
+            }
         });
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.BundleKeys.SELECTED_EXPENSE, wrapper.getExpense());
@@ -219,6 +225,25 @@ public class ExpensesFragment extends BaseFragment {
         } else {
             Timber.e("getActivity() returned null when showing details fragment");
         }
+    }
+
+    private void handleExpenseDuplicateRequested(@Nonnull Expense expense) {
+        mExpensesViewModel.duplicateExpense(expense)
+                .observe(getViewLifecycleOwner(), new Observer<Expense>() {
+                    @Override
+                    public void onChanged(final Expense duplicate) {
+                        Snackbar editSnackbar =
+                                Snackbar.make(mBtnAdd, R.string.expenses_duplicate_success,
+                                        Snackbar.LENGTH_LONG);
+                        editSnackbar.setAction(R.string.common_edit, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                handleExpenseEditRequested(duplicate);
+                            }
+                        });
+                        editSnackbar.show();
+                    }
+                });
     }
 
     private void handleExpenseEditRequested(@Nonnull Expense expense) {

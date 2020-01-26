@@ -89,6 +89,18 @@ public class Expense implements Parcelable {
         mSheetId = sheetId;
     }
 
+    public Expense(Expense expense) {
+        mDateTime = expense.getDateTime();
+        mDescription = expense.getDescription();
+        mStore = expense.getStore();
+        mAmount = expense.getAmount();
+        mPaymentMethod = expense.getPaymentMethod();
+        mCategory = expense.getCategory();
+        mIsStarred = expense.isStarred();
+        mIsSynced = expense.isSynced();
+        mSheetId = expense.getSheetId();
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -18,6 +18,8 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
+import javax.annotation.Nonnull;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import timber.log.Timber;
@@ -36,6 +38,8 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
         void onEditRequested(@NonNull Expense expense);
 
         void onDeleteRequested(@NonNull Expense expense);
+
+        void onDuplicateRequested(@Nonnull Expense expense);
     }
 
     public void setCallback(@NonNull DetailFragmentCallback callback) {
@@ -124,7 +128,22 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
             }
         });
 
-        // Edit button
+        // Duplicate button
+        Button duplicateButton = view.findViewById(R.id.btn_duplicate);
+        if (expense.isSynced()) {
+            duplicateButton.setEnabled(false);
+        }
+        duplicateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                if (mCallback != null) {
+                    mCallback.onDuplicateRequested(expense);
+                }
+            }
+        });
+
+        // Delete button
         Button deleteButton = view.findViewById(R.id.btn_delete);
         if (expense.isSynced()) {
             deleteButton.setEnabled(false);

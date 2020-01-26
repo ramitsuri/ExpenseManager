@@ -25,8 +25,17 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract LiveData<List<Expense>> getAllUnsyncedLiveData();
 
+    @Query("SELECT * FROM expense WHERE mId = :id")
+    public abstract Expense getExpense(long id);
+
+    @Transaction
+    public Expense insertAndGetExpense(Expense expense) {
+        long id = insert(expense);
+        return getExpense(id);
+    }
+
     @Insert
-    public abstract void insert(Expense expense);
+    public abstract long insert(Expense expense);
 
     @Query("UPDATE expense SET date_time =:dateTime WHERE mId = :id")
     abstract void updateDateTime(int id, long dateTime);

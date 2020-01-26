@@ -106,8 +106,16 @@
 - Fix reconstructing payment method and category from parcel
 - Move overflow menu options to new Frag (Miscellaneous)
 
+- Duplicate expense
+- Add new method to Expense Dao to insert and get new expense via @Transaction
+- Add copy constructor to Expense
+- Add new duplicate callback to detail fragment
+
 // TODO
-- Duplicate expense (with edit snackbar)
+- Save downloaded expenses to db
+- select current month by default for all expenses
+- Fix fragment refreshing
+- Show analysis (total used, remaining of all expenses)
 - View flagged expenses
 - Error messages
 - Test limited scope

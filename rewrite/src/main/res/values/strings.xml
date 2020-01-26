@@ -12,6 +12,7 @@
     <string name="common_sync">Sync</string>
     <string name="common_edit">Edit</string>
     <string name="common_delete">Delete</string>
+    <string name="common_duplicate">Clone</string>
     <string name="expense_divider">•</string>
     <string name="content_description_close_fragment">Close view</string>
     <string name="content_description_down_arrow">Down arrow</string>
@@ -45,6 +46,7 @@
     <string name="delete_expense_warning_message">Are you sure you want to delete the expense?</string>
     <string name="expenses_empty_message">No new expenses!</string>
     <string name="expenses_empty_help_message">tap the ADD EXPENSE button to add a new expense</string>
+    <string name="expenses_duplicate_success">Expense duplicated</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
