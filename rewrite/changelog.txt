@@ -111,6 +111,8 @@
 - Add copy constructor to Expense
 - Add new duplicate callback to detail fragment
 
+- Prevent selecting bottom nav tab if already on selected
+
 // TODO
 - Save downloaded expenses to db
 - select current month by default for all expenses

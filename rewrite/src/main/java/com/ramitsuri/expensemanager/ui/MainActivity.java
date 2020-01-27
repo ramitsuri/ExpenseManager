@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -70,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        final NavController navController =
+                Navigation.findNavController(this, R.id.nav_host_fragment);
 
         NavInflater navInflater = navController.getNavInflater();
         NavGraph graph = navInflater.inflate(R.navigation.nav_graph);
@@ -86,7 +88,20 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(toolbar, navController);
 
         final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        if (navController.getCurrentDestination() != null) {
+                            if (navController.getCurrentDestination().getId() == item.getItemId()) {
+                                return false;
+                            }
+                        }
+                        navController.navigate(item.getItemId());
+                        return true;
+                    }
+                });
+        //NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
         navController.addOnDestinationChangedListener(
                 new NavController.OnDestinationChangedListener() {
@@ -99,6 +114,14 @@ public class MainActivity extends AppCompatActivity {
                             bottomNavigationView.setVisibility(View.VISIBLE);
                         } else {
                             bottomNavigationView.setVisibility(View.GONE);
+                        }
+                        // Manually setting checked item because there being an issue where selected
+                        // fragment and bottom nav menu item are mismatched on pressing
+                        // back button from non main view fragments
+                        MenuItem item =
+                                bottomNavigationView.getMenu().findItem(destination.getId());
+                        if (item != null) {
+                            item.setChecked(true);
                         }
                     }
                 });
