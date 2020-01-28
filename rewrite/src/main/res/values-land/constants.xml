@@ -3,4 +3,5 @@
     <integer name="values_grid_view_rows">1</integer>
     <integer name="sheets_grid_view_rows">1</integer>
     <integer name="expenses_grid_columns">2</integer>
+    <integer name="sheets_grid_columns">4</integer>
 </resources>

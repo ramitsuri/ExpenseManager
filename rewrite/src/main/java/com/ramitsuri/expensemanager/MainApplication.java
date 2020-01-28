@@ -66,7 +66,7 @@ public class MainApplication extends Application {
 
         mCategoryRepo = new CategoryRepository(appExecutors, database, source);
         mPaymentMethodRepo = new PaymentMethodRepository(appExecutors, database, source);
-        mExpenseRepo = new ExpenseRepository(appExecutors, database, source);
+        mExpenseRepo = new ExpenseRepository(appExecutors, database);
         mLogRepo = new LogRepository(appExecutors, database);
 
         // TODO DEBUG Only

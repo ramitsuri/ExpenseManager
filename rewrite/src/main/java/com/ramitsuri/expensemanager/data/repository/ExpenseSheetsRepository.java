@@ -16,16 +16,13 @@ import androidx.lifecycle.MutableLiveData;
 
 import static com.ramitsuri.expensemanager.Constants.Sheets.EXPENSE_RANGE;
 
-public class ExpenseSheetsRepository {
+public class ExpenseSheetsRepository extends ExpenseRepository {
 
-    private AppExecutors mExecutors;
-    private ExpenseManagerDatabase mDatabase;
     private SheetRepository mSheetRepository;
 
     public ExpenseSheetsRepository(AppExecutors executors, ExpenseManagerDatabase database,
             SheetRepository sheetRepository) {
-        mExecutors = executors;
-        mDatabase = database;
+        super(executors, database);
         mSheetRepository = sheetRepository;
     }
 

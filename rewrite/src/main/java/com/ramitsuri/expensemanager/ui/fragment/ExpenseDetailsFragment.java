@@ -130,9 +130,6 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
         // Duplicate button
         Button duplicateButton = view.findViewById(R.id.btn_duplicate);
-        if (expense.isSynced()) {
-            duplicateButton.setEnabled(false);
-        }
         duplicateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,5 +154,11 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
                 }
             }
         });
+
+        // Edit delete info text
+        TextView info = view.findViewById(R.id.txt_info);
+        if (expense.isSynced()) {
+            info.setVisibility(View.VISIBLE);
+        }
     }
 }

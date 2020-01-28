@@ -1,7 +1,17 @@
 <resources>
-    <plurals name="expense_count">
+    <plurals name="new_expense_count">
         <item quantity="one">%d new expense</item>
         <item quantity="other">%d new expenses</item>
+    </plurals>
+
+    <plurals name="backed_up_expense_count_in_sheet">
+        <item quantity="one">%1$d expense in %2$s</item>
+        <item quantity="other">%1$d expenses in %2$s</item>
+    </plurals>
+
+    <plurals name="backed_up_expense_count">
+        <item quantity="one">%d backed up expense</item>
+        <item quantity="other">%d backed up expenses</item>
     </plurals>
 
     <string name="app_name">Expenses</string>
@@ -104,6 +114,10 @@
     <string name="metadata_delete_logs">Delete Logs</string>
 
     <!-- All Expenses -->
-    <string name="all_expenses_select_sheet">Select Sheet</string>
+    <string name="all_expenses_select_sheet">Change Sheet</string>
+
+    <!-- Details -->
+    <string name="expense_detail_backed_up_disability_message">Edit and delete not available for
+        backed up expenses</string>
 
 </resources>

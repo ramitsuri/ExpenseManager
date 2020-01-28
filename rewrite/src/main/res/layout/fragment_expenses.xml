@@ -12,18 +12,6 @@
         android:layout_height="match_parent"
         android:padding="@dimen/padding_small">
 
-        <ImageView
-            android:id="@+id/img_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_arrow"
-            android:contentDescription="@string/content_description_down_arrow"
-            android:src="@drawable/ic_arrow_down"
-            android:tint="@color/color_red"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_expenses"
             android:layout_width="0dp"

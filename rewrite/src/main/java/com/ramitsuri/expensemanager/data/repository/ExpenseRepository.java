@@ -17,13 +17,12 @@ public class ExpenseRepository {
 
     @SourceType
     private int mSourceType;
-    private AppExecutors mExecutors;
-    private ExpenseManagerDatabase mDatabase;
+    AppExecutors mExecutors;
+    ExpenseManagerDatabase mDatabase;
 
     private LiveData<List<Expense>> mExpenses;
 
-    public ExpenseRepository(AppExecutors executors, ExpenseManagerDatabase database,
-            @SourceType int sourceType) {
+    public ExpenseRepository(AppExecutors executors, ExpenseManagerDatabase database) {
         mExecutors = executors;
         mDatabase = database;
         mSourceType = SourceType.DB;

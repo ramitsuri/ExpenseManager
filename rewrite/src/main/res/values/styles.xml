@@ -26,4 +26,8 @@
         <item name="colorAccent">#fff</item>
     </style>
 
+    <style name="ChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_background_color</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+    </style>
 </resources>

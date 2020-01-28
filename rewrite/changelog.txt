@@ -113,7 +113,15 @@
 
 - Prevent selecting bottom nav tab if already on selected
 
+- Change List adapter item style (list_picker_item)
+- Change all expenses layout to use fab and similar layout to expenses
+- Subclass ExpenseSheetsRepository from ExpenseRepository
+- Add info about disabled edit and delete in details
+- Show details for backed up expenses as well
+
 // TODO
+- Extract duplicate code and move to base for expenses and all
+- Fix sticky header
 - Save downloaded expenses to db
 - select current month by default for all expenses
 - Fix fragment refreshing

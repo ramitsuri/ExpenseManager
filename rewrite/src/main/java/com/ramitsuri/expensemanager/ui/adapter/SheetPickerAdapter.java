@@ -32,14 +32,18 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
     }
 
     public void setValues(@NonNull List<SheetInfo> values, int selectedId) {
+        setValues(values, selectedId, true);
+    }
+
+    public void setValues(@NonNull List<SheetInfo> values, int selectedId,
+            boolean callbackOnDefaultSelect) {
         mValues = values;
         if (selectedId == Constants.UNDEFINED &&
                 values.size() > 0) { // Select first value in case selection is null
             SheetInfo firstItem = values.get(0);
-            mSelectedId = firstItem.getSheetId();
             // Send callback with selected value when selected value was not found (new expense)
             Timber.i("Selecting first value from list %s", firstItem.toString());
-            onSelectionMade(firstItem);
+            onSelectionMade(firstItem, callbackOnDefaultSelect);
         } else {
             mSelectedId = selectedId;
             notifyDataSetChanged();
@@ -77,10 +81,12 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
         }
     }
 
-    private void onSelectionMade(SheetInfo selectedValue) {
+    private void onSelectionMade(SheetInfo selectedValue, boolean callback) {
         if (mCallback != null) {
             mSelectedId = selectedValue.getSheetId();
-            mCallback.onItemPicked(selectedValue);
+            if (callback) {
+                mCallback.onItemPicked(selectedValue);
+            }
             notifyDataSetChanged();
         } else {
             Timber.w("mCallback is null");
@@ -111,7 +117,7 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
         public void onClick(View view) {
             if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                 if (mValues != null) {
-                    onSelectionMade(mValues.get(getAdapterPosition()));
+                    onSelectionMade(mValues.get(getAdapterPosition()), true);
                 } else {
                     Timber.w("mValues is null");
                 }

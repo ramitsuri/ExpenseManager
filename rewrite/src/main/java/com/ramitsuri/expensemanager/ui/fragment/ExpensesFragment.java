@@ -181,7 +181,8 @@ public class ExpensesFragment extends BaseFragment {
             }
         }
         // Number of expenses
-        mTextInfo1.setText(getResources().getQuantityString(R.plurals.expense_count, count, count));
+        mTextInfo1.setText(
+                getResources().getQuantityString(R.plurals.new_expense_count, count, count));
 
         // Date range
         if (startDateIndex == endDateIndex) {
