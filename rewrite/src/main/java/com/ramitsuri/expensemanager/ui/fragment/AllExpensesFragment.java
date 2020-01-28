@@ -17,6 +17,7 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
+import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.viewModel.AllExpensesViewModel;
@@ -135,6 +136,7 @@ public class AllExpensesFragment extends BaseFragment {
         });
         listExpenses.setAdapter(mExpenseAdapter);
         listExpenses.setLayoutManager(manager);
+        listExpenses.addItemDecoration(new StickyHeaderItemDecoration(mExpenseAdapter));
         listExpenses.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

@@ -47,8 +47,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
-    implementation "androidx.constraintlayout:constraintlayout:2.0.0-beta3"
-    implementation "androidx.coordinatorlayout:coordinatorlayout:1.0.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.0-beta4"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
 
     // Fragments
     implementation "androidx.fragment:fragment:1.2.0-beta02"
@@ -59,7 +59,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui:2.2.0-beta01"
 
     // Material Components
-    implementation "com.google.android.material:material:1.1.0-beta01"
+    implementation "com.google.android.material:material:1.2.0-alpha04"
 
     // Room (Use 2.1.0 to satisfy bug with kotlin stdlib)
     implementation "androidx.room:room-common:2.1.0"
@@ -82,8 +82,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:17.0.0"
 
     // Work
-    implementation "androidx.work:work-runtime:2.2.0"
-    implementation "androidx.work:work-testing:2.2.0"
+    implementation "androidx.work:work-runtime:2.3.0"
+    implementation "androidx.work:work-testing:2.3.0"
 
     // Google Sheets
     implementation("com.google.api-client:google-api-client-android:1.22.0") {

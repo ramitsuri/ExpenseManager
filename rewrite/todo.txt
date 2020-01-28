@@ -1,0 +1,13 @@
+- Move settings to Extra tab
+- Darker bottom nav tab
+- Extract duplicate code and move to base for expenses and all
+- Save downloaded expenses to db
+- Fix fragment refreshing
+- Show analysis (total used, remaining of all expenses)
+- View flagged expenses
+- Error messages
+- Test limited scope
+- Extract id from url
+--------------
+- Scheduled recurring expense
+- Snackbar for log

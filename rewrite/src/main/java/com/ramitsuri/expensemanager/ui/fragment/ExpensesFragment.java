@@ -16,6 +16,7 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
+import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
@@ -117,6 +118,7 @@ public class ExpensesFragment extends BaseFragment {
         });
         listExpenses.setAdapter(adapter);
         listExpenses.setLayoutManager(manager);
+        listExpenses.addItemDecoration(new StickyHeaderItemDecoration(adapter));
         mExpensesViewModel.getExpenses().observe(this, new Observer<List<ExpenseWrapper>>() {
             @Override
             public void onChanged(List<ExpenseWrapper> expenses) {

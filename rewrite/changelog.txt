@@ -1,3 +1,108 @@
+- Sticky header for expenses
+- Update library versions for a bunch of libraries
+
+- Change List adapter item style (list_picker_item)
+- Change all expenses layout to use fab and similar layout to expenses
+- Subclass ExpenseSheetsRepository from ExpenseRepository
+- Add info about disabled edit and delete in details
+- Show details for backed up expenses as well
+
+- Prevent selecting bottom nav tab if already on selected
+
+- Duplicate expense
+- Add new method to Expense Dao to insert and get new expense via @Transaction
+- Add copy constructor to Expense
+- Add new duplicate callback to detail fragment
+
+- Bottom Nav - add new, all and extra tab
+- Remove toolbar in fragments except settings, do not show it in some frags in onStop
+- Delete motion layout transition stuff
+- Delete unneeded views in ExpensesFrag
+- Center align no expenses message
+- Update unsynced to synced on backup
+- Get unsynced in expenses fragment
+- Get expenses from sheets
+- Fix (from sheets date) in DateHelper
+- Add ExpenseSheets repo to do both expense db and sheets stuff
+- Add new Expense constructor to create object from List<Object>
+- Fix reconstructing payment method and category from parcel
+- Move overflow menu options to new Frag (Miscellaneous)
+
+- Modify text sizes
+
+- Remove backup button from expenses frag (was already hidden)
+- Cleanup
+
+- Remove way to get sheets in MetadataFrag
+
+- Update warning dialogs to have no title and change buttons for delete warning
+- Adjust expense list header ui
+- Change default store and description value
+- Remove hidden option Jess
+
+- Enable hidden option for Jess
+
+- Fix flag icon margin top in expense item
+- Handle back click so app doesn't close in one of the fragments
+- Change "No Expenses" text to "No new expenses"
+- Change flag button's style
+- Fix potential crash due to no changes done for flag functionality in landscape ui in add expense
+
+- Adapt info height in expenses screen
+- Swap category and payment method positions in expense list
+- Add flag implementation
+- Migrate date layout card to use material button instead
+- Update expense updates sync and star status as well
+- Send flag column value to spreadsheet
+
+- Fix default sheet selection bug
+- Rename AddExpenseViewModel methods to remove expense from name
+- Use expense instance from ViewModel instead of what's received as argument in Add Expense fragment
+- Add landscape support to expenses, add expense
+- Fix status and nav bar color issues
+- Change bottom sheet dialog color
+
+- Modify SheetRequestHelper to generate multiple requests with sheet ids from expenses
+- Change settings fragment string version info
+- Remove settings pref current sheet id
+- Add AppHelper.defaultSheetId
+- Reduce spacing in add expense fragment layout
+- Hide no expenses help message
+- Add SheetInfo table
+- Add SheetInfo get to SheetRepository with boolean to decide whether to fetch from Google sheet
+- Modify SheetRepo constructor to take in Database object
+- Move Save button to top
+- Add SyncWorker to get info from sheet
+- Add a way to sync data from Sheets in MainActivity
+- Update ExpenseDao.updateExpense() to update sheet id
+
+- Fix crash amount formatting
+- Fix crash with hint on edit text with layout
+
+- Use extended fab for add expense and save expense
+- Made visibility gone on "down arrow to indicate add expense button"
+- Add new column "sheet_id" to Expense (with migration and tests)
+
+- Fix crash due to SheetRepo null in SetupFragment.
+- Add a new public method in MainApp to initialize SheetRepo
+
+- Enabled nav and status bar transparency in theme for API 29
+
+- Deleting expenses directly via database class instead of via repository after backup success
+- Made init repo methods private in MainApplication and calling them in onCreate()
+- Add a fragment to view logs and sheets in debug mode (or special access mode)
+- Add currency format helper and route all big decimals via that class
+- Add delete all logs capability
+- Move exitToUp() to BaseFragment
+- Add version info to settings which can be tapped 7 times to enable hidden options
+- Use sheetscore 1.4.0
+
+- Add card view around expense info textviews in expenses fragment
+- Fix bug where all expenses will get deleted when single expenses is deleted
+
+- Changed colors for dark and night themes
+- Fix theme by battery saver on Android < Q
+
 - Cleanup pref access and set mechanism by adding a AppHelper to read/write prefs
 - Add a WorkHelper to route WorkManager requests
 - Auto backup toggle in settings works now
@@ -16,121 +121,4 @@
 - Change Activity soft input mode to AdjustResize so FAB goes over keyboard
 - Add views for when expenses empty
 - Add a way to delete all expenses in debug build
-
-- Changed colors for dark and night themes
-- Fix theme by battery saver on Android < Q
-
-- Add card view around expense info textviews in expenses fragment
-- Fix bug where all expenses will get deleted when single expenses is deleted
-
-- Deleting expenses directly via database class instead of via repository after backup success
-- Made init repo methods private in MainApplication and calling them in onCreate()
-- Add a fragment to view logs and sheets in debug mode (or special access mode)
-- Add currency format helper and route all big decimals via that class
-- Add delete all logs capability
-- Move exitToUp() to BaseFragment
-- Add version info to settings which can be tapped 7 times to enable hidden options
-- Use sheetscore 1.4.0
-
-- Enabled nav and status bar transparency in theme for API 29
-
-- Fix crash due to SheetRepo null in SetupFragment.
-- Add a new public method in MainApp to initialize SheetRepo
-
-- Use extended fab for add expense and save expense
-- Made visibility gone on "down arrow to indicate add expense button"
-- Add new column "sheet_id" to Expense (with migration and tests)
-
-- Fix crash amount formatting
-- Fix crash with hint on edit text with layout
-
-- Modify SheetRequestHelper to generate multiple requests with sheet ids from expenses
-- Change settings fragment string version info
-- Remove settings pref current sheet id
-- Add AppHelper.defaultSheetId
-- Reduce spacing in add expense fragment layout
-- Hide no expenses help message
-- Add SheetInfo table
-- Add SheetInfo get to SheetRepository with boolean to decide whether to fetch from Google sheet
-- Modify SheetRepo constructor to take in Database object
-- Move Save button to top
-- Add SyncWorker to get info from sheet
-- Add a way to sync data from Sheets in MainActivity
-- Update ExpenseDao.updateExpense() to update sheet id
-
-- Fix default sheet selection bug
-- Rename AddExpenseViewModel methods to remove expense from name
-- Use expense instance from ViewModel instead of what's received as argument in Add Expense fragment
-- Add landscape support to expenses, add expense
-- Fix status and nav bar color issues
-- Change bottom sheet dialog color
-
-- Adapt info height in expenses screen
-- Swap category and payment method positions in expense list
-- Add flag implementation
-- Migrate date layout card to use material button instead
-- Update expense updates sync and star status as well
-- Send flag column value to spreadsheet
-
-- Fix flag icon margin top in expense item
-- Handle back click so app doesn't close in one of the fragments
-- Change "No Expenses" text to "No new expenses"
-- Change flag button's style
-- Fix potential crash due to no changes done for flag functionality in landscape ui in add expense
-
-- Enable hidden option for Jess
-
-- Update warning dialogs to have no title and change buttons for delete warning
-- Adjust expense list header ui
-- Change default store and description value
-- Remove hidden option Jess
-
-- Remove way to get sheets in MetadataFrag
-
-- Remove backup button from expenses frag (was already hidden)
-- Cleanup
-
-- Modify text sizes
-
-- Bottom Nav - add new, all and extra tab
-- Remove toolbar in fragments except settings, do not show it in some frags in onStop
-- Delete motion layout transition stuff
-- Delete unneeded views in ExpensesFrag
-- Center align no expenses message
-- Update unsynced to synced on backup
-- Get unsynced in expenses fragment
-- Get expenses from sheets
-- Fix (from sheets date) in DateHelper
-- Add ExpenseSheets repo to do both expense db and sheets stuff
-- Add new Expense constructor to create object from List<Object>
-- Fix reconstructing payment method and category from parcel
-- Move overflow menu options to new Frag (Miscellaneous)
-
-- Duplicate expense
-- Add new method to Expense Dao to insert and get new expense via @Transaction
-- Add copy constructor to Expense
-- Add new duplicate callback to detail fragment
-
-- Prevent selecting bottom nav tab if already on selected
-
-- Change List adapter item style (list_picker_item)
-- Change all expenses layout to use fab and similar layout to expenses
-- Subclass ExpenseSheetsRepository from ExpenseRepository
-- Add info about disabled edit and delete in details
-- Show details for backed up expenses as well
-
-// TODO
-- Extract duplicate code and move to base for expenses and all
-- Fix sticky header
-- Save downloaded expenses to db
-- select current month by default for all expenses
-- Fix fragment refreshing
-- Show analysis (total used, remaining of all expenses)
-- View flagged expenses
-- Error messages
-- Test limited scope
-- Extract id from url
---------------
-- Scheduled recurring expense
-- Snackbar for log
 

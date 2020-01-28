@@ -4,6 +4,7 @@
     android:id="@+id/text_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/dialog_bg"
     android:gravity="start"
     android:textColor="@color/color_teal"
     android:textSize="@dimen/text_body1"
