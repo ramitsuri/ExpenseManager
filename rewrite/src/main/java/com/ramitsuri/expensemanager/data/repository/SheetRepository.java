@@ -182,19 +182,21 @@ public class SheetRepository {
                     ((ValueRangeSpreadsheetResponse)response).getValueRange()
                             .getValues();
             List<List<String>> entityLists = new ArrayList<>(EntitiesConsumerResponse.MAX_ENTITIES);
-            for (List<Object> objectList : objectLists) {
-                if (objectList == null || objectList.size() == 0) {
-                    continue;
-                }
-                List<String> entityList = new ArrayList<>(objectList.size());
-                for (Object object : objectList) {
-                    if (object != null) {
-                        entityList.add(object.toString());
+            if (objectLists != null) {
+                for (List<Object> objectList : objectLists) {
+                    if (objectList == null || objectList.size() == 0) {
+                        continue;
                     }
-                }
-                entityLists.add(entityList);
-                if (entityLists.size() == EntitiesConsumerResponse.MAX_ENTITIES) {
-                    break;
+                    List<String> entityList = new ArrayList<>(objectList.size());
+                    for (Object object : objectList) {
+                        if (object != null) {
+                            entityList.add(object.toString());
+                        }
+                    }
+                    entityLists.add(entityList);
+                    if (entityLists.size() == EntitiesConsumerResponse.MAX_ENTITIES) {
+                        break;
+                    }
                 }
             }
             consumerResponse.setStringLists(entityLists);
@@ -218,17 +220,19 @@ public class SheetRepository {
                     ((ValueRangeSpreadsheetResponse)response).getValueRange()
                             .getValues();
             List<List<Object>> responseObjectLists = new ArrayList<>();
-            for (List<Object> objectList : objectLists) {
-                if (objectList == null || objectList.size() == 0) {
-                    continue;
-                }
-                List<Object> responseObjectList = new ArrayList<>(objectList.size());
-                for (Object object : objectList) {
-                    if (object != null) {
-                        responseObjectList.add(object);
+            if (objectLists != null) {
+                for (List<Object> objectList : objectLists) {
+                    if (objectList == null || objectList.size() == 0) {
+                        continue;
                     }
+                    List<Object> responseObjectList = new ArrayList<>(objectList.size());
+                    for (Object object : objectList) {
+                        if (object != null) {
+                            responseObjectList.add(object);
+                        }
+                    }
+                    responseObjectLists.add(responseObjectList);
                 }
-                responseObjectLists.add(responseObjectList);
             }
             consumerResponse.setObjectLists(responseObjectLists);
         } catch (IOException e) {

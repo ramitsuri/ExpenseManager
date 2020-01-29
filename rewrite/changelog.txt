@@ -1,3 +1,6 @@
+- Fix crash when a sheet doesn't have any expenses
+- Set "No expenses" text in all expenses
+
 - Change Bottom nav view bg color
 
 - Sticky header for expenses

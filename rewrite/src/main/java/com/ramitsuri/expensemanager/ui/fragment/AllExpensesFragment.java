@@ -254,6 +254,8 @@ public class AllExpensesFragment extends BaseFragment {
         boolean doCalculation = false;
         if (expenses.size() == 0) {
             mTextInfoEmpty.setVisibility(View.VISIBLE);
+            mTextInfoEmpty.setText(String.format(getString(R.string.all_expenses_empty_message),
+                    mViewModel.getSelectedSheetName()));
             mCardInfo.setVisibility(View.GONE);
         } else {
             doCalculation = true;
