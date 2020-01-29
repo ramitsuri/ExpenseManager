@@ -1,3 +1,5 @@
+- Change Bottom nav view bg color
+
 - Sticky header for expenses
 - Update library versions for a bunch of libraries
 

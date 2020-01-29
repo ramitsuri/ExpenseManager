@@ -11,4 +11,5 @@
     <color name="bg_grey">#f5f5f5</color>
 
     <color name="dialog_bg">@android:color/white</color>
+    <color name="bottom_nav_bg">@android:color/white</color>
 </resources>
