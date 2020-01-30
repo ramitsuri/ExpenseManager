@@ -154,14 +154,17 @@ public class SheetRepository {
             BaseSpreadsheetResponse response = mSheetsProcessor.getSheetsInSpreadsheet();
 
             List<SheetMetadata> sheetMetadataList = new ArrayList<>();
-            for (Sheet sheet : ((SpreadsheetSpreadsheetResponse)response).getSpreadsheet()
-                    .getSheets()) {
-                int sheetId = sheet.getProperties().getSheetId();
-                String sheetName = sheet.getProperties().getTitle();
-                SheetMetadata sheetMetadata = new SheetMetadata(sheetId, sheetName);
-                sheetMetadataList.add(sheetMetadata);
+            SpreadsheetSpreadsheetResponse spreadsheetResponse =
+                    (SpreadsheetSpreadsheetResponse)response;
+            if (spreadsheetResponse != null) {
+                for (Sheet sheet : spreadsheetResponse.getSpreadsheet().getSheets()) {
+                    int sheetId = sheet.getProperties().getSheetId();
+                    String sheetName = sheet.getProperties().getTitle();
+                    SheetMetadata sheetMetadata = new SheetMetadata(sheetId, sheetName);
+                    sheetMetadataList.add(sheetMetadata);
+                }
+                consumerResponse.setSheetMetadataList(sheetMetadataList);
             }
-            consumerResponse.setSheetMetadataList(sheetMetadataList);
         } catch (IOException e) {
             Timber.e(e);
             consumerResponse.setException(e);

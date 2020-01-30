@@ -121,7 +121,6 @@ public class SetupFragment extends BaseFragment {
             response.observe(getViewLifecycleOwner(), new Observer<EntitiesConsumerResponse>() {
                 @Override
                 public void onChanged(EntitiesConsumerResponse response) {
-                    Timber.i(response.toString());
                     if (response.getStringLists() != null) {
                         onSaveDataRequested(response.getStringLists());
                     }

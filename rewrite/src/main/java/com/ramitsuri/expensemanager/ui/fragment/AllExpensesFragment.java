@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -44,8 +45,10 @@ public class AllExpensesFragment extends BaseFragment {
 
     // Views
     private ExtendedFloatingActionButton mBtnSelectSheet;
+    private RecyclerView mListExpenses;
     private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
+    private ProgressBar mProgressBar;
 
     public AllExpensesFragment() {
     }
@@ -108,11 +111,13 @@ public class AllExpensesFragment extends BaseFragment {
         mTextInfo2 = view.findViewById(R.id.txt_expense_info_2);
         mTextInfo3 = view.findViewById(R.id.txt_expense_info_3);
 
+        mProgressBar = view.findViewById(R.id.progress);
+
         setupListExpenses(view);
     }
 
     private void setupListExpenses(View view) {
-        final RecyclerView listExpenses = view.findViewById(R.id.list_expenses);
+        mListExpenses = view.findViewById(R.id.list_expenses);
         final int numberOfColumns = getResources().getInteger(R.integer.expenses_grid_columns);
         GridLayoutManager manager = new GridLayoutManager(getActivity(), numberOfColumns);
 
@@ -134,10 +139,10 @@ public class AllExpensesFragment extends BaseFragment {
                 }
             }
         });
-        listExpenses.setAdapter(mExpenseAdapter);
-        listExpenses.setLayoutManager(manager);
-        listExpenses.addItemDecoration(new StickyHeaderItemDecoration(mExpenseAdapter));
-        listExpenses.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mListExpenses.setAdapter(mExpenseAdapter);
+        mListExpenses.setLayoutManager(manager);
+        mListExpenses.addItemDecoration(new StickyHeaderItemDecoration(mExpenseAdapter));
+        mListExpenses.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
@@ -235,6 +240,10 @@ public class AllExpensesFragment extends BaseFragment {
     private void onSheetSelected(@Nonnull SheetInfo sheetInfo, boolean isFirstTime) {
         Timber.i("Sheet selected - %s", sheetInfo.getSheetName());
         if (mViewModel.getSelectedSheetId() != sheetInfo.getSheetId() || isFirstTime) {
+            mListExpenses.setVisibility(View.GONE);
+            mCardInfo.setVisibility(View.GONE);
+            mTextInfoEmpty.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
             mViewModel.setSelectedSheetId(sheetInfo.getSheetId());
             mViewModel.getExpenses(sheetInfo).observe(getViewLifecycleOwner(),
                     new Observer<List<ExpenseWrapper>>() {
@@ -242,6 +251,9 @@ public class AllExpensesFragment extends BaseFragment {
                         public void onChanged(List<ExpenseWrapper> expenses) {
                             Timber.i("Refreshing expenses");
                             mExpenseAdapter.setExpenses(expenses);
+                            mProgressBar.setVisibility(View.GONE);
+                            mCardInfo.setVisibility(View.VISIBLE);
+                            mListExpenses.setVisibility(View.VISIBLE);
                             setTextInfo(expenses);
                         }
                     });

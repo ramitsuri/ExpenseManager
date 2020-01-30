@@ -57,7 +57,7 @@ public class SyncWorker extends BaseWorker {
         // Payment methods and Categories
         EntitiesConsumerResponse entities = MainApplication.getInstance().getSheetRepository()
                 .getEntityDataResponse(Constants.Range.CATEGORIES_PAYMENT_METHODS);
-        if (entities.getStringLists().size() != 2) {
+        if (entities.getStringLists() == null || entities.getStringLists().size() != 2) {
             message = "Attempting to save entities, list size should be 2";
             Timber.i(message);
             insertLog(workType,

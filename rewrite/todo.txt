@@ -1,10 +1,9 @@
 - Move settings to Extra tab
-- Animation when fetching expenses from sheets
 - Extract duplicate code and move to base for expenses and all
 - Save downloaded expenses to db
 - Fix fragment refreshing
 - Show analysis (total used, remaining of all expenses)
-- View flagged expenses
+- Filter for all expenses
 - Error messages
 - Test limited scope
 - Extract id from url

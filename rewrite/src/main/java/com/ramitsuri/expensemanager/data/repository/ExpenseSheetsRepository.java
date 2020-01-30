@@ -34,10 +34,12 @@ public class ExpenseSheetsRepository extends ExpenseRepository {
                 List<Expense> values = new ArrayList<>();
                 String range = sheetInfo.getSheetName() + EXPENSE_RANGE;
                 RangeConsumerResponse response = mSheetRepository.getRangeDataResponse(range);
-                for (List<Object> objects : response.getObjectLists()) {
-                    if (objects.size() >= 6) {
-                        Expense expense = new Expense(objects, sheetInfo.getSheetId());
-                        values.add(expense);
+                if (response.getObjectLists() != null) {
+                    for (List<Object> objects : response.getObjectLists()) {
+                        if (objects.size() >= 6) {
+                            Expense expense = new Expense(objects, sheetInfo.getSheetId());
+                            values.add(expense);
+                        }
                     }
                 }
                 expenses.postValue(values);

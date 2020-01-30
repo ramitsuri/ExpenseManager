@@ -1,3 +1,6 @@
+- Add progress bar animation to all expenses
+- Add null checks for sheet repository get methods
+
 - Fix crash when a sheet doesn't have any expenses
 - Set "No expenses" text in all expenses
 
