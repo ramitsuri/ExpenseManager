@@ -1,3 +1,5 @@
+- Center change sheets fragment grid
+
 - Move AutoBackup, Version info, Spreadsheet Id, theme selector to Misc fragment
 - Fix edit text full screen view in landscape
 - Add DialogHelper methods to show dialog with edit text and with radio list
