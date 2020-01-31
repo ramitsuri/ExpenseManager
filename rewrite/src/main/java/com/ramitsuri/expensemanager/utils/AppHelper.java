@@ -9,6 +9,7 @@ import com.ramitsuri.expensemanager.R;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
+import timber.log.Timber;
 
 public class AppHelper {
 
@@ -75,6 +76,10 @@ public class AppHelper {
 
     public static boolean isAutoBackupEnabled() {
         return PrefHelper.get(getString(R.string.settings_key_auto_backup), false);
+    }
+
+    public static void setAutoBackupEnabled(boolean enable) {
+        PrefHelper.set(getString(R.string.settings_key_auto_backup), enable);
     }
 
     public static String getVersionInfo() {

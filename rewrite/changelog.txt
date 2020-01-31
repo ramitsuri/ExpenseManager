@@ -1,3 +1,8 @@
+- Move AutoBackup, Version info, Spreadsheet Id, theme selector to Misc fragment
+- Fix edit text full screen view in landscape
+- Add DialogHelper methods to show dialog with edit text and with radio list
+- Set default theme on main activity create to fix theme resetting on <Q
+
 - Add progress bar animation to all expenses
 - Add null checks for sheet repository get methods
 

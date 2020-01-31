@@ -35,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
         setupNavigation();
 
         // Set Default Theme
-        if (TextUtils.isEmpty(AppHelper.getCurrentTheme())) {
+        String theme = AppHelper.getCurrentTheme();
+        if (TextUtils.isEmpty(theme)) {
             Timber.i("Setting default theme");
-            AppHelper.setCurrentTheme(Constants.SystemTheme.SYSTEM_DEFAULT);
+            theme = Constants.SystemTheme.SYSTEM_DEFAULT;
         }
+        AppHelper.setCurrentTheme(theme);
 
         migrateCurrentToDefaultSheetId();
 

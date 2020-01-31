@@ -41,6 +41,7 @@
     <string name="common_cancel">Cancel</string>
     <string name="common_store">Store</string>
     <string name="common_expense">Expense</string>
+    <string name="common_ok">OK</string>
 
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">All</string>
@@ -120,5 +121,16 @@
     <!-- Details -->
     <string name="expense_detail_backed_up_disability_message">Edit and delete not available for
         backed up expenses</string>
+
+    <!-- Miscellaneous -->
+    <string name="header_title_backup_sync">Backup and Sync</string>
+    <string name="header_title_spreadsheet">Spreadsheet</string>
+    <string name="header_title_general">General</string>
+
+    <!-- Theme -->
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_battery_saver">Set by Battery Saver</string>
+    <string name="theme_system_default">System Default</string>
 
 </resources>
