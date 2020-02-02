@@ -1,13 +1,19 @@
-- Move settings to Extra tab
-- Extract duplicate code and move to base for expenses and all
-- Save downloaded expenses to db
-- Fix fragment refreshing
-- Show analysis (total used, remaining of all expenses)
-- Filter for all expenses
-- Error messages
+High
 - Test limited scope
-- Extract id from url
+- Save downloaded expenses to db
+
+
+Medium
+- Show analysis (total used, remaining of all expenses)
+- Filter for all expenses - Change sheet button to include two filter and view detail analysis
+- Fix fragment refreshing
 - Easier setup after first start
---------------
-- Scheduled recurring expense
+- Fix change sheet fragment selection - default sheet keeps getting selected
+
+
+Low
+- Extract duplicate code and move to base for expenses and all
+- Extract id from url
+- Error messages
 - Snackbar for log
+- Scheduled recurring expense

@@ -40,7 +40,9 @@ public class Constants {
 
     public class Range {
         public static final String CATEGORIES = "Entities!C1:C20";
+        public static final String USER_ENTERED_CATEGORIES = "=" + CATEGORIES;
         public static final String PAYMENT_METHODS = "Entities!A1:A20";
+        public static final String USER_ENTERED_PAYMENT_METHODS = "=" + PAYMENT_METHODS;
         public static final String CATEGORIES_PAYMENT_METHODS = "Entities!A1:C20";
     }
 
@@ -72,6 +74,7 @@ public class Constants {
         public static final String DATE_PATTERN = "M/d/yyyy";
         public static final String DATE_IS_VALID = "DATE_IS_VALID";
         public static final String ONE_OF_LIST = "ONE_OF_LIST";
+        public static final String ONE_OF_RANGE = "ONE_OF_RANGE";
         public static final String FLAG = "FLAG";
         public static final String EXPENSE_RANGE = "!A:G";
     }

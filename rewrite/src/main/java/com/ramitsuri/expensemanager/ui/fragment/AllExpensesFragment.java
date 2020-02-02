@@ -243,6 +243,7 @@ public class AllExpensesFragment extends BaseFragment {
             mListExpenses.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.GONE);
             mTextInfoEmpty.setVisibility(View.GONE);
+            mBtnSelectSheet.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
             mViewModel.setSelectedSheetId(sheetInfo.getSheetId());
             mViewModel.getExpenses(sheetInfo).observe(getViewLifecycleOwner(),
@@ -252,7 +253,7 @@ public class AllExpensesFragment extends BaseFragment {
                             Timber.i("Refreshing expenses");
                             mExpenseAdapter.setExpenses(expenses);
                             mProgressBar.setVisibility(View.GONE);
-                            mCardInfo.setVisibility(View.VISIBLE);
+                            mBtnSelectSheet.setVisibility(View.VISIBLE);
                             mListExpenses.setVisibility(View.VISIBLE);
                             setTextInfo(expenses);
                         }

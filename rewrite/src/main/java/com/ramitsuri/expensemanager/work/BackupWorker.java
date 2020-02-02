@@ -5,13 +5,10 @@ import android.content.Context;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
-import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -43,21 +40,6 @@ public class BackupWorker extends BaseWorker {
         List<Expense> expensesToBackup =
                 ExpenseManagerDatabase.getInstance().expenseDao().getAllUnsynced();
 
-        // Categories
-        List<Category> categoriesList = ExpenseManagerDatabase.getInstance().categoryDao().getAll();
-        List<String> categories = new ArrayList<>();
-        for (Category category : categoriesList) {
-            categories.add(category.getName());
-        }
-
-        // Payment methods
-        List<PaymentMethod> paymentMethodsList =
-                ExpenseManagerDatabase.getInstance().paymentMethodDao().getAll();
-        List<String> paymentMethods = new ArrayList<>();
-        for (PaymentMethod paymentMethod : paymentMethodsList) {
-            paymentMethods.add(paymentMethod.getName());
-        }
-
         if (expensesToBackup == null) {
             Timber.i("Expenses to backup is null");
             insertLog(workType,
@@ -67,7 +49,7 @@ public class BackupWorker extends BaseWorker {
         }
 
         InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
-                .getInsertRangeResponse(expensesToBackup, categories, paymentMethods, sheetId);
+                .getInsertRangeResponse(expensesToBackup, sheetId);
         if (response.isSuccessful()) {
             ExpenseManagerDatabase.getInstance().expenseDao().updateUnsynced();
             insertLog(workType,

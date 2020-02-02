@@ -36,10 +36,11 @@ public class ExpenseSheetsRepository extends ExpenseRepository {
                 RangeConsumerResponse response = mSheetRepository.getRangeDataResponse(range);
                 if (response.getObjectLists() != null) {
                     for (List<Object> objects : response.getObjectLists()) {
-                        if (objects.size() >= 6) {
-                            Expense expense = new Expense(objects, sheetInfo.getSheetId());
-                            values.add(expense);
+                        if (objects == null || objects.size() < 5) {
+                            continue;
                         }
+                        Expense expense = new Expense(objects, sheetInfo.getSheetId());
+                        values.add(expense);
                     }
                 }
                 expenses.postValue(values);

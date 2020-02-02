@@ -1,3 +1,8 @@
+- Change Version Info string to be correct case
+- Fix Change Sheet button jumping around
+- Null check objects list in ExpenseSheetsRepository
+- Change to ONE_OF_RANGE for categories & payments so that they can be picked from sheet itself
+
 - Center change sheets fragment grid
 
 - Move AutoBackup, Version info, Spreadsheet Id, theme selector to Misc fragment

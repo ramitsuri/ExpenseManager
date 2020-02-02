@@ -21,18 +21,19 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import static com.ramitsuri.expensemanager.Constants.Range.USER_ENTERED_CATEGORIES;
+import static com.ramitsuri.expensemanager.Constants.Range.USER_ENTERED_PAYMENT_METHODS;
 import static com.ramitsuri.expensemanager.Constants.Sheets.DATE;
 import static com.ramitsuri.expensemanager.Constants.Sheets.DATE_IS_VALID;
 import static com.ramitsuri.expensemanager.Constants.Sheets.DATE_PATTERN;
 import static com.ramitsuri.expensemanager.Constants.Sheets.FLAG;
 import static com.ramitsuri.expensemanager.Constants.Sheets.ONE_OF_LIST;
+import static com.ramitsuri.expensemanager.Constants.Sheets.ONE_OF_RANGE;
 
 public class SheetRequestHelper {
 
     public static BatchUpdateSpreadsheetRequest getUpdateRequestBody(
             List<Expense> expensesToBackup,
-            List<String> categories,
-            List<String> paymentMethods,
             int defaultSheetId) {
         BatchUpdateSpreadsheetRequest requestBody = new BatchUpdateSpreadsheetRequest();
         List<Request> requests = new ArrayList<>();
@@ -92,8 +93,8 @@ public class SheetRequestHelper {
                 cellData.setUserEnteredValue(new ExtendedValue()
                         .setStringValue(String.valueOf(expense.getPaymentMethod())));
                 cellData.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
-                                .setValues(getPaymentMethodConditionValues(paymentMethods)))
+                        .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
+                                .setValues(getPaymentMethodConditionValues()))
                         .setStrict(true)
                         .setShowCustomUi(true));
                 cellDataList.add(cellData);
@@ -103,8 +104,8 @@ public class SheetRequestHelper {
                 cellData.setUserEnteredValue(new ExtendedValue()
                         .setStringValue(String.valueOf(expense.getCategory())));
                 cellData.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
-                                .setValues(getCategoriesConditionValues(categories)))
+                        .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
+                                .setValues(getCategoriesConditionValues()))
                         .setStrict(true)
                         .setShowCustomUi(true));
                 cellDataList.add(cellData);
@@ -133,28 +134,22 @@ public class SheetRequestHelper {
         return requestBody;
     }
 
-    private static ArrayList<ConditionValue> getPaymentMethodConditionValues(
-            List<String> paymentMethods) {
+    private static ArrayList<ConditionValue> getPaymentMethodConditionValues() {
         ArrayList<ConditionValue> conditionValues = new ArrayList<>();
 
-        for (String paymentMethod : paymentMethods) {
-            ConditionValue value = new ConditionValue();
-            value.setUserEnteredValue(paymentMethod);
-            conditionValues.add(value);
-        }
+        ConditionValue value = new ConditionValue();
+        value.setUserEnteredValue(USER_ENTERED_PAYMENT_METHODS);
+        conditionValues.add(value);
 
         return conditionValues;
     }
 
-    private static ArrayList<ConditionValue> getCategoriesConditionValues(
-            List<String> categories) {
+    private static ArrayList<ConditionValue> getCategoriesConditionValues() {
         ArrayList<ConditionValue> conditionValues = new ArrayList<>();
 
-        for (String category : categories) {
-            ConditionValue value = new ConditionValue();
-            value.setUserEnteredValue(category);
-            conditionValues.add(value);
-        }
+        ConditionValue value = new ConditionValue();
+        value.setUserEnteredValue(USER_ENTERED_CATEGORIES);
+        conditionValues.add(value);
 
         return conditionValues;
     }

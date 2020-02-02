@@ -132,16 +132,13 @@ public class SheetRepository {
      */
     public LiveData<InsertConsumerResponse> insertRange(
             @NonNull final List<Expense> expenses,
-            @NonNull final List<String> categories,
-            @NonNull final List<String> paymentMethods,
             final int sheetId) {
         final MutableLiveData<InsertConsumerResponse> responseLiveData =
                 new MutableLiveData<>();
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                InsertConsumerResponse response =
-                        getInsertRangeResponse(expenses, categories, paymentMethods, sheetId);
+                InsertConsumerResponse response = getInsertRangeResponse(expenses, sheetId);
                 responseLiveData.postValue(response);
             }
         });
@@ -249,14 +246,11 @@ public class SheetRepository {
     }
 
     public InsertConsumerResponse getInsertRangeResponse(@NonNull List<Expense> expenses,
-            @NonNull List<String> categories,
-            @NonNull List<String> paymentMethods,
             int sheetId) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
             BatchUpdateSpreadsheetRequest requestBody =
-                    SheetRequestHelper
-                            .getUpdateRequestBody(expenses, categories, paymentMethods, sheetId);
+                    SheetRequestHelper.getUpdateRequestBody(expenses, sheetId);
             if (requestBody != null) {
                 mSheetsProcessor.updateSheet(requestBody);
                 consumerResponse.setSuccessful(true);

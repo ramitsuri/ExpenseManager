@@ -67,7 +67,7 @@
     <string name="settings_auto_backup_on">Automatic backup ON</string>
     <string name="settings_auto_backup_off">Automatic backup OFF</string>
     <string name="settings_title_theme">Choose theme</string>
-    <string name="settings_title_version_info">Version Info</string>
+    <string name="settings_title_version_info">Version info</string>
     <string name="settings_summary_spreadsheet_id">Spreadsheet ID</string>
     <string name="settings_summary_sheet_id">Current sheet ID</string>
     <string name="settings_summary_auto_backup">Auto backup new expenses</string>
