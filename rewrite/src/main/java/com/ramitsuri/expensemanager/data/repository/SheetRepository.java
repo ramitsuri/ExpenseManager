@@ -17,7 +17,7 @@ import com.ramitsuri.sheetscore.consumerResponse.RangeConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
 import com.ramitsuri.sheetscore.intdef.Dimension;
-import com.ramitsuri.sheetscore.spreadsheetResponse.BaseSpreadsheetResponse;
+import com.ramitsuri.sheetscore.spreadsheetResponse.BaseResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.SpreadsheetSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.ValueRangeSpreadsheetResponse;
 
@@ -41,7 +41,7 @@ public class SheetRepository {
     public SheetRepository(@NonNull Context context, @NonNull String appName,
             @NonNull Account account, @NonNull String spreadsheetId, @NonNull List<String> scopes,
             @NonNull AppExecutors executors, @Nonnull ExpenseManagerDatabase database) {
-        mSheetsProcessor = new SheetsProcessor(context, appName, account, spreadsheetId, scopes);
+        mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
         mExecutors = executors;
         mDatabase = database;
     }
@@ -50,7 +50,8 @@ public class SheetRepository {
      * Method that runs in a background thread and prepares sheet metadata response with names and
      * ids of all the sheets present in a spreadsheet
      */
-    public LiveData<List<SheetInfo>> getSheetInfos(boolean fetch) {
+    public LiveData<List<SheetInfo>> getSheetInfos(@Nonnull final String spreadsheetId,
+            boolean fetch) {
         final MutableLiveData<List<SheetInfo>> sheetInfosLiveData =
                 new MutableLiveData<>();
         if (fetch) {
@@ -58,7 +59,8 @@ public class SheetRepository {
             mExecutors.networkIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    SheetsMetadataConsumerResponse response = getSheetsMetadataResponse();
+                    SheetsMetadataConsumerResponse response =
+                            getSheetsMetadataResponse(spreadsheetId);
                     List<SheetInfo> sheetInfos = new ArrayList<>();
                     if (response.getSheetMetadataList() != null) {
                         for (SheetMetadata sheetMetadata : response.getSheetMetadataList()) {
@@ -92,13 +94,14 @@ public class SheetRepository {
      * <p>
      * EX: "Entities!A1:J20"
      */
-    public LiveData<EntitiesConsumerResponse> getEntityData(final String range) {
+    public LiveData<EntitiesConsumerResponse> getEntityData(@Nonnull final String spreadsheetId,
+            @Nonnull final String range) {
         final MutableLiveData<EntitiesConsumerResponse> responseLiveData =
                 new MutableLiveData<>();
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                EntitiesConsumerResponse response = getEntityDataResponse(range);
+                EntitiesConsumerResponse response = getEntityDataResponse(spreadsheetId, range);
                 responseLiveData.postValue(response);
             }
         });
@@ -111,13 +114,14 @@ public class SheetRepository {
      * <p>
      * EX: "Aug19!A19:F"
      */
-    public LiveData<RangeConsumerResponse> getRangeData(final String range) {
+    public LiveData<RangeConsumerResponse> getRangeData(@Nonnull final String spreadsheetId,
+            @Nonnull final String range) {
         final MutableLiveData<RangeConsumerResponse> responseLiveData =
                 new MutableLiveData<>();
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                RangeConsumerResponse response = getRangeDataResponse(range);
+                RangeConsumerResponse response = getRangeDataResponse(spreadsheetId, range);
                 responseLiveData.postValue(response);
             }
         });
@@ -130,7 +134,7 @@ public class SheetRepository {
      * <p>
      * EX: "Aug19!A19:F"
      */
-    public LiveData<InsertConsumerResponse> insertRange(
+    public LiveData<InsertConsumerResponse> insertRange(@Nonnull final String spreadsheetId,
             @NonNull final List<Expense> expenses,
             final int sheetId) {
         final MutableLiveData<InsertConsumerResponse> responseLiveData =
@@ -138,17 +142,18 @@ public class SheetRepository {
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                InsertConsumerResponse response = getInsertRangeResponse(expenses, sheetId);
+                InsertConsumerResponse response =
+                        getInsertRangeResponse(spreadsheetId, expenses, sheetId);
                 responseLiveData.postValue(response);
             }
         });
         return responseLiveData;
     }
 
-    public SheetsMetadataConsumerResponse getSheetsMetadataResponse() {
+    public SheetsMetadataConsumerResponse getSheetsMetadataResponse(@Nonnull String spreadsheetId) {
         SheetsMetadataConsumerResponse consumerResponse = new SheetsMetadataConsumerResponse();
         try {
-            BaseSpreadsheetResponse response = mSheetsProcessor.getSheetsInSpreadsheet();
+            BaseResponse response = mSheetsProcessor.getSheetsInSpreadsheet(spreadsheetId);
 
             List<SheetMetadata> sheetMetadataList = new ArrayList<>();
             SpreadsheetSpreadsheetResponse spreadsheetResponse =
@@ -172,11 +177,12 @@ public class SheetRepository {
         return consumerResponse;
     }
 
-    public EntitiesConsumerResponse getEntityDataResponse(String range) {
+    public EntitiesConsumerResponse getEntityDataResponse(@Nonnull String spreadsheetId,
+            @Nonnull String range) {
         EntitiesConsumerResponse consumerResponse = new EntitiesConsumerResponse();
         try {
-            BaseSpreadsheetResponse response =
-                    mSheetsProcessor.getSheetData(range, Dimension.COLUMNS);
+            BaseResponse response =
+                    mSheetsProcessor.getSheetData(spreadsheetId, range, Dimension.COLUMNS);
 
             List<List<Object>> objectLists =
                     ((ValueRangeSpreadsheetResponse)response).getValueRange()
@@ -210,11 +216,12 @@ public class SheetRepository {
         return consumerResponse;
     }
 
-    public RangeConsumerResponse getRangeDataResponse(String range) {
+    public RangeConsumerResponse getRangeDataResponse(@Nonnull String spreadsheetId,
+            @Nonnull String range) {
         RangeConsumerResponse consumerResponse = new RangeConsumerResponse();
         try {
-            BaseSpreadsheetResponse response =
-                    mSheetsProcessor.getSheetData(range, Dimension.ROWS);
+            BaseResponse response =
+                    mSheetsProcessor.getSheetData(spreadsheetId, range, Dimension.ROWS);
 
             List<List<Object>> objectLists =
                     ((ValueRangeSpreadsheetResponse)response).getValueRange()
@@ -245,14 +252,15 @@ public class SheetRepository {
         return consumerResponse;
     }
 
-    public InsertConsumerResponse getInsertRangeResponse(@NonNull List<Expense> expenses,
+    public InsertConsumerResponse getInsertRangeResponse(@Nonnull String spreadsheetId,
+            @NonNull List<Expense> expenses,
             int sheetId) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
             BatchUpdateSpreadsheetRequest requestBody =
                     SheetRequestHelper.getUpdateRequestBody(expenses, sheetId);
             if (requestBody != null) {
-                mSheetsProcessor.updateSheet(requestBody);
+                mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
                 consumerResponse.setSuccessful(true);
             } else {
                 consumerResponse.setSuccessful(false);

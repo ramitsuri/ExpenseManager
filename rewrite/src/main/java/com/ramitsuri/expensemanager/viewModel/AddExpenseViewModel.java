@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
@@ -26,6 +28,7 @@ import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+import timber.log.Timber;
 
 public class AddExpenseViewModel extends ViewModel {
 
@@ -74,14 +77,18 @@ public class AddExpenseViewModel extends ViewModel {
                         return paymentMethodStrings;
                     }
                 });
-
-        mSheetInfos = Transformations.map(sheetRepo.getSheetInfos(false),
-                new Function<List<SheetInfo>, List<SheetInfo>>() {
-                    @Override
-                    public List<SheetInfo> apply(List<SheetInfo> input) {
-                        return TransformationHelper.filterSheetInfos(input);
-                    }
-                });
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        if (TextUtils.isEmpty(spreadsheetId)) {
+            Timber.i("SpreadsheetId is null or empty");
+        } else {
+            mSheetInfos = Transformations.map(sheetRepo.getSheetInfos(spreadsheetId, false),
+                    new Function<List<SheetInfo>, List<SheetInfo>>() {
+                        @Override
+                        public List<SheetInfo> apply(List<SheetInfo> input) {
+                            return TransformationHelper.filterSheetInfos(input);
+                        }
+                    });
+        }
 
         reset(expense);
     }
@@ -94,6 +101,7 @@ public class AddExpenseViewModel extends ViewModel {
         return mPaymentMethods;
     }
 
+    @Nullable
     public LiveData<List<SheetInfo>> getSheetInfos() {
         return mSheetInfos;
     }

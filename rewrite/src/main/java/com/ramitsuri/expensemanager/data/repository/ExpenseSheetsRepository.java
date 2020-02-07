@@ -26,14 +26,16 @@ public class ExpenseSheetsRepository extends ExpenseRepository {
         mSheetRepository = sheetRepository;
     }
 
-    public LiveData<List<Expense>> getExpensesFromSheet(@Nonnull final SheetInfo sheetInfo) {
+    public LiveData<List<Expense>> getExpensesFromSheet(@Nonnull final String spreadsheetId,
+            @Nonnull final SheetInfo sheetInfo) {
         final MutableLiveData<List<Expense>> expenses = new MutableLiveData<>();
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
                 List<Expense> values = new ArrayList<>();
                 String range = sheetInfo.getSheetName() + EXPENSE_RANGE;
-                RangeConsumerResponse response = mSheetRepository.getRangeDataResponse(range);
+                RangeConsumerResponse response =
+                        mSheetRepository.getRangeDataResponse(spreadsheetId, range);
                 if (response.getObjectLists() != null) {
                     for (List<Object> objects : response.getObjectLists()) {
                         if (objects == null || objects.size() < 5) {

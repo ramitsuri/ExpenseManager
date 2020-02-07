@@ -1,11 +1,13 @@
 package com.ramitsuri.expensemanager.work;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
@@ -54,9 +56,20 @@ public class SyncWorker extends BaseWorker {
             return Result.failure();
         }
 
+        // Spreadsheet Id
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        if (TextUtils.isEmpty(spreadsheetId)) {
+            message = "Spreadsheet id is empty or null";
+            Timber.e(message);
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    message);
+            return Result.failure();
+        }
+
         // Payment methods and Categories
         EntitiesConsumerResponse entities = MainApplication.getInstance().getSheetRepository()
-                .getEntityDataResponse(Constants.Range.CATEGORIES_PAYMENT_METHODS);
+                .getEntityDataResponse(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
         if (entities.getStringLists() == null || entities.getStringLists().size() != 2) {
             message = "Attempting to save entities, list size should be 2";
             Timber.i(message);
@@ -77,7 +90,8 @@ public class SyncWorker extends BaseWorker {
 
         // Sheet meta data / info
         SheetsMetadataConsumerResponse response =
-                MainApplication.getInstance().getSheetRepository().getSheetsMetadataResponse();
+                MainApplication.getInstance().getSheetRepository()
+                        .getSheetsMetadataResponse(spreadsheetId);
         List<SheetInfo> sheetInfos = new ArrayList<>();
         if (response.getSheetMetadataList() != null) {
             message = "Saving sheet infos";

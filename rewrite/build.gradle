@@ -103,7 +103,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.0.0'
 
     // SheetsCore
-    implementation("com.ramitsuri:sheetscore:1.4.0")
+    implementation("com.ramitsuri:sheetscore:2.0.0-rc7")
 
     // Due to error - Duplicate class com.google.common.util.concurrent.ListenableFuture found in
     // modules guava-jdk5-17.0.jar (com.google.guava:guava-jdk5:17.0) and listenablefuture-1.0.jar

@@ -33,6 +33,7 @@ import java.util.List;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -222,20 +223,23 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             }
         });
         mListSheets.setAdapter(sheetsAdapter);
-        mViewModel.getSheetInfos().observe(this, new Observer<List<SheetInfo>>() {
-            @Override
-            public void onChanged(List<SheetInfo> sheetInfos) {
-                Timber.i("SheetInfos received %s", sheetInfos);
-                int selectedValue = mViewModel.getSheetId();
-                for (SheetInfo info : sheetInfos) {
-                    if (selectedValue == info.getSheetId()) {
-                        onSheetPicked(info);
-                        break;
+        LiveData<List<SheetInfo>> sheetInfos = mViewModel.getSheetInfos();
+        if (sheetInfos != null) {
+            sheetInfos.observe(this, new Observer<List<SheetInfo>>() {
+                @Override
+                public void onChanged(List<SheetInfo> sheetInfos) {
+                    Timber.i("SheetInfos received %s", sheetInfos);
+                    int selectedValue = mViewModel.getSheetId();
+                    for (SheetInfo info : sheetInfos) {
+                        if (selectedValue == info.getSheetId()) {
+                            onSheetPicked(info);
+                            break;
+                        }
                     }
+                    sheetsAdapter.setValues(sheetInfos, selectedValue);
                 }
-                sheetsAdapter.setValues(sheetInfos, selectedValue);
-            }
-        });
+            });
+        }
     }
 
     @Override

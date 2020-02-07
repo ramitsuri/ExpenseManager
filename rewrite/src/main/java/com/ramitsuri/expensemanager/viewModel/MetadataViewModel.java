@@ -1,14 +1,19 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
@@ -59,23 +64,30 @@ public class MetadataViewModel extends ViewModel {
         mLogRepository.deleteAll();
     }
 
+    @Nullable
     public LiveData<List<String>> getSheets() {
-        return Transformations.map(mSheetRepository.getSheetInfos(true),
-                new Function<List<SheetInfo>, List<String>>() {
-                    @Override
-                    public List<String> apply(List<SheetInfo> input) {
-                        Timber.i("Transforming sheets");
-                        List<String> sheets = new ArrayList<>();
-                        for (SheetInfo sheetInfo : input) {
-                            if (sheetInfo != null) {
-                                String sb = sheetInfo.getSheetName() +
-                                        " | " +
-                                        sheetInfo.getSheetId();
-                                sheets.add(sb);
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        if (TextUtils.isEmpty(spreadsheetId)) {
+            Timber.i("SpreadsheetId is null or empty");
+            return null;
+        } else {
+            return Transformations.map(mSheetRepository.getSheetInfos(spreadsheetId, true),
+                    new Function<List<SheetInfo>, List<String>>() {
+                        @Override
+                        public List<String> apply(List<SheetInfo> input) {
+                            Timber.i("Transforming sheets");
+                            List<String> sheets = new ArrayList<>();
+                            for (SheetInfo sheetInfo : input) {
+                                if (sheetInfo != null) {
+                                    String sb = sheetInfo.getSheetName() +
+                                            " | " +
+                                            sheetInfo.getSheetId();
+                                    sheets.add(sb);
+                                }
                             }
+                            return sheets;
                         }
-                        return sheets;
-                    }
-                });
+                    });
+        }
     }
 }

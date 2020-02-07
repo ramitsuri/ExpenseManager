@@ -1,10 +1,13 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 
 import java.util.List;
@@ -38,7 +41,13 @@ public class SetupViewModel extends ViewModel {
     @Nullable
     public LiveData<EntitiesConsumerResponse> getEntitiesFromSheets() {
         if (mSheetRepository != null) {
-            return mSheetRepository.getEntityData(Constants.Range.CATEGORIES_PAYMENT_METHODS);
+            String spreadsheetId = AppHelper.getSpreadsheetId();
+            if (TextUtils.isEmpty(spreadsheetId)) {
+                Timber.i("SpreadsheetId is null or empty");
+                return null;
+            }
+            return mSheetRepository
+                    .getEntityData(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
         }
         return null;
     }
