@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.ExpenseSheetsRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
@@ -32,18 +34,25 @@ public class AllExpensesViewModel extends ViewModel {
 
         mSelectedSheetId = AppHelper.getDefaultSheetId();
         SheetRepository sheetRepository = MainApplication.getInstance().getSheetRepository();
-        mSheetInfosLiveData = Transformations.map(sheetRepository.getSheetInfos(false),
-                new Function<List<SheetInfo>, List<SheetInfo>>() {
-                    @Override
-                    public List<SheetInfo> apply(List<SheetInfo> input) {
-                        mSheetInfos = TransformationHelper.filterSheetInfos(input);
-                        return mSheetInfos;
-                    }
-                });
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        if (TextUtils.isEmpty(spreadsheetId)) {
+            Timber.i("SpreadsheetId is null or empty");
+        } else {
+            mSheetInfosLiveData =
+                    Transformations.map(sheetRepository.getSheetInfos(spreadsheetId, false),
+                            new Function<List<SheetInfo>, List<SheetInfo>>() {
+                                @Override
+                                public List<SheetInfo> apply(List<SheetInfo> input) {
+                                    mSheetInfos = TransformationHelper.filterSheetInfos(input);
+                                    return mSheetInfos;
+                                }
+                            });
+        }
 
         mRepository = MainApplication.getInstance().getExpenseSheetsRepo();
     }
 
+    @Nullable
     public LiveData<List<SheetInfo>> getSheetInfosLiveData() {
         return mSheetInfosLiveData;
     }
@@ -53,8 +62,14 @@ public class AllExpensesViewModel extends ViewModel {
         return mSheetInfos;
     }
 
+    @Nullable
     public LiveData<List<ExpenseWrapper>> getExpenses(SheetInfo sheetInfo) {
-        return Transformations.map(mRepository.getExpensesFromSheet(sheetInfo),
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        if (TextUtils.isEmpty(spreadsheetId)) {
+            Timber.i("SpreadsheetId is null or empty");
+            return null;
+        }
+        return Transformations.map(mRepository.getExpensesFromSheet(spreadsheetId, sheetInfo),
                 new Function<List<Expense>, List<ExpenseWrapper>>() {
                     @Override
                     public List<ExpenseWrapper> apply(List<Expense> input) {

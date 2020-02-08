@@ -55,6 +55,8 @@
 
 - Remove way to get sheets in MetadataFrag
 
+-  Fix calls to SheetProcessor methods that didn't send  SpreadsheetId
+
 - Update warning dialogs to have no title and change buttons for delete warning
 - Adjust expense list header ui
 - Change default store and description value

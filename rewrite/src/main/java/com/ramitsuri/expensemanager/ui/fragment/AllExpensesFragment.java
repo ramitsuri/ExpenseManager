@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -94,13 +95,16 @@ public class AllExpensesFragment extends BaseFragment {
             }
         });
 
-        mViewModel.getSheetInfosLiveData().observe(getViewLifecycleOwner(),
-                new Observer<List<SheetInfo>>() {
-                    @Override
-                    public void onChanged(List<SheetInfo> sheetInfos) {
-                        onSheetInfosReceived(sheetInfos);
-                    }
-                });
+        LiveData<List<SheetInfo>> sheetInfos = mViewModel.getSheetInfosLiveData();
+        if (sheetInfos != null) {
+            sheetInfos.observe(getViewLifecycleOwner(),
+                    new Observer<List<SheetInfo>>() {
+                        @Override
+                        public void onChanged(List<SheetInfo> sheetInfos) {
+                            onSheetInfosReceived(sheetInfos);
+                        }
+                    });
+        }
 
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
@@ -246,18 +250,23 @@ public class AllExpensesFragment extends BaseFragment {
             mBtnSelectSheet.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
             mViewModel.setSelectedSheetId(sheetInfo.getSheetId());
-            mViewModel.getExpenses(sheetInfo).observe(getViewLifecycleOwner(),
-                    new Observer<List<ExpenseWrapper>>() {
-                        @Override
-                        public void onChanged(List<ExpenseWrapper> expenses) {
-                            Timber.i("Refreshing expenses");
-                            mExpenseAdapter.setExpenses(expenses);
-                            mProgressBar.setVisibility(View.GONE);
-                            mBtnSelectSheet.setVisibility(View.VISIBLE);
-                            mListExpenses.setVisibility(View.VISIBLE);
-                            setTextInfo(expenses);
-                        }
-                    });
+            LiveData<List<ExpenseWrapper>> expenses = mViewModel.getExpenses(sheetInfo);
+            if (expenses != null) {
+                expenses.observe(getViewLifecycleOwner(),
+                        new Observer<List<ExpenseWrapper>>() {
+                            @Override
+                            public void onChanged(List<ExpenseWrapper> expenses) {
+                                Timber.i("Refreshing expenses");
+                                mExpenseAdapter.setExpenses(expenses);
+                                mProgressBar.setVisibility(View.GONE);
+                                mBtnSelectSheet.setVisibility(View.VISIBLE);
+                                mListExpenses.setVisibility(View.VISIBLE);
+                                setTextInfo(expenses);
+                            }
+                        });
+            } else {
+                Timber.i("Expenses null");
+            }
         } else {
             Timber.i("Same Sheet selected, ignoring request");
         }
