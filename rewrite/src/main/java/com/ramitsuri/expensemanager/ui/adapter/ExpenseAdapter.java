@@ -16,9 +16,10 @@ import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.util.List;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
@@ -31,22 +32,23 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Nullable
     private List<ExpenseWrapper> mExpenses;
+    private boolean mIsHistorical;
     @Nullable
     private ItemClickListener mCallback;
 
     public void setExpenses(List<ExpenseWrapper> expenses) {
         if (mExpenses != null) {
-            /*ExpenseDiffCallback callback = new ExpenseDiffCallback(mExpenses, expenses);
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);*/
-
             mExpenses.clear();
             mExpenses.addAll(expenses);
-            //diffResult.dispatchUpdatesTo(this);
         } else {
             // first initialization
             mExpenses = expenses;
         }
         notifyDataSetChanged();
+    }
+
+    public void setHistorical(boolean historical) {
+        mIsHistorical = historical;
     }
 
     public void setCallback(@Nullable ItemClickListener callback) {
@@ -194,45 +196,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private void bind(String date) {
             txtDate.setText(date);
-        }
-    }
-
-    class ExpenseDiffCallback extends DiffUtil.Callback {
-
-        private final List<ExpenseWrapper> oldExpenses, newExpenses;
-
-        ExpenseDiffCallback(List<ExpenseWrapper> oldExpenses, List<ExpenseWrapper> newExpenses) {
-            this.oldExpenses = oldExpenses;
-            this.newExpenses = newExpenses;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldExpenses.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newExpenses.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ExpenseWrapper oldWrapper = oldExpenses.get(oldItemPosition);
-            ExpenseWrapper newWrapper = newExpenses.get(newItemPosition);
-
-            if (oldWrapper.getDate() != null && newWrapper.getDate() != null) {
-                return oldWrapper.getDate().equals(newWrapper.getDate());
-            } else if (oldWrapper.getExpense() != null && newWrapper.getExpense() != null) {
-                return oldWrapper.getExpense().getId() == newWrapper.getExpense().getId();
+            if (mIsHistorical) {
+                setHeaderColor(txtDate, R.color.color_teal);
             } else {
-                return false;
+                setHeaderColor(txtDate, R.color.color_red);
             }
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldExpenses.get(oldItemPosition).equals(newExpenses.get(newItemPosition));
         }
     }
 
@@ -260,6 +228,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ExpenseWrapper wrapper = getItem(headerPosition);
             if (wrapper != null) {
                 textView.setText(wrapper.getDate());
+                if (mIsHistorical) {
+                    setHeaderColor(textView, R.color.color_teal);
+                } else {
+                    setHeaderColor(textView, R.color.color_red);
+                }
             }
         }
     }
@@ -267,5 +240,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public boolean isHeader(int itemPosition) {
         return (getItemViewType(itemPosition) == ListItemType.HEADER);
+    }
+
+    private void setHeaderColor(TextView view, @ColorRes int color) {
+        view.setTextColor(ContextCompat.getColor(view.getContext(), color));
     }
 }

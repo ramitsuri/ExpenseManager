@@ -137,6 +137,7 @@
         android:contentDescription="@string/all_expenses_select_sheet"
         android:text="@string/all_expenses_select_sheet"
         android:textAllCaps="false"
+        android:textColor="@android:color/white"
         app:backgroundTint="@color/color_teal"
         app:layout_anchor="@id/list_expenses"
         app:layout_anchorGravity="bottom|right|end" />

@@ -44,8 +44,8 @@
     <string name="common_ok">OK</string>
 
     <string name="common_new_tab">New</string>
-    <string name="common_all_tab">All</string>
-    <string name="common_extra_tab">Extra</string>
+    <string name="common_all_tab">History</string>
+    <string name="common_extra_tab">Setup</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>

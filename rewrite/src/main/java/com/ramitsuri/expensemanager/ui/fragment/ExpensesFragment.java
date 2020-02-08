@@ -99,6 +99,7 @@ public class ExpensesFragment extends BaseFragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), numberOfColumns);
 
         final ExpenseAdapter adapter = new ExpenseAdapter();
+        adapter.setHistorical(false);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(

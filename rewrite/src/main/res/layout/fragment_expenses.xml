@@ -34,7 +34,7 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
             android:visibility="gone"
-            app:cardBackgroundColor="@color/color_teal"
+            app:cardBackgroundColor="@color/color_red"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -126,7 +126,8 @@
         android:contentDescription="@string/add_expense"
         android:text="@string/add_expense"
         android:textAllCaps="false"
-        app:backgroundTint="@color/color_teal"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/color_red"
         app:layout_anchor="@id/list_expenses"
         app:layout_anchorGravity="bottom|right|end" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

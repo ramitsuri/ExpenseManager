@@ -1,3 +1,6 @@
+- Change color of new expenses fragment to have red instead of teal
+- Change icon and names of bottom tabs (icon - all tab, names - all, misc tab)
+
 - Fix spreadsheet Id being null because  it was saved after it was needed
 
 - Fix calls to SheetProcessor methods that didn't send  SpreadsheetId
