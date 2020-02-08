@@ -113,10 +113,11 @@ public class SetupFragment extends BaseFragment {
         Timber.i("Initiating setup");
 
         // Init Sheet Repo
-        mViewModel.initSheetRepository(accountName, accountType, getSpreadsheetId());
+        mViewModel.initSheetRepository(accountName, accountType);
 
         // Get Categories and PaymentMethods from Google Sheet
-        LiveData<EntitiesConsumerResponse> response = mViewModel.getEntitiesFromSheets();
+        LiveData<EntitiesConsumerResponse> response =
+                mViewModel.getEntitiesFromSheets(getSpreadsheetId());
         if (response != null) {
             response.observe(getViewLifecycleOwner(), new Observer<EntitiesConsumerResponse>() {
                 @Override

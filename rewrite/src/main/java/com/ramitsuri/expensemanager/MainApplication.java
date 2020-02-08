@@ -80,28 +80,26 @@ public class MainApplication extends Application {
     }
 
     private void initSheetRepo() {
-        String spreadsheetId = AppHelper.getSpreadsheetId();
         String accountName = AppHelper.getAccountName();
         String accountType = AppHelper.getAccountType();
 
-        initSheetRepo(spreadsheetId, accountName, accountType);
+        initSheetRepo(accountName, accountType);
     }
 
-    public void initSheetRepo(String spreadsheetId, String accountName, String accountType) {
+    public void initSheetRepo(String accountName, String accountType) {
         AppExecutors appExecutors = AppExecutors.getInstance();
         ExpenseManagerDatabase database = ExpenseManagerDatabase.getInstance();
         String appName = getString(R.string.app_name);
 
-        if (TextUtils.isEmpty(spreadsheetId) ||
-                TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
-            Timber.i("Spreadsheet Id - %s / Account Name - %s / Account Type - %s null or empty",
-                    spreadsheetId, accountName, accountType);
+        if (TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
+            Timber.i("Account Name - %s / Account Type - %s null or empty",
+                    accountName, accountType);
             return;
         }
 
         Account account = new Account(accountName, accountType);
 
-        mSheetRepository = new SheetRepository(this, appName, account, spreadsheetId,
+        mSheetRepository = new SheetRepository(this, appName, account,
                 Arrays.asList(Constants.SCOPES), appExecutors, database);
     }
 

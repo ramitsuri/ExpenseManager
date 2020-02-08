@@ -39,7 +39,7 @@ public class SheetRepository {
     private ExpenseManagerDatabase mDatabase;
 
     public SheetRepository(@NonNull Context context, @NonNull String appName,
-            @NonNull Account account, @NonNull String spreadsheetId, @NonNull List<String> scopes,
+            @NonNull Account account, @NonNull List<String> scopes,
             @NonNull AppExecutors executors, @Nonnull ExpenseManagerDatabase database) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
         mExecutors = executors;

@@ -1,3 +1,7 @@
+- Fix spreadsheet Id being null because  it was saved after it was needed
+
+- Fix calls to SheetProcessor methods that didn't send  SpreadsheetId
+
 - Change Version Info string to be correct case
 - Fix Change Sheet button jumping around
 - Null check objects list in ExpenseSheetsRepository
@@ -54,8 +58,6 @@
 - Cleanup
 
 - Remove way to get sheets in MetadataFrag
-
--  Fix calls to SheetProcessor methods that didn't send  SpreadsheetId
 
 - Update warning dialogs to have no title and change buttons for delete warning
 - Adjust expense list header ui

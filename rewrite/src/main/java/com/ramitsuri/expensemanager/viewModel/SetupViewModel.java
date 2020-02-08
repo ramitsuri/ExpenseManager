@@ -30,18 +30,17 @@ public class SetupViewModel extends ViewModel {
         mPaymentMethodRepository = MainApplication.getInstance().getPaymentMethodRepo();
     }
 
-    public void initSheetRepository(String accountName, String accountType, String spreadsheetId) {
+    public void initSheetRepository(String accountName, String accountType) {
         if (MainApplication.getInstance().getSheetRepository() == null) {
             Timber.e("Sheet repo is null");
-            MainApplication.getInstance().initSheetRepo(spreadsheetId, accountName, accountType);
+            MainApplication.getInstance().initSheetRepo(accountName, accountType);
         }
         mSheetRepository = MainApplication.getInstance().getSheetRepository();
     }
 
     @Nullable
-    public LiveData<EntitiesConsumerResponse> getEntitiesFromSheets() {
+    public LiveData<EntitiesConsumerResponse> getEntitiesFromSheets(String spreadsheetId) {
         if (mSheetRepository != null) {
-            String spreadsheetId = AppHelper.getSpreadsheetId();
             if (TextUtils.isEmpty(spreadsheetId)) {
                 Timber.i("SpreadsheetId is null or empty");
                 return null;
