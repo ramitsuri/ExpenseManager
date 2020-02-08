@@ -34,19 +34,10 @@
         android:label="@string/common_empty">
 
         <action
-            android:id="@+id/nav_action_settings"
-            app:destination="@id/fragment_settings" />
-
-        <action
             android:id="@+id/nav_action_sheets"
             app:destination="@id/fragment_metadata" />
 
     </fragment>
-
-    <fragment
-        android:id="@+id/fragment_settings"
-        android:name="com.ramitsuri.expensemanager.ui.fragment.SettingsFragment"
-        android:label="@string/common_empty" />
 
     <fragment
         android:id="@+id/fragment_metadata"
