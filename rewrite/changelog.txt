@@ -1,3 +1,25 @@
+- Add migrate option
+-   Will create a copy of existing spreadsheet from within the app so app can access it with lesser permissions
+-   Steps
+       1. Go to Setup tab at the bottom
+       2. Tap migrate
+       3. Wait for Spreadsheet Id to be refreshed. Don't close the app until the migrate button reads "Tap to restore access"
+       4. Close the app
+       5. Go to https://myaccount.google.com/u/0/permissions and remove access to Expense Manager
+       6. Wait for like 10 mins
+       7. Go to Setup tab
+       8. Tap Migrate again
+       9. Make sure you see the new screen to grant reduced permissions
+       10. Tap allow
+       11. Tap Sync
+       12. Turn on and off Auto Backup (if you want it on)
+       13. Add a new expense and tap backup now to make sure everything is working
+- Change no expenses text color in history tab
+- Add DriveProcess instance to SheetRepository
+- Add a method to refresh processor instances (MainApp and SheetRepo)
+- Add methods to get create (with entities and template) spreadsheet and copy file requests
+- Use SheetsCore 3.0.0
+
 - Change color of new expenses fragment to have red instead of teal
 - Change icon and names of bottom tabs (icon - all tab, names - all, misc tab)
 

@@ -1,15 +1,26 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.IntDefs.MigrationStep;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
+import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
+import com.ramitsuri.sheetscore.consumerResponse.FileConsumerResponse;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import androidx.annotation.ArrayRes;
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import timber.log.Timber;
 
@@ -19,9 +30,12 @@ public class MiscellaneousViewModel extends ViewModel {
     private int mAboutPressCount;
     private MutableLiveData<String> mSpreadsheetId;
     private MutableLiveData<String> mCurrentTheme;
+    private MutableLiveData<Integer> mMigrationStepLive;
+    private SheetRepository mRepository;
 
     public MiscellaneousViewModel() {
         super();
+        mRepository = MainApplication.getInstance().getSheetRepository();
 
         mDeleteLastPressTime = 0;
 
@@ -32,6 +46,9 @@ public class MiscellaneousViewModel extends ViewModel {
 
         mCurrentTheme = new MutableLiveData<>();
         mCurrentTheme.postValue(AppHelper.getCurrentTheme());
+
+        mMigrationStepLive = new MutableLiveData<>();
+        mMigrationStepLive.postValue(AppHelper.getMigrationStep());
     }
 
     public void initiateBackup() {
@@ -142,5 +159,64 @@ public class MiscellaneousViewModel extends ViewModel {
         }
         AppHelper.setCurrentTheme(theme);
         mCurrentTheme.postValue(theme);
+    }
+
+    private void setMigrationStep(@MigrationStep int migrationStep) {
+        AppHelper.setMigrationStep(migrationStep);
+        mMigrationStepLive.postValue(migrationStep);
+    }
+
+    @MigrationStep
+    public int getMigrationStep() {
+        return AppHelper.getMigrationStep();
+    }
+
+    public LiveData<Integer> getMigrationStepLive() {
+        return mMigrationStepLive;
+    }
+
+    @Nullable
+    public LiveData<Boolean> copySpreadsheet(@Nonnull String spreadsheetName) {
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        if (TextUtils.isEmpty(spreadsheetId)) {
+            Timber.i("SpreadsheetId is null or empty");
+            return null;
+        }
+        setMigrationStep(MigrationStep.COPY_IN_PROGRESS);
+        return Transformations.map(mRepository.copySpreadsheet(spreadsheetId, spreadsheetName),
+                new Function<FileConsumerResponse, Boolean>() {
+                    @Override
+                    public Boolean apply(FileConsumerResponse input) {
+                        if (input.getFileId() != null) {
+                            setSpreadsheetId(input.getFileId());
+                            setMigrationStep(MigrationStep.RESTORE_ACCESS);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+    }
+
+    // Used only to get the exception to restore access
+    @Nullable
+    public LiveData<EntitiesConsumerResponse> restoreAccess() {
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        if (TextUtils.isEmpty(spreadsheetId)) {
+            Timber.i("SpreadsheetId is null or empty");
+            return null;
+        }
+        MainApplication.getInstance()
+                .refreshSheetRepo(AppHelper.getAccountName(), AppHelper.getAccountType());
+        setMigrationStep(MigrationStep.RESTORE_ACCESS_IN_PROGRESS);
+        return mRepository.getEntityData(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
+    }
+
+    public void onAccessRestored() {
+        setMigrationStep(MigrationStep.COMPLETE);
+    }
+
+    public void onAccessRestoreFail() {
+        setMigrationStep(MigrationStep.RESTORE_ACCESS);
     }
 }

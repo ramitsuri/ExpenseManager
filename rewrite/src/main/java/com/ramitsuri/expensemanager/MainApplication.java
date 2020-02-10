@@ -33,6 +33,8 @@ public class MainApplication extends Application {
 
     @Override
     public void onCreate() {
+        Timber.i("Creating application");
+
         super.onCreate();
 
         sInstance = this;
@@ -100,7 +102,7 @@ public class MainApplication extends Application {
         Account account = new Account(accountName, accountType);
 
         mSheetRepository = new SheetRepository(this, appName, account,
-                Arrays.asList(Constants.SCOPES), appExecutors, database);
+                Arrays.asList(AppHelper.getScopes()), appExecutors, database);
     }
 
     private void initExpenseSheetRepo() {
@@ -108,6 +110,20 @@ public class MainApplication extends Application {
         ExpenseManagerDatabase database = ExpenseManagerDatabase.getInstance();
 
         mExpenseSheetsRepo = new ExpenseSheetsRepository(appExecutors, database, mSheetRepository);
+    }
+
+    public void refreshSheetRepo(String accountName, String accountType) {
+        String appName = getString(R.string.app_name);
+
+        if (TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
+            Timber.i("Account Name - %s / Account Type - %s null or empty",
+                    accountName, accountType);
+            return;
+        }
+
+        Account account = new Account(accountName, accountType);
+        mSheetRepository
+                .refreshProcessors(this, appName, account, Arrays.asList(AppHelper.getScopes()));
     }
 
     public CategoryRepository getCategoryRepo() {

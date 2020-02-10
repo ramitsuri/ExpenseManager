@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager.ui.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.IntDefs.MigrationStep;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.utils.ToastHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
+import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
+
+import java.util.Date;
 
 import javax.annotation.Nonnull;
 
@@ -26,9 +34,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
+import timber.log.Timber;
+
+import static android.app.Activity.RESULT_OK;
 
 public class MiscellaneousFragment extends BaseFragment {
 
@@ -114,6 +126,12 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_spreadsheet_id,
                 R.string.settings_title_spreadsheet_id,
                 R.drawable.ic_spreadsheet_id);
+
+        // Migrate
+        setupMigrateItem(view,
+                R.id.item_migrate,
+                R.string.settings_title_migrate,
+                R.drawable.ic_migrate);
 
         // Header - General
         setupHeader(view,
@@ -262,6 +280,51 @@ public class MiscellaneousFragment extends BaseFragment {
         }
     }
 
+    private void setupMigrateItem(@Nonnull View view,
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            @DrawableRes int drawableRes) {
+        int migrationStep = mViewModel.getMigrationStep();
+        ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes,
+                migrationStep != MigrationStep.COMPLETE);
+        if (container != null) {
+            final TextView summary = container.findViewById(R.id.summary);
+            final View progress = view.findViewById(R.id.progress);
+            if (summary != null) {
+                summary.setVisibility(View.VISIBLE);
+                mViewModel.getMigrationStepLive().observe(getViewLifecycleOwner(),
+                        new Observer<Integer>() {
+                            @Override
+                            public void onChanged(Integer integer) {
+                                switch (integer) {
+                                    case MigrationStep.COPY:
+                                        summary.setText(R.string.migration_step_copy_summary);
+                                        progress.setVisibility(View.GONE);
+                                        break;
+
+                                    case MigrationStep.RESTORE_ACCESS:
+                                        summary.setText(
+                                                R.string.migration_step_restore_access_summary);
+                                        progress.setVisibility(View.GONE);
+                                        break;
+
+                                    case MigrationStep.COPY_IN_PROGRESS:
+                                    case MigrationStep.RESTORE_ACCESS_IN_PROGRESS:
+                                        progress.setVisibility(View.VISIBLE);
+                                        summary.setText(R.string.migration_step_progress_summary);
+                                        break;
+
+                                    case MigrationStep.COMPLETE:
+                                        summary.setText(R.string.migration_step_complete_summary);
+                                        progress.setVisibility(View.GONE);
+                                        break;
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
     private void setupThemeItem(@Nonnull View view,
             @IdRes final int idRes,
             @StringRes int titleRes,
@@ -366,6 +429,80 @@ public class MiscellaneousFragment extends BaseFragment {
                         R.string.settings_title_theme,
                         R.string.common_cancel, null);
                 break;
+
+            case R.id.item_migrate:
+                int migrationStep = mViewModel.getMigrationStep();
+                Timber.i("Migrate Clicked: " + migrationStep);
+                switch (migrationStep) {
+                    case MigrationStep.COPY:
+                        LiveData<Boolean> copySuccess =
+                                mViewModel.copySpreadsheet(
+                                        String.format(getString(R.string.spreadsheet_name),
+                                                DateHelper.getFriendlyDate(new Date().getTime())));
+                        if (copySuccess == null) {
+                            Timber.i("Spreadsheet copy failed");
+                        } else {
+                            copySuccess.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean aBoolean) {
+                                    Timber.i("Spreadsheet copied");
+                                }
+                            });
+                        }
+                        break;
+
+                    case MigrationStep.RESTORE_ACCESS:
+                        LiveData<EntitiesConsumerResponse> response = mViewModel.restoreAccess();
+                        if (response == null) {
+                            Timber.i("Restore access failed");
+                        } else {
+                            response.observe(getViewLifecycleOwner(),
+                                    new Observer<EntitiesConsumerResponse>() {
+                                        @Override
+                                        public void onChanged(
+                                                EntitiesConsumerResponse entitiesConsumerResponse) {
+                                            Timber.i(entitiesConsumerResponse.toString());
+                                            Exception exception =
+                                                    entitiesConsumerResponse.getException();
+                                            if (exception != null) {
+                                                Timber.i("Attempting to restore access");
+                                                startActivityForResult(
+                                                        ((UserRecoverableAuthIOException)exception)
+                                                                .getIntent(),
+                                                        Constants.RequestCode.GOOGLE_SIGN_IN);
+                                            } else {
+                                                mViewModel.onAccessRestoreFail();
+                                            }
+                                        }
+                                    });
+                        }
+                        break;
+                    case MigrationStep.COMPLETE:
+                        View view = getView();
+                        if (view != null) {
+                            Snackbar.make(view, R.string.migration_all_set, Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
+                        break;
+
+                    case MigrationStep.COPY_IN_PROGRESS:
+                    case MigrationStep.RESTORE_ACCESS_IN_PROGRESS:
+                        break;
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestCode.GOOGLE_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                Timber.i("Sign in success");
+                mViewModel.onAccessRestored();
+            } else {
+                mViewModel.onAccessRestoreFail();
+            }
         }
     }
 }

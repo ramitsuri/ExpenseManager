@@ -4,12 +4,12 @@ import android.os.Build;
 
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.IntDefs.MigrationStep;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
-import timber.log.Timber;
 
 public class AppHelper {
 
@@ -101,6 +101,24 @@ public class AppHelper {
     public static int getDefaultSheetId() {
         return PrefHelper
                 .get(getString(R.string.settings_key_default_sheet_id), Constants.UNDEFINED);
+    }
+
+    public static void setMigrationStep(@MigrationStep int migrationStep) {
+        PrefHelper.set(getString(R.string.settings_key_migration_step), migrationStep);
+    }
+
+    @MigrationStep
+    public static int getMigrationStep() {
+        return PrefHelper
+                .get(getString(R.string.settings_key_migration_step), MigrationStep.COPY);
+    }
+
+    public static String[] getScopes() {
+        if (getMigrationStep() == MigrationStep.COPY) {
+            return Constants.SCOPES;
+        } else {
+            return Constants.SCOPES_LIMITED;
+        }
     }
 
     private static String getString(@StringRes int resourceId) {

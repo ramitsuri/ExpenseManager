@@ -15,6 +15,7 @@
     </plurals>
 
     <string name="app_name">Expenses</string>
+    <string name="spreadsheet_name">Expenses - %1$s</string>
     <string name="hello_add_fragment">Hello Add fragment</string>
     <string name="hello_settings_fragment">Hello Settings fragment</string>
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
@@ -84,6 +85,7 @@
     <string name="settings_key_account_type">settings_account_type</string>
     <string name="settings_key_enable_debug_options">enable_debug_options</string>
     <string name="settings_key_default_sheet_id">default_sheet_id</string>
+    <string name="settings_key_migration_step">migration_step</string>
 
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>
@@ -126,6 +128,12 @@
     <string name="header_title_backup_sync">Backup and Sync</string>
     <string name="header_title_spreadsheet">Spreadsheet</string>
     <string name="header_title_general">General</string>
+    <string name="settings_title_migrate">Migrate</string>
+    <string name="migration_step_copy_summary">Tap to begin migration</string>
+    <string name="migration_step_restore_access_summary">Tap to restore access</string>
+    <string name="migration_step_progress_summary">Doing something… Don\'t close the app</string>
+    <string name="migration_step_complete_summary">All set! You can continue using the app</string>
+    <string name="migration_all_set">You\'re all set!</string>
 
     <!-- Theme -->
     <string name="theme_light">Light</string>

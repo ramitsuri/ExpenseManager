@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.data.repository;
 import android.accounts.Account;
 import android.content.Context;
 
+import com.google.api.services.drive.model.File;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.ramitsuri.expensemanager.AppExecutors;
@@ -10,12 +11,15 @@ import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.SheetRequestHelper;
+import com.ramitsuri.sheetscore.DriveProcessor;
 import com.ramitsuri.sheetscore.SheetsProcessor;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
+import com.ramitsuri.sheetscore.consumerResponse.FileConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.RangeConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
+import com.ramitsuri.sheetscore.driveResponse.FileCopyResponse;
 import com.ramitsuri.sheetscore.intdef.Dimension;
 import com.ramitsuri.sheetscore.spreadsheetResponse.BaseResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.SpreadsheetSpreadsheetResponse;
@@ -35,6 +39,7 @@ import timber.log.Timber;
 public class SheetRepository {
 
     private SheetsProcessor mSheetsProcessor;
+    private DriveProcessor mDriveProcessor;
     private AppExecutors mExecutors;
     private ExpenseManagerDatabase mDatabase;
 
@@ -42,6 +47,7 @@ public class SheetRepository {
             @NonNull Account account, @NonNull List<String> scopes,
             @NonNull AppExecutors executors, @Nonnull ExpenseManagerDatabase database) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
+        mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
         mExecutors = executors;
         mDatabase = database;
     }
@@ -144,6 +150,25 @@ public class SheetRepository {
             public void run() {
                 InsertConsumerResponse response =
                         getInsertRangeResponse(spreadsheetId, expenses, sheetId);
+                responseLiveData.postValue(response);
+            }
+        });
+        return responseLiveData;
+    }
+
+    /**
+     * Method that runs in a background thread and prepares range data for a given range
+     * in a spreadsheet
+     * <p>
+     * EX: "Aug19!A19:F"
+     */
+    public LiveData<FileConsumerResponse> copySpreadsheet(@Nonnull final String spreadsheetId,
+            @NonNull final String fileName) {
+        final MutableLiveData<FileConsumerResponse> responseLiveData = new MutableLiveData<>();
+        mExecutors.networkIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                FileConsumerResponse response = getCopySpreadsheetResponse(spreadsheetId, fileName);
                 responseLiveData.postValue(response);
             }
         });
@@ -275,5 +300,30 @@ public class SheetRepository {
             consumerResponse.setException(e);
         }
         return consumerResponse;
+    }
+
+    public FileConsumerResponse getCopySpreadsheetResponse(@Nonnull String spreadsheetId,
+            @NonNull String fileName) {
+        FileConsumerResponse consumerResponse = new FileConsumerResponse();
+        try {
+            File requestBody =
+                    SheetRequestHelper.getCopyFileRequestBody(fileName);
+            BaseResponse response = mDriveProcessor.copyFile(spreadsheetId, requestBody);
+            String newFileId = ((FileCopyResponse)response).getResponse().getId();
+            consumerResponse.setFileId(newFileId);
+        } catch (IOException e) {
+            Timber.e(e);
+            consumerResponse.setException(e);
+        } catch (Exception e) {
+            Timber.e(e);
+            consumerResponse.setException(e);
+        }
+        return consumerResponse;
+    }
+
+    public void refreshProcessors(@NonNull Context context, @NonNull String appName,
+            @NonNull Account account, @NonNull List<String> scopes) {
+        mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
+        mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
     }
 }
