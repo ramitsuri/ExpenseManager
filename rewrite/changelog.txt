@@ -1,3 +1,7 @@
+- Remove some of migrate code as not needed
+- Change night red color to be lighter
+- Remove sheets from metadata
+
 - Add migrate option
 -   Will create a copy of existing spreadsheet from within the app so app can access it with lesser permissions
 -   Steps

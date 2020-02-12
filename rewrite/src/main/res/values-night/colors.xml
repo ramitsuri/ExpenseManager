@@ -2,7 +2,7 @@
 <resources>
     <color name="grey">#75e1eff7</color>
     <color name="bg_grey">#262626</color>
-    <color name="color_red">#ba000d</color>
+    <color name="color_red">#e53935</color>
     <color name="color_teal">#00675b</color>
 
     <color name="dialog_bg">#121212</color>
