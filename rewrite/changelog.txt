@@ -1,3 +1,5 @@
+- Add ripple to misc frag items for touch effect
+
 - Remove some of migrate code as not needed
 - Change night red color to be lighter
 - Remove sheets from metadata
