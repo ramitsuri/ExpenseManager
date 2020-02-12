@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.IntDefs.SourceType;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
+import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseSheetsRepository;
@@ -25,6 +26,7 @@ public class MainApplication extends Application {
     private PaymentMethodRepository mPaymentMethodRepo;
     private ExpenseRepository mExpenseRepo;
     private LogRepository mLogRepo;
+    private BudgetRepository mBudgetRepository;
     private ExpenseSheetsRepository mExpenseSheetsRepo;
 
     private SheetRepository mSheetRepository;
@@ -70,6 +72,7 @@ public class MainApplication extends Application {
         mPaymentMethodRepo = new PaymentMethodRepository(appExecutors, database, source);
         mExpenseRepo = new ExpenseRepository(appExecutors, database);
         mLogRepo = new LogRepository(appExecutors, database);
+        mBudgetRepository = new BudgetRepository(appExecutors, database);
 
         // TODO DEBUG Only
         /*mExpenseRepo.deleteExpenses();
@@ -148,5 +151,9 @@ public class MainApplication extends Application {
 
     public ExpenseSheetsRepository getExpenseSheetsRepo() {
         return mExpenseSheetsRepo;
+    }
+
+    public BudgetRepository getBudgetRepository() {
+        return mBudgetRepository;
     }
 }

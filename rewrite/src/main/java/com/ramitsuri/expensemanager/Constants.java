@@ -46,6 +46,7 @@ public class Constants {
         public static final String PAYMENT_METHODS = "Entities!A1:A20";
         public static final String USER_ENTERED_PAYMENT_METHODS = "=" + PAYMENT_METHODS;
         public static final String CATEGORIES_PAYMENT_METHODS = "Entities!A1:C20";
+        public static final String BUDGETS = "Entities!G1:M20";
     }
 
     public class SystemTheme {

@@ -40,4 +40,17 @@ public class DatabaseMigration {
                     ")");
         }
     };
+
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `Budget` " +
+                    "(" +
+                    "`mId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`name` TEXT, " +
+                    "`amount` TEXT, " +
+                    "`categories` TEXT " +
+                    ")");
+        }
+    };
 }

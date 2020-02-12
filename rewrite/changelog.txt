@@ -1,3 +1,11 @@
+- Db version to 5
+- Add db migration
+- Add Budget table, dao, repository
+- Add list converter for string list objects in room table
+- Remove max entities limit when getting entities so that budgets can be read
+- Sync budgets in SyncWorker
+- Add gson library used for listconverter
+
 - Add ripple to misc frag items for touch effect
 
 - Remove some of migrate code as not needed

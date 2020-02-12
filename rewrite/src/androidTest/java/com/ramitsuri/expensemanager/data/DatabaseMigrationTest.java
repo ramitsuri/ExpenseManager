@@ -86,4 +86,25 @@ public class DatabaseMigrationTest {
         // but you need to validate that the data was migrated properly.
         db.execSQL("INSERT INTO SheetInfo(sheet_name,sheet_id) VALUES('DEC', '154646')");
     }
+
+    @Test
+    public void migrate4To5() throws IOException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 4);
+
+        // db has schema version 4. insert some data using SQL queries.
+        // You cannot use DAO classes because they expect the latest schema.
+        db.execSQL("SELECT * FROM Expense");
+
+        // Prepare for the next version.
+        db.close();
+
+        // Re-open the database with version 5 and provide
+        // MIGRATION_4_5 as the migration process.
+        db = helper.runMigrationsAndValidate(TEST_DB, 5, true, DatabaseMigration.MIGRATION_4_5);
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+        db.execSQL(
+                "INSERT INTO Budget(name,amount,categories) VALUES('Budget1', '32.93','[\"Utilities\",\"Rent\",\"Home\"]')");
+    }
 }

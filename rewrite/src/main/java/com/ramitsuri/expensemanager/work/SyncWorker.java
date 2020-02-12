@@ -6,11 +6,13 @@ import android.text.TextUtils;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
+import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
+import com.ramitsuri.sheetscore.intdef.Dimension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +73,7 @@ public class SyncWorker extends BaseWorker {
         EntitiesConsumerResponse entities = MainApplication.getInstance().getSheetRepository()
                 .getEntityDataResponse(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
         if (entities.getStringLists() == null || entities.getStringLists().size() != 2) {
-            message = "Attempting to save entities, list size should be 2";
+            message = "Attempting to save categories & payment methods, list size should be 2";
             Timber.i(message);
             insertLog(workType,
                     Constants.LogResult.FAILURE,
@@ -83,6 +85,32 @@ public class SyncWorker extends BaseWorker {
                     .setPaymentMethods(entities.getStringLists().get(0));
             MainApplication.getInstance().getCategoryRepo()
                     .setCategories(entities.getStringLists().get(1));
+            insertLog(workType,
+                    Constants.LogResult.SUCCESS,
+                    message);
+        }
+
+        // Budgets
+        entities = MainApplication.getInstance().getSheetRepository()
+                .getEntityDataResponse(spreadsheetId, Constants.Range.BUDGETS, Dimension.ROWS);
+        if (entities.getStringLists() == null || entities.getStringLists().size() == 0) {
+            message = "Attempting to save budgets, list size should be greater than 0";
+            Timber.i(message);
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    message);
+        } else {
+            List<Budget> budgets = new ArrayList<>();
+            for (List<String> strings : entities.getStringLists()) {
+                if (strings == null || strings.size() < 3) {
+                    continue;
+                }
+                budgets.add(new Budget(strings));
+            }
+            message = "Saving budgets";
+            Timber.i(message, budgets.toString());
+            MainApplication.getInstance().getBudgetRepository()
+                    .setBudgets(budgets);
             insertLog(workType,
                     Constants.LogResult.SUCCESS,
                     message);

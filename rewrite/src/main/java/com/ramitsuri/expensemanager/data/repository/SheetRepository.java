@@ -204,15 +204,20 @@ public class SheetRepository {
 
     public EntitiesConsumerResponse getEntityDataResponse(@Nonnull String spreadsheetId,
             @Nonnull String range) {
+        return getEntityDataResponse(spreadsheetId, range, Dimension.COLUMNS);
+    }
+
+    public EntitiesConsumerResponse getEntityDataResponse(@Nonnull String spreadsheetId,
+            @Nonnull String range, @Dimension String dimension) {
         EntitiesConsumerResponse consumerResponse = new EntitiesConsumerResponse();
         try {
             BaseResponse response =
-                    mSheetsProcessor.getSheetData(spreadsheetId, range, Dimension.COLUMNS);
+                    mSheetsProcessor.getSheetData(spreadsheetId, range, dimension);
 
             List<List<Object>> objectLists =
                     ((ValueRangeSpreadsheetResponse)response).getValueRange()
                             .getValues();
-            List<List<String>> entityLists = new ArrayList<>(EntitiesConsumerResponse.MAX_ENTITIES);
+            List<List<String>> entityLists = new ArrayList<>();
             if (objectLists != null) {
                 for (List<Object> objectList : objectLists) {
                     if (objectList == null || objectList.size() == 0) {
@@ -225,9 +230,6 @@ public class SheetRepository {
                         }
                     }
                     entityLists.add(entityList);
-                    if (entityLists.size() == EntitiesConsumerResponse.MAX_ENTITIES) {
-                        break;
-                    }
                 }
             }
             consumerResponse.setStringLists(entityLists);

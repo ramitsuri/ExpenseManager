@@ -2,11 +2,14 @@ package com.ramitsuri.expensemanager.data;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.converter.BigDecimalConverter;
+import com.ramitsuri.expensemanager.data.converter.ListConverter;
+import com.ramitsuri.expensemanager.data.dao.BudgetDao;
 import com.ramitsuri.expensemanager.data.dao.CategoryDao;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
 import com.ramitsuri.expensemanager.data.dao.LogDao;
 import com.ramitsuri.expensemanager.data.dao.PaymentMethodDao;
 import com.ramitsuri.expensemanager.data.dao.SheetDao;
+import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Log;
@@ -19,8 +22,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {Category.class, Expense.class, PaymentMethod.class,
-        Log.class, SheetInfo.class}, version = 4, exportSchema = true)
-@TypeConverters({BigDecimalConverter.class})
+        Log.class, SheetInfo.class, Budget.class}, version = 5, exportSchema = true)
+@TypeConverters({BigDecimalConverter.class, ListConverter.class})
 public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
     private static volatile ExpenseManagerDatabase INSTANCE;
@@ -35,6 +38,7 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
                             .addMigrations(DatabaseMigration.MIGRATION_1_2)
                             .addMigrations(DatabaseMigration.MIGRATION_2_3)
                             .addMigrations(DatabaseMigration.MIGRATION_3_4)
+                            .addMigrations(DatabaseMigration.MIGRATION_4_5)
                             .build();
                 }
             }
@@ -51,4 +55,6 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
     public abstract LogDao logDao();
 
     public abstract SheetDao sheetDao();
+
+    public abstract BudgetDao budgetDao();
 }
