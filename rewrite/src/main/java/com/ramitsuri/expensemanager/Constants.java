@@ -8,8 +8,6 @@ public class Constants {
     public static final String[] SCOPES = {SheetsScopes.SPREADSHEETS, SheetsScopes.DRIVE};
     public static final String[] SCOPES_LIMITED = {DriveScopes.DRIVE_FILE};
 
-    public static final int UNDEFINED = -1;
-
     public class BundleKeys {
         public static final String PICKER_VALUES = "picker_values";
         public static final String PICKED_ITEM = "picked_item";
@@ -80,5 +78,10 @@ public class Constants {
         public static final String ONE_OF_RANGE = "ONE_OF_RANGE";
         public static final String FLAG = "FLAG";
         public static final String EXPENSE_RANGE = "!A:G";
+    }
+
+    public class Basic {
+        public static final int UNDEFINED = -1;
+        public static final String EMPTY_BUDGET = "-";
     }
 }

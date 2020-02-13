@@ -13,10 +13,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import static com.ramitsuri.expensemanager.Constants.Basic.EMPTY_BUDGET;
+
 @Entity
 public class Budget implements Parcelable {
-
-    private static final String EMPTY_BUDGET = "-";
 
     @PrimaryKey(autoGenerate = true)
     private int mId;

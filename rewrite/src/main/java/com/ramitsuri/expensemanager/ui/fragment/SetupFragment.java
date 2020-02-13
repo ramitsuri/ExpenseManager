@@ -93,7 +93,7 @@ public class SetupFragment extends BaseFragment {
 
         AccountManager accountManager = new AccountManager();
         SignInResponse response =
-                accountManager.prepareSignIn(MainApplication.getInstance(), Constants.SCOPES);
+                accountManager.prepareSignIn(MainApplication.getInstance(), AppHelper.getScopes());
         if (response.getGoogleSignInAccount() != null) {
             Account account = response.getGoogleSignInAccount().getAccount();
             if (account != null) {

@@ -418,7 +418,8 @@ public class SheetRequestHelper {
         SparseArray<List<Expense>> map = new SparseArray<>();
         for (Expense expense : expenses) {
             int sheetId;
-            if (expense.getSheetId() == Constants.UNDEFINED) { // Expense doesn't have a sheet id
+            // Expense doesn't have a sheet id
+            if (expense.getSheetId() == Constants.Basic.UNDEFINED) {
                 sheetId = defaultSheetId;
             } else { // Expense has a sheet id
                 sheetId = expense.getSheetId();

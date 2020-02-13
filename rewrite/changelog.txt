@@ -1,3 +1,8 @@
+- Add budget dummy data
+- Move UNDEFINED Int constant to subclass in Constants
+- Move to using limited scope full time
+- Add Calculator to calculate values for categories, payment methods and budget and log them
+
 - Db version to 5
 - Add db migration
 - Add Budget table, dao, repository

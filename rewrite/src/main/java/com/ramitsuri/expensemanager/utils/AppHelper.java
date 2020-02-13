@@ -100,7 +100,7 @@ public class AppHelper {
 
     public static int getDefaultSheetId() {
         return PrefHelper
-                .get(getString(R.string.settings_key_default_sheet_id), Constants.UNDEFINED);
+                .get(getString(R.string.settings_key_default_sheet_id), Constants.Basic.UNDEFINED);
     }
 
     public static void setMigrationStep(@MigrationStep int migrationStep) {
@@ -114,11 +114,7 @@ public class AppHelper {
     }
 
     public static String[] getScopes() {
-        if (getMigrationStep() == MigrationStep.COPY) {
-            return Constants.SCOPES;
-        } else {
-            return Constants.SCOPES_LIMITED;
-        }
+        return Constants.SCOPES_LIMITED;
     }
 
     private static String getString(@StringRes int resourceId) {

@@ -108,7 +108,7 @@ public class SyncWorker extends BaseWorker {
                 budgets.add(new Budget(strings));
             }
             message = "Saving budgets";
-            Timber.i(message, budgets.toString());
+            Timber.i(message);
             MainApplication.getInstance().getBudgetRepository()
                     .setBudgets(budgets);
             insertLog(workType,

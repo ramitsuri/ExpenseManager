@@ -38,7 +38,7 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
     public void setValues(@NonNull List<SheetInfo> values, int selectedId,
             boolean callbackOnDefaultSelect) {
         mValues = values;
-        if (selectedId == Constants.UNDEFINED &&
+        if (selectedId == Constants.Basic.UNDEFINED &&
                 values.size() > 0) { // Select first value in case selection is null
             SheetInfo firstItem = values.get(0);
             // Send callback with selected value when selected value was not found (new expense)
