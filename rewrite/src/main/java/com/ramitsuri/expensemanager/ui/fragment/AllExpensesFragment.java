@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ public class AllExpensesFragment extends BaseFragment {
     private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
     private ProgressBar mProgressBar;
-    private Button mBtnFilter, mBtnAnalysis;
+    private Button mBtnFilter, mBtnAnalysis, mBtnFilterSecond;
 
     public AllExpensesFragment() {
     }
@@ -100,12 +101,22 @@ public class AllExpensesFragment extends BaseFragment {
         mBtnAnalysis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(mBtnAnalysis, "In progress", Snackbar.LENGTH_SHORT).show();
+                showAnalysis();
             }
         });
 
         mBtnFilter = view.findViewById(R.id.btn_filter);
         mBtnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mViewModel.getSheetInfos() != null) {
+                    showFilterOptions(new ArrayList<>(mViewModel.getSheetInfos()));
+                }
+            }
+        });
+
+        mBtnFilterSecond = view.findViewById(R.id.btn_filter_second);
+        mBtnFilterSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mViewModel.getSheetInfos() != null) {
@@ -227,10 +238,24 @@ public class AllExpensesFragment extends BaseFragment {
         }
     }
 
+    private void showAnalysis() {
+        Timber.i("Showing analysis in bottom sheet");
+        AnalysisFragment fragment = AnalysisFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(Constants.BundleKeys.ANALYSIS_EXPENSES,
+                (ArrayList<? extends Parcelable>)mExpenseAdapter.getExpenses());
+        fragment.setArguments(bundle);
+        if (getActivity() != null) {
+            fragment.show(getActivity().getSupportFragmentManager(), AnalysisFragment.TAG);
+        } else {
+            Timber.e("getActivity() returned null when showing details fragment");
+        }
+    }
+
     private void onSheetInfosReceived(final List<SheetInfo> sheetInfos) {
         Timber.i("Sheetinfos received");
-        if (mViewModel.getSheetInfos() != null && mViewModel.getSheetInfos().size() >= 1) {
-            for (SheetInfo sheetInfo : mViewModel.getSheetInfos()) {
+        if (sheetInfos != null) {
+            for (SheetInfo sheetInfo : sheetInfos) {
                 if (mViewModel.getSelectedSheetId() == sheetInfo.getSheetId()) {
                     Timber.i("Selecting default sheet id");
                     onSheetSelected(sheetInfo, true);
@@ -246,6 +271,7 @@ public class AllExpensesFragment extends BaseFragment {
             mListExpenses.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.GONE);
             mTextInfoEmpty.setVisibility(View.GONE);
+            mBtnFilterSecond.setVisibility(View.GONE);
             mBtnFilter.setVisibility(View.GONE);
             mBtnAnalysis.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
@@ -258,11 +284,7 @@ public class AllExpensesFragment extends BaseFragment {
                             public void onChanged(List<ExpenseWrapper> expenses) {
                                 Timber.i("Refreshing expenses");
                                 mExpenseAdapter.setExpenses(expenses);
-                                mProgressBar.setVisibility(View.GONE);
-                                mBtnFilter.setVisibility(View.VISIBLE);
-                                mBtnAnalysis.setVisibility(View.VISIBLE);
-                                mListExpenses.setVisibility(View.VISIBLE);
-                                setTextInfo(expenses);
+                                onExpensesReceived(expenses);
                             }
                         });
             } else {
@@ -273,17 +295,26 @@ public class AllExpensesFragment extends BaseFragment {
         }
     }
 
-    private void setTextInfo(List<ExpenseWrapper> expenses) {
+    private void onExpensesReceived(List<ExpenseWrapper> expenses) {
         boolean doCalculation = false;
+        mProgressBar.setVisibility(View.GONE);
         if (expenses.size() == 0) {
+            mBtnFilterSecond.setVisibility(View.VISIBLE);
             mTextInfoEmpty.setVisibility(View.VISIBLE);
             mTextInfoEmpty.setText(String.format(getString(R.string.all_expenses_empty_message),
                     mViewModel.getSelectedSheetName()));
             mCardInfo.setVisibility(View.GONE);
+            mBtnAnalysis.setVisibility(View.GONE);
+            mBtnFilter.setVisibility(View.GONE);
+            mListExpenses.setVisibility(View.GONE);
         } else {
             doCalculation = true;
+            mBtnFilterSecond.setVisibility(View.GONE);
             mTextInfoEmpty.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.VISIBLE);
+            mBtnAnalysis.setVisibility(View.VISIBLE);
+            mBtnFilter.setVisibility(View.VISIBLE);
+            mListExpenses.setVisibility(View.VISIBLE);
         }
 
         // Return when no calculation required (TextInfo 1, 2, 3 are not going to be shown)

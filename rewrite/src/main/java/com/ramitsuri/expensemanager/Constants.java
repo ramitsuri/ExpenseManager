@@ -17,6 +17,7 @@ public class Constants {
         public static final String SELECTED_EXPENSE = "selected_expense";
         public static final String SHEET_INFOS = "sheet_infos";
         public static final String SELECTED_SHEET_ID = "selected_sheet_id";
+        public static final String ANALYSIS_EXPENSES = "analysis_expenses";
     }
 
     public class RequestCode {
@@ -83,5 +84,6 @@ public class Constants {
     public class Basic {
         public static final int UNDEFINED = -1;
         public static final String EMPTY_BUDGET = "-";
+        public static final String CALCULATOR_ALL = "CALCULATOR_ALL";
     }
 }

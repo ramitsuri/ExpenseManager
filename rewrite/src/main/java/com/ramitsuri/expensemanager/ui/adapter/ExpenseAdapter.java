@@ -14,6 +14,7 @@ import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.ColorRes;
@@ -45,6 +46,19 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mExpenses = expenses;
         }
         notifyDataSetChanged();
+    }
+
+    public List<Expense> getExpenses() {
+        List<Expense> expenses = new ArrayList<>();
+        if (mExpenses == null) {
+            return expenses;
+        }
+        for (ExpenseWrapper wrapper : mExpenses) {
+            if (wrapper.getExpense() != null) {
+                expenses.add(wrapper.getExpense());
+            }
+        }
+        return expenses;
     }
 
     public void setHistorical(boolean historical) {

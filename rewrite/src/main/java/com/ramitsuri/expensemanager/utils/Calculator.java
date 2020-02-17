@@ -35,6 +35,7 @@ public class Calculator {
         mLog = log;
 
         for (Budget budget : budgets) {
+            // First - Budget amount, Second - Used amount
             mBudgetValueMap.put(budget.getName(), new Pair<>(budget.getAmount(), BigDecimal.ZERO));
 
             for (String category : budget.getCategories()) {
@@ -44,27 +45,34 @@ public class Calculator {
     }
 
     public void calculate() {
+        BigDecimal budgetAllUsedValue = BigDecimal.ZERO;
+        BigDecimal budgetAllValue = BigDecimal.ZERO;
+        BigDecimal categoryAllValue = BigDecimal.ZERO;
+        BigDecimal paymentMethodAllValue = BigDecimal.ZERO;
+
         for (Expense expense : mExpenses) {
-            BigDecimal amount = expense.getAmount();
-            BigDecimal value;
+            BigDecimal expenseValue = expense.getAmount();
+            BigDecimal totalValue;
 
             // Payment method
             String paymentMethod = expense.getPaymentMethod();
-            value = mPaymentMethodValueMap.get(paymentMethod);
-            if (value == null) {
-                value = BigDecimal.ZERO;
+            totalValue = mPaymentMethodValueMap.get(paymentMethod);
+            if (totalValue == null) {
+                totalValue = BigDecimal.ZERO;
             }
-            value = value.add(amount);
-            mPaymentMethodValueMap.put(paymentMethod, value);
+            totalValue = totalValue.add(expenseValue);
+            paymentMethodAllValue = paymentMethodAllValue.add(expenseValue);
+            mPaymentMethodValueMap.put(paymentMethod, totalValue);
 
             // Category
             String category = expense.getCategory();
-            value = mCategoryValueMap.get(category);
-            if (value == null) {
-                value = BigDecimal.ZERO;
+            totalValue = mCategoryValueMap.get(category);
+            if (totalValue == null) {
+                totalValue = BigDecimal.ZERO;
             }
-            value = value.add(amount);
-            mCategoryValueMap.put(category, value);
+            totalValue = totalValue.add(expenseValue);
+            categoryAllValue = categoryAllValue.add(expenseValue);
+            mCategoryValueMap.put(category, totalValue);
 
             // Budget
             String budgetName = mCategoryBudgetMap.get(category);
@@ -75,13 +83,25 @@ public class Calculator {
             if (valuePair == null) {
                 valuePair = new Pair<>(BigDecimal.ZERO, BigDecimal.ZERO);
             }
-            value = valuePair.second;
-            if (value == null) {
-                value = BigDecimal.ZERO;
+            totalValue = valuePair.second; // This would not happen, there just for safety
+            if (totalValue == null) {
+                totalValue = BigDecimal.ZERO;
             }
-            value = value.add(amount);
-            mBudgetValueMap.put(budgetName, new Pair<>(valuePair.first, value));
+            totalValue = totalValue.add(expenseValue);
+            mBudgetValueMap.put(budgetName, new Pair<>(valuePair.first, totalValue));
         }
+        for (String budget : mBudgetValueMap.keySet()) {
+            Pair<BigDecimal, BigDecimal> valuePair = mBudgetValueMap.get(budget);
+            if (valuePair != null && valuePair.first != null && valuePair.second != null) {
+                budgetAllValue = budgetAllValue.add(valuePair.first);
+                budgetAllUsedValue = budgetAllUsedValue.add(valuePair.second);
+            }
+        }
+
+        mPaymentMethodValueMap.put(Constants.Basic.CALCULATOR_ALL, paymentMethodAllValue);
+        mCategoryValueMap.put(Constants.Basic.CALCULATOR_ALL, categoryAllValue);
+        mBudgetValueMap.put(Constants.Basic.CALCULATOR_ALL,
+                new Pair<>(budgetAllValue, budgetAllUsedValue));
 
         if (!mLog) {
             return;
@@ -101,13 +121,25 @@ public class Calculator {
             Pair<BigDecimal, BigDecimal> valuePair = mBudgetValueMap.get(budget);
             if (valuePair != null) {
                 if (valuePair.first != null && valuePair.second != null) {
-                    loggerAddBudget(budget, valuePair.first,
-                            valuePair.first.subtract(valuePair.second));
+                    loggerAddBudget(budget, valuePair.first, valuePair.second);
                 }
             }
         }
         Timber.i(mLogger.getOutput() + "\n");
         mLogger.reset();
+        Timber.i("Calculation done");
+    }
+
+    public Map<String, BigDecimal> getPaymentValues() {
+        return mPaymentMethodValueMap;
+    }
+
+    public Map<String, BigDecimal> getCategoryValues() {
+        return mCategoryValueMap;
+    }
+
+    public Map<String, Pair<BigDecimal, BigDecimal>> getBudgetValues() {
+        return mBudgetValueMap;
     }
 
     private void loggerAddPaymentMethod(String name, BigDecimal value) {
@@ -153,7 +185,7 @@ public class Calculator {
         mLogger.setColumns(new ArrayList<CalculationLogger.ColumnSpec>() {{
             add(new CalculationLogger.ColumnSpec("Name", "s", mColumnWidth));
             add(new CalculationLogger.ColumnSpec("Budget", "s", mColumnWidth));
-            add(new CalculationLogger.ColumnSpec("Remaining", "s", mColumnWidth));
+            add(new CalculationLogger.ColumnSpec("Used", "s", mColumnWidth));
         }});
         mLogger.addNewline();
         mLogger.addTitle("[[[     BUDGETS     ]]]");

@@ -8,6 +8,7 @@
     <dimen name="padding_medium">24dp</dimen>
     <dimen name="padding_large">32dp</dimen>
     <dimen name="padding_extra_large">48dp</dimen>
+    <dimen name="padding_extra_extra_large">64dp</dimen>
 
     <!-- Margin -->
     <dimen name="margin_extra_extra_small">@dimen/padding_extra_extra_small</dimen>
@@ -16,6 +17,7 @@
     <dimen name="margin_medium">@dimen/padding_medium</dimen>
     <dimen name="margin_large">@dimen/padding_large</dimen>
     <dimen name="margin_extra_large">@dimen/padding_extra_large</dimen>
+    <dimen name="margin_extra_extra_large">@dimen/padding_extra_extra_large</dimen>
     <dimen name="margin_arrow">72dp</dimen>
 
     <!-- Text Sizes -->

@@ -1,11 +1,9 @@
 High
-- Test limited scope
+- Filter for all expenses - Change sheet button to include two filter and view detail analysis
 - Save downloaded expenses to db
 
 
 Medium
-- Show analysis (total used, remaining of all expenses)
-- Filter for all expenses - Change sheet button to include two filter and view detail analysis
 - Fix fragment refreshing
 - Easier setup after first start
 - Fix change sheet fragment selection - default sheet keeps getting selected

@@ -26,12 +26,14 @@
     <fragment
         android:id="@+id/fragment_all_expenses"
         android:name="com.ramitsuri.expensemanager.ui.fragment.AllExpensesFragment"
-        android:label="@string/common_expenses" />
+        android:label="@string/common_expenses"
+        tools:layout="@layout/fragment_all_expenses" />
 
     <fragment
         android:id="@+id/fragment_miscellaneous"
         android:name="com.ramitsuri.expensemanager.ui.fragment.MiscellaneousFragment"
-        android:label="@string/common_empty">
+        android:label="@string/common_empty"
+        tools:layout="@layout/fragment_miscellaneous">
 
         <action
             android:id="@+id/nav_action_sheets"
@@ -41,7 +43,8 @@
 
     <fragment
         android:id="@+id/fragment_metadata"
-        android:name="com.ramitsuri.expensemanager.ui.fragment.MetadataFragment" />
+        android:name="com.ramitsuri.expensemanager.ui.fragment.MetadataFragment"
+        tools:layout="@layout/fragment_metadata" />
 
     <fragment
         android:id="@+id/fragment_add_expense"

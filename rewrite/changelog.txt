@@ -1,3 +1,13 @@
+- Add a way to get list of expenses from ExpenseAdapter
+- Add secondary modify filter button when no expenses are available
+- Show analysis of selected expenses
+- Add Analysis fragment to show calculated values
+- Add total values for budget, payments, categories in Calculator
+- Add method to CurrencyHelper to strip trailing zeros
+- Add method to CurrencyHelper to divide BigDecimals
+- Add a way to get ViewModel with List<Expense> parameter to ViewModelFactory
+- Change night red color to be same as light red color
+
 - Move filter button to be below card view in all expenses
 - Add Analysis button
 - Remove change sheet button
