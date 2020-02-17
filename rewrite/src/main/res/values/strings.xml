@@ -119,7 +119,6 @@
     <!-- All Expenses -->
     <string name="all_expenses_select_sheet">Filter</string>
     <string name="all_expenses_empty_message">No expenses in %1s!</string>
-    <string name="all_expenses_options">Options</string>
     <string name="all_expenses_analysis">Analysis</string>
 
     <!-- Details -->

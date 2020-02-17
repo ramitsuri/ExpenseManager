@@ -1,3 +1,9 @@
+- Move filter button to be below card view in all expenses
+- Add Analysis button
+- Remove change sheet button
+- Rename Change Sheet frag to FilterOptions
+- Remove top bottom padding on all views
+
 - Add budget dummy data
 - Move UNDEFINED Int constant to subclass in Constants
 - Move to using limited scope full time

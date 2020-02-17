@@ -28,7 +28,6 @@
     <dimen name="button_size_extra_small">24dp</dimen>
     <dimen name="button_size_small">32dp</dimen>
     <dimen name="button_size_medium">56dp</dimen>
-    <dimen name="button_width_medium">120dp</dimen>
     <dimen name="button_size_large">80dp</dimen>
     <dimen name="layout_pickers_height">56dp</dimen>
     <dimen name="divider_width">2dp</dimen>
@@ -39,9 +38,4 @@
 
     <!-- Expenses -->
     <item name="horizontal_guideline_percent" type="dimen">0.1</item>
-
-    <!-- All Expenses -->
-    <dimen name="all_expenses_filter_option_margin">80dp</dimen>
-    <dimen name="all_expenses_analysis_option_margin">144dp</dimen>
-
 </resources>
