@@ -106,11 +106,13 @@
             android:layout_height="wrap_content"
             android:text="@string/all_expenses_filter"
             android:textSize="@dimen/text_caption"
+            android:visibility="gone"
             app:icon="@drawable/ic_filter"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/padding_extra_extra_small"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_info" />
+            app:layout_constraintTop_toBottomOf="@id/card_info"
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_filter_second"
@@ -131,11 +133,13 @@
             android:layout_height="wrap_content"
             android:text="@string/all_expenses_analysis"
             android:textSize="@dimen/text_caption"
+            android:visibility="gone"
             app:icon="@drawable/ic_analyse"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/padding_extra_extra_small"
             app:layout_constraintEnd_toStartOf="@id/btn_filter"
-            app:layout_constraintTop_toBottomOf="@id/card_info" />
+            app:layout_constraintTop_toBottomOf="@id/card_info"
+            tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_expenses"

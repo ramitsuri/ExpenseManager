@@ -9,6 +9,7 @@ import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.TransformationHelper;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
@@ -126,6 +127,13 @@ public class SyncWorker extends BaseWorker {
             Timber.i(message);
             for (SheetMetadata sheetMetadata : response.getSheetMetadataList()) {
                 sheetInfos.add(new SheetInfo(sheetMetadata));
+            }
+            // Set default sheet id
+            if (AppHelper.getDefaultSheetId() == Constants.Basic.UNDEFINED) {
+                List<SheetInfo> filtered = TransformationHelper.filterSheetInfos(sheetInfos);
+                if (filtered.size() > 0) {
+                    AppHelper.setDefaultSheetId(filtered.get(0).getSheetId());
+                }
             }
             ExpenseManagerDatabase.getInstance().sheetDao().setAll(sheetInfos);
             insertLog(workType,

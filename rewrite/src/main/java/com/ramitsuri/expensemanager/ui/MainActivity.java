@@ -10,7 +10,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.expensemanager.utils.PrefHelper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,30 +41,12 @@ public class MainActivity extends AppCompatActivity {
         }
         AppHelper.setCurrentTheme(theme);
 
-        migrateCurrentToDefaultSheetId();
-
         // Set dark nav and status bar if light theme
         if ((getResources().getConfiguration().uiMode &
                 Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
             Timber.i("Light theme, setting status and nav bar light flag");
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
                     View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-        }
-    }
-
-    private void migrateCurrentToDefaultSheetId() {
-        // Delete current sheet id and migrate it to default sheet id
-        // After which current sheet id is deleted
-        String currentSheetId = AppHelper.getCurrentSheetId();
-        if (TextUtils.isEmpty(currentSheetId)) {
-            return;
-        }
-        try {
-            int defaultSheetId = Integer.parseInt(currentSheetId);
-            AppHelper.setDefaultSheetId(defaultSheetId);
-            PrefHelper.remove(getString(R.string.settings_key_sheet_id));
-        } catch (Exception ex) {
-            Timber.i("Unable to migrate current sheet id to default sheet id");
         }
     }
 

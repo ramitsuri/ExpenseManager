@@ -1,3 +1,8 @@
+- Delete default sheet id migration code from MainActivity
+- Set default sheet id if not set in syncworker
+- Set default visibility of new analysis and filter buttons to gone
+
+
 - Add a way to get list of expenses from ExpenseAdapter
 - Add secondary modify filter button when no expenses are available
 - Show analysis of selected expenses
