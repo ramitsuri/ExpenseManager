@@ -22,21 +22,21 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
-public class ChangeSheetFragment extends BottomSheetDialogFragment {
+public class FilterOptionsFragment extends BottomSheetDialogFragment {
 
-    static final String TAG = ChangeSheetFragment.class.getName();
+    static final String TAG = FilterOptionsFragment.class.getName();
 
-    static ChangeSheetFragment newInstance() {
-        return new ChangeSheetFragment();
+    static FilterOptionsFragment newInstance() {
+        return new FilterOptionsFragment();
     }
 
-    private ChangeSheetFragmentCallback mCallback;
+    private FilterOptionsFragmentCallback mCallback;
 
-    public interface ChangeSheetFragmentCallback {
-        void onChangeSheetRequested(@NonNull SheetInfo sheetInfo);
+    public interface FilterOptionsFragmentCallback {
+        void onFilterRequested(@NonNull SheetInfo sheetInfo);
     }
 
-    public void setCallback(@NonNull ChangeSheetFragmentCallback callback) {
+    public void setCallback(@NonNull FilterOptionsFragmentCallback callback) {
         mCallback = callback;
     }
 
@@ -50,7 +50,7 @@ public class ChangeSheetFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_change_sheet, container, false);
+        View view = inflater.inflate(R.layout.fragment_filter_options, container, false);
         if ((getResources().getConfiguration().uiMode &
                 Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
             Timber.i("Light theme, setting status and nav bar light flag");
@@ -91,7 +91,7 @@ public class ChangeSheetFragment extends BottomSheetDialogFragment {
             public void onItemPicked(SheetInfo value) {
                 dismiss();
                 if (mCallback != null) {
-                    mCallback.onChangeSheetRequested(value);
+                    mCallback.onFilterRequested(value);
                 }
             }
         });

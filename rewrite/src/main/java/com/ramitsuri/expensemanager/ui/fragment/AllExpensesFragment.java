@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -45,11 +47,18 @@ public class AllExpensesFragment extends BaseFragment {
     private ExpenseAdapter mExpenseAdapter;
 
     // Views
-    private ExtendedFloatingActionButton mBtnSelectSheet;
+    private ExtendedFloatingActionButton mBtnOptions, mBtnFilter, mBtnAnalysis;
     private RecyclerView mListExpenses;
     private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
     private ProgressBar mProgressBar;
+    private View mOptionsBg;
+
+    // Anims
+    private Animation mOptionsOpen, mOptionsClose;
+
+    // Data
+    private boolean mAreFabOptionsShown;
 
     public AllExpensesFragment() {
     }
@@ -85,13 +94,41 @@ public class AllExpensesFragment extends BaseFragment {
 
         mViewModel = ViewModelProviders.of(this).get(AllExpensesViewModel.class);
 
-        mBtnSelectSheet = view.findViewById(R.id.btn_select_sheet);
-        mBtnSelectSheet.setOnClickListener(new View.OnClickListener() {
+        mOptionsBg = view.findViewById(R.id.options_background);
+        mOptionsBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsClicked();
+            }
+        });
+
+        mOptionsClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_options_close);
+        mOptionsOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_options_open);
+
+        mBtnOptions = view.findViewById(R.id.btn_options);
+        mBtnOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onOptionsClicked();
+            }
+        });
+
+        mBtnFilter = view.findViewById(R.id.btn_filter);
+        mBtnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onOptionsClicked();
                 if (mViewModel.getSheetInfos() != null) {
-                    showSheets(new ArrayList<>(mViewModel.getSheetInfos()));
+                    showFilterOptions(new ArrayList<>(mViewModel.getSheetInfos()));
                 }
+            }
+        });
+
+        mBtnAnalysis = view.findViewById(R.id.btn_analysis);
+        mBtnAnalysis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onOptionsClicked();
             }
         });
 
@@ -118,6 +155,42 @@ public class AllExpensesFragment extends BaseFragment {
         mProgressBar = view.findViewById(R.id.progress);
 
         setupListExpenses(view);
+    }
+
+    private void onOptionsClicked() {
+        if (mAreFabOptionsShown) { // Already open, so close options view
+            mAreFabOptionsShown = false;
+
+            mOptionsBg.setVisibility(View.GONE);
+
+            mBtnAnalysis.setVisibility(View.VISIBLE);
+            mBtnAnalysis.startAnimation(mOptionsClose);
+            mBtnAnalysis.setClickable(false);
+            mBtnAnalysis.setFocusable(false);
+
+            mBtnFilter.setVisibility(View.VISIBLE);
+            mBtnFilter.startAnimation(mOptionsClose);
+            mBtnFilter.setClickable(false);
+            mBtnFilter.setFocusable(false);
+
+            mBtnOptions.setText(R.string.all_expenses_options);
+        } else { // Open options view
+            mAreFabOptionsShown = true;
+
+            mOptionsBg.setVisibility(View.VISIBLE);
+
+            mBtnAnalysis.setVisibility(View.INVISIBLE);
+            mBtnAnalysis.startAnimation(mOptionsOpen);
+            mBtnAnalysis.setClickable(true);
+            mBtnAnalysis.setFocusable(true);
+
+            mBtnFilter.setVisibility(View.INVISIBLE);
+            mBtnFilter.startAnimation(mOptionsOpen);
+            mBtnFilter.setClickable(true);
+            mBtnFilter.setFocusable(true);
+
+            mBtnOptions.setText(R.string.common_cancel);
+        }
     }
 
     private void setupListExpenses(View view) {
@@ -151,9 +224,9 @@ public class AllExpensesFragment extends BaseFragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    mBtnSelectSheet.hide();
+                    mBtnOptions.hide();
                 } else if (dy < 0) {
-                    mBtnSelectSheet.show();
+                    mBtnOptions.show();
                 }
             }
         });
@@ -202,19 +275,19 @@ public class AllExpensesFragment extends BaseFragment {
                     @Override
                     public void onChanged(final Expense duplicate) {
                         Snackbar editSnackbar =
-                                Snackbar.make(mBtnSelectSheet, R.string.expenses_duplicate_success,
+                                Snackbar.make(mBtnOptions, R.string.expenses_duplicate_success,
                                         Snackbar.LENGTH_LONG);
                         editSnackbar.show();
                     }
                 });
     }
 
-    private void showSheets(ArrayList<SheetInfo> sheetInfos) {
-        Timber.i("Showing sheets in bottom sheet");
-        ChangeSheetFragment fragment = ChangeSheetFragment.newInstance();
-        fragment.setCallback(new ChangeSheetFragment.ChangeSheetFragmentCallback() {
+    private void showFilterOptions(ArrayList<SheetInfo> sheetInfos) {
+        Timber.i("Showing filter options in bottom sheet");
+        FilterOptionsFragment fragment = FilterOptionsFragment.newInstance();
+        fragment.setCallback(new FilterOptionsFragment.FilterOptionsFragmentCallback() {
             @Override
-            public void onChangeSheetRequested(@NonNull SheetInfo sheetInfo) {
+            public void onFilterRequested(@NonNull SheetInfo sheetInfo) {
                 onSheetSelected(sheetInfo, false);
             }
         });
@@ -223,7 +296,7 @@ public class AllExpensesFragment extends BaseFragment {
         bundle.putInt(Constants.BundleKeys.SELECTED_SHEET_ID, AppHelper.getDefaultSheetId());
         fragment.setArguments(bundle);
         if (getActivity() != null) {
-            fragment.show(getActivity().getSupportFragmentManager(), ChangeSheetFragment.TAG);
+            fragment.show(getActivity().getSupportFragmentManager(), FilterOptionsFragment.TAG);
         } else {
             Timber.e("getActivity() returned null when showing details fragment");
         }
@@ -248,7 +321,7 @@ public class AllExpensesFragment extends BaseFragment {
             mListExpenses.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.GONE);
             mTextInfoEmpty.setVisibility(View.GONE);
-            mBtnSelectSheet.setVisibility(View.GONE);
+            mBtnOptions.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
             mViewModel.setSelectedSheetId(sheetInfo.getSheetId());
             LiveData<List<ExpenseWrapper>> expenses = mViewModel.getExpenses(sheetInfo);
@@ -260,7 +333,7 @@ public class AllExpensesFragment extends BaseFragment {
                                 Timber.i("Refreshing expenses");
                                 mExpenseAdapter.setExpenses(expenses);
                                 mProgressBar.setVisibility(View.GONE);
-                                mBtnSelectSheet.setVisibility(View.VISIBLE);
+                                mBtnOptions.setVisibility(View.VISIBLE);
                                 mListExpenses.setVisibility(View.VISIBLE);
                                 setTextInfo(expenses);
                             }

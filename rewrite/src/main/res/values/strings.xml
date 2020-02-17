@@ -117,8 +117,10 @@
     <string name="metadata_delete_logs">Delete Logs</string>
 
     <!-- All Expenses -->
-    <string name="all_expenses_select_sheet">Change Sheet</string>
+    <string name="all_expenses_select_sheet">Filter</string>
     <string name="all_expenses_empty_message">No expenses in %1s!</string>
+    <string name="all_expenses_options">Options</string>
+    <string name="all_expenses_analysis">Analysis</string>
 
     <!-- Details -->
     <string name="expense_detail_backed_up_disability_message">Edit and delete not available for
