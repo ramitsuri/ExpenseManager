@@ -9,7 +9,6 @@ import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
-import com.ramitsuri.expensemanager.data.repository.ExpenseSheetsRepository;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
@@ -27,7 +26,6 @@ public class MainApplication extends Application {
     private ExpenseRepository mExpenseRepo;
     private LogRepository mLogRepo;
     private BudgetRepository mBudgetRepository;
-    private ExpenseSheetsRepository mExpenseSheetsRepo;
 
     private SheetRepository mSheetRepository;
 
@@ -46,8 +44,6 @@ public class MainApplication extends Application {
         initDataRepos();
 
         initSheetRepo();
-
-        initExpenseSheetRepo();
     }
 
     private void initTimber() {
@@ -73,15 +69,6 @@ public class MainApplication extends Application {
         mExpenseRepo = new ExpenseRepository(appExecutors, database);
         mLogRepo = new LogRepository(appExecutors, database);
         mBudgetRepository = new BudgetRepository(appExecutors, database);
-
-        // TODO DEBUG Only
-        /*mExpenseRepo.deleteExpenses();
-        for (Expense expense : DummyData.getExpenses()) {
-            mExpenseRepo.insertExpense(expense);
-        }
-
-        mCategoryRepo.setCategories(DummyData.getCategories());
-        mPaymentMethodRepo.setPaymentMethods(DummyData.getPaymentMethods());*/
     }
 
     private void initSheetRepo() {
@@ -106,13 +93,6 @@ public class MainApplication extends Application {
 
         mSheetRepository = new SheetRepository(this, appName, account,
                 Arrays.asList(AppHelper.getScopes()), appExecutors, database);
-    }
-
-    private void initExpenseSheetRepo() {
-        AppExecutors appExecutors = AppExecutors.getInstance();
-        ExpenseManagerDatabase database = ExpenseManagerDatabase.getInstance();
-
-        mExpenseSheetsRepo = new ExpenseSheetsRepository(appExecutors, database, mSheetRepository);
     }
 
     public void refreshSheetRepo(String accountName, String accountType) {
@@ -147,10 +127,6 @@ public class MainApplication extends Application {
 
     public SheetRepository getSheetRepository() {
         return mSheetRepository;
-    }
-
-    public ExpenseSheetsRepository getExpenseSheetsRepo() {
-        return mExpenseSheetsRepo;
     }
 
     public BudgetRepository getBudgetRepository() {

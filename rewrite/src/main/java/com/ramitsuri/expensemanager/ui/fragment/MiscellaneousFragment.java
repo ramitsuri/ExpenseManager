@@ -59,6 +59,12 @@ public class MiscellaneousFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        showActionBar();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         hideActionBar();
     }
 

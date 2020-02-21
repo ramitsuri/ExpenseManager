@@ -57,7 +57,7 @@ public class MiscellaneousViewModel extends ViewModel {
         long currentTime = System.currentTimeMillis();
         if (currentTime - mDeleteLastPressTime <= 2000) {
             if (BuildConfig.DEBUG) { // Extra protection, only in debug
-                MainApplication.getInstance().getExpenseRepo().deleteExpenses();
+                MainApplication.getInstance().getExpenseRepo().delete();
             }
             mDeleteLastPressTime = 0;
         } else {

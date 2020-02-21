@@ -19,11 +19,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/dialog_bg</item>
         <item name="android:windowIsFloating">false</item>
-    </style>
-
-    <style name="DropDownStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
-        <item name="boxStrokeColor">@color/text_input_box_stroke</item>
-        <item name="colorAccent">#fff</item>
+        <item name="android:colorEdgeEffect">@color/colorPrimary</item>
     </style>
 
     <style name="ChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">

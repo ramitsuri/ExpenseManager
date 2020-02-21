@@ -5,10 +5,10 @@
     android:id="@+id/nav_graph">
 
     <fragment
-        android:id="@+id/fragment_expenses"
-        android:name="com.ramitsuri.expensemanager.ui.fragment.ExpensesFragment"
+        android:id="@+id/fragment_all_expenses"
+        android:name="com.ramitsuri.expensemanager.ui.fragment.AllExpensesFragment"
         android:label="@string/common_expenses"
-        tools:layout="@layout/fragment_expenses">
+        tools:layout="@layout/fragment_all_expenses">
 
         <action
             android:id="@+id/nav_action_add_expense"
@@ -21,13 +21,11 @@
 
         </action>
 
-    </fragment>
+        <action
+            android:id="@+id/nav_action_setup"
+            app:destination="@id/fragment_miscellaneous" />
 
-    <fragment
-        android:id="@+id/fragment_all_expenses"
-        android:name="com.ramitsuri.expensemanager.ui.fragment.AllExpensesFragment"
-        android:label="@string/common_expenses"
-        tools:layout="@layout/fragment_all_expenses" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_miscellaneous"
@@ -65,7 +63,7 @@
 
         <action
             android:id="@+id/nav_action_setup_done"
-            app:destination="@id/fragment_expenses"
+            app:destination="@id/fragment_all_expenses"
             app:popUpTo="@id/fragment_setup"
             app:popUpToInclusive="true" />
 

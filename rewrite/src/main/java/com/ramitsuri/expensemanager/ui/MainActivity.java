@@ -3,20 +3,15 @@ package com.ramitsuri.expensemanager.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.NavGraph;
 import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
@@ -64,50 +59,11 @@ public class MainActivity extends AppCompatActivity {
             // First time setup
             graph.setStartDestination(R.id.fragment_setup);
         } else { // First time setup already done
-            graph.setStartDestination(R.id.fragment_expenses);
+            graph.setStartDestination(R.id.fragment_all_expenses);
         }
         navController.setGraph(graph);
 
         NavigationUI.setupWithNavController(toolbar, navController);
-
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        if (navController.getCurrentDestination() != null) {
-                            if (navController.getCurrentDestination().getId() == item.getItemId()) {
-                                return false;
-                            }
-                        }
-                        navController.navigate(item.getItemId());
-                        return true;
-                    }
-                });
-        //NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
-        navController.addOnDestinationChangedListener(
-                new NavController.OnDestinationChangedListener() {
-                    @Override
-                    public void onDestinationChanged(@NonNull NavController controller,
-                            @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                        if (destination.getId() == R.id.fragment_expenses ||
-                                destination.getId() == R.id.fragment_all_expenses ||
-                                destination.getId() == R.id.fragment_miscellaneous) {
-                            bottomNavigationView.setVisibility(View.VISIBLE);
-                        } else {
-                            bottomNavigationView.setVisibility(View.GONE);
-                        }
-                        // Manually setting checked item because there being an issue where selected
-                        // fragment and bottom nav menu item are mismatched on pressing
-                        // back button from non main view fragments
-                        MenuItem item =
-                                bottomNavigationView.getMenu().findItem(destination.getId());
-                        if (item != null) {
-                            item.setChecked(true);
-                        }
-                    }
-                });
     }
 
     @Override

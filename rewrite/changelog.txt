@@ -1,3 +1,36 @@
+ExpenseDao
+    add method to get expenses for sheet id
+    add abstract method to delete existing backed up expenses for sheet id, and add new ones
+    rearranged stuff
+ExpenseRepo
+    remove local data source stuff
+    move methods from ExpenseSheetsRepo here
+    add a way to get expenses from Spreadsheet and save it to db
+    rename some methods
+ExpenseAdapter
+    remove method to get expenses from expense wrappers
+    add sync status image for not backed up expenses
+AllExpenseFragment
+    move stuff from ExpenseFrag here
+    add refreshlayout to fetch from spreadsheet
+    add add expense button
+    add a way to edit and delete expense (only non backed up ones)
+AnalysisFragment
+    fix nav bar button color getting all white
+MiscFragment
+    show action bar since bottom nav is gone
+MainActivity
+    remove bottom nav
+AllExpenseViwModel
+    remove expense sheets repo
+    expense repo does everything
+MainApplication
+    remove ExpenseSheetsRepo
+ExpenseItem
+    switch places of category and store
+    add sync status image
+Remove ExpensesFragment
+
 - Delete default sheet id migration code from MainActivity
 - Set default sheet id if not set in syncworker
 - Set default visibility of new analysis and filter buttons to gone

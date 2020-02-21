@@ -108,14 +108,14 @@ public class AddExpenseViewModel extends ViewModel {
 
     public void add() {
         Expense expense = mExpense;
-        mExpenseRepo.insertExpense(expense);
+        mExpenseRepo.insert(expense);
         AppHelper.setDefaultSheetId(expense.getSheetId());
         reset(null);
     }
 
     public void edit() {
         Expense expense = mExpense;
-        mExpenseRepo.editExpense(expense);
+        mExpenseRepo.edit(expense);
         reset(null);
     }
 

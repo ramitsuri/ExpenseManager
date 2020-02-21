@@ -1,6 +1,11 @@
 High
-- Filter for all expenses - Change sheet button to include two filter and view detail analysis
-- Save downloaded expenses to db
+- Cleanup AllExpensesFrag
+- Move fetch all to Misc
+- Remove progress bar as won't be needed
+- Move Card View calculation to calculator
+- Fix add and refresh buttons when no expenses
+- Fix language for analysis, improve  - multiple layouts for test
+- Improve sheet selection in add expense
 
 
 Medium
@@ -10,7 +15,6 @@ Medium
 
 
 Low
-- Extract duplicate code and move to base for expenses and all
 - Extract id from url
 - Error messages
 - Snackbar for log

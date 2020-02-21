@@ -13,8 +13,14 @@ import androidx.room.Transaction;
 
 @Dao
 public abstract class ExpenseDao {
+    /*
+     * SELECT
+     */
     @Query("SELECT * FROM expense ORDER BY date_time DESC")
     public abstract LiveData<List<Expense>> getAll();
+
+    @Query("SELECT * FROM expense WHERE sheet_id = :sheetId ORDER BY date_time DESC")
+    public abstract List<Expense> getAllForSheet(int sheetId);
 
     @Query("SELECT * FROM expense WHERE is_starred = 1")
     public abstract List<Expense> getAllStarred();
@@ -28,15 +34,18 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE mId = :id")
     public abstract Expense getExpense(long id);
 
-    @Transaction
-    public Expense insertAndGetExpense(Expense expense) {
-        long id = insert(expense);
-        return getExpense(id);
-    }
-
+    /*
+     * INSERT
+     */
     @Insert
     public abstract long insert(Expense expense);
 
+    @Insert
+    public abstract void insert(List<Expense> expenses);
+
+    /*
+     * UPDATE
+     */
     @Query("UPDATE expense SET date_time =:dateTime WHERE mId = :id")
     abstract void updateDateTime(int id, long dateTime);
 
@@ -64,6 +73,39 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET is_synced =:isSynced WHERE mId = :id")
     abstract void updateIsSynced(int id, boolean isSynced);
 
+    @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
+    public abstract void updateUnsynced();
+
+    @Query("UPDATE expense SET is_starred = 1 WHERE mId = :id")
+    public abstract void setStarred(int id);
+
+    @Query("UPDATE expense SET is_starred = 0 WHERE mId = :id")
+    public abstract void setUnstarred(int id);
+
+    /*
+     * DELETE
+     */
+    @Query("DELETE FROM expense where mId = :id")
+    public abstract void deleteExpense(int id);
+
+    @Query("DELETE FROM expense")
+    public abstract void deleteAll();
+
+    @Query("DELETE FROM expense WHERE is_synced = 1")
+    public abstract void deleteSynced();
+
+    @Query("DELETE FROM expense WHERE sheet_id = :sheetId AND is_synced = 1")
+    public abstract void deleteAllSyncedForSheet(int sheetId);
+
+    /*
+     * TRANSACTION
+     */
+    @Transaction
+    public Expense insertAndGetExpense(Expense expense) {
+        long id = insert(expense);
+        return getExpense(id);
+    }
+
     @Transaction
     public void updateExpense(Expense expense) {
         updateDateTime(expense.getId(), expense.getDateTime());
@@ -77,21 +119,9 @@ public abstract class ExpenseDao {
         updateIsSynced(expense.getId(), expense.isSynced());
     }
 
-    @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
-    public abstract void updateUnsynced();
-
-    @Query("UPDATE expense SET is_starred = 1 WHERE mId = :id")
-    public abstract void setStarred(int id);
-
-    @Query("UPDATE expense SET is_starred = 0 WHERE mId = :id")
-    public abstract void setUnstarred(int id);
-
-    @Query("DELETE FROM expense where mId = :id")
-    public abstract void deleteExpense(int id);
-
-    @Query("DELETE FROM expense")
-    public abstract void deleteAll();
-
-    @Query("DELETE FROM expense WHERE is_synced = 1")
-    public abstract void deleteSynced();
+    @Transaction
+    public void insert(List<Expense> expenses, int sheetId) {
+        deleteAllSyncedForSheet(sheetId);
+        insert(expenses);
+    }
 }

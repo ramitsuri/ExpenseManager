@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
 import android.app.Dialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,8 +50,15 @@ public class AnalysisFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_analysis, container, false);
 
-        return inflater.inflate(R.layout.fragment_analysis, container, false);
+        if ((getResources().getConfiguration().uiMode &
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
+            Timber.i("Light theme, setting status and nav bar light flag");
+            view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
+                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        }
+        return view;
     }
 
     @Override

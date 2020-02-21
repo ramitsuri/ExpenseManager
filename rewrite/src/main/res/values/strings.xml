@@ -62,6 +62,7 @@
     <string name="expenses_empty_message">No new expenses!</string>
     <string name="expenses_empty_help_message">tap the ADD EXPENSE button to add a new expense</string>
     <string name="expenses_duplicate_success">Expense duplicated</string>
+    <string name="expenses_not_synced">Not synced</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -122,6 +123,7 @@
     <!-- All Expenses -->
     <string name="all_expenses_filter">Filter</string>
     <string name="all_expenses_modify_filter">Modify Filter</string>
+    <string name="all_expenses_go_to_setup">Go To Setup</string>
     <string name="all_expenses_empty_message">No expenses in %1s!</string>
     <string name="all_expenses_analysis">Analysis</string>
 

@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.IntDefs.ListItemType;
@@ -22,6 +24,7 @@ import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
+import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.AllExpensesViewModel;
 
 import java.math.BigDecimal;
@@ -30,27 +33,29 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import timber.log.Timber;
 
 public class AllExpensesFragment extends BaseFragment {
 
     private AllExpensesViewModel mViewModel;
-    private ExpenseAdapter mExpenseAdapter;
 
     // Views
+    private ExtendedFloatingActionButton mBtnAdd;
     private RecyclerView mListExpenses;
     private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
     private ProgressBar mProgressBar;
-    private Button mBtnFilter, mBtnAnalysis, mBtnFilterSecond;
+    private Button mBtnFilter, mBtnAnalysis, mBtnFilterSecond, mBtnSetup, mBtnSetupSecond;
+    private SwipeRefreshLayout mRefreshLayout;
 
     public AllExpensesFragment() {
     }
@@ -60,18 +65,6 @@ public class AllExpensesFragment extends BaseFragment {
             Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_all_expenses, container, false);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                exitToUp();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
@@ -96,6 +89,14 @@ public class AllExpensesFragment extends BaseFragment {
                         }
                     });
         }
+
+        mRefreshLayout = view.findViewById(R.id.swipe_layout);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                onSheetSelected(true);
+            }
+        });
 
         mBtnAnalysis = view.findViewById(R.id.btn_analyse);
         mBtnAnalysis.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +126,33 @@ public class AllExpensesFragment extends BaseFragment {
             }
         });
 
+        mBtnSetup = view.findViewById(R.id.btn_setup);
+        mBtnSetup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(AllExpensesFragment.this)
+                        .navigate(R.id.nav_action_setup, null);
+            }
+        });
+
+        mBtnSetupSecond = view.findViewById(R.id.btn_setup_second);
+        mBtnSetupSecond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(AllExpensesFragment.this)
+                        .navigate(R.id.nav_action_setup, null);
+            }
+        });
+
+        mBtnAdd = view.findViewById(R.id.btn_add);
+        mBtnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(AllExpensesFragment.this)
+                        .navigate(R.id.nav_action_add_expense, null);
+            }
+        });
+
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
 
@@ -144,14 +172,14 @@ public class AllExpensesFragment extends BaseFragment {
         final int numberOfColumns = getResources().getInteger(R.integer.expenses_grid_columns);
         GridLayoutManager manager = new GridLayoutManager(getActivity(), numberOfColumns);
 
-        mExpenseAdapter = new ExpenseAdapter();
-        mExpenseAdapter.setHistorical(true);
+        final ExpenseAdapter adapter = new ExpenseAdapter();
+        adapter.setHistorical(true);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(
                     int position) { // Set headers to span the whole width of recycler view
                 @ListItemType
-                int itemType = mExpenseAdapter.getItemViewType(position);
+                int itemType = adapter.getItemViewType(position);
                 switch (itemType) {
                     case ListItemType.HEADER:
                         return numberOfColumns;
@@ -163,16 +191,41 @@ public class AllExpensesFragment extends BaseFragment {
                 }
             }
         });
-        mListExpenses.setAdapter(mExpenseAdapter);
+        mListExpenses.setAdapter(adapter);
         mListExpenses.setLayoutManager(manager);
-        mListExpenses.addItemDecoration(new StickyHeaderItemDecoration(mExpenseAdapter));
+        mListExpenses.addItemDecoration(new StickyHeaderItemDecoration(adapter));
 
-        mExpenseAdapter.setCallback(new ExpenseAdapter.ItemClickListener() {
+        mListExpenses.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    mBtnAdd.hide();
+                } else if (dy < 0) {
+                    mBtnAdd.show();
+                }
+            }
+        });
+
+        adapter.setCallback(new ExpenseAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(@NonNull ExpenseWrapper wrapper) {
                 showExpenseDetails(wrapper);
             }
         });
+        LiveData<List<ExpenseWrapper>> expenses = mViewModel.getExpenseWrappers();
+        if (expenses != null) {
+            expenses.observe(getViewLifecycleOwner(),
+                    new Observer<List<ExpenseWrapper>>() {
+                        @Override
+                        public void onChanged(List<ExpenseWrapper> expenses) {
+                            Timber.i("Refreshing expenses" + expenses.size());
+                            adapter.setExpenses(expenses);
+                            onExpensesReceived(expenses);
+                        }
+                    });
+        } else {
+            Timber.i("Expenses null");
+        }
     }
 
     private void showExpenseDetails(ExpenseWrapper wrapper) {
@@ -181,12 +234,12 @@ public class AllExpensesFragment extends BaseFragment {
         detailsFragment.setCallback(new ExpenseDetailsFragment.DetailFragmentCallback() {
             @Override
             public void onEditRequested(@NonNull Expense expense) {
-                // Not used
+                handleExpenseEditRequested(expense);
             }
 
             @Override
             public void onDeleteRequested(@NonNull Expense expense) {
-                // Not used
+                handleExpenseDeleteRequested(expense);
             }
 
             @Override
@@ -211,11 +264,40 @@ public class AllExpensesFragment extends BaseFragment {
                     @Override
                     public void onChanged(final Expense duplicate) {
                         Snackbar editSnackbar =
-                                Snackbar.make(mListExpenses, R.string.expenses_duplicate_success,
+                                Snackbar.make(mBtnAdd, R.string.expenses_duplicate_success,
                                         Snackbar.LENGTH_LONG);
+                        editSnackbar.setAction(R.string.common_edit, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                handleExpenseEditRequested(duplicate);
+                            }
+                        });
                         editSnackbar.show();
                     }
                 });
+    }
+
+    private void handleExpenseEditRequested(@Nonnull Expense expense) {
+        AllExpensesFragmentDirections.NavActionAddExpense addAction
+                = AllExpensesFragmentDirections.navActionAddExpense();
+        addAction.setExpense(expense);
+        NavHostFragment.findNavController(this).navigate(addAction);
+    }
+
+    private void handleExpenseDeleteRequested(@Nonnull final Expense expense) {
+        if (getContext() != null) {
+            DialogInterface.OnClickListener positiveListener =
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mViewModel.deleteExpense(expense);
+                        }
+                    };
+            DialogHelper.showAlert(getContext(),
+                    R.string.delete_expense_warning_message,
+                    R.string.common_delete, positiveListener,
+                    R.string.common_cancel, null);
+        }
     }
 
     private void showFilterOptions(ArrayList<SheetInfo> sheetInfos) {
@@ -224,7 +306,12 @@ public class AllExpensesFragment extends BaseFragment {
         fragment.setCallback(new FilterOptionsFragment.FilterOptionsFragmentCallback() {
             @Override
             public void onFilterRequested(@NonNull SheetInfo sheetInfo) {
-                onSheetSelected(sheetInfo, false);
+                if (mViewModel.getSelectedSheetId() != sheetInfo.getSheetId()) {
+                    mViewModel.setSelectedSheetInfo(sheetInfo);
+                    onSheetSelected(false);
+                } else {
+                    Timber.i("Same Sheet selected, ignoring request");
+                }
             }
         });
         Bundle bundle = new Bundle();
@@ -243,7 +330,7 @@ public class AllExpensesFragment extends BaseFragment {
         AnalysisFragment fragment = AnalysisFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(Constants.BundleKeys.ANALYSIS_EXPENSES,
-                (ArrayList<? extends Parcelable>)mExpenseAdapter.getExpenses());
+                (ArrayList<? extends Parcelable>)mViewModel.getExpenses());
         fragment.setArguments(bundle);
         if (getActivity() != null) {
             fragment.show(getActivity().getSupportFragmentManager(), AnalysisFragment.TAG);
@@ -258,63 +345,67 @@ public class AllExpensesFragment extends BaseFragment {
             for (SheetInfo sheetInfo : sheetInfos) {
                 if (mViewModel.getSelectedSheetId() == sheetInfo.getSheetId()) {
                     Timber.i("Selecting default sheet id");
-                    onSheetSelected(sheetInfo, true);
+                    onSheetSelected(false);
                     break;
                 }
             }
         }
     }
 
-    private void onSheetSelected(@Nonnull SheetInfo sheetInfo, boolean isFirstTime) {
-        Timber.i("Sheet selected - %s", sheetInfo.getSheetName());
-        if (mViewModel.getSelectedSheetId() != sheetInfo.getSheetId() || isFirstTime) {
-            mListExpenses.setVisibility(View.GONE);
-            mCardInfo.setVisibility(View.GONE);
-            mTextInfoEmpty.setVisibility(View.GONE);
+    private void onSheetSelected(boolean fetch) {
+        if (fetch) {
+            mBtnAdd.setVisibility(View.GONE);
+            mBtnAnalysis.setVisibility(View.GONE);
             mBtnFilterSecond.setVisibility(View.GONE);
             mBtnFilter.setVisibility(View.GONE);
-            mBtnAnalysis.setVisibility(View.GONE);
+            mBtnSetup.setVisibility(View.GONE);
+            mBtnSetupSecond.setVisibility(View.GONE);
+            mCardInfo.setVisibility(View.GONE);
+            mListExpenses.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.GONE);
+            mTextInfoEmpty.setVisibility(View.GONE);
+
             mProgressBar.setVisibility(View.VISIBLE);
-            mViewModel.setSelectedSheetId(sheetInfo.getSheetId());
-            LiveData<List<ExpenseWrapper>> expenses = mViewModel.getExpenses(sheetInfo);
-            if (expenses != null) {
-                expenses.observe(getViewLifecycleOwner(),
-                        new Observer<List<ExpenseWrapper>>() {
-                            @Override
-                            public void onChanged(List<ExpenseWrapper> expenses) {
-                                Timber.i("Refreshing expenses");
-                                mExpenseAdapter.setExpenses(expenses);
-                                onExpensesReceived(expenses);
-                            }
-                        });
-            } else {
-                Timber.i("Expenses null");
-            }
+
+            mViewModel.getWrappersFromSheet();
         } else {
-            Timber.i("Same Sheet selected, ignoring request");
+            mViewModel.getWrappersFromSheet(mViewModel.getSelectedSheetId());
         }
     }
 
     private void onExpensesReceived(List<ExpenseWrapper> expenses) {
         boolean doCalculation = false;
-        mProgressBar.setVisibility(View.GONE);
         if (expenses.size() == 0) {
+            mBtnAnalysis.setVisibility(View.GONE);
+            mBtnFilter.setVisibility(View.GONE);
+            mBtnSetup.setVisibility(View.GONE);
+            mCardInfo.setVisibility(View.GONE);
+            mListExpenses.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.GONE);
+
+            mBtnAdd.setVisibility(View.VISIBLE);
             mBtnFilterSecond.setVisibility(View.VISIBLE);
+            mBtnSetupSecond.setVisibility(View.VISIBLE);
             mTextInfoEmpty.setVisibility(View.VISIBLE);
             mTextInfoEmpty.setText(String.format(getString(R.string.all_expenses_empty_message),
                     mViewModel.getSelectedSheetName()));
-            mCardInfo.setVisibility(View.GONE);
-            mBtnAnalysis.setVisibility(View.GONE);
-            mBtnFilter.setVisibility(View.GONE);
-            mListExpenses.setVisibility(View.GONE);
+            mRefreshLayout.setRefreshing(false);
         } else {
             doCalculation = true;
-            mBtnFilterSecond.setVisibility(View.GONE);
-            mTextInfoEmpty.setVisibility(View.GONE);
-            mCardInfo.setVisibility(View.VISIBLE);
+            mBtnAdd.setVisibility(View.VISIBLE);
             mBtnAnalysis.setVisibility(View.VISIBLE);
             mBtnFilter.setVisibility(View.VISIBLE);
+            mBtnSetup.setVisibility(View.VISIBLE);
+            mCardInfo.setVisibility(View.VISIBLE);
             mListExpenses.setVisibility(View.VISIBLE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+
+            mBtnFilterSecond.setVisibility(View.GONE);
+            mBtnSetupSecond.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+            mTextInfoEmpty.setVisibility(View.GONE);
+            mRefreshLayout.setRefreshing(false);
         }
 
         // Return when no calculation required (TextInfo 1, 2, 3 are not going to be shown)

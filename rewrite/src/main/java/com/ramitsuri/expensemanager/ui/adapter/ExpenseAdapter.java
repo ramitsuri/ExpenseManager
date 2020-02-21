@@ -14,7 +14,6 @@ import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.ColorRes;
@@ -46,19 +45,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mExpenses = expenses;
         }
         notifyDataSetChanged();
-    }
-
-    public List<Expense> getExpenses() {
-        List<Expense> expenses = new ArrayList<>();
-        if (mExpenses == null) {
-            return expenses;
-        }
-        for (ExpenseWrapper wrapper : mExpenses) {
-            if (wrapper.getExpense() != null) {
-                expenses.add(wrapper.getExpense());
-            }
-        }
-        return expenses;
     }
 
     public void setHistorical(boolean historical) {
@@ -138,7 +124,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private ViewGroup container;
         private TextView txtDate, txtDescription, txtAmount, txtDetail1, txtDetail2, txtDetail3;
-        private View flagStatus;
+        private View flagStatus, syncStatus;
 
         ItemViewHolder(View itemView) {
             super(itemView);
@@ -153,23 +139,29 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtDetail2 = itemView.findViewById(R.id.text_expense_detail_2);
             txtDetail3 = itemView.findViewById(R.id.text_expense_detail_3);
             flagStatus = itemView.findViewById(R.id.flag_status);
+            syncStatus = itemView.findViewById(R.id.sync_status);
         }
 
         private void bind(final Expense expense) {
             if (TextUtils.isEmpty(expense.getStore())) {
-                txtDetail1.setVisibility(View.GONE);
+                txtDetail3.setVisibility(View.GONE);
             } else {
-                txtDetail1.setText(expense.getStore());
+                txtDetail3.setText(expense.getStore());
             }
             txtDetail2.setText(expense.getPaymentMethod());
             txtDescription.setText(expense.getDescription());
             txtAmount.setText(CurrencyHelper.formatForDisplay(true, expense.getAmount()));
             txtDate.setText(DateHelper.getFriendlyDate(expense.getDateTime()));
-            txtDetail3.setText(expense.getCategory());
+            txtDetail1.setText(expense.getCategory());
             if (expense.isStarred()) {
                 flagStatus.setVisibility(View.VISIBLE);
             } else {
                 flagStatus.setVisibility(View.GONE);
+            }
+            if (expense.isSynced()) {
+                syncStatus.setVisibility(View.GONE);
+            } else {
+                syncStatus.setVisibility(View.VISIBLE);
             }
         }
 

@@ -3,7 +3,7 @@ package com.ramitsuri.expensemanager.viewModel;
 import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.MainApplication;
-import com.ramitsuri.expensemanager.data.repository.ExpenseSheetsRepository;
+import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
@@ -24,16 +24,22 @@ import timber.log.Timber;
 
 public class AllExpensesViewModel extends ViewModel {
 
-    private int mSelectedSheetId;
-    private LiveData<List<SheetInfo>> mSheetInfosLiveData;
+    private ExpenseRepository mRepository;
+
+    private SheetInfo mSelectedSheetInfo;
     private List<SheetInfo> mSheetInfos;
-    private ExpenseSheetsRepository mRepository;
+    private List<Expense> mExpenses;
+
+    private LiveData<List<SheetInfo>> mSheetInfosLiveData;
 
     public AllExpensesViewModel() {
         super();
-
-        mSelectedSheetId = AppHelper.getDefaultSheetId();
         SheetRepository sheetRepository = MainApplication.getInstance().getSheetRepository();
+
+        mRepository = MainApplication.getInstance().getExpenseRepo();
+
+        mSelectedSheetInfo = new SheetInfo();
+        mSelectedSheetInfo.setSheetId(AppHelper.getDefaultSheetId());
         String spreadsheetId = AppHelper.getSpreadsheetId();
         if (TextUtils.isEmpty(spreadsheetId)) {
             Timber.i("SpreadsheetId is null or empty");
@@ -48,10 +54,11 @@ public class AllExpensesViewModel extends ViewModel {
                                 }
                             });
         }
-
-        mRepository = MainApplication.getInstance().getExpenseSheetsRepo();
     }
 
+    /*
+     * Sheet infos
+     */
     @Nullable
     public LiveData<List<SheetInfo>> getSheetInfosLiveData() {
         return mSheetInfosLiveData;
@@ -62,46 +69,57 @@ public class AllExpensesViewModel extends ViewModel {
         return mSheetInfos;
     }
 
+    public int getSelectedSheetId() {
+        return mSelectedSheetInfo.getSheetId();
+    }
+
+    public void setSelectedSheetInfo(SheetInfo selectedSheetInfo) {
+        mSelectedSheetInfo = selectedSheetInfo;
+    }
+
     @Nullable
-    public LiveData<List<ExpenseWrapper>> getExpenses(SheetInfo sheetInfo) {
-        String spreadsheetId = AppHelper.getSpreadsheetId();
-        if (TextUtils.isEmpty(spreadsheetId)) {
-            Timber.i("SpreadsheetId is null or empty");
-            return null;
+    public String getSelectedSheetName() {
+        if (mSelectedSheetInfo != null) {
+            return mSelectedSheetInfo.getSheetName();
         }
-        return Transformations.map(mRepository.getExpensesFromSheet(spreadsheetId, sheetInfo),
+        return null;
+    }
+
+    /*
+     * Expenses
+     */
+    @Nullable
+    public LiveData<List<ExpenseWrapper>> getExpenseWrappers() {
+        return Transformations.map(mRepository.getExpenses(),
                 new Function<List<Expense>, List<ExpenseWrapper>>() {
                     @Override
                     public List<ExpenseWrapper> apply(List<Expense> input) {
-                        Timber.i("Transforming");
+                        mExpenses = input;
                         return TransformationHelper.toExpenseWrapperList(input);
                     }
                 });
     }
 
+    @Nullable
+    public List<Expense> getExpenses() {
+        return mExpenses;
+    }
+
+    public void getWrappersFromSheet(int sheetId) {
+        mRepository.getFromSheet(sheetId);
+    }
+
+    public void getWrappersFromSheet() {
+        mRepository.getFromSheet(mSelectedSheetInfo);
+    }
+
     public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
         Expense duplicate = new Expense(expense);
         duplicate.setIsSynced(false);
-        return mRepository.insertAndGetExpense(duplicate);
+        return mRepository.insertAndGet(duplicate, expense.getSheetId());
     }
 
-    public int getSelectedSheetId() {
-        return mSelectedSheetId;
-    }
-
-    public void setSelectedSheetId(int selectedSheetId) {
-        mSelectedSheetId = selectedSheetId;
-    }
-
-    @Nullable
-    public String getSelectedSheetName() {
-        if (mSheetInfos != null) {
-            for (SheetInfo sheetInfo : mSheetInfos) {
-                if (mSelectedSheetId == sheetInfo.getSheetId()) {
-                    return sheetInfo.getSheetName();
-                }
-            }
-        }
-        return null;
+    public void deleteExpense(@Nonnull Expense expense) {
+        mRepository.delete(expense, expense.getSheetId());
     }
 }
