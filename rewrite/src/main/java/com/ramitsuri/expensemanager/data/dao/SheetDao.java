@@ -15,6 +15,9 @@ public abstract class SheetDao {
     @Query("SELECT * FROM sheetinfo")
     public abstract List<SheetInfo> getAll();
 
+    @Query("SELECT sheet_name FROM sheetinfo WHERE sheet_id = :sheetId")
+    public abstract String getName(int sheetId);
+
     @Transaction
     public void setAll(List<SheetInfo> sheetInfos) {
         deleteAll();

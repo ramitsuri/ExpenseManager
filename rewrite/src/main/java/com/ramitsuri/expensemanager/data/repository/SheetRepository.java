@@ -43,13 +43,17 @@ public class SheetRepository {
     private AppExecutors mExecutors;
     private ExpenseManagerDatabase mDatabase;
 
+    private MutableLiveData<String> mSheetName;
+
     public SheetRepository(@NonNull Context context, @NonNull String appName,
             @NonNull Account account, @NonNull List<String> scopes,
             @NonNull AppExecutors executors, @Nonnull ExpenseManagerDatabase database) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
-        mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
+        //mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
         mExecutors = executors;
         mDatabase = database;
+
+        mSheetName = new MutableLiveData<>();
     }
 
     /**
@@ -173,6 +177,21 @@ public class SheetRepository {
             }
         });
         return responseLiveData;
+    }
+
+    public LiveData<String> getSheetName() {
+        return mSheetName;
+    }
+
+    public void refreshSheetName(final int sheetId) {
+        Timber.i("Refreshing sheet name for %d", sheetId);
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                String name = mDatabase.sheetDao().getName(sheetId);
+                mSheetName.postValue(name);
+            }
+        });
     }
 
     public SheetsMetadataConsumerResponse getSheetsMetadataResponse(@Nonnull String spreadsheetId) {
@@ -326,6 +345,6 @@ public class SheetRepository {
     public void refreshProcessors(@NonNull Context context, @NonNull String appName,
             @NonNull Account account, @NonNull List<String> scopes) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
-        mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
+        //mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
     }
 }

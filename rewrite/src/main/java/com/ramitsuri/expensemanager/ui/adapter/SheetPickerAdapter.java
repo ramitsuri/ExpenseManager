@@ -23,6 +23,7 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
     @Nullable
     private SheetPickerAdapterCallback mCallback;
     private int mSelectedId;
+    private boolean mShowSelection;
 
     public interface SheetPickerAdapterCallback {
         void onItemPicked(SheetInfo value);
@@ -32,22 +33,24 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
     }
 
     public void setValues(@NonNull List<SheetInfo> values, int selectedId) {
-        setValues(values, selectedId, true);
-    }
-
-    public void setValues(@NonNull List<SheetInfo> values, int selectedId,
-            boolean callbackOnDefaultSelect) {
         mValues = values;
+        mShowSelection = true;
         if (selectedId == Constants.Basic.UNDEFINED &&
                 values.size() > 0) { // Select first value in case selection is null
             SheetInfo firstItem = values.get(0);
             // Send callback with selected value when selected value was not found (new expense)
             Timber.i("Selecting first value from list %s", firstItem.toString());
-            onSelectionMade(firstItem, callbackOnDefaultSelect);
+            onSelectionMade(firstItem);
         } else {
             mSelectedId = selectedId;
             notifyDataSetChanged();
         }
+    }
+
+    public void setValues(@NonNull List<SheetInfo> values) {
+        mValues = values;
+        mShowSelection = true;
+        notifyDataSetChanged();
     }
 
     public void setCallback(@NonNull SheetPickerAdapterCallback callback) {
@@ -81,12 +84,10 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
         }
     }
 
-    private void onSelectionMade(SheetInfo selectedValue, boolean callback) {
+    private void onSelectionMade(SheetInfo selectedValue) {
         if (mCallback != null) {
             mSelectedId = selectedValue.getSheetId();
-            if (callback) {
-                mCallback.onItemPicked(selectedValue);
-            }
+            mCallback.onItemPicked(selectedValue);
             notifyDataSetChanged();
         } else {
             Timber.w("mCallback is null");
@@ -106,8 +107,12 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
 
         private void bind(final SheetInfo value) {
             txtValue.setText(value.getSheetName());
-            if (value.getSheetId() == mSelectedId) {
-                txtValue.setChecked(true);
+            if (mShowSelection) {
+                if (value.getSheetId() == mSelectedId) {
+                    txtValue.setChecked(true);
+                } else {
+                    txtValue.setChecked(false);
+                }
             } else {
                 txtValue.setChecked(false);
             }
@@ -117,7 +122,7 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
         public void onClick(View view) {
             if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                 if (mValues != null) {
-                    onSelectionMade(mValues.get(getAdapterPosition()), true);
+                    onSelectionMade(mValues.get(getAdapterPosition()));
                 } else {
                     Timber.w("mValues is null");
                 }

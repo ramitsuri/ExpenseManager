@@ -1,9 +1,7 @@
 High
 - Cleanup AllExpensesFrag
 - Move fetch all to Misc
-- Remove progress bar as won't be needed
 - Move Card View calculation to calculator
-- Fix add and refresh buttons when no expenses
 - Fix language for analysis, improve  - multiple layouts for test
 - Improve sheet selection in add expense
 
@@ -11,7 +9,6 @@ High
 Medium
 - Fix fragment refreshing
 - Easier setup after first start
-- Fix change sheet fragment selection - default sheet keeps getting selected
 
 
 Low

@@ -14,18 +14,6 @@
         android:paddingStart="@dimen/padding_small"
         android:paddingEnd="@dimen/padding_small">
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_info"
             style="@style/Widget.MaterialComponents.CardView"
@@ -42,8 +30,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/padding_small">
+                android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guide_vertical"
@@ -56,44 +43,93 @@
                     android:id="@+id/txt_expense_info_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_extra_small"
+                    android:layout_marginTop="@dimen/margin_extra_small"
+                    android:textAllCaps="true"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_body1"
+                    android:textSize="@dimen/text_caption"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/txt_expense_info_2"
-                    app:layout_constraintEnd_toEndOf="@id/guide_vertical"
+                    app:layout_constraintEnd_toStartOf="@id/guide_vertical"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="10 expenses in Jan"
+                    tools:text="Jan"
                     tools:visibility="visible" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txt_expense_info_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_caption"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/txt_expense_info_1"
                     app:layout_constraintStart_toStartOf="@id/txt_expense_info_1"
                     app:layout_constraintTop_toBottomOf="@id/txt_expense_info_1"
-                    tools:text="(31 Oct - 7 Nov)"
+                    tools:text="31 expenses\n4 not backed up"
                     tools:visibility="visible" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txt_expense_info_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_extra_small"
                     android:gravity="end"
                     android:padding="@dimen/padding_extra_small"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_h6"
+                    android:textSize="@dimen/text_body1"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/guide_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="$45"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_setup"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/common_setup"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_caption"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_expense_info_3"
+                    app:layout_constraintWidth_percent="0.15"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_filter"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/all_expenses_filter"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_caption"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/btn_setup"
+                    app:layout_constraintEnd_toStartOf="@id/btn_setup"
+                    app:layout_constraintTop_toTopOf="@id/btn_setup"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_analyse"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/all_expenses_analysis"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_caption"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@id/btn_filter"
+                    app:layout_constraintTop_toTopOf="@id/btn_filter"
                     tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -101,41 +137,13 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_setup"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:icon="@drawable/ic_miscellaneous"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_info"
-            app:layout_constraintWidth_percent="0.17"
-            tools:visibility="visible" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_filter"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/all_expenses_filter"
-            android:textSize="@dimen/text_caption"
-            android:visibility="gone"
-            app:icon="@drawable/ic_filter"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/padding_extra_extra_small"
-            app:layout_constraintEnd_toStartOf="@id/btn_setup"
-            app:layout_constraintTop_toBottomOf="@id/card_info"
-            tools:visibility="visible" />
-
-        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_filter_second"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
             android:text="@string/all_expenses_modify_filter"
+            android:textAllCaps="false"
             android:textSize="@dimen/text_caption"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/txt_expense_empty"
@@ -144,10 +152,11 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_setup_second"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/all_expenses_go_to_setup"
+            android:textAllCaps="false"
             android:textSize="@dimen/text_caption"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/btn_filter_second"
@@ -155,39 +164,31 @@
             app:layout_constraintTop_toBottomOf="@id/btn_filter_second" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_analyse"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:id="@+id/btn_add_expense_second"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/all_expenses_analysis"
+            android:text="@string/add_expense"
+            android:textAllCaps="false"
             android:textSize="@dimen/text_caption"
             android:visibility="gone"
-            app:icon="@drawable/ic_analyse"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/padding_extra_extra_small"
-            app:layout_constraintEnd_toStartOf="@id/btn_filter"
-            app:layout_constraintTop_toBottomOf="@id/card_info"
-            tools:visibility="visible" />
+            app:layout_constraintEnd_toEndOf="@id/btn_filter_second"
+            app:layout_constraintStart_toStartOf="@id/btn_filter_second"
+            app:layout_constraintTop_toBottomOf="@id/btn_setup_second" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_layout"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_expenses"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_filter"
-            app:layout_constraintVertical_bias="0.0">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list_expenses"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
-                tools:itemCount="20"
-                tools:listitem="@layout/expense_item" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layout_constraintTop_toBottomOf="@id/card_info"
+            app:layout_constraintVertical_bias="0.0"
+            tools:itemCount="20"
+            tools:listitem="@layout/expense_item" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txt_expense_empty"

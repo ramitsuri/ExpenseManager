@@ -1,17 +1,7 @@
 <resources>
-    <plurals name="new_expense_count">
-        <item quantity="one">%d new expense</item>
-        <item quantity="other">%d new expenses</item>
-    </plurals>
-
-    <plurals name="backed_up_expense_count_in_sheet">
-        <item quantity="one">%1$d expense in %2$s</item>
-        <item quantity="other">%1$d expenses in %2$s</item>
-    </plurals>
-
-    <plurals name="backed_up_expense_count">
-        <item quantity="one">%d backed up expense</item>
-        <item quantity="other">%d backed up expenses</item>
+    <plurals name="expense_count_total">
+        <item quantity="one">%d expense</item>
+        <item quantity="other">%d expenses</item>
     </plurals>
 
     <string name="app_name">Expenses</string>
@@ -46,6 +36,7 @@
     <string name="common_budgets">Budgets</string>
     <string name="common_payments">Payments</string>
     <string name="common_categories">Categories</string>
+    <string name="common_filter">Filter</string>
 
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">History</string>
@@ -126,6 +117,8 @@
     <string name="all_expenses_go_to_setup">Go To Setup</string>
     <string name="all_expenses_empty_message">No expenses in %1s!</string>
     <string name="all_expenses_analysis">Analysis</string>
+    <string name="all_expenses_count_not_backed_up">%1d not backed up</string>
+    <string name="all_expenses_count_all_backed_up">All backed up</string>
 
     <!-- Details -->
     <string name="expense_detail_backed_up_disability_message">Edit and delete not available for

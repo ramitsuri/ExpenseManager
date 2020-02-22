@@ -1,3 +1,21 @@
+SheetDao
+    add a way to get name of sheet from id
+SheetRepository
+    comment instance creation for DriveProcessor (not needed for now)
+    get sheet name from dao
+SheetPickerAdapter
+    fix default selection for filter
+FilterOptionsFragment
+    add viewmodel, getting sheets from VM and not arguments
+AllExpensesFragment
+    remove progress bar, refresh view, moved buttons around
+    add Add button for when no expenses
+    modify card info view
+AllExpensesViewModel
+    remove getting sheet infos, just get sheet name for sheet id
+    cleanup
+
+
 ExpenseDao
     add method to get expenses for sheet id
     add abstract method to delete existing backed up expenses for sheet id, and add new ones

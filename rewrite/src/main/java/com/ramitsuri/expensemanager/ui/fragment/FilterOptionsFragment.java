@@ -9,15 +9,20 @@ import android.view.ViewGroup;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.SheetPickerAdapter;
+import com.ramitsuri.expensemanager.viewModel.FilterOptionsViewModel;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
@@ -29,6 +34,9 @@ public class FilterOptionsFragment extends BottomSheetDialogFragment {
     static FilterOptionsFragment newInstance() {
         return new FilterOptionsFragment();
     }
+
+    @Nonnull
+    private FilterOptionsViewModel mViewModel;
 
     private FilterOptionsFragmentCallback mCallback;
 
@@ -64,19 +72,11 @@ public class FilterOptionsFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (getArguments() != null) {
-            List<SheetInfo> sheetInfoList =
-                    getArguments().getParcelableArrayList(Constants.BundleKeys.SHEET_INFOS);
-            int selectedSheetId = getArguments().getInt(Constants.BundleKeys.SELECTED_SHEET_ID);
-            if (sheetInfoList != null) {
-                Timber.i("Showing %d sheets", sheetInfoList.size());
-                setupViews(view, sheetInfoList, selectedSheetId);
-            }
-        }
+        mViewModel = ViewModelProviders.of(this).get(FilterOptionsViewModel.class);
+        setupViews(view);
     }
 
-    private void setupViews(@NonNull View view, @NonNull final List<SheetInfo> sheetInfoList,
-            int selectedSheetId) {
+    private void setupViews(@NonNull View view) {
         RecyclerView listSheets = view.findViewById(R.id.list_sheets);
         int numberOfColumns = getResources().getInteger(R.integer.sheets_grid_columns);
         GridLayoutManager manager = new GridLayoutManager(getActivity(), numberOfColumns);
@@ -84,7 +84,7 @@ public class FilterOptionsFragment extends BottomSheetDialogFragment {
         listSheets.setLayoutManager(manager);
         listSheets.setHasFixedSize(true);
 
-        SheetPickerAdapter adapter = new SheetPickerAdapter();
+        final SheetPickerAdapter adapter = new SheetPickerAdapter();
         listSheets.setAdapter(adapter);
         adapter.setCallback(new SheetPickerAdapter.SheetPickerAdapterCallback() {
             @Override
@@ -95,6 +95,15 @@ public class FilterOptionsFragment extends BottomSheetDialogFragment {
                 }
             }
         });
-        adapter.setValues(sheetInfoList, selectedSheetId, false);
+        LiveData<List<SheetInfo>> sheetInfoList = mViewModel.getSheetInfos();
+        if (sheetInfoList != null) {
+            sheetInfoList.observe(getViewLifecycleOwner(),
+                    new Observer<List<SheetInfo>>() {
+                        @Override
+                        public void onChanged(List<SheetInfo> sheetInfos) {
+                            adapter.setValues(sheetInfos);
+                        }
+                    });
+        }
     }
 }
