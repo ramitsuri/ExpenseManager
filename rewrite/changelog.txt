@@ -1,3 +1,8 @@
+AllExpensesFrag
+    - Remove analysis, setup and filter buttons from CardView
+    - Add a menu button in place
+    - Implement onClickListener and move button clicks to bottom of class
+
 SheetRepository
     Add method to get data from multiple ranges
 MiscFragment

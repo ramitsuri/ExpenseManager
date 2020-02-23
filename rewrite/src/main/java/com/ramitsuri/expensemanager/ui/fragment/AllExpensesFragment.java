@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -41,7 +43,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
-public class AllExpensesFragment extends BaseFragment {
+public class AllExpensesFragment extends BaseFragment implements View.OnClickListener {
 
     private AllExpensesViewModel mViewModel;
 
@@ -50,8 +52,7 @@ public class AllExpensesFragment extends BaseFragment {
     private RecyclerView mListExpenses;
     private MaterialCardView mCardInfo;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
-    private Button mBtnFilter, mBtnAnalysis, mBtnFilterSecond, mBtnSetup, mBtnSetupSecond,
-            mBtnAddSecond;
+    private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnMenu;
 
     public AllExpensesFragment() {
     }
@@ -75,64 +76,20 @@ public class AllExpensesFragment extends BaseFragment {
 
         mViewModel = ViewModelProviders.of(this).get(AllExpensesViewModel.class);
 
-        mBtnAnalysis = view.findViewById(R.id.btn_analyse);
-        mBtnAnalysis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAnalysis();
-            }
-        });
-
-        mBtnFilter = view.findViewById(R.id.btn_filter);
-        mBtnFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFilterOptions();
-            }
-        });
-
         mBtnFilterSecond = view.findViewById(R.id.btn_filter_second);
-        mBtnFilterSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFilterOptions();
-            }
-        });
-
-        mBtnSetup = view.findViewById(R.id.btn_setup);
-        mBtnSetup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavHostFragment.findNavController(AllExpensesFragment.this)
-                        .navigate(R.id.nav_action_setup, null);
-            }
-        });
+        mBtnFilterSecond.setOnClickListener(this);
 
         mBtnSetupSecond = view.findViewById(R.id.btn_setup_second);
-        mBtnSetupSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavHostFragment.findNavController(AllExpensesFragment.this)
-                        .navigate(R.id.nav_action_setup, null);
-            }
-        });
+        mBtnSetupSecond.setOnClickListener(this);
 
         mBtnAdd = view.findViewById(R.id.btn_add);
-        mBtnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(AllExpensesFragment.this)
-                        .navigate(R.id.nav_action_add_expense, null);
-            }
-        });
+        mBtnAdd.setOnClickListener(this);
+
         mBtnAddSecond = view.findViewById(R.id.btn_add_expense_second);
-        mBtnAddSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavHostFragment.findNavController(AllExpensesFragment.this)
-                        .navigate(R.id.nav_action_add_expense, null);
-            }
-        });
+        mBtnAddSecond.setOnClickListener(this);
+
+        mBtnMenu = view.findViewById(R.id.btn_menu);
+        mBtnMenu.setOnClickListener(this);
 
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
@@ -336,12 +293,10 @@ public class AllExpensesFragment extends BaseFragment {
     private void onExpensesReceived(List<ExpenseWrapper> expenses) {
         boolean doCalculation = false;
         if (expenses.size() == 0) {
-            mBtnAnalysis.setVisibility(View.GONE);
-            mBtnFilter.setVisibility(View.GONE);
-            mBtnSetup.setVisibility(View.GONE);
+            mBtnAdd.setVisibility(View.GONE);
+            mBtnMenu.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.GONE);
             mListExpenses.setVisibility(View.GONE);
-            mBtnAdd.setVisibility(View.GONE);
 
             mBtnAddSecond.setVisibility(View.VISIBLE);
             mBtnFilterSecond.setVisibility(View.VISIBLE);
@@ -350,9 +305,7 @@ public class AllExpensesFragment extends BaseFragment {
         } else {
             doCalculation = true;
             mBtnAdd.setVisibility(View.VISIBLE);
-            mBtnAnalysis.setVisibility(View.VISIBLE);
-            mBtnFilter.setVisibility(View.VISIBLE);
-            mBtnSetup.setVisibility(View.VISIBLE);
+            mBtnMenu.setVisibility(View.VISIBLE);
             mCardInfo.setVisibility(View.VISIBLE);
             mListExpenses.setVisibility(View.VISIBLE);
 
@@ -415,4 +368,39 @@ public class AllExpensesFragment extends BaseFragment {
         // Total
         mTextInfo3.setText(CurrencyHelper.formatForDisplay(true, totalAmount));
     }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == mBtnFilterSecond.getId()) { // Filter
+            showFilterOptions();
+        } else if (v.getId() == mBtnSetupSecond.getId()) { // Setup
+            NavHostFragment.findNavController(AllExpensesFragment.this)
+                    .navigate(R.id.nav_action_setup, null);
+        } else if (v.getId() == mBtnAdd.getId() || v.getId() == mBtnAddSecond.getId()) { // Add
+            NavHostFragment.findNavController(AllExpensesFragment.this)
+                    .navigate(R.id.nav_action_add_expense, null);
+        } else if (v.getId() == mBtnMenu.getId()) { // Show Popup menu
+            PopupMenu popup = new PopupMenu(mBtnMenu.getContext(), mBtnMenu);
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.menu_analysis) { // Analysis
+                        showAnalysis();
+                        return true;
+                    } else if (item.getItemId() == R.id.menu_filter) { // Filter
+                        showFilterOptions();
+                        return true;
+                    } else if (item.getItemId() == R.id.menu_setup) { // Setup
+                        NavHostFragment.findNavController(AllExpensesFragment.this)
+                                .navigate(R.id.nav_action_setup, null);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            popup.getMenuInflater().inflate(R.menu.all_expenses_menu, popup.getMenu());
+            popup.show();
+        }
+    }
 }
+

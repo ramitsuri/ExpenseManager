@@ -72,9 +72,9 @@
                     android:id="@+id/txt_expense_info_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:layout_marginEnd="@dimen/margin_extra_small"
                     android:gravity="end"
-                    android:padding="@dimen/padding_extra_small"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_body1"
                     android:textStyle="bold"
@@ -85,51 +85,20 @@
                     tools:visibility="visible" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_setup"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/btn_menu"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:text="@string/common_setup"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_caption"
                     android:visibility="visible"
+                    app:icon="@drawable/ic_menu"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconTint="@android:color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/txt_expense_info_3"
-                    app:layout_constraintWidth_percent="0.15"
-                    tools:visibility="visible" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_filter"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:text="@string/all_expenses_filter"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_caption"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/btn_setup"
-                    app:layout_constraintEnd_toStartOf="@id/btn_setup"
-                    app:layout_constraintTop_toTopOf="@id/btn_setup"
-                    tools:visibility="visible" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_analyse"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:text="@string/all_expenses_analysis"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_caption"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toStartOf="@id/btn_filter"
-                    app:layout_constraintTop_toTopOf="@id/btn_filter"
+                    app:layout_constraintWidth_percent="0.1"
                     tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
