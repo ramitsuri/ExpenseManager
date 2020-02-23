@@ -52,6 +52,11 @@ public class MiscellaneousViewModel extends ViewModel {
         WorkHelper.enqueueOneTimeSync();
     }
 
+    public void syncExpensesFromSheet() {
+        Timber.i("Initiating sync expenses");
+        WorkHelper.enqueueOneTimeExpenseSync();
+    }
+
     public void deleteExpenses() {
         Timber.i("Deleting expenses");
         long currentTime = System.currentTimeMillis();

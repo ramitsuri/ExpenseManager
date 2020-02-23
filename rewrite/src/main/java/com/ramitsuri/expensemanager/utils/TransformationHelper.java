@@ -8,7 +8,13 @@ import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import static com.ramitsuri.expensemanager.Constants.Sheets.EXPENSE_RANGE;
 
 public class TransformationHelper {
 
@@ -61,5 +67,13 @@ public class TransformationHelper {
             }
         }
         return sheetInfos;
+    }
+
+    public static Map<String, Integer> getExpenseRanges(@Nonnull List<SheetInfo> sheetInfos) {
+        Map<String, Integer> map = new HashMap<>();
+        for (SheetInfo info : sheetInfos) {
+            map.put(info.getSheetName() + EXPENSE_RANGE, info.getSheetId());
+        }
+        return map;
     }
 }

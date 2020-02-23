@@ -6,6 +6,7 @@ import android.content.Context;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.ValueRange;
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -17,6 +18,7 @@ import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.FileConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.RangeConsumerResponse;
+import com.ramitsuri.sheetscore.consumerResponse.RangesConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
 import com.ramitsuri.sheetscore.driveResponse.FileCopyResponse;
@@ -24,6 +26,7 @@ import com.ramitsuri.sheetscore.intdef.Dimension;
 import com.ramitsuri.sheetscore.spreadsheetResponse.BaseResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.SpreadsheetSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.ValueRangeSpreadsheetResponse;
+import com.ramitsuri.sheetscore.spreadsheetResponse.ValueRangesSpreadsheetResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -288,6 +291,54 @@ public class SheetRepository {
                 }
             }
             consumerResponse.setObjectLists(responseObjectLists);
+        } catch (IOException e) {
+            Timber.e(e);
+            consumerResponse.setException(e);
+        } catch (Exception e) {
+            Timber.e(e);
+            consumerResponse.setException(e);
+        }
+        return consumerResponse;
+    }
+
+    public RangesConsumerResponse getRangesDataResponse(@Nonnull String spreadsheetId,
+            @Nonnull List<String> range) {
+        RangesConsumerResponse consumerResponse = new RangesConsumerResponse();
+        try {
+            BaseResponse response =
+                    mSheetsProcessor.getSheetData(spreadsheetId, range, Dimension.ROWS);
+
+            List<RangeConsumerResponse> values = new ArrayList<>();
+            if (response != null) {
+                List<ValueRange> valueRangeList =
+                        ((ValueRangesSpreadsheetResponse)response).getValueRanges();
+                if (valueRangeList != null) {
+                    for (ValueRange valueRange : valueRangeList) {
+                        RangeConsumerResponse value = new RangeConsumerResponse();
+                        value.setRange(valueRange.getRange());
+                        List<List<Object>> objectLists = valueRange.getValues();
+                        List<List<Object>> responseObjectLists = new ArrayList<>();
+                        if (objectLists != null) {
+                            for (List<Object> objectList : objectLists) {
+                                if (objectList == null || objectList.size() == 0) {
+                                    continue;
+                                }
+                                List<Object> responseObjectList =
+                                        new ArrayList<>(objectList.size());
+                                for (Object object : objectList) {
+                                    if (object != null) {
+                                        responseObjectList.add(object);
+                                    }
+                                }
+                                responseObjectLists.add(responseObjectList);
+                            }
+                        }
+                        value.setObjectLists(responseObjectLists);
+                        values.add(value);
+                    }
+                }
+            }
+            consumerResponse.setValues(values);
         } catch (IOException e) {
             Timber.e(e);
             consumerResponse.setException(e);

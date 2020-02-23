@@ -44,15 +44,7 @@
             tools:visibility="visible" />
 
         <include
-            android:id="@+id/item_sheets"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_delete_all"
+            android:id="@+id/item_sync_expenses"
             layout="@layout/extra_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,6 +99,22 @@
 
         <include
             android:id="@+id/item_version"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_sheets"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_delete_all"
             layout="@layout/extra_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

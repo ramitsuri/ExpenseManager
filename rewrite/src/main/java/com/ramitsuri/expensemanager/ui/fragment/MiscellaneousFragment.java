@@ -97,6 +97,12 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.string.common_sync,
                 R.drawable.ic_sync);
 
+        // Sync Expenses
+        setupMenuItem(view,
+                R.id.item_sync_expenses,
+                R.string.common_sync_expenses,
+                R.drawable.ic_sync);
+
         // Logs Metadata
         setupMenuItem(view,
                 R.id.item_sheets,
@@ -307,6 +313,10 @@ public class MiscellaneousFragment extends BaseFragment {
 
             case R.id.item_sync:
                 mViewModel.syncDataFromSheet();
+                break;
+
+            case R.id.item_sync_expenses:
+                mViewModel.syncExpensesFromSheet();
                 break;
 
             case R.id.item_sheets:

@@ -37,6 +37,7 @@ public class Constants {
         public static final String ONE_TIME_BACKUP = "one_time_backup";
         public static final String SCHEDULED_BACKUP = "scheduled_backup";
         public static final String ONE_TIME_SYNC = "one_time_sync";
+        public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";
     }
 
     public class Range {
@@ -64,6 +65,7 @@ public class Constants {
         public static final String PERIODIC_BACKUP = "periodic_backup";
         public static final String ONE_TIME_BACKUP = "one_time_backup";
         public static final String ONE_TIME_SYNC = "one_time_sync";
+        public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";
     }
 
     public class LogResult {

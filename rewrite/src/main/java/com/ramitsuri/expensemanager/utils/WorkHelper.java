@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.utils;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.work.BackupWorker;
+import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
 import com.ramitsuri.expensemanager.work.SyncWorker;
 
 import java.util.List;
@@ -86,6 +87,26 @@ public class WorkHelper {
                 .enqueue(syncRequest);
     }
 
+    public static void enqueueOneTimeExpenseSync() {
+        Timber.i("Enqueue one-time expenses sync invoked");
+        String tag = getOneTimeExpenseSyncTag();
+
+        Data input = new Data.Builder()
+                .putString(Constants.Work.TYPE, Constants.LogType.ONE_TIME_EXPENSE_SYNC)
+                .build();
+
+        // Request
+        OneTimeWorkRequest syncRequest = new OneTimeWorkRequest
+                .Builder(ExpenseSyncWorker.class)
+                .setInputData(input)
+                .addTag(tag)
+                .build();
+
+        // Enqueue
+        getInstance()
+                .enqueue(syncRequest);
+    }
+
     public static void cancelScheduledBackup() {
         Timber.i("Cancel scheduled backup invoked");
         String tag = getPeriodicWorkTag();
@@ -102,6 +123,10 @@ public class WorkHelper {
 
     public static String getOneTimeSyncTag() {
         return Constants.Tag.ONE_TIME_SYNC;
+    }
+
+    public static String getOneTimeExpenseSyncTag() {
+        return Constants.Tag.ONE_TIME_EXPENSE_SYNC;
     }
 
     public static LiveData<List<WorkInfo>> getWorkStatus(String tag) {

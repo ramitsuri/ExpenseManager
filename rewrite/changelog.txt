@@ -1,3 +1,17 @@
+SheetRepository
+    Add method to get data from multiple ranges
+MiscFragment
+    Add new option to sync expenses
+    Move log and delete options to General section
+TransformationHelper
+    Add a method to convert list of sheet info to map of sheet name (key) and id (value)
+WorkHelper
+    Add method to get OneTimeExpenseSyncWorker's tag
+    Add method to enqueue OneTimeExpenseSyncWorker
+ExpenseSyncWorker
+    New worker to get expenses from multiple ranges and save them in db
+Use SheetsCore 3.1.0
+
 SheetDao
     add a way to get name of sheet from id
 SheetRepository
