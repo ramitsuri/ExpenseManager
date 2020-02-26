@@ -135,9 +135,10 @@ public class AnalysisFragment extends BottomSheetDialogFragment {
             Timber.i("ViewModel is null");
             return;
         }
-        mViewModel.onBudgetTabSelected(getString(R.string.analysis_all_budgets),
+        mViewModel.onBudgetTabSelected(getString(R.string.analysis_overall),
                 getString(R.string.analysis_used_format),
-                getString(R.string.analysis_remaining_format));
+                getString(R.string.analysis_remaining_format),
+                getString(R.string.analysis_overused_format));
     }
 
     private void onPaymentsTabSelected() {
@@ -146,8 +147,7 @@ public class AnalysisFragment extends BottomSheetDialogFragment {
             Timber.i("ViewModel is null");
             return;
         }
-        mViewModel.onPaymentsTabSelected(getString(R.string.analysis_all_payments),
-                getString(R.string.analysis_used_format));
+        mViewModel.onPaymentsTabSelected(getString(R.string.analysis_overall));
     }
 
     private void onCategoriesTabSelected() {
@@ -156,7 +156,6 @@ public class AnalysisFragment extends BottomSheetDialogFragment {
             Timber.i("ViewModel is null");
             return;
         }
-        mViewModel.onCategoriesTabSelected(getString(R.string.analysis_all_categories),
-                getString(R.string.analysis_used_format));
+        mViewModel.onCategoriesTabSelected(getString(R.string.analysis_overall));
     }
 }

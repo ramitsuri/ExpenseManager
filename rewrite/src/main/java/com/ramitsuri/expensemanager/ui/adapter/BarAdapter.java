@@ -1,5 +1,8 @@
 package com.ramitsuri.expensemanager.ui.adapter;
 
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,9 +61,9 @@ public class BarAdapter extends RecyclerView.Adapter<BarAdapter.ViewHolder> {
         return mItems.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtTitle, txtValue1, txtValue2, txtValue3;
+        private TextView txtTitle, txtValue1, txtValue2;
         private ProgressBar progressBar;
 
         ViewHolder(View itemView) {
@@ -69,24 +72,17 @@ public class BarAdapter extends RecyclerView.Adapter<BarAdapter.ViewHolder> {
             txtTitle = itemView.findViewById(R.id.txt_title);
             txtValue1 = itemView.findViewById(R.id.txt_value_1);
             txtValue2 = itemView.findViewById(R.id.txt_value_2);
-            txtValue3 = itemView.findViewById(R.id.txt_value_3);
             progressBar = itemView.findViewById(R.id.progress);
         }
 
         private void bind(BarWrapper wrapper) {
             txtTitle.setText(wrapper.getTitle());
-            txtValue1.setText(wrapper.getValue1());
-            if (!TextUtils.isEmpty(wrapper.getValue2())) {
-                txtValue2.setText(wrapper.getValue2());
+            txtValue1.setText(wrapper.getValueUsed());
+            if (!TextUtils.isEmpty(wrapper.getValueRemaining())) {
+                txtValue2.setText(wrapper.getValueRemaining());
                 txtValue2.setVisibility(View.VISIBLE);
             } else {
                 txtValue2.setVisibility(View.GONE);
-            }
-            if (!TextUtils.isEmpty(wrapper.getValue3())) {
-                txtValue3.setText(wrapper.getValue3());
-                txtValue3.setVisibility(View.VISIBLE);
-            } else {
-                txtValue3.setVisibility(View.GONE);
             }
 
             // Progress bar
@@ -98,8 +94,23 @@ public class BarAdapter extends RecyclerView.Adapter<BarAdapter.ViewHolder> {
                     .getDrawable(progressBar.getContext(), R.drawable.progress_bar_shape));
             ProgressBarAnimation animation =
                     new ProgressBarAnimation(progressBar, oldProgress, newProgress);
-            animation.setDuration(2000);
+            animation.setDuration(1500);
             progressBar.startAnimation(animation);
+
+            LayerDrawable layerDrawable = (LayerDrawable)progressBar.getProgressDrawable();
+            layerDrawable.mutate();
+
+            ScaleDrawable scaleDrawable = (ScaleDrawable)layerDrawable.getDrawable(1);
+            GradientDrawable progressLayer = (GradientDrawable)scaleDrawable.getDrawable();
+            if (progressLayer != null) {
+                if (newProgress >= 100) {
+                    progressLayer.setColor(
+                            ContextCompat.getColor(progressBar.getContext(), R.color.color_red));
+                } else {
+                    progressLayer.setColor(
+                            ContextCompat.getColor(progressBar.getContext(), R.color.color_teal));
+                }
+            }
         }
     }
 }

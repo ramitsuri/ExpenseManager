@@ -8,13 +8,23 @@
     android:padding="@dimen/padding_extra_small">
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_body1"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Entertainment" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txt_value_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_caption"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Used: $345.67" />
+        app:layout_constraintStart_toStartOf="@id/txt_title"
+        app:layout_constraintTop_toBottomOf="@id/txt_title"
+        tools:text="345.67/500" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txt_value_2"
@@ -22,21 +32,9 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_caption"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/txt_value_1"
-        app:layout_constraintTop_toBottomOf="@id/txt_value_1"
-        tools:text="Remaining: $154.33"
-        tools:visibility="visible" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/txt_value_3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_caption"
-        android:textStyle="bold"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/progress"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="$500"
+        tools:text="$123.21 left"
         tools:visibility="visible" />
 
     <ProgressBar
@@ -48,18 +46,7 @@
         android:padding="@dimen/padding_extra_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_value_2"
+        app:layout_constraintTop_toBottomOf="@id/txt_value_1"
         tools:progress="54" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/txt_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_body1"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress"
-        tools:text="Entertainment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

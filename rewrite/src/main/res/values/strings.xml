@@ -143,10 +143,9 @@
     <string name="theme_system_default">System Default</string>
 
     <!-- Analysis -->
-    <string name="analysis_all_budgets">All Budgets</string>
-    <string name="analysis_all_payments">All Payments</string>
-    <string name="analysis_all_categories">All Categories</string>
-    <string name="analysis_used_format">Used: %1s</string>
-    <string name="analysis_remaining_format">Remaining: %1s</string>
+    <string name="analysis_overall">Overall</string>
+    <string name="analysis_used_format">%1s/%2s</string>
+    <string name="analysis_remaining_format">%1s left</string>
+    <string name="analysis_overused_format">%1s over</string>
 
 </resources>

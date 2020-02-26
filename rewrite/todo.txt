@@ -1,15 +1,10 @@
 High
-- Cleanup AllExpensesFrag
-- Move fetch all to Misc
-- Move Card View calculation to calculator
-- Fix language for analysis, improve  - multiple layouts for test
 - Improve sheet selection in add expense
-
 
 Medium
 - Fix fragment refreshing
 - Easier setup after first start
-
+- Move Card View calculation to calculator
 
 Low
 - Extract id from url

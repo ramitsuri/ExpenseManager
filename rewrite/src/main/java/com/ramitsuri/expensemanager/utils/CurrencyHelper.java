@@ -66,7 +66,9 @@ public class CurrencyHelper {
             value = sCurrencyFormatterNoSymbol.format(roundForCalculation(amount));
         }
         if (stripZeros) {
-            value = value.replaceAll("[0]*$", "").replaceAll(".$", "");
+            value = value.contains(".0") ?
+                    value.replaceAll("0*$", "").replaceAll("\\.$", "") :
+                    value;
         }
         return value;
     }

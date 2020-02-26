@@ -61,7 +61,7 @@ public class AnalysisViewModel extends ViewModel {
         return mCalculated;
     }
 
-    private void preparePaymentWrappers(String allName, String used) {
+    private void preparePaymentWrappers(String allName) {
         Timber.i("Prepare payment wrappers");
         if (mCalculator == null) {
             return;
@@ -72,19 +72,19 @@ public class AnalysisViewModel extends ViewModel {
 
         // All
         BigDecimal allValue = paymentValues.get(Constants.Basic.CALCULATOR_ALL);
-        wrappers.add(getPaymentOrCategoryWrapper(allName, used, allValue, allValue));
+        wrappers.add(getPaymentOrCategoryWrapper(allName, allValue, allValue));
 
         for (String paymentMethod : paymentValues.keySet()) {
             if (paymentMethod.equals(Constants.Basic.CALCULATOR_ALL)) {
                 continue;
             }
             BigDecimal value = paymentValues.get(paymentMethod);
-            wrappers.add(getPaymentOrCategoryWrapper(paymentMethod, used, value, allValue));
+            wrappers.add(getPaymentOrCategoryWrapper(paymentMethod, value, allValue));
         }
         mListWrappers.postValue(wrappers);
     }
 
-    private void prepareCategoryWrappers(String allName, String used) {
+    private void prepareCategoryWrappers(String allName) {
         Timber.i("Prepare category wrappers");
         if (mCalculator == null) {
             return;
@@ -95,19 +95,20 @@ public class AnalysisViewModel extends ViewModel {
 
         // All
         BigDecimal allValue = categoryValues.get(Constants.Basic.CALCULATOR_ALL);
-        wrappers.add(getPaymentOrCategoryWrapper(allName, used, allValue, allValue));
+        wrappers.add(getPaymentOrCategoryWrapper(allName, allValue, allValue));
 
         for (String category : categoryValues.keySet()) {
             if (category.equals(Constants.Basic.CALCULATOR_ALL)) {
                 continue;
             }
             BigDecimal value = categoryValues.get(category);
-            wrappers.add(getPaymentOrCategoryWrapper(category, used, value, allValue));
+            wrappers.add(getPaymentOrCategoryWrapper(category, value, allValue));
         }
         mListWrappers.postValue(wrappers);
     }
 
-    private void prepareBudgetWrappers(String allName, String used, String remaining) {
+    private void prepareBudgetWrappers(String allName, String used, String remaining,
+            String overUsed) {
         Timber.i("Prepare budget wrappers");
         if (mCalculator == null) {
             return;
@@ -117,62 +118,82 @@ public class AnalysisViewModel extends ViewModel {
         Map<String, Pair<BigDecimal, BigDecimal>> budgetValues = mCalculator.getBudgetValues();
 
         // All
-        wrappers.add(getBudgetWrapper(allName, used, remaining,
+        wrappers.add(getBudgetWrapper(allName, used, remaining, overUsed,
                 budgetValues.get(Constants.Basic.CALCULATOR_ALL)));
 
         for (String budget : budgetValues.keySet()) {
             if (budget.equals(Constants.Basic.CALCULATOR_ALL)) {
                 continue;
             }
-            wrappers.add(getBudgetWrapper(budget, used, remaining,
+            wrappers.add(getBudgetWrapper(budget, used, remaining, overUsed,
                     budgetValues.get(budget)));
         }
         mListWrappers.postValue(wrappers);
     }
 
-    private BarWrapper getPaymentOrCategoryWrapper(String name, String used,
+    private BarWrapper getPaymentOrCategoryWrapper(String name,
             BigDecimal value,
             BigDecimal allValue) {
         if (value == null || value.compareTo(BigDecimal.ZERO) == 0) {
             value = BigDecimal.ZERO;
         }
+        int progress;
+        if (allValue.compareTo(BigDecimal.ZERO) == 0) {
+            progress = 100;
+        } else {
+            progress = CurrencyHelper.divide(value.multiply(HUNDRED), allValue).intValue();
+        }
         return new BarWrapper(
                 name,
-                String.format(used, CurrencyHelper.formatForDisplay(true, value)),
-                CurrencyHelper.divide(value.multiply(HUNDRED), allValue).intValue());
+                CurrencyHelper.formatForDisplay(true, value, true),
+                progress);
     }
 
     private BarWrapper getBudgetWrapper(String name, String used,
-            String remaining, Pair<BigDecimal, BigDecimal> valuePair) {
+            String remaining, String overUsed, Pair<BigDecimal, BigDecimal> valuePair) {
         if (valuePair == null) {
             valuePair = new Pair<>(BigDecimal.ZERO, BigDecimal.ZERO);
         }
-        BigDecimal allBudget = valuePair.first;
-        BigDecimal allUsed = valuePair.second;
-        if (allBudget == null) {
-            allBudget = BigDecimal.ZERO;
+        BigDecimal budgetValue = valuePair.first;
+        BigDecimal usedValue = valuePair.second;
+        if (budgetValue == null) {
+            budgetValue = BigDecimal.ZERO;
         }
-        if (allUsed == null) {
-            allUsed = BigDecimal.ZERO;
+        if (usedValue == null) {
+            usedValue = BigDecimal.ZERO;
+        }
+        String value2;
+        if (budgetValue.compareTo(usedValue) >= 0) {
+            value2 = String.format(remaining,
+                    CurrencyHelper.formatForDisplay(true, budgetValue.subtract(usedValue), true));
+        } else {
+            value2 = String.format(overUsed,
+                    CurrencyHelper.formatForDisplay(true, usedValue.subtract(budgetValue), true));
+        }
+        int progress;
+        if (budgetValue.compareTo(BigDecimal.ZERO) == 0) {
+            progress = 100;
+        } else {
+            progress = CurrencyHelper.divide(usedValue.multiply(HUNDRED), budgetValue).intValue();
         }
         return new BarWrapper(
                 name,
-                String.format(used, CurrencyHelper.formatForDisplay(true, allUsed)),
-                String.format(remaining,
-                        CurrencyHelper.formatForDisplay(true, allBudget.subtract(allUsed))),
-                CurrencyHelper.formatForDisplay(true, allBudget, true),
-                CurrencyHelper.divide(allUsed.multiply(HUNDRED), allBudget).intValue());
+                String.format(used, CurrencyHelper.formatForDisplay(true, usedValue, true),
+                        CurrencyHelper.formatForDisplay(true, budgetValue, true)),
+                value2,
+                progress);
     }
 
-    public void onBudgetTabSelected(String allName, String used, String remaining) {
-        prepareBudgetWrappers(allName, used, remaining);
+    public void onBudgetTabSelected(String allName, String used, String remaining,
+            String overUsed) {
+        prepareBudgetWrappers(allName, used, remaining, overUsed);
     }
 
-    public void onPaymentsTabSelected(String allName, String used) {
-        preparePaymentWrappers(allName, used);
+    public void onPaymentsTabSelected(String allName) {
+        preparePaymentWrappers(allName);
     }
 
-    public void onCategoriesTabSelected(String allName, String used) {
-        prepareCategoryWrappers(allName, used);
+    public void onCategoriesTabSelected(String allName) {
+        prepareCategoryWrappers(allName);
     }
 }

@@ -5,22 +5,20 @@ import javax.annotation.Nonnull;
 public class BarWrapper {
 
     private String mTitle;
-    private String mValue1;
-    private String mValue2;
-    private String mValue3;
+    private String mValueUsed;
+    private String mValueRemaining;
     private int mProgress;
 
-    public BarWrapper(String title, String value1, String value2, String value3, int progress) {
+    public BarWrapper(String title, String valueUsed, String valueRemaining, int progress) {
         mTitle = title;
-        mValue1 = value1;
-        mValue2 = value2;
-        mValue3 = value3;
+        mValueUsed = valueUsed;
+        mValueRemaining = valueRemaining;
         mProgress = progress;
     }
 
-    public BarWrapper(String title, String value1, int progress) {
+    public BarWrapper(String title, String valueUsed, int progress) {
         mTitle = title;
-        mValue1 = value1;
+        mValueUsed = valueUsed;
         mProgress = progress;
     }
 
@@ -32,28 +30,20 @@ public class BarWrapper {
         mTitle = title;
     }
 
-    public String getValue1() {
-        return mValue1;
+    public String getValueUsed() {
+        return mValueUsed;
     }
 
-    public void setValue1(String value1) {
-        mValue1 = value1;
+    public void setValueUsed(String valueUsed) {
+        mValueUsed = valueUsed;
     }
 
-    public String getValue2() {
-        return mValue2;
+    public String getValueRemaining() {
+        return mValueRemaining;
     }
 
-    public void setValue2(String value2) {
-        mValue2 = value2;
-    }
-
-    public String getValue3() {
-        return mValue3;
-    }
-
-    public void setValue3(String value3) {
-        mValue3 = value3;
+    public void setValueRemaining(String value2) {
+        mValueRemaining = value2;
     }
 
     public int getProgress() {
@@ -69,9 +59,8 @@ public class BarWrapper {
     public String toString() {
         return "BarWrapper{" +
                 "mTitle='" + mTitle + '\'' +
-                ", mValue1='" + mValue1 + '\'' +
-                ", mValue2='" + mValue2 + '\'' +
-                ", mValue3='" + mValue3 + '\'' +
+                ", mValueUsed='" + mValueUsed + '\'' +
+                ", mValueRemaining='" + mValueRemaining + '\'' +
                 ", mProgress=" + mProgress +
                 "}";
     }

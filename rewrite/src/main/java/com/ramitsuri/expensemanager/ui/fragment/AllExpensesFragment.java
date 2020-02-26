@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -34,7 +34,6 @@ import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -51,8 +50,10 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     private ExtendedFloatingActionButton mBtnAdd;
     private RecyclerView mListExpenses;
     private MaterialCardView mCardInfo;
+    private LinearLayout mGroupButtons;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
-    private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnMenu;
+    private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnFilter, mBtnSetup,
+            mBtnAnalysis;
 
     public AllExpensesFragment() {
     }
@@ -82,20 +83,27 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         mBtnSetupSecond = view.findViewById(R.id.btn_setup_second);
         mBtnSetupSecond.setOnClickListener(this);
 
+        mBtnFilter = view.findViewById(R.id.btn_filter);
+        mBtnFilter.setOnClickListener(this);
+
+        mBtnSetup = view.findViewById(R.id.btn_setup);
+        mBtnSetup.setOnClickListener(this);
+
         mBtnAdd = view.findViewById(R.id.btn_add);
         mBtnAdd.setOnClickListener(this);
 
         mBtnAddSecond = view.findViewById(R.id.btn_add_expense_second);
         mBtnAddSecond.setOnClickListener(this);
 
-        mBtnMenu = view.findViewById(R.id.btn_menu);
-        mBtnMenu.setOnClickListener(this);
+        mBtnAnalysis = view.findViewById(R.id.btn_analysis);
+        mBtnAnalysis.setOnClickListener(this);
 
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
 
         // Shown when there are expenses
         mCardInfo = view.findViewById(R.id.card_info);
+        mGroupButtons = view.findViewById(R.id.group_buttons);
         mTextInfo1 = view.findViewById(R.id.txt_expense_info_1);
         mTextInfo2 = view.findViewById(R.id.txt_expense_info_2);
         mTextInfo3 = view.findViewById(R.id.txt_expense_info_3);
@@ -294,7 +302,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         boolean doCalculation = false;
         if (expenses.size() == 0) {
             mBtnAdd.setVisibility(View.GONE);
-            mBtnMenu.setVisibility(View.GONE);
+            mGroupButtons.setVisibility(View.GONE);
             mCardInfo.setVisibility(View.GONE);
             mListExpenses.setVisibility(View.GONE);
 
@@ -305,7 +313,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         } else {
             doCalculation = true;
             mBtnAdd.setVisibility(View.VISIBLE);
-            mBtnMenu.setVisibility(View.VISIBLE);
+            mGroupButtons.setVisibility(View.VISIBLE);
             mCardInfo.setVisibility(View.VISIBLE);
             mListExpenses.setVisibility(View.VISIBLE);
 
@@ -371,35 +379,18 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == mBtnFilterSecond.getId()) { // Filter
+        if (v.getId() == mBtnFilter.getId() ||
+                v.getId() == mBtnFilterSecond.getId()) { // Filter
             showFilterOptions();
-        } else if (v.getId() == mBtnSetupSecond.getId()) { // Setup
+        } else if (v.getId() == mBtnSetup.getId() ||
+                v.getId() == mBtnSetupSecond.getId()) { // Setup
             NavHostFragment.findNavController(AllExpensesFragment.this)
                     .navigate(R.id.nav_action_setup, null);
         } else if (v.getId() == mBtnAdd.getId() || v.getId() == mBtnAddSecond.getId()) { // Add
             NavHostFragment.findNavController(AllExpensesFragment.this)
                     .navigate(R.id.nav_action_add_expense, null);
-        } else if (v.getId() == mBtnMenu.getId()) { // Show Popup menu
-            PopupMenu popup = new PopupMenu(mBtnMenu.getContext(), mBtnMenu);
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.menu_analysis) { // Analysis
-                        showAnalysis();
-                        return true;
-                    } else if (item.getItemId() == R.id.menu_filter) { // Filter
-                        showFilterOptions();
-                        return true;
-                    } else if (item.getItemId() == R.id.menu_setup) { // Setup
-                        NavHostFragment.findNavController(AllExpensesFragment.this)
-                                .navigate(R.id.nav_action_setup, null);
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            popup.getMenuInflater().inflate(R.menu.all_expenses_menu, popup.getMenu());
-            popup.show();
+        } else if (v.getId() == mBtnAnalysis.getId()) { // Analysis
+            showAnalysis();
         }
     }
 }

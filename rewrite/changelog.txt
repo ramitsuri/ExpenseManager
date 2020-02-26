@@ -1,3 +1,22 @@
+BarAdapter
+    - Show different color when progress is >=100
+    - Reduce animation speed to 1500ms
+    - Change item ui
+BarWrapper
+    - Remove Value3
+    - Rename Value 1 and 2 to something more meaningful
+AllExpenses
+    - Remove 3 dot menu button
+    - Move buttons to LinearLayout
+AnalysisFragment
+    - Change item ui
+    - Add an indicator that sheet opens
+    - Send progress value as 100 when dividing by 0
+CurrencyHelper
+    - Change "strip zeros" logic
+    - Add unit test
+    -
+
 AllExpensesFrag
     - Remove analysis, setup and filter buttons from CardView
     - Add a menu button in place
