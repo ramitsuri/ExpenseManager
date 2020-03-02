@@ -1,3 +1,8 @@
+AddExpenseFragment
+    - Change sheets list view to be a grid
+    - Move it to an expanding card view at the top
+    - Move Save button to bottom (Portrait)
+
 BarAdapter
     - Show different color when progress is >=100
     - Reduce animation speed to 1500ms

@@ -2,10 +2,33 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="@dimen/padding_small"
     android:paddingEnd="@dimen/padding_small">
+
+    <LinearLayout
+        android:id="@+id/container_sheet_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_extra_small"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_sheet_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_expand"
+            android:drawableTint="?attr/colorControlNormal"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/text_body1"
+            tools:text="Feb" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/btn_close"
@@ -13,9 +36,9 @@
         android:layout_height="@dimen/button_size_small"
         android:contentDescription="@string/content_description_close_fragment"
         android:tint="?attr/colorControlNormal"
-        app:layout_constraintBottom_toBottomOf="@id/btn_done"
+        app:layout_constraintBottom_toBottomOf="@id/container_sheet_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btn_done"
+        app:layout_constraintTop_toTopOf="@id/container_sheet_name"
         app:srcCompat="@drawable/ic_close" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -38,38 +61,18 @@
         tools:itemCount="2"
         tools:listitem="@layout/list_picker_item" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_sheets"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_sheet_id_help"
-        tools:itemCount="1"
-        tools:listitem="@layout/list_picker_item" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_done"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:text="@string/common_save"
         android:textAllCaps="false"
         app:backgroundTint="@color/color_teal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_change_sheet"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/common_change"
-        android:textSize="@dimen/text_caption"
-        app:layout_constraintBottom_toBottomOf="@id/text_sheet_id_help"
-        app:layout_constraintStart_toEndOf="@id/text_sheet_id_help"
-        app:layout_constraintTop_toTopOf="@id/text_sheet_id_help" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_payment_methods" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_date"
@@ -77,6 +80,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_extra_small"
+        android:stateListAnimator="@null"
         android:text="@string/add_expense_today"
         android:textColor="?attr/colorControlNormal"
         app:backgroundTint="@color/bg_grey"
@@ -163,6 +167,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_extra_small"
+        android:stateListAnimator="@null"
         android:textColor="?attr/colorControlNormal"
         app:backgroundTint="@color/bg_grey"
         app:icon="@drawable/ic_flag_off"
@@ -199,16 +204,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/list_categories" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_sheet_id_help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:textSize="@dimen/text_caption"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/container_sheets"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_payment_methods"
-        tools:text="Will be saved to Dec" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dialog_bg"
+            android:orientation="vertical"
+            tools:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/container_sheet_name_secondary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_extra_small"
+                android:gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txt_sheet_name_secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableEnd="@drawable/ic_collapse"
+                    android:drawableTint="?attr/colorControlNormal"
+                    android:gravity="center_horizontal"
+                    android:textSize="@dimen/text_body1"
+                    tools:text="Feb" />
+
+            </LinearLayout>
+
+            <app:androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_sheets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_extra_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/container_sheet_name_secondary"
+                tools:itemCount="1"
+                tools:listitem="@layout/list_picker_item" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

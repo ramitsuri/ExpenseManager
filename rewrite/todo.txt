@@ -1,5 +1,4 @@
 High
-- Improve sheet selection in add expense
 
 Medium
 - Fix fragment refreshing
