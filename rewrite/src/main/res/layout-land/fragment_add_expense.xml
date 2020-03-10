@@ -22,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_expand"
+            android:drawablePadding="@dimen/margin_extra_extra_small"
             android:drawableTint="?attr/colorControlNormal"
             android:gravity="center_horizontal"
             android:textSize="@dimen/text_body1"
@@ -81,6 +82,7 @@
         android:layout_height="wrap_content"
         android:text="@string/common_save"
         android:textAllCaps="false"
+        android:textColor="@android:color/white"
         app:backgroundTint="@color/color_teal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -252,6 +254,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableEnd="@drawable/ic_collapse"
+                    android:drawablePadding="@dimen/margin_extra_extra_small"
                     android:drawableTint="?attr/colorControlNormal"
                     android:gravity="center_horizontal"
                     android:textSize="@dimen/text_body1"

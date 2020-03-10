@@ -1,3 +1,9 @@
+AddExpense
+    - Reduce collapse expand icon size
+AllExpenses
+    - Bring back analysis bottom sheet expand icon
+Make teal primary color and change it to be same as one stock app's color
+
 AddExpenseFragment
     - Change sheets list view to be a grid
     - Move it to an expanding card view at the top
