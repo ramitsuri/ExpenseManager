@@ -1,3 +1,6 @@
+Add a way to add splitwise expense
+    - Add toggle to add a duplicate split by 2 expense
+
 CategoryRepo, PaymentMethodRepo
     - Remove source type variable
     - Add new method to get mutable list

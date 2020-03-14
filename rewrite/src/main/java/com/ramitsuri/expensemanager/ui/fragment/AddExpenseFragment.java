@@ -53,7 +53,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private ImageView mBtnClose;
     private EditText mEditStore, mEditAmount, mEditDescription;
     private Button mBtnDone, mBtnDate;
-    private MaterialButton mBtnFlag;
+    private MaterialButton mBtnFlag, mBtnSplit;
     private RecyclerView mListSheets;
     private TextView mTxtSheetName, mTxtSheetNameSecondary;
     private View mBackground;
@@ -140,6 +140,10 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mBtnFlag.setOnClickListener(this);
         updateExpenseFlag();
 
+        // Split
+        mBtnSplit = view.findViewById(R.id.btn_split);
+        mBtnSplit.setOnClickListener(this);
+
         // Store
         String value = mViewModel.getStore();
         if (!TextUtils.isEmpty(value) && !value.equals(getDefaultStoreValue())) {
@@ -217,6 +221,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 String selectedValue = null;
                 selectedValue = mViewModel.getPaymentMethod();
                 paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
+                if (mViewModel.isSplitAvailable()) {
+                    mBtnSplit.setVisibility(View.VISIBLE);
+                } else {
+                    mBtnSplit.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -264,6 +273,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             handleDoneClicked();
         } else if (view == mBtnFlag) {
             handleFlagClicked();
+        } else if (view == mBtnSplit) {
+            handleSplitClicked();
         } else if (view == mTxtSheetName || view == mContainerSheetName) {
             handleChangeSheetClicked();
         } else if (view == mTxtSheetNameSecondary || view == mContainerSheetNameSecondary) {
@@ -346,6 +357,17 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         } else {
             mBtnFlag.setIcon(
                     ContextCompat.getDrawable(mBtnFlag.getContext(), R.drawable.ic_flag_off));
+        }
+    }
+
+    private void handleSplitClicked() {
+        mViewModel.setSplit();
+        if (mViewModel.isSplit()) {
+            mBtnSplit.setIcon(
+                    ContextCompat.getDrawable(mBtnSplit.getContext(), R.drawable.ic_split_on));
+        } else {
+            mBtnSplit.setIcon(
+                    ContextCompat.getDrawable(mBtnSplit.getContext(), R.drawable.ic_split_off));
         }
     }
 

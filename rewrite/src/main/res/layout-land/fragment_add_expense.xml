@@ -121,11 +121,33 @@
         app:iconPadding="0dp"
         app:iconTint="@color/color_red"
         app:layout_constraintBottom_toBottomOf="@id/layout_description"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_split"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/guide_vertical_2"
         app:layout_constraintTop_toTopOf="@id/layout_description"
         app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_split"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:stateListAnimator="@null"
+        android:textColor="?attr/colorControlNormal"
+        android:visibility="gone"
+        app:backgroundTint="@color/bg_grey"
+        app:icon="@drawable/ic_split_off"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconTint="@color/color_red"
+        app:layout_constraintBottom_toBottomOf="@id/layout_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/btn_flag"
+        app:layout_constraintTop_toTopOf="@id/layout_description"
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="visible" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_amount"

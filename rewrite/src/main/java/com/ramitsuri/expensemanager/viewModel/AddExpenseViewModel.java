@@ -13,6 +13,7 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
@@ -40,7 +41,7 @@ public class AddExpenseViewModel extends ViewModel {
     private LiveData<List<SheetInfo>> mSheetInfos;
     private int mAddMode;
 
-    private boolean mChangesMade;
+    private boolean mChangesMade, mIsSplitAvailable, mIsSplit;
 
     public AddExpenseViewModel(Expense expense) {
         super();
@@ -72,6 +73,11 @@ public class AddExpenseViewModel extends ViewModel {
                         if (paymentMethods != null) {
                             for (PaymentMethod paymentMethod : paymentMethods) {
                                 paymentMethodStrings.add(paymentMethod.getName());
+                                if (!TextUtils.isEmpty(paymentMethod.getName()) &&
+                                        paymentMethod.getName()
+                                                .equalsIgnoreCase(Constants.Basic.SPLITWISE)) {
+                                    mIsSplitAvailable = true;
+                                }
                             }
                         }
                         return paymentMethodStrings;
@@ -110,12 +116,14 @@ public class AddExpenseViewModel extends ViewModel {
         Expense expense = mExpense;
         mExpenseRepo.insert(expense);
         AppHelper.setDefaultSheetId(expense.getSheetId());
+        addSplitExpense(expense);
         reset(null);
     }
 
     public void edit() {
         Expense expense = mExpense;
         mExpenseRepo.edit(expense);
+        addSplitExpense(expense);
         reset(null);
     }
 
@@ -223,7 +231,30 @@ public class AddExpenseViewModel extends ViewModel {
         return mAddMode;
     }
 
+    public boolean isSplitAvailable() {
+        return mIsSplitAvailable;
+    }
+
+    public boolean isSplit() {
+        return mIsSplit;
+    }
+
+    public void setSplit() {
+        mIsSplit = !mIsSplit;
+    }
+
+    private void addSplitExpense(@Nonnull Expense expense) {
+        if (mIsSplit) {
+            Expense splitExpense = new Expense(expense);
+            splitExpense.setAmount(
+                    CurrencyHelper.divide(splitExpense.getAmount(), new BigDecimal("2")).negate());
+            splitExpense.setPaymentMethod(Constants.Basic.SPLITWISE);
+            mExpenseRepo.insert(splitExpense);
+        }
+    }
+
     private void reset(@Nullable Expense expense) {
+        mIsSplit = false;
         if (expense != null) {
             mExpense = expense;
             mAddMode = Constants.AddExpenseMode.EDIT;
