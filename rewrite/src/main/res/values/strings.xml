@@ -38,6 +38,9 @@
     <string name="common_payments">Payments</string>
     <string name="common_categories">Categories</string>
     <string name="common_filter">Filter</string>
+    <string name="common_next">Next</string>
+    <string name="common_done">Done</string>
+    <string name="common_previous">Previous</string>
 
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">History</string>
@@ -102,6 +105,12 @@
 
     <!-- Setup -->
     <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>
+    <string name="setup_budget_amount">Amount</string>
+    <string name="setup_budget_name">Name</string>
+    <string name="setup_edit_categories">Edit Categories</string>
+    <string name="setup_edit_payment_methods">Edit Payment methods</string>
+    <string name="setup_edit_budgets">Edit Budgets</string>
+    <string name="setup_add_new">Add New</string>
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>

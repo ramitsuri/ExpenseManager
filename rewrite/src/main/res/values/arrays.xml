@@ -12,4 +12,23 @@
         <item>battery_saver</item>
     </string-array>
 
+    <string-array name="categories">
+        <item>Food</item>
+        <item>Groceries</item>
+        <item>Shopping</item>
+        <item>Utilities</item>
+        <item>Rent</item>
+        <item>Travel</item>
+        <item>Donation</item>
+        <item>Entertainment</item>
+    </string-array>
+
+    <string-array name="payment_methods">
+        <item>Amex-Credit</item>
+        <item>Discover-Credit</item>
+        <item>Citi-Credit</item>
+        <item>Citi-Debit</item>
+        <item>Cash</item>
+    </string-array>
+
 </resources>

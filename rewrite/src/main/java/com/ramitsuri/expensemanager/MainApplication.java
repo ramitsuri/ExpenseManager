@@ -16,6 +16,7 @@ import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 
 import java.util.Arrays;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -44,6 +45,12 @@ public class MainApplication extends Application {
         initDataRepos();
 
         initSheetRepo();
+
+        if (TextUtils.isEmpty(AppHelper.getSpreadsheetId())) {
+            addDefaultData();
+        } else {
+            Timber.i("Application has already been set up");
+        }
     }
 
     private void initTimber() {
@@ -59,13 +66,11 @@ public class MainApplication extends Application {
     }
 
     private void initDataRepos() {
-        @SourceType int source = SourceType.DB;
-
         AppExecutors appExecutors = AppExecutors.getInstance();
         ExpenseManagerDatabase database = ExpenseManagerDatabase.getInstance();
 
-        mCategoryRepo = new CategoryRepository(appExecutors, database, source);
-        mPaymentMethodRepo = new PaymentMethodRepository(appExecutors, database, source);
+        mCategoryRepo = new CategoryRepository(appExecutors, database);
+        mPaymentMethodRepo = new PaymentMethodRepository(appExecutors, database);
         mExpenseRepo = new ExpenseRepository(appExecutors, database);
         mLogRepo = new LogRepository(appExecutors, database);
         mBudgetRepository = new BudgetRepository(appExecutors, database);
@@ -107,6 +112,15 @@ public class MainApplication extends Application {
         Account account = new Account(accountName, accountType);
         mSheetRepository
                 .refreshProcessors(this, appName, account, Arrays.asList(AppHelper.getScopes()));
+    }
+
+    private void addDefaultData() {
+        List<String> categories = Arrays.asList(getResources().getStringArray(R.array.categories));
+        getCategoryRepo().setCategories(categories);
+
+        List<String> paymentMethods =
+                Arrays.asList(getResources().getStringArray(R.array.payment_methods));
+        getPaymentMethodRepo().setPaymentMethods(paymentMethods);
     }
 
     public CategoryRepository getCategoryRepo() {

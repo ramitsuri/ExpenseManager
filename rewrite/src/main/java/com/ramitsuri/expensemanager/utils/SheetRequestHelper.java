@@ -25,8 +25,10 @@ import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import com.google.api.services.sheets.v4.model.TextFormat;
 import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Expense;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -154,7 +156,8 @@ public class SheetRequestHelper {
             @Nonnull String templateSheetTitle,
             int templateSheetIndex,
             @Nonnull List<String> paymentMethods,
-            @Nonnull List<String> categories) {
+            @Nonnull List<String> categories,
+            @Nonnull List<Budget> budgets) {
         Spreadsheet request = new Spreadsheet();
 
         SpreadsheetProperties properties = new SpreadsheetProperties();
@@ -186,7 +189,7 @@ public class SheetRequestHelper {
 
         List<Sheet> sheets = new ArrayList<>();
         sheets.add(getEntitiesSheet(entitiesSheetTitle, entitiesSheetIndex,
-                paymentMethods, categories));
+                paymentMethods, categories, budgets));
         sheets.add(getExpenseSheet(templateSheetTitle, templateSheetIndex));
 
         request.setSheets(sheets);
@@ -298,7 +301,8 @@ public class SheetRequestHelper {
     private static Sheet getEntitiesSheet(@Nonnull String title,
             int index,
             @Nonnull List<String> paymentMethods,
-            @Nonnull List<String> categories) {
+            @Nonnull List<String> categories,
+            @Nonnull List<Budget> budgets) {
         int rows = 22;
         int columns = 13;
         Sheet sheet = new Sheet();
@@ -336,6 +340,25 @@ public class SheetRequestHelper {
             value = getEmptyCell();
             valuesList.add(value);
 
+            // Budget
+            if (rowIndex < budgets.size()) {
+                Budget budget = budgets.get(rowIndex);
+
+                value = getValueCell(budget.getName());
+                valuesList.add(value);
+
+                value = getValueCell(budget.getAmount());
+                valuesList.add(value);
+
+                for (String category : budget.getCategories()) {
+                    value = getValueCell(category);
+                    valuesList.add(value);
+                }
+            } else {
+                value = getEmptyCell();
+                valuesList.add(value);
+            }
+
             rowData.setValues(valuesList);
             rowDataList.add(rowData);
         }
@@ -369,6 +392,14 @@ public class SheetRequestHelper {
                 .setUserEnteredValue(new ExtendedValue().setStringValue(value))
                 .setEffectiveValue(new ExtendedValue().setStringValue(value))
                 .setFormattedValue(value)
+                .setUserEnteredFormat(getUserEnteredFormat())
+                .setEffectiveFormat(getEffectiveFormat());
+    }
+
+    private static CellData getValueCell(BigDecimal value) {
+        return new CellData()
+                .setUserEnteredValue(new ExtendedValue().setNumberValue(value.doubleValue()))
+                .setEffectiveValue(new ExtendedValue().setNumberValue(value.doubleValue()))
                 .setUserEnteredFormat(getUserEnteredFormat())
                 .setEffectiveFormat(getEffectiveFormat());
     }

@@ -1,8 +1,9 @@
 High
+- Easier setup after first start
 
 Medium
+- Widget with total used
 - Fix fragment refreshing
-- Easier setup after first start
 - Move Card View calculation to calculator
 
 Low

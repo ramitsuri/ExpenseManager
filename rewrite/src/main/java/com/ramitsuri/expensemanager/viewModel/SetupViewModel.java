@@ -1,66 +1,116 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import android.text.TextUtils;
-
-import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
-import com.ramitsuri.expensemanager.data.repository.SheetRepository;
-import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
+import com.ramitsuri.expensemanager.entities.Budget;
+import com.ramitsuri.expensemanager.ui.fragment.SetupCurrentStep;
 
 import java.util.List;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import timber.log.Timber;
 
 public class SetupViewModel extends ViewModel {
 
-    private CategoryRepository mCategoryRepository;
-    private PaymentMethodRepository mPaymentMethodRepository;
-    private SheetRepository mSheetRepository;
+    @SetupCurrentStep
+    private int mCurrentStep;
+    private MutableLiveData<Integer> mCurrentStepLiveData;
+    private MutableLiveData<List<String>> mCategoriesLive;
+    private MutableLiveData<List<String>> mPaymentMethodsLive;
+    private MutableLiveData<List<Budget>> mBudgets;
 
     public SetupViewModel() {
         super();
 
-        mCategoryRepository = MainApplication.getInstance().getCategoryRepo();
-        mPaymentMethodRepository = MainApplication.getInstance().getPaymentMethodRepo();
+        mCurrentStep = SetupCurrentStep.CATEGORIES;
+        mCurrentStepLiveData = new MutableLiveData<>();
+        mCurrentStepLiveData.postValue(mCurrentStep);
+
+        mCategoriesLive = categoryRepo().getCategoryStrings();
+        mPaymentMethodsLive = paymentMethodRepo().getPaymentMethodStrings();
+        mBudgets = new MutableLiveData<>();
     }
 
-    public void initSheetRepository(String accountName, String accountType) {
-        if (MainApplication.getInstance().getSheetRepository() == null) {
-            Timber.e("Sheet repo is null");
-            MainApplication.getInstance().initSheetRepo(accountName, accountType);
-        }
-        mSheetRepository = MainApplication.getInstance().getSheetRepository();
+    public LiveData<Integer> getCurrentStepLive() {
+        return mCurrentStepLiveData;
     }
 
-    @Nullable
-    public LiveData<EntitiesConsumerResponse> getEntitiesFromSheets(String spreadsheetId) {
-        if (mSheetRepository != null) {
-            if (TextUtils.isEmpty(spreadsheetId)) {
-                Timber.i("SpreadsheetId is null or empty");
-                return null;
-            }
-            return mSheetRepository
-                    .getEntityData(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
-        }
-        return null;
+    @SetupCurrentStep
+    public int getCurrentStep() {
+        return mCurrentStep;
     }
 
-    public void saveEntities(List<List<String>> stringsList) {
-        if (stringsList.size() != 2) {
-            Timber.w("Attempting to save entities, list size should be 2. Exiting.");
-            return;
+    public boolean canGoPrevious() {
+        return mCurrentStep != SetupCurrentStep.CATEGORIES;
+    }
+
+    public void goPrevious() {
+        if (canGoPrevious()) {
+            mCurrentStep = mCurrentStep - 1;
+            mCurrentStepLiveData.postValue(mCurrentStep);
         }
-        if (mPaymentMethodRepository != null) {
-            mPaymentMethodRepository.setPaymentMethods(stringsList.get(0));
+    }
+
+    public boolean canGoNext() {
+        return mCurrentStep != SetupCurrentStep.BUDGETS;
+    }
+
+    public void goNext() {
+        if (canGoNext()) {
+            mCurrentStep = mCurrentStep + 1;
+            mCurrentStepLiveData.postValue(mCurrentStep);
         }
-        if (mCategoryRepository != null) {
-            mCategoryRepository.setCategories(stringsList.get(1));
+    }
+
+    public LiveData<List<String>> getCategoriesLive() {
+        return mCategoriesLive;
+    }
+
+    public void setCategories(List<String> categories) {
+        mCategoriesLive.postValue(categories);
+    }
+
+    public LiveData<List<String>> getPaymentMethodsLive() {
+        return mPaymentMethodsLive;
+    }
+
+    public void setPaymentMethods(List<String> paymentMethods) {
+        mPaymentMethodsLive.postValue(paymentMethods);
+    }
+
+    public LiveData<List<Budget>> getBudgets() {
+        return mBudgets;
+    }
+
+    public void setBudgets(List<Budget> budgets) {
+        mBudgets.postValue(budgets);
+    }
+
+    public void saveCategories(List<String> categories) {
+        if (categoryRepo() != null) {
+            categoryRepo().setCategories(categories);
         }
+    }
+
+    public void savePaymentMethods(List<String> paymentMethods) {
+        if (paymentMethodRepo() != null) {
+            paymentMethodRepo().setPaymentMethods(paymentMethods);
+        }
+    }
+
+    public void saveBudgets(List<Budget> budgets) {
+        if (MainApplication.getInstance().getBudgetRepository() != null) {
+            MainApplication.getInstance().getBudgetRepository().setBudgets(budgets);
+        }
+    }
+
+    private CategoryRepository categoryRepo() {
+        return MainApplication.getInstance().getCategoryRepo();
+    }
+
+    private PaymentMethodRepository paymentMethodRepo() {
+        return MainApplication.getInstance().getPaymentMethodRepo();
     }
 }

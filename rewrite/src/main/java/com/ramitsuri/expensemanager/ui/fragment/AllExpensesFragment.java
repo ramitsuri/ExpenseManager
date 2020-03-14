@@ -363,16 +363,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         }
         mTextInfo2.setText(sb.toString());
 
-        // Date range
-        /*if (startDateIndex == endDateIndex) {
-            mTextInfo2.setText(String.format("(%1s)",
-                    expenses.get(startDateIndex).getDate()));
-        } else {
-            mTextInfo2.setText(String.format("(%1s - %2s)",
-                    expenses.get(startDateIndex).getDate(),
-                    expenses.get(endDateIndex).getDate()));
-        }*/
-
         // Total
         mTextInfo3.setText(CurrencyHelper.formatForDisplay(true, totalAmount));
     }

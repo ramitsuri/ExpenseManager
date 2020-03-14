@@ -1,3 +1,18 @@
+CategoryRepo, PaymentMethodRepo
+    - Remove source type variable
+    - Add new method to get mutable list
+ListPickerMultiSelectionAdapter
+    - New adapter with item deletion capability
+SetupFragment
+    - Repurpose fragment to edit categories, payment methods and budgets (Incomplete)
+MainActivity
+    - Make AllExpensesFrag the default start destination
+SheetRequestHelper
+    - Made changes to entities sheet creation to include budgets (Not tested)
+MainApplication
+    - Add default categories and payment methods from string arrays file if spreadsheet id not set (assumes it's first time). This logic will need to be adjusted if entities are set manually but spreadsheet id still not set
+Change primary and teal color for night theme
+
 AddExpense
     - Reduce collapse expand icon size
 AllExpenses

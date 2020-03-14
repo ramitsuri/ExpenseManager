@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_all_expenses">
 
     <fragment
         android:id="@+id/fragment_all_expenses"
@@ -24,6 +25,10 @@
         <action
             android:id="@+id/nav_action_setup"
             app:destination="@id/fragment_miscellaneous" />
+
+        <action
+            android:id="@+id/nav_action_first_setup"
+            app:destination="@id/fragment_setup" />
 
     </fragment>
 
@@ -59,14 +64,6 @@
     <fragment
         android:id="@+id/fragment_setup"
         android:name="com.ramitsuri.expensemanager.ui.fragment.SetupFragment"
-        tools:layout="@layout/fragment_setup">
-
-        <action
-            android:id="@+id/nav_action_setup_done"
-            app:destination="@id/fragment_all_expenses"
-            app:popUpTo="@id/fragment_setup"
-            app:popUpToInclusive="true" />
-
-    </fragment>
+        tools:layout="@layout/fragment_setup" />
 
 </navigation>

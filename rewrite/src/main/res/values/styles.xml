@@ -22,8 +22,13 @@
         <item name="android:colorEdgeEffect">@color/colorPrimary</item>
     </style>
 
-    <style name="ChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+    <style name="Chip" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/chip_background_color</item>
         <item name="android:textColor">@color/chip_text_color</item>
+    </style>
+
+    <style name="ChipSelection" parent="Chip">
+        <item name="chipMinHeight">@dimen/button_size_small</item>
+        <item name="closeIconTint">@color/chip_text_color</item>
     </style>
 </resources>

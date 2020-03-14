@@ -54,13 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         NavInflater navInflater = navController.getNavInflater();
         NavGraph graph = navInflater.inflate(R.navigation.nav_graph);
-
-        if (TextUtils.isEmpty(AppHelper.getSpreadsheetId())) {
-            // First time setup
-            graph.setStartDestination(R.id.fragment_setup);
-        } else { // First time setup already done
-            graph.setStartDestination(R.id.fragment_all_expenses);
-        }
         navController.setGraph(graph);
 
         NavigationUI.setupWithNavController(toolbar, navController);
