@@ -144,6 +144,7 @@
     <string name="migration_step_progress_summary">Doing something… Don\'t close the app</string>
     <string name="migration_step_complete_summary">All set! You can continue using the app</string>
     <string name="migration_all_set">You\'re all set!</string>
+    <string name="miscellaneous_sync_entities">Edit entities</string>
 
     <!-- Theme -->
     <string name="theme_light">Light</string>

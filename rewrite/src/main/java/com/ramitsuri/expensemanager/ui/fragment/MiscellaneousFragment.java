@@ -132,6 +132,13 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.header_general,
                 R.string.header_title_general);
 
+        // Edit entities
+        setupMenuItem(view,
+                R.id.item_edit_entities,
+                R.string.miscellaneous_sync_entities,
+                R.drawable.ic_edit_entities,
+                true);
+
         // Theme
         setupThemeItem(view,
                 R.id.item_theme,
@@ -381,6 +388,11 @@ public class MiscellaneousFragment extends BaseFragment {
                         themeTitles, selectedTheme, itemListener,
                         R.string.settings_title_theme,
                         R.string.common_cancel, null);
+                break;
+
+            case R.id.item_edit_entities:
+                NavHostFragment.findNavController(MiscellaneousFragment.this)
+                        .navigate(R.id.nav_action_first_setup, null);
                 break;
         }
     }

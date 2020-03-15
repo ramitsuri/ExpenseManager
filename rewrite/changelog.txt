@@ -1,3 +1,5 @@
+Add a way to start edit entities (SetupFrag)
+
 Add a way to add splitwise expense
     - Add toggle to add a duplicate split by 2 expense
 

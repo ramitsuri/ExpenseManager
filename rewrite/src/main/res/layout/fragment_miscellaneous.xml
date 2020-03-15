@@ -90,6 +90,14 @@
             tools:visibility="visible" />
 
         <include
+            android:id="@+id/item_edit_entities"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
             android:id="@+id/item_theme"
             layout="@layout/extra_item"
             android:layout_width="match_parent"
