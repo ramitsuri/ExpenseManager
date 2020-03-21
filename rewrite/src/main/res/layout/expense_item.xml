@@ -96,32 +96,15 @@
         app:layout_constraintTop_toBottomOf="@id/txt_expense_amount"
         tools:text="Discover" />
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/flag_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:contentDescription="@string/common_flagged"
+        android:src="@drawable/ic_flag_on_medium"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_expense_detail_2">
-
-        <ImageView
-            android:id="@+id/flag_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/common_flagged"
-            android:src="@drawable/ic_flag_on_medium"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/sync_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/expenses_not_synced"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_not_synced"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/text_expense_detail_2"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

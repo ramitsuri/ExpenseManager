@@ -131,7 +131,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         GridLayoutManager manager = new GridLayoutManager(getActivity(), numberOfColumns);
 
         final ExpenseAdapter adapter = new ExpenseAdapter();
-        adapter.setHistorical(true);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(
@@ -328,41 +327,12 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             return;
         }
 
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        int count = 0;
-        int notBackedUpCount = 0;
-        int startDateIndex = -1;
-        int endDateIndex = -1;
-        for (int i = 0; i < expenses.size(); i++) {
-            /* List is in descending order of date.
-             * First header encountered is end date.
-             * Last header encountered is the start date
-             */
-            ExpenseWrapper wrapper = expenses.get(i);
-            if (wrapper.getItemType() == ListItemType.ITEM) {
-                count = count + 1;
-                if (!wrapper.getExpense().isSynced()) {
-                    notBackedUpCount = notBackedUpCount + 1;
-                }
-                totalAmount = totalAmount.add(expenses.get(i).getExpense().getAmount());
-            } else if (wrapper.getItemType() == ListItemType.HEADER) {
-                if (endDateIndex == -1) {
-                    endDateIndex = i;
-                }
-                startDateIndex = i;
-            }
-        }
-        // Number of expenses
-        StringBuilder sb = new StringBuilder();
-        sb.append(getResources().getQuantityString(R.plurals.expense_count_total, count, count));
-        sb.append("\n");
-        if (notBackedUpCount > 0) {
-            sb.append(getString(R.string.all_expenses_count_not_backed_up, notBackedUpCount));
-        } else {
-            sb.append(getString(R.string.all_expenses_count_all_backed_up));
-        }
-        mTextInfo2.setText(sb.toString());
+        int count = mViewModel.getExpensesSize();
+        BigDecimal totalAmount = mViewModel.getExpensesTotal();
 
+        // Number of expenses
+        mTextInfo2.setText(
+                getResources().getQuantityString(R.plurals.expense_count_total, count, count));
         // Total
         mTextInfo3.setText(CurrencyHelper.formatForDisplay(true, totalAmount));
     }

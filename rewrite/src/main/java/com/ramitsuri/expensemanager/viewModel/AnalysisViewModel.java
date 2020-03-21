@@ -45,7 +45,7 @@ public class AnalysisViewModel extends ViewModel {
                 new Function<List<Budget>, Boolean>() {
                     @Override
                     public Boolean apply(List<Budget> input) {
-                        mCalculator = new Calculator(expenses, input, BuildConfig.DEBUG);
+                        mCalculator = new Calculator(expenses, input, true, BuildConfig.DEBUG);
                         mCalculator.calculate();
                         return true;
                     }

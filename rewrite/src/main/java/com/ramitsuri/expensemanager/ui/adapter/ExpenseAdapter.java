@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.IntDefs.ListItemType;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -16,7 +17,6 @@ import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.util.List;
 
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -32,7 +32,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Nullable
     private List<ExpenseWrapper> mExpenses;
-    private boolean mIsHistorical;
     @Nullable
     private ItemClickListener mCallback;
 
@@ -45,10 +44,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mExpenses = expenses;
         }
         notifyDataSetChanged();
-    }
-
-    public void setHistorical(boolean historical) {
-        mIsHistorical = historical;
     }
 
     public void setCallback(@Nullable ItemClickListener callback) {
@@ -124,7 +119,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private ViewGroup container;
         private TextView txtDate, txtDescription, txtAmount, txtDetail1, txtDetail2, txtDetail3;
-        private View flagStatus, syncStatus;
+        private View flagStatus;
 
         ItemViewHolder(View itemView) {
             super(itemView);
@@ -139,7 +134,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtDetail2 = itemView.findViewById(R.id.text_expense_detail_2);
             txtDetail3 = itemView.findViewById(R.id.text_expense_detail_3);
             flagStatus = itemView.findViewById(R.id.flag_status);
-            syncStatus = itemView.findViewById(R.id.sync_status);
         }
 
         private void bind(final Expense expense) {
@@ -158,10 +152,14 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 flagStatus.setVisibility(View.GONE);
             }
-            if (expense.isSynced()) {
-                syncStatus.setVisibility(View.GONE);
-            } else {
-                syncStatus.setVisibility(View.VISIBLE);
+            if (BuildConfig.DEBUG) {
+                if (expense.isSynced()) {
+                    txtAmount.setTextColor(
+                            ContextCompat.getColor(txtAmount.getContext(), R.color.color_teal));
+                } else {
+                    txtAmount.setTextColor(
+                            ContextCompat.getColor(txtAmount.getContext(), R.color.color_red));
+                }
             }
         }
 
@@ -191,7 +189,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtDate;
 
@@ -202,11 +200,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private void bind(String date) {
             txtDate.setText(date);
-            if (mIsHistorical) {
-                setHeaderColor(txtDate, R.color.color_teal);
-            } else {
-                setHeaderColor(txtDate, R.color.color_red);
-            }
         }
     }
 
@@ -234,11 +227,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ExpenseWrapper wrapper = getItem(headerPosition);
             if (wrapper != null) {
                 textView.setText(wrapper.getDate());
-                if (mIsHistorical) {
-                    setHeaderColor(textView, R.color.color_teal);
-                } else {
-                    setHeaderColor(textView, R.color.color_red);
-                }
             }
         }
     }
@@ -246,9 +234,5 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public boolean isHeader(int itemPosition) {
         return (getItemViewType(itemPosition) == ListItemType.HEADER);
-    }
-
-    private void setHeaderColor(TextView view, @ColorRes int color) {
-        view.setTextColor(ContextCompat.getColor(view.getContext(), color));
     }
 }

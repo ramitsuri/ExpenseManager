@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import androidx.core.util.Pair;
 import timber.log.Timber;
@@ -19,32 +20,77 @@ public class Calculator {
     private final CalculationLogger mLogger = new CalculationLogger();
     private final int mColumnWidth = 12;
 
+    @Nonnull
     private List<Expense> mExpenses;
     private Map<String, BigDecimal> mPaymentMethodValueMap;
     private Map<String, BigDecimal> mCategoryValueMap;
     private Map<String, String> mCategoryBudgetMap;
     private Map<String, Pair<BigDecimal, BigDecimal>> mBudgetValueMap;
-    private boolean mLog;
+    private BigDecimal mExpenseTotalValue;
+    private boolean mCalculateAll, mLog;
 
-    public Calculator(@Nonnull List<Expense> expenses, @Nonnull List<Budget> budgets, boolean log) {
+    public Calculator(@Nonnull List<Expense> expenses, @Nullable List<Budget> budgets,
+            boolean calculateAll, boolean log) {
         mExpenses = expenses;
+        mCalculateAll = calculateAll;
+        mLog = log;
+        if (!mCalculateAll) {
+            return;
+        }
+
         mPaymentMethodValueMap = new HashMap<>();
         mCategoryValueMap = new HashMap<>();
         mCategoryBudgetMap = new HashMap<>();
         mBudgetValueMap = new HashMap<>();
-        mLog = log;
 
-        for (Budget budget : budgets) {
-            // First - Budget amount, Second - Used amount
-            mBudgetValueMap.put(budget.getName(), new Pair<>(budget.getAmount(), BigDecimal.ZERO));
+        if (budgets != null) {
+            for (Budget budget : budgets) {
+                // First - Budget amount, Second - Used amount
+                mBudgetValueMap
+                        .put(budget.getName(), new Pair<>(budget.getAmount(), BigDecimal.ZERO));
 
-            for (String category : budget.getCategories()) {
-                mCategoryBudgetMap.put(category, budget.getName());
+                for (String category : budget.getCategories()) {
+                    mCategoryBudgetMap.put(category, budget.getName());
+                }
             }
         }
     }
 
     public void calculate() {
+        if (mCalculateAll) {
+            calculateAll();
+        } else {
+            calculateTotal();
+        }
+    }
+
+    public Map<String, BigDecimal> getPaymentValues() {
+        return mPaymentMethodValueMap;
+    }
+
+    public Map<String, BigDecimal> getCategoryValues() {
+        return mCategoryValueMap;
+    }
+
+    public Map<String, Pair<BigDecimal, BigDecimal>> getBudgetValues() {
+        return mBudgetValueMap;
+    }
+
+    public BigDecimal getExpenseTotalValue() {
+        return mExpenseTotalValue;
+    }
+
+    private void calculateTotal() {
+        if (mExpenseTotalValue == null) {
+            mExpenseTotalValue = BigDecimal.ZERO;
+        }
+        for (Expense expense : mExpenses) {
+            BigDecimal expenseValue = expense.getAmount();
+            mExpenseTotalValue = mExpenseTotalValue.add(expenseValue);
+        }
+    }
+
+    private void calculateAll() {
         BigDecimal budgetAllUsedValue = BigDecimal.ZERO;
         BigDecimal budgetAllValue = BigDecimal.ZERO;
         BigDecimal categoryAllValue = BigDecimal.ZERO;
@@ -52,6 +98,7 @@ public class Calculator {
 
         for (Expense expense : mExpenses) {
             BigDecimal expenseValue = expense.getAmount();
+
             BigDecimal totalValue;
 
             // Payment method
@@ -103,6 +150,10 @@ public class Calculator {
         mBudgetValueMap.put(Constants.Basic.CALCULATOR_ALL,
                 new Pair<>(budgetAllValue, budgetAllUsedValue));
 
+
+        /*
+         * Start logging
+         */
         if (!mLog) {
             return;
         }
@@ -125,21 +176,9 @@ public class Calculator {
                 }
             }
         }
-        Timber.i(mLogger.getOutput() + "\n");
+        Timber.i("%s \n", mLogger.getOutput());
         mLogger.reset();
         Timber.i("Calculation done");
-    }
-
-    public Map<String, BigDecimal> getPaymentValues() {
-        return mPaymentMethodValueMap;
-    }
-
-    public Map<String, BigDecimal> getCategoryValues() {
-        return mCategoryValueMap;
-    }
-
-    public Map<String, Pair<BigDecimal, BigDecimal>> getBudgetValues() {
-        return mBudgetValueMap;
     }
 
     private void loggerAddPaymentMethod(String name, BigDecimal value) {

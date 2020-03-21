@@ -127,8 +127,6 @@
     <string name="all_expenses_go_to_setup">Go To Setup</string>
     <string name="all_expenses_empty_message">No expenses in %1s!</string>
     <string name="all_expenses_analysis">Analysis</string>
-    <string name="all_expenses_count_not_backed_up">%1d not backed up</string>
-    <string name="all_expenses_count_all_backed_up">All backed up</string>
 
     <!-- Details -->
     <string name="expense_detail_backed_up_disability_message">Edit and delete not available for

@@ -6,8 +6,10 @@ import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.Calculator;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -68,6 +70,23 @@ public class AllExpensesViewModel extends ViewModel {
     @Nullable
     public List<Expense> getExpenses() {
         return mExpenses;
+    }
+
+    public int getExpensesSize() {
+        if (mExpenses == null) {
+            return 0;
+        } else {
+            return mExpenses.size();
+        }
+    }
+
+    public BigDecimal getExpensesTotal() {
+        if (mExpenses == null) {
+            return BigDecimal.ZERO;
+        }
+        Calculator calculator = new Calculator(mExpenses, null, false, false);
+        calculator.calculate();
+        return calculator.getExpenseTotalValue();
     }
 
     public void refreshExpenseWrappers() {

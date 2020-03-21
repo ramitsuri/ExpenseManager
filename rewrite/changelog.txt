@@ -1,3 +1,13 @@
+ExpenseAdapter
+    - Remove unnecessary code
+    - Remove sync status
+    - Add color to amount for debug builds to show sync status
+AllExpensesFragment
+    - Move calculation code to Calculator
+    - No longer show not backed up count
+Calculator
+    - Modify to calculate everything or just total expense amount
+
 Miscellaneous Fragment
     - Hid all spreadsheet related options - backup, sync, spreadsheet id
     - Can be enabled by tapping 7 times on version info
