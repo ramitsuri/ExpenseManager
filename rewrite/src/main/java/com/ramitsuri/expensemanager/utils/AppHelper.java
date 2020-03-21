@@ -86,14 +86,6 @@ public class AppHelper {
         return BuildConfig.VERSION_NAME;
     }
 
-    public static void enableDebugOptions() {
-        PrefHelper.set(getString(R.string.settings_key_enable_debug_options), true);
-    }
-
-    public static boolean isDebugOptionEnabled() {
-        return PrefHelper.get(getString(R.string.settings_key_enable_debug_options), false);
-    }
-
     public static void setDefaultSheetId(int sheetId) {
         PrefHelper.set(getString(R.string.settings_key_default_sheet_id), sheetId);
     }
@@ -101,16 +93,6 @@ public class AppHelper {
     public static int getDefaultSheetId() {
         return PrefHelper
                 .get(getString(R.string.settings_key_default_sheet_id), Constants.Basic.UNDEFINED);
-    }
-
-    public static void setMigrationStep(@MigrationStep int migrationStep) {
-        PrefHelper.set(getString(R.string.settings_key_migration_step), migrationStep);
-    }
-
-    @MigrationStep
-    public static int getMigrationStep() {
-        return PrefHelper
-                .get(getString(R.string.settings_key_migration_step), MigrationStep.COPY);
     }
 
     public static String[] getScopes() {

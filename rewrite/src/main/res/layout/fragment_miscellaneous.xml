@@ -17,6 +17,7 @@
             layout="@layout/extra_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             tools:visibility="visible" />
 
         <include
@@ -51,19 +52,12 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <View
-            android:id="@+id/divider1"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/margin_small"
-            android:background="@color/grey" />
-
         <include
             android:id="@+id/header_spreadsheet"
             layout="@layout/extra_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
+            android:visibility="gone"
             tools:visibility="visible" />
 
         <include
@@ -74,19 +68,11 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/margin_small"
-            android:background="@color/grey" />
-
         <include
             android:id="@+id/header_general"
             layout="@layout/extra_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
             tools:visibility="visible" />
 
         <include

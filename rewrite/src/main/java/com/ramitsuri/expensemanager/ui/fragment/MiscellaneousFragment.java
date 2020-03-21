@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
-import com.ramitsuri.expensemanager.utils.ToastHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
 
 import javax.annotation.Nonnull;
@@ -74,34 +73,43 @@ public class MiscellaneousFragment extends BaseFragment {
 
         mViewModel = ViewModelProviders.of(this).get(MiscellaneousViewModel.class);
 
+        setupViews(view);
+    }
+
+    private void setupViews(@Nonnull View view) {
         // Header - Backup and Sync
         setupHeader(view,
                 R.id.header_backup_sync,
-                R.string.header_title_backup_sync);
+                R.string.header_title_backup_sync,
+                mViewModel.enableHidden());
 
         // Backup
         setupMenuItem(view,
                 R.id.item_backup,
                 R.string.common_sync_now,
-                R.drawable.ic_backup);
+                R.drawable.ic_backup,
+                mViewModel.enableHidden());
 
         // Auto backup
         setupAutoBackupItem(view,
                 R.id.item_auto_backup,
                 R.string.settings_title_auto_backup,
-                R.drawable.ic_auto_backup);
+                R.drawable.ic_auto_backup,
+                mViewModel.enableHidden());
 
         // Sync
         setupMenuItem(view,
                 R.id.item_sync,
                 R.string.common_sync,
-                R.drawable.ic_sync);
+                R.drawable.ic_sync,
+                mViewModel.enableHidden());
 
         // Sync Expenses
         setupMenuItem(view,
                 R.id.item_sync_expenses,
                 R.string.common_sync_expenses,
-                R.drawable.ic_sync);
+                R.drawable.ic_sync,
+                mViewModel.enableHidden());
 
         // Logs Metadata
         setupMenuItem(view,
@@ -119,18 +127,21 @@ public class MiscellaneousFragment extends BaseFragment {
         // Header - Spreadsheet
         setupHeader(view,
                 R.id.header_spreadsheet,
-                R.string.header_title_spreadsheet);
+                R.string.header_title_spreadsheet,
+                mViewModel.enableHidden());
 
         // Spreadsheet Id
         setupSpreadsheetItem(view,
                 R.id.item_spreadsheet_id,
                 R.string.settings_title_spreadsheet_id,
-                R.drawable.ic_spreadsheet_id);
+                R.drawable.ic_spreadsheet_id,
+                mViewModel.enableHidden());
 
         // Header - General
         setupHeader(view,
                 R.id.header_general,
-                R.string.header_title_general);
+                R.string.header_title_general,
+                true);
 
         // Edit entities
         setupMenuItem(view,
@@ -197,18 +208,24 @@ public class MiscellaneousFragment extends BaseFragment {
 
     private void setupHeader(@Nonnull View view,
             @IdRes final int idRes,
-            @StringRes int titleRes) {
+            @StringRes int titleRes,
+            boolean show) {
+        if (!show) {
+            return;
+        }
         TextView title = view.findViewById(idRes);
         if (title != null) {
             title.setText(titleRes);
+            title.setVisibility(View.VISIBLE);
         }
     }
 
     private void setupAutoBackupItem(@Nonnull View view,
             @IdRes final int idRes,
             @StringRes int titleRes,
-            @DrawableRes int drawableRes) {
-        ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes);
+            @DrawableRes int drawableRes,
+            boolean show) {
+        ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
         if (container != null) {
             boolean autoBackupEnabled = mViewModel.isAutoBackupEnabled();
             // Summary
@@ -263,8 +280,9 @@ public class MiscellaneousFragment extends BaseFragment {
     private void setupSpreadsheetItem(@Nonnull View view,
             @IdRes final int idRes,
             @StringRes int titleRes,
-            @DrawableRes int drawableRes) {
-        ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes);
+            @DrawableRes int drawableRes,
+            boolean show) {
+        ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
         if (container != null) {
             // Summary
             final TextView summary = container.findViewById(R.id.summary);
@@ -359,11 +377,8 @@ public class MiscellaneousFragment extends BaseFragment {
                 break;
 
             case R.id.item_version:
-                if (mViewModel.versionInfoPressSuccess()) {
-                    if (getActivity() != null) {
-                        ToastHelper.showToast(getActivity(),
-                                R.string.settings_hidden_options_enabled);
-                    }
+                if (mViewModel.versionInfoPressSuccess() && getView() != null) {
+                    setupViews(getView());
                 }
                 break;
 

@@ -23,12 +23,14 @@ public class MiscellaneousViewModel extends ViewModel {
 
     private long mDeleteLastPressTime;
     private int mAboutPressCount;
+    private boolean mEnableHidden;
     private MutableLiveData<String> mSpreadsheetId;
     private MutableLiveData<String> mCurrentTheme;
     private SheetRepository mRepository;
 
     public MiscellaneousViewModel() {
         super();
+
         mRepository = MainApplication.getInstance().getSheetRepository();
 
         mDeleteLastPressTime = 0;
@@ -71,7 +73,7 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean enableHidden() {
-        return AppHelper.isDebugOptionEnabled() || BuildConfig.DEBUG;
+        return mEnableHidden;
     }
 
     public boolean enableDeleteAll() {
@@ -92,12 +94,12 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean versionInfoPressSuccess() {
-        if (AppHelper.isDebugOptionEnabled()) {
+        if (mEnableHidden) {
             return false;
         }
         mAboutPressCount = mAboutPressCount + 1;
         if (mAboutPressCount >= 7) {
-            AppHelper.enableDebugOptions();
+            mEnableHidden = true;
             return true;
         }
         return false;

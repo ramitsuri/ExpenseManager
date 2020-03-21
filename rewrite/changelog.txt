@@ -1,3 +1,10 @@
+Miscellaneous Fragment
+    - Hid all spreadsheet related options - backup, sync, spreadsheet id
+    - Can be enabled by tapping 7 times on version info
+    - Reset enablement on fragment start
+AppHelper
+    - Remove unused code - enable hidden options and migration step
+
 Add a way to start edit entities (SetupFrag)
 
 Add a way to add splitwise expense
