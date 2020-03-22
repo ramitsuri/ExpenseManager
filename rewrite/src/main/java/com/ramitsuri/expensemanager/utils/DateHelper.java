@@ -1,11 +1,14 @@
 package com.ramitsuri.expensemanager.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 
@@ -104,5 +107,26 @@ public class DateHelper {
     public static long getDateFromYearMonthDay(int year, int month, int day) {
         LocalDate localDate = LocalDate.of(year, month + 1, day);
         return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    /**
+     * Returns a Duration object for difference between current time and desired hour of the day.
+     * <p>
+     * If current time is past the desired hour of the day, then difference between current time
+     * and next day's desired hour of the day is returned.
+     */
+    public static Duration getDelayForPeriodicWork(Calendar calendar, int desiredHourOfDay) {
+        long timeNow = calendar.getTimeInMillis();
+
+        calendar.set(Calendar.HOUR_OF_DAY, desiredHourOfDay);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        long timeDesired = calendar.getTimeInMillis();
+        if (timeNow > timeDesired) {
+            timeDesired = timeDesired + TimeUnit.DAYS.toMillis(1);
+        }
+        return Duration.ofMillis(timeDesired - timeNow);
     }
 }

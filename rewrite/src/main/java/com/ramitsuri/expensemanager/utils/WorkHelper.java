@@ -6,6 +6,7 @@ import com.ramitsuri.expensemanager.work.BackupWorker;
 import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
 import com.ramitsuri.expensemanager.work.SyncWorker;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,12 +23,15 @@ import timber.log.Timber;
 
 public class WorkHelper {
 
+    /**
+     * One Time Backup
+     */
     public static void enqueueOneTimeBackup() {
         Timber.i("Enqueue one-time backup invoked");
         String tag = getOneTimeWorkTag();
 
         Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, Constants.LogType.ONE_TIME_BACKUP)
+                .putString(Constants.Work.TYPE, tag)
                 .build();
 
         // Request
@@ -43,7 +47,8 @@ public class WorkHelper {
     }
 
     /**
-     * Will run every 12 hours
+     * Periodic Backup
+     * Runs once a day around 2AM
      */
     public static void enqueuePeriodicBackup() {
         Timber.i("Enqueue scheduled backup invoked");
@@ -51,7 +56,7 @@ public class WorkHelper {
         String tag = getPeriodicWorkTag();
         Constraints constraints = getConstraints();
         Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, Constants.LogType.PERIODIC_BACKUP)
+                .putString(Constants.Work.TYPE, tag)
                 .build();
 
         // Request
@@ -59,6 +64,7 @@ public class WorkHelper {
                 .Builder(BackupWorker.class, 1, TimeUnit.DAYS)
                 .setInputData(input)
                 .addTag(tag)
+                .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 2))
                 .setConstraints(constraints)
                 .build();
 
@@ -67,12 +73,22 @@ public class WorkHelper {
                 .enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.REPLACE, request);
     }
 
+    public static void cancelPeriodicLegacyBackup() {
+        Timber.i("Cancel scheduled backup invoked");
+        String tag = getPeriodicWorkLegacyTag();
+        getInstance()
+                .cancelAllWorkByTag(tag);
+    }
+
+    /**
+     * One Time Entities Sync
+     */
     public static void enqueueOneTimeSync() {
         Timber.i("Enqueue one-time sync invoked");
         String tag = getOneTimeSyncTag();
 
         Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, Constants.LogType.ONE_TIME_SYNC)
+                .putString(Constants.Work.TYPE, tag)
                 .build();
 
         // Request
@@ -87,12 +103,15 @@ public class WorkHelper {
                 .enqueue(syncRequest);
     }
 
+    /**
+     * One Time Expenses Sync
+     */
     public static void enqueueOneTimeExpenseSync() {
         Timber.i("Enqueue one-time expenses sync invoked");
         String tag = getOneTimeExpenseSyncTag();
 
         Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, Constants.LogType.ONE_TIME_EXPENSE_SYNC)
+                .putString(Constants.Work.TYPE, tag)
                 .build();
 
         // Request
@@ -107,31 +126,29 @@ public class WorkHelper {
                 .enqueue(syncRequest);
     }
 
-    public static void cancelScheduledBackup() {
-        Timber.i("Cancel scheduled backup invoked");
-        String tag = getPeriodicWorkTag();
-        getInstance().cancelAllWorkByTag(tag);
-    }
-
-    public static String getOneTimeWorkTag() {
-        return Constants.Tag.ONE_TIME_BACKUP;
-    }
-
-    public static String getPeriodicWorkTag() {
-        return Constants.Tag.SCHEDULED_BACKUP;
-    }
-
-    public static String getOneTimeSyncTag() {
-        return Constants.Tag.ONE_TIME_SYNC;
-    }
-
-    public static String getOneTimeExpenseSyncTag() {
-        return Constants.Tag.ONE_TIME_EXPENSE_SYNC;
-    }
-
     public static LiveData<List<WorkInfo>> getWorkStatus(String tag) {
         return getInstance()
                 .getWorkInfosByTagLiveData(tag);
+    }
+
+    public static String getPeriodicWorkLegacyTag() {
+        return Constants.Tag.SCHEDULED_BACKUP_LEGACY;
+    }
+
+    public static String getPeriodicWorkTag() {
+        return Constants.Tag.PERIODIC_BACKUP;
+    }
+
+    private static String getOneTimeWorkTag() {
+        return Constants.Tag.ONE_TIME_BACKUP;
+    }
+
+    private static String getOneTimeSyncTag() {
+        return Constants.Tag.ONE_TIME_SYNC;
+    }
+
+    private static String getOneTimeExpenseSyncTag() {
+        return Constants.Tag.ONE_TIME_EXPENSE_SYNC;
     }
 
     private static Constraints getConstraints() {

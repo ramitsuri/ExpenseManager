@@ -1,3 +1,24 @@
+BaseFragment
+    - Insert log to db for work status
+MetadataFragment
+    - Prevent back click that closes app - now will go up
+    - Increase lines for metadata items so that whole log is visible
+MiscellaneousFragment
+    - Log legacy and new scheduled backup status
+    - Remove auto backup menu option
+    - Hide edit entities menu option for now
+AppHelper
+    - Remove Auto backup pref helper methods
+DateHelper
+    - Add method to get initial delay for periodic backup work with unit test
+WorkHelper
+    - Rearrange some code
+    - Add a way to cancel old periodic work (that ran when auto backup toggle was changed) and enqueue new periodic work (runs around 2AM)
+Constants
+    - Remove log type constants - use work type wherever necessary
+MainApplication
+    - Cancel legacy periodic work and enqueue new periodic work
+
 ExpenseAdapter
     - Remove unnecessary code
     - Remove sync status

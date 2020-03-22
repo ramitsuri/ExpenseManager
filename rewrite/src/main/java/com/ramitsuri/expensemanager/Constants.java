@@ -35,7 +35,8 @@ public class Constants {
 
     public class Tag {
         public static final String ONE_TIME_BACKUP = "one_time_backup";
-        public static final String SCHEDULED_BACKUP = "scheduled_backup";
+        public static final String SCHEDULED_BACKUP_LEGACY = "scheduled_backup";
+        public static final String PERIODIC_BACKUP = "periodic_backup";
         public static final String ONE_TIME_SYNC = "one_time_sync";
         public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";
     }
@@ -59,13 +60,6 @@ public class Constants {
     public class AddExpenseMode {
         public static final int ADD = 0;
         public static final int EDIT = 1;
-    }
-
-    public class LogType {
-        public static final String PERIODIC_BACKUP = "periodic_backup";
-        public static final String ONE_TIME_BACKUP = "one_time_backup";
-        public static final String ONE_TIME_SYNC = "one_time_sync";
-        public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";
     }
 
     public class LogResult {

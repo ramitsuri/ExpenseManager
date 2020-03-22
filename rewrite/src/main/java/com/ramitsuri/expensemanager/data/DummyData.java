@@ -308,28 +308,28 @@ public class DummyData {
 
         Log log = new Log();
         log.setTime(base - 10 * oneDay);
-        log.setType(Constants.LogType.ONE_TIME_BACKUP);
+        log.setType(Constants.Tag.ONE_TIME_BACKUP);
         log.setResult(Constants.LogResult.SUCCESS);
         log.setMessage(null);
         log.setIsAcknowledged(false);
 
         log = new Log();
         log.setTime(base - 5 * oneDay);
-        log.setType(Constants.LogType.ONE_TIME_BACKUP);
+        log.setType(Constants.Tag.ONE_TIME_BACKUP);
         log.setResult(Constants.LogResult.SUCCESS);
         log.setMessage(null);
         log.setIsAcknowledged(true);
 
         log = new Log();
         log.setTime(base - 6 * oneDay);
-        log.setType(Constants.LogType.PERIODIC_BACKUP);
+        log.setType(Constants.Tag.SCHEDULED_BACKUP_LEGACY);
         log.setResult(Constants.LogResult.SUCCESS);
         log.setMessage(null);
         log.setIsAcknowledged(false);
 
         log = new Log();
         log.setTime(base + 10 * oneDay);
-        log.setType(Constants.LogType.PERIODIC_BACKUP);
+        log.setType(Constants.Tag.SCHEDULED_BACKUP_LEGACY);
         log.setResult(Constants.LogResult.FAILURE);
         log.setMessage(null);
         log.setIsAcknowledged(false);

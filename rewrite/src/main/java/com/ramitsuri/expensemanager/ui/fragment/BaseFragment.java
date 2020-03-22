@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.List;
@@ -125,7 +127,7 @@ public class BaseFragment extends Fragment {
         Timber.i("%s OnDetach", this.getClass().getSimpleName());
     }
 
-    public void hideKeyboardFrom(Context context, View view) {
+    void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm =
                 (InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm != null) {
@@ -133,18 +135,28 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    protected void logWorkStatus(String workTag) {
+    void logWorkStatus(final String workTag) {
         WorkHelper.getWorkStatus(workTag).observe(this, new Observer<List<WorkInfo>>() {
             @Override
             public void onChanged(List<WorkInfo> workInfos) {
-                if (workInfos != null && !workInfos.isEmpty()) {
+                if (workInfos != null && !workInfos.isEmpty() && workInfos.get(0) != null) {
                     Timber.i("Work status %s", workInfos.get(0).toString());
+                    insertLog(workTag, "null", workInfos.get(0).toString());
                 }
             }
         });
     }
 
-    protected void exitToUp() {
+    private void insertLog(String type, String result, String message) {
+        MainApplication.getInstance().getLogRepo().insertLog(new Log(
+                System.currentTimeMillis(),
+                type,
+                result,
+                message
+        ));
+    }
+
+    void exitToUp() {
         Activity activity = getActivity();
         if (activity != null) {
             ((AppCompatActivity)activity).onSupportNavigateUp();

@@ -175,7 +175,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
                     new Observer<List<ExpenseWrapper>>() {
                         @Override
                         public void onChanged(List<ExpenseWrapper> expenses) {
-                            Timber.i("Refreshing expenses" + expenses.size());
+                            Timber.i("Refreshing expenses %s", expenses.size());
                             adapter.setExpenses(expenses);
                             onExpensesReceived(expenses);
                         }

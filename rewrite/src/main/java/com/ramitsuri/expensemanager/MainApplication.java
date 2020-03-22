@@ -4,7 +4,6 @@ import android.accounts.Account;
 import android.app.Application;
 import android.text.TextUtils;
 
-import com.ramitsuri.expensemanager.IntDefs.SourceType;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
@@ -14,6 +13,7 @@ import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +51,11 @@ public class MainApplication extends Application {
         } else {
             Timber.i("Application has already been set up");
         }
+
+        // Cancel legacy work that ran at random time based on when auto backup toggle was enabled
+        WorkHelper.cancelPeriodicLegacyBackup();
+        // Enqueue work that runs around 2AM
+        WorkHelper.enqueuePeriodicBackup();
     }
 
     private void initTimber() {

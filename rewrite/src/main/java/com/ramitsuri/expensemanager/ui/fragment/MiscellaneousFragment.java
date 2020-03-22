@@ -6,14 +6,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,6 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
@@ -74,6 +74,9 @@ public class MiscellaneousFragment extends BaseFragment {
         mViewModel = ViewModelProviders.of(this).get(MiscellaneousViewModel.class);
 
         setupViews(view);
+
+        logWorkStatus(WorkHelper.getPeriodicWorkLegacyTag());
+        logWorkStatus(WorkHelper.getPeriodicWorkTag());
     }
 
     private void setupViews(@Nonnull View view) {
@@ -88,13 +91,6 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_backup,
                 R.string.common_sync_now,
                 R.drawable.ic_backup,
-                mViewModel.enableHidden());
-
-        // Auto backup
-        setupAutoBackupItem(view,
-                R.id.item_auto_backup,
-                R.string.settings_title_auto_backup,
-                R.drawable.ic_auto_backup,
                 mViewModel.enableHidden());
 
         // Sync
@@ -148,7 +144,7 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_edit_entities,
                 R.string.miscellaneous_sync_entities,
                 R.drawable.ic_edit_entities,
-                true);
+                BuildConfig.DEBUG);
 
         // Theme
         setupThemeItem(view,
@@ -217,48 +213,6 @@ public class MiscellaneousFragment extends BaseFragment {
         if (title != null) {
             title.setText(titleRes);
             title.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void setupAutoBackupItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes,
-            boolean show) {
-        ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
-        if (container != null) {
-            boolean autoBackupEnabled = mViewModel.isAutoBackupEnabled();
-            // Summary
-            final TextView summary = container.findViewById(R.id.summary);
-            summary.setVisibility(View.VISIBLE);
-            onAutoBackupStatusChanged(summary, autoBackupEnabled, false);
-
-            // Switch
-            final SwitchCompat toggle = view.findViewById(R.id.toggle);
-            toggle.setChecked(autoBackupEnabled);
-            toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    onAutoBackupStatusChanged(summary, isChecked, true);
-                }
-            });
-            container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggle.setChecked(!toggle.isChecked());
-                }
-            });
-        }
-    }
-
-    private void onAutoBackupStatusChanged(TextView summary, boolean enabled, boolean updateAll) {
-        if (enabled) {
-            summary.setText(R.string.settings_auto_backup_on);
-        } else {
-            summary.setText(R.string.settings_auto_backup_off);
-        }
-        if (updateAll) {
-            mViewModel.setAutoBackupStatus(enabled);
         }
     }
 

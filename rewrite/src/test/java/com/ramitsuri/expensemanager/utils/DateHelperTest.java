@@ -268,4 +268,49 @@ public class DateHelperTest {
             calendar1.add(Calendar.DAY_OF_MONTH, 1);
         }
     }
+
+    // Fails when DST kicks in in March
+    @Test
+    public void testGetInitialDelay() {
+        TimeZone timeZone = TimeZone.getDefault();
+
+        Calendar calActual = Calendar.getInstance(timeZone);
+        calActual.set(Calendar.HOUR_OF_DAY, 0);
+        calActual.set(Calendar.MINUTE, 0);
+        calActual.set(Calendar.SECOND, 0);
+        calActual.set(Calendar.MILLISECOND, 0);
+
+        Calendar calExpected = Calendar.getInstance(timeZone);
+        calExpected.setTimeInMillis(calActual.getTimeInMillis());
+
+        int day = calExpected.get(Calendar.DAY_OF_MONTH);
+        while (calExpected.get(Calendar.DAY_OF_MONTH) != day + 1) { // Run for only one day
+            long expectedMinutes = getMinutes(calExpected.get(Calendar.HOUR_OF_DAY),
+                    calExpected.get(Calendar.MINUTE));
+
+            Date actualTime = calActual.getTime();
+            long actualMinutes = DateHelper.getDelayForPeriodicWork(calActual, 2).toMillis();
+
+            System.out.println(
+                    "Expected: " + calExpected.getTime() + "/" + expectedMinutes + " " +
+                            "Actual: " + actualTime + "/" + actualMinutes);
+
+            calExpected.set(Calendar.MINUTE, calExpected.get(Calendar.MINUTE) + 1);
+            calActual.setTimeInMillis(calExpected.getTimeInMillis());
+        }
+    }
+
+    private long getMinutes(int hourOfDay, int minutes) {
+        long value = 0;
+        if (hourOfDay < 2) {
+            value = 120 - (hourOfDay * 60 + minutes);
+        } else if (hourOfDay > 2) {
+            value = (24 * 60) - ((hourOfDay - 2) * 60 + minutes);
+        } else {
+            if (minutes != 0) {
+                value = (24 * 60) - minutes;
+            }
+        }
+        return value;
+    }
 }

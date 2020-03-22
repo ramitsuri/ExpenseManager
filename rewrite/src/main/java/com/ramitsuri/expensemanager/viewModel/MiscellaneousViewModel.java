@@ -109,20 +109,6 @@ public class MiscellaneousViewModel extends ViewModel {
         return AppHelper.getVersionInfo();
     }
 
-    public boolean isAutoBackupEnabled() {
-        return AppHelper.isAutoBackupEnabled();
-    }
-
-    public void setAutoBackupStatus(boolean enabled) {
-        if (enabled) {
-            WorkHelper.enqueuePeriodicBackup();
-            AppHelper.setAutoBackupEnabled(true);
-        } else {
-            WorkHelper.cancelScheduledBackup();
-            AppHelper.setAutoBackupEnabled(false);
-        }
-    }
-
     @ArrayRes
     public int getThemeTitles() {
         return R.array.theme_titles;

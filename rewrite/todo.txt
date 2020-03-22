@@ -4,10 +4,7 @@ High
 Medium
 - Widget with total used
 - Fix fragment refreshing
-- Move Card View calculation to calculator
 
 Low
-- Extract id from url
 - Error messages
-- Snackbar for log
 - Scheduled recurring expense

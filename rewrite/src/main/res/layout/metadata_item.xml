@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/padding_extra_small"
         android:ellipsize="marquee"
-        android:maxLines="2"
         android:textIsSelectable="true"
         android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
