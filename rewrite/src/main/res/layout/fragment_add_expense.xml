@@ -84,6 +84,7 @@
         android:layout_marginStart="@dimen/margin_extra_small"
         android:stateListAnimator="@null"
         android:text="@string/add_expense_today"
+        android:textAllCaps="false"
         android:textColor="?attr/colorControlNormal"
         app:backgroundTint="@color/bg_grey"
         app:icon="@drawable/ic_date"

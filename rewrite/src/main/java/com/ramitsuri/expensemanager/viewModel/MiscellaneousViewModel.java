@@ -73,7 +73,7 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean enableHidden() {
-        return mEnableHidden;
+        return mEnableHidden || BuildConfig.DEBUG;
     }
 
     public boolean enableDeleteAll() {
@@ -94,7 +94,7 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean versionInfoPressSuccess() {
-        if (mEnableHidden) {
+        if (mEnableHidden || BuildConfig.DEBUG) {
             return false;
         }
         mAboutPressCount = mAboutPressCount + 1;

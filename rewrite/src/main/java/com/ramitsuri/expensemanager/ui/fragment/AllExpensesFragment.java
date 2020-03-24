@@ -192,7 +192,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
                     public void onChanged(final Expense duplicate) {
                         Snackbar editSnackbar =
                                 Snackbar.make(mBtnAdd, R.string.expenses_duplicate_success,
-                                        Snackbar.LENGTH_LONG);
+                                        Snackbar.LENGTH_INDEFINITE);
                         editSnackbar.setAction(R.string.common_edit, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

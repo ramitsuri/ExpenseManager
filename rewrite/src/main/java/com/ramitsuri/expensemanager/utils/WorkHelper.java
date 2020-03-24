@@ -80,6 +80,13 @@ public class WorkHelper {
                 .cancelAllWorkByTag(tag);
     }
 
+    public static void cancelPeriodicBackup() {
+        Timber.i("Cancel scheduled backup invoked");
+        String tag = getPeriodicWorkTag();
+        getInstance()
+                .cancelAllWorkByTag(tag);
+    }
+
     /**
      * One Time Entities Sync
      */

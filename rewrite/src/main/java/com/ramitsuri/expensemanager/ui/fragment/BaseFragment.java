@@ -141,7 +141,7 @@ public class BaseFragment extends Fragment {
             public void onChanged(List<WorkInfo> workInfos) {
                 if (workInfos != null && !workInfos.isEmpty() && workInfos.get(0) != null) {
                     Timber.i("Work status %s", workInfos.get(0).toString());
-                    insertLog(workTag, "null", workInfos.get(0).toString());
+                    insertLog(workTag, "null", workInfos.get(0).getState().toString());
                 }
             }
         });

@@ -14,7 +14,6 @@ import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
-import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
 
 import javax.annotation.Nonnull;
@@ -74,9 +73,6 @@ public class MiscellaneousFragment extends BaseFragment {
         mViewModel = ViewModelProviders.of(this).get(MiscellaneousViewModel.class);
 
         setupViews(view);
-
-        logWorkStatus(WorkHelper.getPeriodicWorkLegacyTag());
-        logWorkStatus(WorkHelper.getPeriodicWorkTag());
     }
 
     private void setupViews(@Nonnull View view) {

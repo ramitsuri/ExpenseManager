@@ -1,3 +1,23 @@
+LogRepository
+    - Fix get logs by adding a way to refresh them manually
+BarAdapter
+    - Show green when you have used the max value but haven't gone over
+AllExpenses
+    - Show "Edit" snack bar after clone indefinitely
+BaseFragment
+    - Insert only the status of work to logs
+MetadataFragment
+    - Refresh logs on start and on deletion
+MiscFragment
+    - Remove work status logging
+    - Enable hidden options when debug build
+MainApplication
+    - Cancel periodic backup in debug builds
+AddExpense
+    - Change date button to not be all caps
+AnalysisFragment
+    - Center and scrollable tab view so it fits all devices
+
 BaseFragment
     - Insert log to db for work status
 MetadataFragment

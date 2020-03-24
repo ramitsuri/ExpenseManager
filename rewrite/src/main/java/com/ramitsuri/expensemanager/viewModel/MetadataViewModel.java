@@ -25,7 +25,7 @@ public class MetadataViewModel extends ViewModel {
         }
         mLogRepository = MainApplication.getInstance().getLogRepo();
 
-        mLogs = Transformations.map(mLogRepository.getAllLogs(),
+        mLogs = Transformations.map(mLogRepository.getLogs(),
                 new Function<List<Log>, List<String>>() {
                     @Override
                     public List<String> apply(List<Log> input) {
@@ -45,6 +45,10 @@ public class MetadataViewModel extends ViewModel {
                         return logs;
                     }
                 });
+    }
+
+    public void refreshLogs() {
+        mLogRepository.getAllLogs();
     }
 
     public LiveData<List<String>> getLogs() {

@@ -6,5 +6,6 @@ Medium
 - Fix fragment refreshing
 
 Low
+- Tap on budget/payment/category to view filtered expenses
 - Error messages
 - Scheduled recurring expense

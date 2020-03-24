@@ -13,10 +13,12 @@ public class LogRepository {
 
     private AppExecutors mExecutors;
     private ExpenseManagerDatabase mDatabase;
+    private MutableLiveData<List<Log>> mLogs;
 
     public LogRepository(AppExecutors executors, ExpenseManagerDatabase database) {
         mExecutors = executors;
         mDatabase = database;
+        mLogs = new MutableLiveData<>();
     }
 
     public void insertLog(final Log log) {
@@ -40,16 +42,18 @@ public class LogRepository {
         return logs;
     }
 
-    public LiveData<List<Log>> getAllLogs() {
-        final MutableLiveData<List<Log>> logs = new MutableLiveData<>();
+    public LiveData<List<Log>> getLogs() {
+        return mLogs;
+    }
+
+    public void getAllLogs() {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 List<Log> values = mDatabase.logDao().getAll();
-                logs.postValue(values);
+                mLogs.postValue(values);
             }
         });
-        return logs;
     }
 
     public void deleteAcknowledged() {

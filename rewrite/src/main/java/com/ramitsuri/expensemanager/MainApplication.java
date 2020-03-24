@@ -54,8 +54,11 @@ public class MainApplication extends Application {
 
         // Cancel legacy work that ran at random time based on when auto backup toggle was enabled
         WorkHelper.cancelPeriodicLegacyBackup();
-        // Enqueue work that runs around 2AM
-        WorkHelper.enqueuePeriodicBackup();
+        WorkHelper.cancelPeriodicBackup();
+        // Enqueue work that runs around 2AM - only in non debug apps
+        if (!BuildConfig.DEBUG) {
+            WorkHelper.enqueuePeriodicBackup();
+        }
     }
 
     private void initTimber() {

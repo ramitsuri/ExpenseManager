@@ -103,7 +103,7 @@ public class BarAdapter extends RecyclerView.Adapter<BarAdapter.ViewHolder> {
             ScaleDrawable scaleDrawable = (ScaleDrawable)layerDrawable.getDrawable(1);
             GradientDrawable progressLayer = (GradientDrawable)scaleDrawable.getDrawable();
             if (progressLayer != null) {
-                if (newProgress >= 100) {
+                if (newProgress > 100) {
                     progressLayer.setColor(
                             ContextCompat.getColor(progressBar.getContext(), R.color.color_red));
                 } else {

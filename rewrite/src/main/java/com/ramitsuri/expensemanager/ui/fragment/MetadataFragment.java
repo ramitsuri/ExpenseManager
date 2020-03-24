@@ -62,6 +62,8 @@ public class MetadataFragment extends BaseFragment {
         mViewModel = ViewModelProviders.of(this).get(MetadataViewModel.class);
 
         setupViews(view);
+
+        mViewModel.refreshLogs();
     }
 
     private void setupViews(View view) {
@@ -86,6 +88,7 @@ public class MetadataFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 mViewModel.deleteLogs();
+                mViewModel.refreshLogs();
             }
         });
 

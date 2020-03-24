@@ -24,7 +24,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_maximize"
         app:tabBackground="@color/dialog_bg"
+        app:tabGravity="center"
         app:tabIndicatorColor="@color/color_teal"
+        app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/color_teal">
 
         <com.google.android.material.tabs.TabItem
