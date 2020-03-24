@@ -1,8 +1,12 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.constants.stringDefs.SecretMessages;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.entities.Log;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,7 +59,28 @@ public class MetadataViewModel extends ViewModel {
         return mLogs;
     }
 
-    public void deleteLogs() {
+    private void deleteLogs() {
         mLogRepository.deleteAll();
+    }
+
+    public void onDeleteClicked(String secret) {
+        if (TextUtils.isEmpty(secret)) {
+            Timber.i("Secret is empty, deleting logs");
+            deleteLogs();
+            refreshLogs();
+            return;
+        } else {
+            Timber.i("Secret is not empty, not deleting logs");
+        }
+
+        if (SecretMessages.ENABLE_SPLITTING.equalsIgnoreCase(secret.trim())) {
+            Timber.i("Enabling splitting");
+            AppHelper.setSplittingEnabled(true);
+        } else if (SecretMessages.DISABLE_SPLITTING.equalsIgnoreCase(secret.trim())) {
+            Timber.i("Disabling splitting");
+            AppHelper.setSplittingEnabled(false);
+        } else {
+            Timber.i("Secret message means nothing");
+        }
     }
 }

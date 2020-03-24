@@ -1,7 +1,7 @@
 package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
@@ -139,7 +139,7 @@ public class AnalysisViewModel extends ViewModel {
         }
         int progress;
         if (allValue.compareTo(BigDecimal.ZERO) == 0) {
-            progress = 100;
+            progress = 0;
         } else {
             progress = CurrencyHelper.divide(value.multiply(HUNDRED), allValue).intValue();
         }
@@ -172,7 +172,7 @@ public class AnalysisViewModel extends ViewModel {
         }
         int progress;
         if (budgetValue.compareTo(BigDecimal.ZERO) == 0) {
-            progress = 100;
+            progress = 0;
         } else {
             progress = CurrencyHelper.divide(usedValue.multiply(HUNDRED), budgetValue).intValue();
         }

@@ -1,3 +1,27 @@
+Move intDefs, Constants to a constants package
+MetadataFragment
+    - Make close button local var
+    - Add an edit text to enable disable features on pressing delete button
+MainActivity
+    - Fix a bug where fragments and activity was getting recreated without restoring its state. Fix was to setup toolbar always while, setting up nav controller and graph only if saved instance state was null
+AppHelper
+    - Add prefs for splitting enabled boolean
+CurrencyHelper
+    - Modify divide method to use sMaxCurrencyPrecision instead of hardcoded 10 that resulted in 10 decimal places visible
+WorkHelper
+    - Modify one time works to be unique
+AddExpense
+    - Fix issue when a backed up expense is edited and moved to a different sheet - will result
+                in expense duplicated in both sheets
+    - Modify availability of splitting button based on new pref
+    - Creating a copy of expense from mExpense when adding new
+    - Remove code to add splitwise expense, instead it splits amount into 2 now
+Analysis
+    - Modify progress so that if denominator is 0, progress will be 0 not 100
+    - Fix tabs having a background that's different for dark theme
+    - Move tabs to left and make tab text non caps
+Use latest libs across the board
+
 DatabaseMigration
     - Add migration to v6 to add new table for edited sheets with migration test and table test
 ExpenseManagerDbTest

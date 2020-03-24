@@ -1,6 +1,6 @@
 package com.ramitsuri.expensemanager.entities;
 
-import com.ramitsuri.expensemanager.IntDefs.ListItemType;
+import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 
 import org.jetbrains.annotations.NotNull;
 

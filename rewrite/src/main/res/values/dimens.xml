@@ -41,4 +41,5 @@
 
     <!-- Expenses -->
     <item name="horizontal_guideline_percent" type="dimen">0.1</item>
+    <item name="all_expenses_vertical_bias_percent" type="dimen">0.4</item>
 </resources>

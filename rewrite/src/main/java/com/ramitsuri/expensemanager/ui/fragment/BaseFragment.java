@@ -33,6 +33,8 @@ public class BaseFragment extends Fragment {
         }
         if (actionBar != null) {
             actionBar.show();
+        } else {
+            Timber.i("Action bar is null");
         }
     }
 
@@ -44,6 +46,8 @@ public class BaseFragment extends Fragment {
         }
         if (actionBar != null) {
             actionBar.hide();
+        } else {
+            Timber.i("Action bar is null");
         }
     }
 

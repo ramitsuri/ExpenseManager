@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 
@@ -23,10 +23,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("onCreate");
 
         setContentView(R.layout.activity_main);
-
-        setupNavigation();
 
         // Set Default Theme
         String theme = AppHelper.getCurrentTheme();
@@ -43,18 +42,22 @@ public class MainActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
                     View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         }
+
+        setupNavigation(savedInstanceState);
     }
 
-    private void setupNavigation() {
+    private void setupNavigation(Bundle savedInstanceState) {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final NavController navController =
                 Navigation.findNavController(this, R.id.nav_host_fragment);
 
-        NavInflater navInflater = navController.getNavInflater();
-        NavGraph graph = navInflater.inflate(R.navigation.nav_graph);
-        navController.setGraph(graph);
+        if (savedInstanceState == null) {
+            NavInflater navInflater = navController.getNavInflater();
+            NavGraph graph = navInflater.inflate(R.navigation.nav_graph);
+            navController.setGraph(graph);
+        }
 
         NavigationUI.setupWithNavController(toolbar, navController);
     }
@@ -62,5 +65,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Timber.i("onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Timber.i("onResume");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Timber.i("onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Timber.i("onDestroy");
     }
 }

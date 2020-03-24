@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.ramitsuri.expensemanager.R;
@@ -26,9 +27,6 @@ public class MetadataFragment extends BaseFragment {
 
     // Data
     private MetadataViewModel mViewModel;
-
-    // Views
-    private ImageView mBtnClose;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,19 +80,25 @@ public class MetadataFragment extends BaseFragment {
             }
         });
 
+        final EditText editSecret = view.findViewById(R.id.edit_secret);
+
         // Button delete logs
         Button btnDeleteLogs = view.findViewById(R.id.btn_delete_logs);
         btnDeleteLogs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.deleteLogs();
-                mViewModel.refreshLogs();
+                mViewModel.onDeleteClicked(editSecret.getText().toString());
+                editSecret.setText("");
+                if (getActivity() != null) { // close keyboard
+                    hideKeyboardFrom(getActivity(), editSecret);
+                }
             }
         });
 
         // Close
-        mBtnClose = view.findViewById(R.id.btn_close);
-        mBtnClose.setOnClickListener(new View.OnClickListener() {
+        // Views
+        ImageView btnClose = view.findViewById(R.id.btn_close);
+        btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 exitToUp();

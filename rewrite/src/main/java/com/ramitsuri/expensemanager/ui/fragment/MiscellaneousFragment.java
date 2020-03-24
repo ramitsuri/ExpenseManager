@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;

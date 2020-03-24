@@ -2,7 +2,7 @@ package com.ramitsuri.expensemanager.utils;
 
 import android.util.LongSparseArray;
 
-import com.ramitsuri.expensemanager.IntDefs.ListItemType;
+import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import static com.ramitsuri.expensemanager.Constants.Sheets.EXPENSE_RANGE;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.EXPENSE_RANGE;
 
 public class TransformationHelper {
 

@@ -12,7 +12,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import static com.ramitsuri.expensemanager.Constants.Sheets.FLAG;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.FLAG;
 
 @Entity
 public class Expense implements Parcelable {

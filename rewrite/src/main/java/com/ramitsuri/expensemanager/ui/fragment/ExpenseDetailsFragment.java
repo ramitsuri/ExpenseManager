@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;

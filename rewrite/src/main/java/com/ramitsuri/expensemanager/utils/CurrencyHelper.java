@@ -91,6 +91,6 @@ public class CurrencyHelper {
         if (second.equals(BigDecimal.ZERO)) {
             return BigDecimal.ZERO;
         }
-        return first.divide(second, 10, sRoundingStyle);
+        return first.divide(second, sMaxCurrencyPrecision, sRoundingStyle);
     }
 }

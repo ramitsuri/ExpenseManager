@@ -3,7 +3,7 @@ package com.ramitsuri.expensemanager.data.repository;
 import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.AppExecutors;
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -20,7 +20,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import timber.log.Timber;
 
-import static com.ramitsuri.expensemanager.Constants.Sheets.EXPENSE_RANGE;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.EXPENSE_RANGE;
 
 public class ExpenseRepository {
     private AppExecutors mExecutors;

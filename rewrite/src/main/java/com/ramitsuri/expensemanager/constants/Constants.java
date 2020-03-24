@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanager;
+package com.ramitsuri.expensemanager.constants;
 
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.sheets.v4.SheetsScopes;
@@ -81,6 +81,5 @@ public class Constants {
         public static final int UNDEFINED = -1;
         public static final String EMPTY_BUDGET = "-";
         public static final String CALCULATOR_ALL = "CALCULATOR_ALL";
-        public static final String SPLITWISE = "Splitwise";
     }
 }

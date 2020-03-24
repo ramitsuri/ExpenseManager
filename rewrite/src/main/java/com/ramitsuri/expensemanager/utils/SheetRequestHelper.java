@@ -26,7 +26,7 @@ import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import com.google.api.services.sheets.v4.model.TextFormat;
 import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Expense;
 
@@ -40,14 +40,14 @@ import java.util.TimeZone;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.ramitsuri.expensemanager.Constants.Range.USER_ENTERED_CATEGORIES;
-import static com.ramitsuri.expensemanager.Constants.Range.USER_ENTERED_PAYMENT_METHODS;
-import static com.ramitsuri.expensemanager.Constants.Sheets.DATE;
-import static com.ramitsuri.expensemanager.Constants.Sheets.DATE_IS_VALID;
-import static com.ramitsuri.expensemanager.Constants.Sheets.DATE_PATTERN;
-import static com.ramitsuri.expensemanager.Constants.Sheets.FLAG;
-import static com.ramitsuri.expensemanager.Constants.Sheets.ONE_OF_LIST;
-import static com.ramitsuri.expensemanager.Constants.Sheets.ONE_OF_RANGE;
+import static com.ramitsuri.expensemanager.constants.Constants.Range.USER_ENTERED_CATEGORIES;
+import static com.ramitsuri.expensemanager.constants.Constants.Range.USER_ENTERED_PAYMENT_METHODS;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.DATE;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.DATE_IS_VALID;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.DATE_PATTERN;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.FLAG;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.ONE_OF_LIST;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.ONE_OF_RANGE;
 
 public class SheetRequestHelper {
 

@@ -2,8 +2,8 @@ package com.ramitsuri.expensemanager.viewModel;
 
 import android.text.TextUtils;
 
-import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
@@ -37,12 +37,13 @@ public class AddExpenseViewModel extends ViewModel {
     private ExpenseRepository mExpenseRepo;
 
     private Expense mExpense;
+    private Integer mOldSheetId;
     private LiveData<List<String>> mCategories;
     private LiveData<List<String>> mPaymentMethods;
     private LiveData<List<SheetInfo>> mSheetInfos;
     private int mAddMode;
 
-    private boolean mChangesMade, mIsSplitAvailable, mIsSplit;
+    private boolean mChangesMade, mIsSplit;
 
     public AddExpenseViewModel(Expense expense) {
         super();
@@ -74,11 +75,6 @@ public class AddExpenseViewModel extends ViewModel {
                         if (paymentMethods != null) {
                             for (PaymentMethod paymentMethod : paymentMethods) {
                                 paymentMethodStrings.add(paymentMethod.getName());
-                                if (!TextUtils.isEmpty(paymentMethod.getName()) &&
-                                        paymentMethod.getName()
-                                                .equalsIgnoreCase(Constants.Basic.SPLITWISE)) {
-                                    mIsSplitAvailable = true;
-                                }
                             }
                         }
                         return paymentMethodStrings;
@@ -114,24 +110,36 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void add() {
-        Expense expense = mExpense;
+        Expense expense = new Expense(mExpense);
+        if (mIsSplit) {
+            expense.setAmount(CurrencyHelper.divide(expense.getAmount(), new BigDecimal("2")));
+        }
         mExpenseRepo.insert(expense);
         AppHelper.setDefaultSheetId(expense.getSheetId());
-        addSplitExpense(expense);
         reset(null);
     }
 
     public void edit() {
-        boolean wasSynced = mExpense.isSynced();
         Expense expense = new Expense(mExpense);
         expense.setId(mExpense.getId());
         expense.setIsSynced(false);
+        if (mIsSplit) {
+            expense.setAmount(CurrencyHelper.divide(expense.getAmount(), new BigDecimal("2")));
+        }
+        boolean wasSynced = mExpense.isSynced();
         mExpenseRepo.edit(expense);
-        addSplitExpense(expense);
         // Backed up expense was edited, update Edited Sheets table to add this expense's sheet id
-        if (wasSynced) {
+        if (wasSynced) { // Backed up expense was edited
+            int editedSheetId;
+            // Expense was moved from old sheet to new sheet
+            // Old sheet would need to be rewritten as an expense from that was deleted
+            if (mOldSheetId != null) {
+                editedSheetId = mOldSheetId;
+            } else { // Sheet wasn't changed so current sheet would need to be rewritten
+                editedSheetId = expense.getSheetId();
+            }
             MainApplication.getInstance().getEditedSheetRepo()
-                    .insertEditedSheet(new EditedSheet(expense.getSheetId()));
+                    .insertEditedSheet(new EditedSheet(editedSheetId));
         }
         reset(null);
     }
@@ -211,6 +219,11 @@ public class AddExpenseViewModel extends ViewModel {
     public void setSheet(@Nonnull SheetInfo sheetInfo) {
         boolean changesMade = sheetInfo.getSheetId() != mExpense.getSheetId();
         if (changesMade) {
+            // A backed up expense is basically being deleted from the old sheet. Save it so that
+            // it can be updated.
+            if (mExpense.isSynced()) {
+                mOldSheetId = mExpense.getSheetId();
+            }
             mExpense.setSheetId(sheetInfo.getSheetId());
         }
     }
@@ -241,7 +254,7 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public boolean isSplitAvailable() {
-        return mIsSplitAvailable;
+        return AppHelper.isSplittingEnabled();
     }
 
     public boolean isSplit() {
@@ -252,18 +265,9 @@ public class AddExpenseViewModel extends ViewModel {
         mIsSplit = !mIsSplit;
     }
 
-    private void addSplitExpense(@Nonnull Expense expense) {
-        if (mIsSplit) {
-            Expense splitExpense = new Expense(expense);
-            splitExpense.setAmount(
-                    CurrencyHelper.divide(splitExpense.getAmount(), new BigDecimal("2")).negate());
-            splitExpense.setPaymentMethod(Constants.Basic.SPLITWISE);
-            mExpenseRepo.insert(splitExpense);
-        }
-    }
-
     private void reset(@Nullable Expense expense) {
         mIsSplit = false;
+        mOldSheetId = null;
         if (expense != null) {
             mExpense = expense;
             mAddMode = Constants.AddExpenseMode.EDIT;
@@ -274,5 +278,11 @@ public class AddExpenseViewModel extends ViewModel {
             mExpense.setSheetId(AppHelper.getDefaultSheetId());
             mAddMode = Constants.AddExpenseMode.ADD;
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        Timber.i("View model cleared");
     }
 }

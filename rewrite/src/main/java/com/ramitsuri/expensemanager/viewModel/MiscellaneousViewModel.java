@@ -3,7 +3,7 @@ package com.ramitsuri.expensemanager.viewModel;
 import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;

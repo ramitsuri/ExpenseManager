@@ -3,8 +3,7 @@ package com.ramitsuri.expensemanager.utils;
 import android.os.Build;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.Constants;
-import com.ramitsuri.expensemanager.IntDefs.MigrationStep;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 
@@ -85,6 +84,14 @@ public class AppHelper {
     public static int getDefaultSheetId() {
         return PrefHelper
                 .get(getString(R.string.settings_key_default_sheet_id), Constants.Basic.UNDEFINED);
+    }
+
+    public static boolean isSplittingEnabled() {
+        return PrefHelper.get(getString(R.string.settings_key_enable_splitting), false);
+    }
+
+    public static void setSplittingEnabled(boolean enable) {
+        PrefHelper.set(getString(R.string.settings_key_enable_splitting), enable);
     }
 
     public static String[] getScopes() {

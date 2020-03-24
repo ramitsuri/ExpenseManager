@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanager.IntDefs;
+package com.ramitsuri.expensemanager.constants.intDefs;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

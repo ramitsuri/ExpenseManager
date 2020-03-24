@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="horizontal_guideline_percent" type="dimen">0.2</item>
+    <item name="all_expenses_vertical_bias_percent" type="dimen">0.2</item>
 </resources>

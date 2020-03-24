@@ -1,6 +1,6 @@
 package com.ramitsuri.expensemanager.utils;
 
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Expense;
 

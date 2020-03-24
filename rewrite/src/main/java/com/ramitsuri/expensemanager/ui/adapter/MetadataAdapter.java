@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ramitsuri.expensemanager.IntDefs.ListItemType;
+import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.R;
 
 import java.util.List;

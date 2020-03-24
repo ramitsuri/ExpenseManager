@@ -3,7 +3,7 @@ package com.ramitsuri.expensemanager.work;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.ramitsuri.expensemanager.Constants;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Budget;

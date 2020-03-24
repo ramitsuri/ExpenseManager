@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.ramitsuri.expensemanager.Constants;
-import com.ramitsuri.expensemanager.IntDefs.PickedItem;
+import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.intDefs.PickedItem;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 

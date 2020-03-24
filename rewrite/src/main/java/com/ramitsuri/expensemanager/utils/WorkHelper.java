@@ -1,7 +1,7 @@
 package com.ramitsuri.expensemanager.utils;
 
-import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.work.BackupWorker;
 import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
 import com.ramitsuri.expensemanager.work.SyncWorker;
@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
@@ -43,7 +44,7 @@ public class WorkHelper {
 
         // Enqueue
         getInstance()
-                .enqueue(backupRequest);
+                .enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, backupRequest);
     }
 
     /**
@@ -70,7 +71,7 @@ public class WorkHelper {
 
         // Enqueue
         getInstance()
-                .enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.REPLACE, request);
+                .enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.KEEP, request);
     }
 
     public static void cancelPeriodicLegacyBackup() {
@@ -107,7 +108,7 @@ public class WorkHelper {
 
         // Enqueue
         getInstance()
-                .enqueue(syncRequest);
+                .enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, syncRequest);
     }
 
     /**
@@ -130,7 +131,7 @@ public class WorkHelper {
 
         // Enqueue
         getInstance()
-                .enqueue(syncRequest);
+                .enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, syncRequest);
     }
 
     public static LiveData<List<WorkInfo>> getWorkStatus(String tag) {
