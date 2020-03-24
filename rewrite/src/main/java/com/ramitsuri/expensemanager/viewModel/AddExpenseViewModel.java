@@ -9,6 +9,7 @@ import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Category;
+import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
@@ -121,9 +122,17 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void edit() {
-        Expense expense = mExpense;
+        boolean wasSynced = mExpense.isSynced();
+        Expense expense = new Expense(mExpense);
+        expense.setId(mExpense.getId());
+        expense.setIsSynced(false);
         mExpenseRepo.edit(expense);
         addSplitExpense(expense);
+        // Backed up expense was edited, update Edited Sheets table to add this expense's sheet id
+        if (wasSynced) {
+            MainApplication.getInstance().getEditedSheetRepo()
+                    .insertEditedSheet(new EditedSheet(expense.getSheetId()));
+        }
         reset(null);
     }
 

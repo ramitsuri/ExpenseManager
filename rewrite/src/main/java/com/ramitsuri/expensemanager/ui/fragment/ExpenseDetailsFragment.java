@@ -115,9 +115,6 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
         // Edit button
         Button editButton = view.findViewById(R.id.btn_edit);
-        if (expense.isSynced()) {
-            editButton.setEnabled(false);
-        }
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,9 +139,6 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
 
         // Delete button
         Button deleteButton = view.findViewById(R.id.btn_delete);
-        if (expense.isSynced()) {
-            deleteButton.setEnabled(false);
-        }
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,11 +148,5 @@ public class ExpenseDetailsFragment extends BottomSheetDialogFragment {
                 }
             }
         });
-
-        // Edit delete info text
-        TextView info = view.findViewById(R.id.txt_info);
-        if (expense.isSynced()) {
-            info.setVisibility(View.VISIBLE);
-        }
     }
 }

@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.data;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
+import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
@@ -256,6 +257,18 @@ public class DummyData {
         expenses.add(expense);
 
         expense = new Expense();
+        expense.setAmount(new BigDecimal("1.40"));
+        expense.setCategory(getCategories()[8]);
+        expense.setDateTime(base - 2 * oneDay);
+        expense.setPaymentMethod(getPaymentMethods()[5]);
+        expense.setDescription(getDescriptions()[7]);
+        expense.setStore(getStores()[10]);
+        expense.setIsStarred(false);
+        expense.setIsSynced(true);
+        expense.setSheetId(1);
+        expenses.add(expense);
+
+        expense = new Expense();
         expense.setAmount(new BigDecimal("31.90"));
         expense.setCategory(getCategories()[2]);
         expense.setDateTime(base + 2 * oneDay);
@@ -294,6 +307,16 @@ public class DummyData {
         List<Expense> expenses = new ArrayList<>();
         for (Expense expense : getExpenses()) {
             if (expense.isSynced()) {
+                expenses.add(expense);
+            }
+        }
+        return expenses;
+    }
+
+    public static List<Expense> getAllForBackup(List<Integer> sheetIds) {
+        List<Expense> expenses = new ArrayList<>();
+        for (Expense expense : getExpenses()) {
+            if (!expense.isSynced() || sheetIds.contains(expense.getSheetId())) {
                 expenses.add(expense);
             }
         }
@@ -406,5 +429,26 @@ public class DummyData {
         budgets.add(budget);
 
         return budgets;
+    }
+
+    public static List<EditedSheet> getEditedSheets() {
+        List<EditedSheet> editedSheets = new ArrayList<>();
+
+        EditedSheet editedSheet = new EditedSheet(32442);
+        editedSheets.add(editedSheet);
+
+        editedSheet = new EditedSheet(8743);
+        editedSheets.add(editedSheet);
+
+        editedSheet = new EditedSheet(3232);
+        editedSheets.add(editedSheet);
+
+        editedSheet = new EditedSheet(323214);
+        editedSheets.add(editedSheet);
+
+        editedSheet = new EditedSheet(78543);
+        editedSheets.add(editedSheet);
+
+        return editedSheets;
     }
 }

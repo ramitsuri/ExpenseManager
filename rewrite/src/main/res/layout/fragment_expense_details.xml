@@ -45,6 +45,7 @@
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
         android:text="@string/common_edit"
+        android:textAllCaps="false"
         android:textColor="@color/color_teal"
         app:icon="@drawable/ic_edit"
         app:iconTint="@color/color_teal"
@@ -58,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
         android:text="@string/common_duplicate"
+        android:textAllCaps="false"
         android:textColor="@color/color_teal"
         app:icon="@drawable/ic_copy"
         app:iconTint="@color/color_teal"
@@ -72,6 +74,7 @@
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
         android:text="@string/common_delete"
+        android:textAllCaps="false"
         android:textColor="@color/color_red"
         app:icon="@drawable/ic_detail_delete"
         app:iconTint="@color/color_red"
@@ -194,21 +197,6 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@id/txt_expense_description"
         app:layout_constraintTop_toBottomOf="@id/text_expense_detail_1"
-        tools:visibility="visible" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/txt_info"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_info"
-        android:drawablePadding="@dimen/padding_extra_extra_small"
-        android:drawableTint="?attr/colorControlNormal"
-        android:gravity="end"
-        android:textSize="@dimen/text_caption"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/btn_duplicate"
-        app:layout_constraintTop_toBottomOf="@id/btn_duplicate"
-        android:text="@string/expense_detail_backed_up_disability_message"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

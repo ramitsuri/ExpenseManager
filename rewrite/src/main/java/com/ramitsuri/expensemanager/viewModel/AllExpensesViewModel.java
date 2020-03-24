@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.viewModel;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
+import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
@@ -101,5 +102,10 @@ public class AllExpensesViewModel extends ViewModel {
 
     public void deleteExpense(@Nonnull Expense expense) {
         mRepository.delete(expense, expense.getSheetId());
+        // Backed up expense was deleted, update Edited Sheets table to add this expense's sheet id
+        if (expense.isSynced()) {
+            MainApplication.getInstance().getEditedSheetRepo()
+                    .insertEditedSheet(new EditedSheet(expense.getSheetId()));
+        }
     }
 }

@@ -351,11 +351,18 @@ public class SheetRepository {
 
     public InsertConsumerResponse getInsertRangeResponse(@Nonnull String spreadsheetId,
             @NonNull List<Expense> expenses,
-            int sheetId) {
+            int defaultSheetId) {
+        return getInsertRangeResponse(spreadsheetId, expenses, null, defaultSheetId);
+    }
+
+    public InsertConsumerResponse getInsertRangeResponse(@Nonnull String spreadsheetId,
+            @NonNull List<Expense> expenses,
+            List<Integer> editedSheetIds,
+            int defaultSheetId) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
-            BatchUpdateSpreadsheetRequest requestBody =
-                    SheetRequestHelper.getUpdateRequestBody(expenses, sheetId);
+            BatchUpdateSpreadsheetRequest requestBody = SheetRequestHelper
+                    .getUpdateRequestBody(expenses, editedSheetIds, defaultSheetId);
             if (requestBody != null) {
                 mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
                 consumerResponse.setSuccessful(true);

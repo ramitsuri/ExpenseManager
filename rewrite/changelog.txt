@@ -1,3 +1,30 @@
+DatabaseMigration
+    - Add migration to v6 to add new table for edited sheets with migration test and table test
+ExpenseManagerDbTest
+    - Fix a Expense table test
+ExpenseDao
+    - Add a method to get expenses for backup (expenses from edited sheets and new ones)
+SheetRepository
+    - Add an overload method to insert a range that takes in edited sheet ids as parameter
+ExpenseDetailsFragment
+    - Remove disabling of edit and delete buttons for backed up expenses
+    - Made edit, delete, clone buttons not all caps
+SheetRequestHelper
+    - Modify update request method to get UpdateCellsRequest object as well
+    - Move expense row data generation code to its own method
+    - Add new method to create a map of edited sheets and its expenses
+AddExpense
+    - Create a copy object properly when editing expense
+    - Add a new row in EditedSheets if edited expense was a backed up expense
+AllExpenses
+    - Add a new row in EditedSheets if deleted expense was a backed up expense
+BackupWorker
+    - Get edited sheets and generate request accordingly
+    - Delete all edited sheets after a successful backup
+    - Insert a log if backup throws an exception
+[Has a known issue when a backed up expense is edited and moved to a different sheet - will result
+in expense duplicated in both sheets]
+
 LogRepository
     - Fix get logs by adding a way to refresh them manually
 BarAdapter

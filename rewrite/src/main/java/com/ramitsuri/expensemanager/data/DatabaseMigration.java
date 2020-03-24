@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.data;
 
+import androidx.annotation.NonNull;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
@@ -51,6 +52,19 @@ public class DatabaseMigration {
                     "`amount` TEXT, " +
                     "`categories` TEXT " +
                     ")");
+        }
+    };
+
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `EditedSheet` " +
+                    "(" +
+                    "`mId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`sheet_id` INTEGER NOT NULL " +
+                    ")");
+            database.execSQL(
+                    "CREATE UNIQUE INDEX `index_EditedSheet_sheet_id` ON `EditedSheet` (`sheet_id`)");
         }
     };
 }

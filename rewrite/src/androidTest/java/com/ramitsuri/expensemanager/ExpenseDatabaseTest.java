@@ -1,14 +1,17 @@
 package com.ramitsuri.expensemanager;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
 import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.dao.CategoryDao;
+import com.ramitsuri.expensemanager.data.dao.EditedSheetDao;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
 import com.ramitsuri.expensemanager.data.dao.LogDao;
 import com.ramitsuri.expensemanager.data.dao.PaymentMethodDao;
+import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 
 import org.junit.After;
@@ -19,6 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
@@ -42,6 +47,7 @@ public class ExpenseDatabaseTest {
     private PaymentMethodDao mPaymentMethodDao;
     private LogDao mLogDao;
     private ExpenseManagerDatabase mDb;
+    private EditedSheetDao mEditedSheetDao;
 
     @Before
     public void createDb() {
@@ -51,6 +57,7 @@ public class ExpenseDatabaseTest {
         mCategoryDao = mDb.categoryDao();
         mPaymentMethodDao = mDb.paymentMethodDao();
         mLogDao = mDb.logDao();
+        mEditedSheetDao = mDb.editedSheetDao();
 
         for (Expense expense : DummyData.getExpenses()) {
             mExpenseDao.insert(expense);
@@ -62,6 +69,10 @@ public class ExpenseDatabaseTest {
 
         for (com.ramitsuri.expensemanager.entities.Log log : DummyData.getLogs()) {
             mLogDao.insert(log);
+        }
+
+        for (EditedSheet editedSheet : DummyData.getEditedSheets()) {
+            mEditedSheetDao.insert(editedSheet);
         }
     }
 
@@ -91,6 +102,13 @@ public class ExpenseDatabaseTest {
                 DummyData.getAllUnsynced().size(),
                 mExpenseDao.getAllUnsynced().size());
 
+        // get All for backup
+        List<Integer> sheetIds = new ArrayList<>();
+        sheetIds.add(1);
+        Assert.assertEquals(
+                DummyData.getAllForBackup(sheetIds).size(),
+                mExpenseDao.getAllForBackup(sheetIds).size());
+
         // delete synced
         mExpenseDao.deleteSynced();
         Assert.assertEquals(
@@ -119,7 +137,13 @@ public class ExpenseDatabaseTest {
                 mExpenseDao.getAllUnsynced().size());
 
         // set starred
-        mExpenseDao.setStarred(LiveDataTestUtil.getValue(mExpenseDao.getAll()).get(3).getId());
+        List<Expense> expenses = LiveDataTestUtil.getValue(mExpenseDao.getAll());
+        for (Expense expense : expenses) {
+            if (!expense.isStarred()) {
+                mExpenseDao.setStarred(expense.getId());
+                break;
+            }
+        }
         Assert.assertEquals(
                 DummyData.getAllStarred().size() + 1,
                 mExpenseDao.getAllStarred().size());
@@ -177,5 +201,22 @@ public class ExpenseDatabaseTest {
     public void logsTest() {
         Assert.assertEquals(DummyData.getUnacknowledgedLogs().size(),
                 mLogDao.getUnacknowledged().size());
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void editedSheetsTest() {
+        // 1
+        Assert.assertEquals(DummyData.getEditedSheets().size(), mEditedSheetDao.getAll().size());
+
+        // 2
+        mEditedSheetDao.deleteAll();
+        Assert.assertEquals(0, mEditedSheetDao.getAll().size());
+
+        // 3
+        for (EditedSheet editedSheet : DummyData.getEditedSheets()) {
+            mEditedSheetDao.insert(editedSheet);
+        }
+        // Will throw exception
+        mEditedSheetDao.insert(DummyData.getEditedSheets().get(0));
     }
 }

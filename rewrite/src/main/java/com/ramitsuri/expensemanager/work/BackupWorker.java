@@ -26,7 +26,7 @@ public class BackupWorker extends BaseWorker {
     @NonNull
     @Override
     public Result doWork() {
-        int sheetId = AppHelper.getDefaultSheetId();
+        int defaultSheetId = AppHelper.getDefaultSheetId();
         String workType = getInputData().getString(Constants.Work.TYPE);
 
         if (MainApplication.getInstance().getSheetRepository() == null) {
@@ -47,9 +47,17 @@ public class BackupWorker extends BaseWorker {
             return Result.failure();
         }
 
+        List<Integer> editedSheetIds =
+                ExpenseManagerDatabase.getInstance().editedSheetDao().getAll();
+
         // Expenses
-        List<Expense> expensesToBackup =
-                ExpenseManagerDatabase.getInstance().expenseDao().getAllUnsynced();
+        List<Expense> expensesToBackup;
+        if (editedSheetIds == null || editedSheetIds.size() == 0) {
+            expensesToBackup = ExpenseManagerDatabase.getInstance().expenseDao().getAllUnsynced();
+        } else {
+            expensesToBackup = ExpenseManagerDatabase.getInstance().expenseDao()
+                    .getAllForBackup(editedSheetIds);
+        }
 
         if (expensesToBackup == null) {
             Timber.i("Expenses to backup is null");
@@ -60,13 +68,20 @@ public class BackupWorker extends BaseWorker {
         }
 
         InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
-                .getInsertRangeResponse(spreadsheetId, expensesToBackup, sheetId);
+                .getInsertRangeResponse(spreadsheetId, expensesToBackup, editedSheetIds,
+                        defaultSheetId);
         if (response.isSuccessful()) {
             ExpenseManagerDatabase.getInstance().expenseDao().updateUnsynced();
+            // Delete all records of edited sheets as all expenses in them are backed up now
+            ExpenseManagerDatabase.getInstance().editedSheetDao().deleteAll();
             insertLog(workType,
                     Constants.LogResult.SUCCESS,
                     "Backup and deletion successful");
             return Result.success();
+        } else if (response.getException() != null) {
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    response.getException().getMessage());
         }
         return Result.failure();
     }

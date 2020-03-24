@@ -15,6 +15,7 @@ import com.google.api.services.sheets.v4.model.DuplicateSheetRequest;
 import com.google.api.services.sheets.v4.model.ExtendedValue;
 import com.google.api.services.sheets.v4.model.GridData;
 import com.google.api.services.sheets.v4.model.GridProperties;
+import com.google.api.services.sheets.v4.model.GridRange;
 import com.google.api.services.sheets.v4.model.NumberFormat;
 import com.google.api.services.sheets.v4.model.Padding;
 import com.google.api.services.sheets.v4.model.Request;
@@ -24,17 +25,20 @@ import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import com.google.api.services.sheets.v4.model.TextFormat;
+import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
 import com.ramitsuri.expensemanager.Constants;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Expense;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.ramitsuri.expensemanager.Constants.Range.USER_ENTERED_CATEGORIES;
 import static com.ramitsuri.expensemanager.Constants.Range.USER_ENTERED_PAYMENT_METHODS;
@@ -48,16 +52,44 @@ import static com.ramitsuri.expensemanager.Constants.Sheets.ONE_OF_RANGE;
 public class SheetRequestHelper {
 
     public static BatchUpdateSpreadsheetRequest getUpdateRequestBody(
-            List<Expense> expensesToBackup,
+            @Nonnull List<Expense> expensesToBackup,
+            @Nullable List<Integer> editedSheetIds,
             int defaultSheetId) {
         BatchUpdateSpreadsheetRequest requestBody = new BatchUpdateSpreadsheetRequest();
         List<Request> requests = new ArrayList<>();
 
-        SparseArray<List<Expense>> map = getSheetIdExpenseMap(expensesToBackup, defaultSheetId);
+        // Update whole sheets that had deleted or edited expenses
+        SparseArray<List<Expense>> updateMap = getUpdateMap(expensesToBackup, editedSheetIds);
+        for (int i = 0; i < updateMap.size(); i++) {
+            int sheetId = updateMap.keyAt(i);
+            List<Expense> expenses = updateMap.get(updateMap.keyAt(i));
+            if (expenses == null) {
+                continue;
+            }
 
-        for (int i = 0; i < map.size(); i++) {
-            int sheetId = map.keyAt(i);
-            List<Expense> expenses = map.get(map.keyAt(i));
+            Request request = new Request();
+            UpdateCellsRequest updateCellsRequest = new UpdateCellsRequest();
+            updateCellsRequest.setFields("*");
+            updateCellsRequest.setRange(new GridRange()
+                    .setSheetId(sheetId)
+                    .setStartColumnIndex(0)
+                    .setStartColumnIndex(0));
+
+            List<RowData> rowDataList = new ArrayList<>();
+            for (Expense expense : expenses) {
+                RowData rowData = getExpenseRowData(expense);
+                rowDataList.add(rowData);
+            }
+            updateCellsRequest.setRows(rowDataList);
+            request.setUpdateCells(updateCellsRequest);
+            requests.add(request);
+        }
+
+        // Append new expenses to their sheets
+        SparseArray<List<Expense>> appendMap = getAppendMap(expensesToBackup, defaultSheetId);
+        for (int i = 0; i < appendMap.size(); i++) {
+            int sheetId = appendMap.keyAt(i);
+            List<Expense> expenses = appendMap.get(appendMap.keyAt(i));
             if (expenses == null) {
                 continue;
             }
@@ -69,82 +101,14 @@ public class SheetRequestHelper {
 
             List<RowData> rowDataList = new ArrayList<>();
             for (Expense expense : expenses) {
-                RowData rowData = new RowData();
-                List<CellData> valuesList = new ArrayList<>();
-                CellData values;
-
-                // Date
-                values = new CellData();
-                values.setUserEnteredValue(new ExtendedValue()
-                        .setNumberValue((double)DateHelper.toSheetsDate(expense.getDateTime())));
-                values.setUserEnteredFormat(
-                        new CellFormat().setNumberFormat(
-                                new NumberFormat().setType(DATE).setPattern(DATE_PATTERN)));
-                values.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType(DATE_IS_VALID)));
-                valuesList.add(values);
-
-                // Description
-                values = new CellData();
-                values.setUserEnteredValue(
-                        new ExtendedValue()
-                                .setStringValue(String.valueOf(expense.getDescription())));
-                valuesList.add(values);
-
-                // Store
-                values = new CellData();
-                values.setUserEnteredValue(
-                        new ExtendedValue().setStringValue(String.valueOf(expense.getStore())));
-                valuesList.add(values);
-
-                // Amount
-                values = new CellData();
-                values.setUserEnteredValue(
-                        new ExtendedValue().setNumberValue(expense.getAmount().doubleValue()));
-                valuesList.add(values);
-
-                // Payment Method
-                values = new CellData();
-                values.setUserEnteredValue(new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getPaymentMethod())));
-                values.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
-                                .setValues(getPaymentMethodConditionValues()))
-                        .setStrict(true)
-                        .setShowCustomUi(true));
-                valuesList.add(values);
-
-                // Category
-                values = new CellData();
-                values.setUserEnteredValue(new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getCategory())));
-                values.setDataValidation(new DataValidationRule()
-                        .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
-                                .setValues(getCategoriesConditionValues()))
-                        .setStrict(true)
-                        .setShowCustomUi(true));
-                valuesList.add(values);
-
-                // Flag
-                if (expense.isStarred()) {
-                    values = new CellData();
-                    values.setUserEnteredValue(new ExtendedValue()
-                            .setStringValue(FLAG));
-                    values.setDataValidation(new DataValidationRule()
-                            .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
-                                    .setValues(getFlagConditionValues()))
-                            .setStrict(true)
-                            .setShowCustomUi(true));
-                    valuesList.add(values);
-                }
-
-                rowData.setValues(valuesList);
+                RowData rowData = getExpenseRowData(expense);
                 rowDataList.add(rowData);
             }
             appendCellsRequest.setRows(rowDataList);
             request.setAppendCells(appendCellsRequest);
             requests.add(request);
         }
+
         requestBody.setRequests(requests);
         return requestBody;
     }
@@ -444,7 +408,7 @@ public class SheetRequestHelper {
         return conditionValues;
     }
 
-    private static SparseArray<List<Expense>> getSheetIdExpenseMap(@Nonnull List<Expense> expenses,
+    private static SparseArray<List<Expense>> getAppendMap(@Nonnull List<Expense> expenses,
             int defaultSheetId) {
         SparseArray<List<Expense>> map = new SparseArray<>();
         for (Expense expense : expenses) {
@@ -466,5 +430,124 @@ public class SheetRequestHelper {
             map.put(sheetId, expenseList);
         }
         return map;
+    }
+
+    /**
+     * Generates a map of sheet id and list of expenses that were edited or deleted after they were
+     * backed up. The expense list should contain all expenses for the edited sheet ids.
+     * The ones that were edited or deleted along with ones that weren't.
+     * This is because there isn't a way right now to just update the sheet rows for expenses that
+     * were edited. The whole sheet would be emptied, and these expenses will be added to it.
+     */
+    private static SparseArray<List<Expense>> getUpdateMap(@Nonnull List<Expense> expenses,
+            @Nullable List<Integer> editedSheetIds) {
+        SparseArray<List<Expense>> map = new SparseArray<>();
+        if (editedSheetIds == null || editedSheetIds.size() == 0) {
+            return map;
+        }
+        if (expenses.size() == 0) {
+            for (Integer editedSheetId : editedSheetIds) {
+                map.put(editedSheetId, new ArrayList<Expense>());
+            }
+        }
+        for (Iterator<Expense> iterator = expenses.iterator(); iterator.hasNext(); ) {
+            Expense expense = iterator.next();
+            if (!editedSheetIds.contains(expense.getSheetId())) {
+                // Sheet id for the expense is not one of those which has a backed up expense
+                // that was edited. This expense will be taken care of in append request
+                continue;
+            } else {
+                // This is an expense that was edited after it was backed up or an expense from the
+                // same sheet id. Add it to update map and remove it from original list so that
+                // it isn't read again when generating Append map.
+                iterator.remove();
+            }
+            int sheetId = expense.getSheetId();
+
+            // Add expense to map
+            List<Expense> expenseList = map.get(sheetId);
+            if (expenseList == null) {
+                expenseList = new ArrayList<>();
+                expenseList.add(expense);
+            } else {
+                expenseList.add(expense);
+            }
+            map.put(sheetId, expenseList);
+        }
+        return map;
+    }
+
+    private static RowData getExpenseRowData(Expense expense) {
+        RowData rowData = new RowData();
+        List<CellData> valuesList = new ArrayList<>();
+        CellData values;
+
+        // Date
+        values = new CellData();
+        values.setUserEnteredValue(new ExtendedValue()
+                .setNumberValue((double)DateHelper.toSheetsDate(expense.getDateTime())));
+        values.setUserEnteredFormat(
+                new CellFormat().setNumberFormat(
+                        new NumberFormat().setType(DATE).setPattern(DATE_PATTERN)));
+        values.setDataValidation(new DataValidationRule()
+                .setCondition(new BooleanCondition().setType(DATE_IS_VALID)));
+        valuesList.add(values);
+
+        // Description
+        values = new CellData();
+        values.setUserEnteredValue(
+                new ExtendedValue()
+                        .setStringValue(String.valueOf(expense.getDescription())));
+        valuesList.add(values);
+
+        // Store
+        values = new CellData();
+        values.setUserEnteredValue(
+                new ExtendedValue().setStringValue(String.valueOf(expense.getStore())));
+        valuesList.add(values);
+
+        // Amount
+        values = new CellData();
+        values.setUserEnteredValue(
+                new ExtendedValue().setNumberValue(expense.getAmount().doubleValue()));
+        valuesList.add(values);
+
+        // Payment Method
+        values = new CellData();
+        values.setUserEnteredValue(new ExtendedValue()
+                .setStringValue(String.valueOf(expense.getPaymentMethod())));
+        values.setDataValidation(new DataValidationRule()
+                .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
+                        .setValues(getPaymentMethodConditionValues()))
+                .setStrict(true)
+                .setShowCustomUi(true));
+        valuesList.add(values);
+
+        // Category
+        values = new CellData();
+        values.setUserEnteredValue(new ExtendedValue()
+                .setStringValue(String.valueOf(expense.getCategory())));
+        values.setDataValidation(new DataValidationRule()
+                .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
+                        .setValues(getCategoriesConditionValues()))
+                .setStrict(true)
+                .setShowCustomUi(true));
+        valuesList.add(values);
+
+        // Flag
+        if (expense.isStarred()) {
+            values = new CellData();
+            values.setUserEnteredValue(new ExtendedValue()
+                    .setStringValue(FLAG));
+            values.setDataValidation(new DataValidationRule()
+                    .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
+                            .setValues(getFlagConditionValues()))
+                    .setStrict(true)
+                    .setShowCustomUi(true));
+            valuesList.add(values);
+        }
+
+        rowData.setValues(valuesList);
+        return rowData;
     }
 }

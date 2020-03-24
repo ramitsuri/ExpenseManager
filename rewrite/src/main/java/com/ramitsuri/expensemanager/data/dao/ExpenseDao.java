@@ -28,6 +28,9 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract List<Expense> getAllUnsynced();
 
+    @Query("SELECT * FROM expense WHERE is_synced = 0 OR sheet_id IN (:sheetIds)")
+    public abstract List<Expense> getAllForBackup(List<Integer> sheetIds);
+
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract LiveData<List<Expense>> getAllUnsyncedLiveData();
 

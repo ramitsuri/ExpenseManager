@@ -60,10 +60,11 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public void deleteExpenses() {
-        Timber.i("Deleting expenses");
+        Timber.i("Delete requested");
         long currentTime = System.currentTimeMillis();
         if (currentTime - mDeleteLastPressTime <= 2000) {
             if (BuildConfig.DEBUG) { // Extra protection, only in debug
+                Timber.i("Deleting all expenses");
                 MainApplication.getInstance().getExpenseRepo().delete();
             }
             mDeleteLastPressTime = 0;
