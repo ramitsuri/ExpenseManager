@@ -1,3 +1,7 @@
+Remove Toolbar/SupportActionBar from app as it caused all sorts of issues when restoring state
+Add up button to MiscFragment
+Add top padding to fragments
+
 Move intDefs, Constants to a constants package
 MetadataFragment
     - Make close button local var

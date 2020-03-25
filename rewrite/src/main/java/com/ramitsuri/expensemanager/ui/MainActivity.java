@@ -47,19 +47,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigation(Bundle savedInstanceState) {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        final NavController navController =
-                Navigation.findNavController(this, R.id.nav_host_fragment);
-
         if (savedInstanceState == null) {
+            final NavController navController =
+                    Navigation.findNavController(this, R.id.nav_host_fragment);
+
             NavInflater navInflater = navController.getNavInflater();
             NavGraph graph = navInflater.inflate(R.navigation.nav_graph);
             navController.setGraph(graph);
         }
-
-        NavigationUI.setupWithNavController(toolbar, navController);
     }
 
     @Override

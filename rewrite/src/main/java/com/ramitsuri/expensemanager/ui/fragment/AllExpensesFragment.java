@@ -14,9 +14,9 @@ import android.widget.TextView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
-import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
@@ -63,12 +63,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_all_expenses, container, false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        hideActionBar();
     }
 
     @Override

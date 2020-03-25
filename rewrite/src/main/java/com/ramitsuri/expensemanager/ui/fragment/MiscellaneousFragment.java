@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
 
@@ -55,18 +55,6 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        showActionBar();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        hideActionBar();
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -76,6 +64,15 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupViews(@Nonnull View view) {
+        // Close
+        ImageView btnClose = view.findViewById(R.id.btn_close);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitToUp();
+            }
+        });
+
         // Header - Backup and Sync
         setupHeader(view,
                 R.id.header_backup_sync,

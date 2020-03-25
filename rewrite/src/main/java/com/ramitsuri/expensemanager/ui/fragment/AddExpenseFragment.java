@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
@@ -85,12 +85,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        hideActionBar();
     }
 
     @Override

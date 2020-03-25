@@ -16,7 +16,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -24,33 +23,6 @@ import androidx.work.WorkInfo;
 import timber.log.Timber;
 
 public class BaseFragment extends Fragment {
-
-    void showActionBar() {
-        Activity activity = getActivity();
-        ActionBar actionBar = null;
-        if (activity != null) {
-            actionBar = ((AppCompatActivity)activity).getSupportActionBar();
-        }
-        if (actionBar != null) {
-            actionBar.show();
-        } else {
-            Timber.i("Action bar is null");
-        }
-    }
-
-    void hideActionBar() {
-        Activity activity = getActivity();
-        ActionBar actionBar = null;
-        if (activity != null) {
-            actionBar = ((AppCompatActivity)activity).getSupportActionBar();
-        }
-        if (actionBar != null) {
-            actionBar.hide();
-        } else {
-            Timber.i("Action bar is null");
-        }
-    }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
