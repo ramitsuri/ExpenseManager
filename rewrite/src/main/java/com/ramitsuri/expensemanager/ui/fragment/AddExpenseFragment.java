@@ -36,7 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -95,7 +95,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         if (getArguments() != null) {
             expense = AddExpenseFragmentArgs.fromBundle(getArguments()).getExpense();
         }
-        mViewModel = ViewModelProviders.of(this, new ViewModelFactory(expense))
+        mViewModel = new ViewModelProvider(this, new ViewModelFactory(expense))
                 .get(AddExpenseViewModel.class);
 
         setupViews(view);

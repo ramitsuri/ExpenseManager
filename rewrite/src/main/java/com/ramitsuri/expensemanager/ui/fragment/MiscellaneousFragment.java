@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 public class MiscellaneousFragment extends BaseFragment {
@@ -58,7 +58,7 @@ public class MiscellaneousFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewModel = ViewModelProviders.of(this).get(MiscellaneousViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(MiscellaneousViewModel.class);
 
         setupViews(view);
     }

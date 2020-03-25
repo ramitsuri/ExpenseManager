@@ -36,7 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,7 +69,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewModel = ViewModelProviders.of(this).get(AllExpensesViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AllExpensesViewModel.class);
 
         mBtnFilterSecond = view.findViewById(R.id.btn_filter_second);
         mBtnFilterSecond.setOnClickListener(this);

@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import timber.log.Timber;
@@ -52,7 +52,7 @@ public class SetupFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewModel = ViewModelProviders.of(this).get(SetupViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(SetupViewModel.class);
 
         setupViews(view);
 

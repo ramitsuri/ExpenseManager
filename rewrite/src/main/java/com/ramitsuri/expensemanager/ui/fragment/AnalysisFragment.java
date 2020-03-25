@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.ui.adapter.BarAdapter;
 import com.ramitsuri.expensemanager.ui.adapter.BarWrapper;
@@ -23,7 +23,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
@@ -68,7 +68,7 @@ public class AnalysisFragment extends BottomSheetDialogFragment {
             List<Expense> expenses =
                     getArguments().getParcelableArrayList(Constants.BundleKeys.ANALYSIS_EXPENSES);
             Timber.i("Received expenses");
-            mViewModel = ViewModelProviders.of(this, new ViewModelFactory(expenses))
+            mViewModel = new ViewModelProvider(this, new ViewModelFactory(expenses))
                     .get(AnalysisViewModel.class);
         }
 
