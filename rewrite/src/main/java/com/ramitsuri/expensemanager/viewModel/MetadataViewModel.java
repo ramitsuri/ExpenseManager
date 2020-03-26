@@ -73,14 +73,29 @@ public class MetadataViewModel extends ViewModel {
             Timber.i("Secret is not empty, not deleting logs");
         }
 
-        if (SecretMessages.ENABLE_SPLITTING.equalsIgnoreCase(secret.trim())) {
-            Timber.i("Enabling splitting");
-            AppHelper.setSplittingEnabled(true);
-        } else if (SecretMessages.DISABLE_SPLITTING.equalsIgnoreCase(secret.trim())) {
-            Timber.i("Disabling splitting");
-            AppHelper.setSplittingEnabled(false);
-        } else {
-            Timber.i("Secret message means nothing");
+        switch (secret.trim().toUpperCase()) {
+            case SecretMessages.ENABLE_SPLITTING:
+                Timber.i("Enabling splitting");
+                AppHelper.setSplittingEnabled(true);
+                break;
+
+            case SecretMessages.DISABLE_SPLITTING:
+                Timber.i("Disabling splitting");
+                AppHelper.setSplittingEnabled(false);
+                break;
+
+            case SecretMessages.ENABLE_EXPENSE_SYNC:
+                Timber.i("Enabling expense sync");
+                AppHelper.setExpenseSyncEnabled(true);
+                break;
+
+            case SecretMessages.DISABLE_EXPENSE_SYNC:
+                Timber.i("Disabling expense sync");
+                AppHelper.setExpenseSyncEnabled(false);
+                break;
+
+            default:
+                Timber.i("Secret message means nothing");
         }
     }
 }

@@ -1,3 +1,13 @@
+SecretMessages
+    - Add messages for enable disable expense sync (no longer needed as app in charge)
+AppHelper
+    - Add helper methods to enable disable expense sync
+MiscFragment
+    - Show expense sync only if enabled
+MetadataViewModel
+    - Move infer logic to switch case
+    - Infer expense sync messages
+
 BudgetRepository
     - Add method to get budget in mutable live data form
 Entities

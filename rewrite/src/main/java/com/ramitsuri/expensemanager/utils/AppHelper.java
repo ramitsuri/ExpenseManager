@@ -3,9 +3,9 @@ package com.ramitsuri.expensemanager.utils;
 import android.os.Build;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -92,6 +92,14 @@ public class AppHelper {
 
     public static void setSplittingEnabled(boolean enable) {
         PrefHelper.set(getString(R.string.settings_key_enable_splitting), enable);
+    }
+
+    public static boolean isExpenseSyncEnabled() {
+        return PrefHelper.get(getString(R.string.settings_key_enable_expense_sync), false);
+    }
+
+    public static void setExpenseSyncEnabled(boolean enable) {
+        PrefHelper.set(getString(R.string.settings_key_enable_expense_sync), enable);
     }
 
     public static String[] getScopes() {

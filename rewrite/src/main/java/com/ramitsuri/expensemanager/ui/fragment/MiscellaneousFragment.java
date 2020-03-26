@@ -97,7 +97,7 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_sync_expenses,
                 R.string.common_sync_expenses,
                 R.drawable.ic_sync,
-                mViewModel.enableHidden());
+                mViewModel.enableExpenseSync());
 
         // Header - Spreadsheet
         setupHeader(view,

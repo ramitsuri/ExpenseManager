@@ -162,4 +162,8 @@ public class MiscellaneousViewModel extends ViewModel {
                 .refreshSheetRepo(AppHelper.getAccountName(), AppHelper.getAccountType());
         return mRepository.getEntityData(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
     }
+
+    public boolean enableExpenseSync() {
+        return enableHidden() && AppHelper.isExpenseSyncEnabled();
+    }
 }
