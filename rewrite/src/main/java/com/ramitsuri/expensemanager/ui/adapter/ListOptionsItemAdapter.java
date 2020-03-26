@@ -26,8 +26,6 @@ public class ListOptionsItemAdapter
     private ListOptionsItemCallback mCallback;
 
     public interface ListOptionsItemCallback {
-        void onItemAddRequested();
-
         void onItemDeleteRequested(@Nonnull String value);
 
         void onItemEditRequested(@Nonnull String value);

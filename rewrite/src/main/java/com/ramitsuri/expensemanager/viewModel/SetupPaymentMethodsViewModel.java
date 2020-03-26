@@ -41,7 +41,10 @@ public class SetupPaymentMethodsViewModel extends ViewModel {
     public boolean editPaymentMethod(@Nonnull String oldValue, @Nonnull String newValue) {
         List<String> values = mPaymentMethodsLive.getValue();
         if (values == null) {
-            values = new ArrayList<>();
+            return false;
+        }
+        if (values.contains(newValue)) {
+            return false;
         }
         if (values.contains(oldValue)) {
             int index = values.indexOf(oldValue);
@@ -56,7 +59,10 @@ public class SetupPaymentMethodsViewModel extends ViewModel {
     public boolean deletePaymentMethod(@Nonnull String value) {
         List<String> values = mPaymentMethodsLive.getValue();
         if (values == null) {
-            values = new ArrayList<>();
+            return false;
+        }
+        if (values.size() == 1) {
+            return false;
         }
         if (values.contains(value)) {
             values.remove(value);
@@ -69,7 +75,9 @@ public class SetupPaymentMethodsViewModel extends ViewModel {
     public void savePaymentMethods() {
         if (paymentMethodRepo() != null) {
             List<String> values = mPaymentMethodsLive.getValue();
-            paymentMethodRepo().setPaymentMethods(values);
+            if (values != null) {
+                paymentMethodRepo().setPaymentMethods(values);
+            }
         }
     }
 

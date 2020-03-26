@@ -116,21 +116,21 @@ public class MiscellaneousFragment extends BaseFragment {
         setupHeader(view,
                 R.id.header_entities,
                 R.string.header_title_entities,
-                mViewModel.enableEntities());
+                true);
 
         // Edit Categories
         setupMenuItem(view,
                 R.id.item_edit_categories,
                 R.string.setup_edit_categories,
                 R.drawable.ic_category,
-                mViewModel.enableEntities());
+                true);
 
         // Edit Payment Methods
         setupMenuItem(view,
                 R.id.item_edit_payment_methods,
                 R.string.setup_edit_payment_methods,
                 R.drawable.ic_payment_method,
-                mViewModel.enableEntities());
+                true);
 
         // Edit Budgets
         setupMenuItem(view,

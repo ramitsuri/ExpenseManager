@@ -42,7 +42,10 @@ public class SetupCategoriesViewModel extends ViewModel {
     public boolean editCategory(@Nonnull String oldValue, @Nonnull String newValue) {
         List<String> values = mCategoriesLive.getValue();
         if (values == null) {
-            values = new ArrayList<>();
+            return false;
+        }
+        if (values.contains(newValue)) {
+            return false;
         }
         if (values.contains(oldValue)) {
             int index = values.indexOf(oldValue);
@@ -57,7 +60,10 @@ public class SetupCategoriesViewModel extends ViewModel {
     public boolean deleteCategory(@Nonnull String value) {
         List<String> values = mCategoriesLive.getValue();
         if (values == null) {
-            values = new ArrayList<>();
+            return false;
+        }
+        if (values.size() == 1) {
+            return false;
         }
         if (values.contains(value)) {
             values.remove(value);
@@ -70,7 +76,9 @@ public class SetupCategoriesViewModel extends ViewModel {
     public void saveCategories() {
         if (categoryRepo() != null) {
             List<String> values = mCategoriesLive.getValue();
-            categoryRepo().setCategories(values);
+            if (values != null) {
+                categoryRepo().setCategories(values);
+            }
         }
     }
 

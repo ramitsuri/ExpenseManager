@@ -1,3 +1,10 @@
+Enable Edit categories and payment methods
+SetupCategories, SetupPaymentMethods
+    - Move add button out of Adapter
+    - Do not allow, less than 1 entities
+    - Do not allow duplicate entities
+    - Save entities on exit
+
 SecretMessages
     - Add messages for enable disable expense sync (no longer needed as app in charge)
 AppHelper

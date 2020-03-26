@@ -31,19 +31,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/btn_close" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_add"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="@string/common_add_new"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_add"
+        app:layout_constraintStart_toStartOf="@id/btn_close"
+        app:layout_constraintTop_toBottomOf="@id/btn_close" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_items"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_medium"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/btn_done"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
+        app:layout_constraintTop_toBottomOf="@id/btn_add"
         app:layout_constraintVertical_bias="0.0"
         tools:itemCount="5"
-        tools:listitem="@layout/list_picker_item" />
+        tools:listitem="@layout/list_options_item_item" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_done"

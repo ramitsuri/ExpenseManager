@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
@@ -77,15 +78,28 @@ public class SetupCategoriesFragment extends BaseFragment {
             }
         });
 
+        // Done
         Button btnDone = view.findViewById(R.id.btn_done);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mViewModel.saveCategories();
                 exitToUp();
             }
         });
-        // Views
-        RecyclerView listItems = view.findViewById(R.id.list_items);
+
+        // Add new
+        Button btnAdd = view.findViewById(R.id.btn_add);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Timber.i("Add requested");
+                showAddEntityDialog(null);
+            }
+        });
+
+        // List
+        final RecyclerView listItems = view.findViewById(R.id.list_items);
         if (getContext() != null) {
             DividerItemDecoration divider =
                     new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
@@ -102,15 +116,15 @@ public class SetupCategoriesFragment extends BaseFragment {
         adapter.setCallback(
                 new ListOptionsItemAdapter.ListOptionsItemCallback() {
                     @Override
-                    public void onItemAddRequested() {
-                        Timber.i("Add requested");
-                        showAddEntityDialog(null);
-                    }
-
-                    @Override
                     public void onItemDeleteRequested(@Nonnull String value) {
                         Timber.i("Delete requested: %s", value);
-                        mViewModel.deleteCategory(value);
+                        if (mViewModel.deleteCategory(value)) {
+                            Timber.i("Delete succeeded");
+                        } else {
+                            Timber.i("Delete failed");
+                            Snackbar.make(listItems, R.string.setup_at_least_one,
+                                    Snackbar.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override
@@ -127,11 +141,6 @@ public class SetupCategoriesFragment extends BaseFragment {
                         adapter.setValues(strings);
                     }
                 });
-    }
-
-    private void addCategory(@Nonnull String newValue) {
-        Timber.i("Add new category %s", newValue);
-        mViewModel.addCategory(newValue);
     }
 
     private void showAddEntityDialog(@Nullable final String value) {
@@ -153,9 +162,25 @@ public class SetupCategoriesFragment extends BaseFragment {
                             return;
                         }
                         if (value == null) {
-                            addCategory(input.getText().toString());
+                            if (mViewModel.addCategory(newValue)) {
+                                Timber.i("Add succeeded");
+                            } else {
+                                Timber.i("Add failed");
+                                if (getView() != null) {
+                                    Snackbar.make(getView(), R.string.setup_category_exists,
+                                            Snackbar.LENGTH_LONG).show();
+                                }
+                            }
                         } else {
-                            mViewModel.editCategory(value, newValue);
+                            if (mViewModel.editCategory(value, newValue)) {
+                                Timber.i("Edit succeeded");
+                            } else {
+                                Timber.i("Edit failed");
+                                if (getView() != null) {
+                                    Snackbar.make(getView(), R.string.setup_category_exists,
+                                            Snackbar.LENGTH_LONG).show();
+                                }
+                            }
                         }
                     }
                 };

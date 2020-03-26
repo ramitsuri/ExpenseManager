@@ -41,6 +41,7 @@
     <string name="common_next">Next</string>
     <string name="common_done">Done</string>
     <string name="common_previous">Previous</string>
+    <string name="common_add_new">Add new</string>
 
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">History</string>
@@ -63,7 +64,7 @@
     <string name="settings">Settings</string>
     <string name="settings_title_spreadsheet_id">Spreadsheet ID</string>
     <string name="settings_title_sheet_id">Default sheet ID</string>
-        <string name="settings_title_theme">Choose theme</string>
+    <string name="settings_title_theme">Choose theme</string>
     <string name="settings_title_version_info">Version info</string>
     <string name="settings_summary_spreadsheet_id">Spreadsheet ID</string>
     <string name="settings_summary_sheet_id">Current sheet ID</string>
@@ -110,6 +111,9 @@
     <string name="setup_edit_payment_methods">Edit payment methods</string>
     <string name="setup_edit_budgets">Edit budgets</string>
     <string name="setup_add_new">Add New</string>
+    <string name="setup_category_exists">Category already exists</string>
+    <string name="setup_payment_method_exists">Payment method already exists</string>
+    <string name="setup_at_least_one">At least one needs to remain</string>
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>
