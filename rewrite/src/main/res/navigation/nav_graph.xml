@@ -27,8 +27,16 @@
             app:destination="@id/fragment_miscellaneous" />
 
         <action
-            android:id="@+id/nav_action_first_setup"
-            app:destination="@id/fragment_setup" />
+            android:id="@+id/nav_action_categories_setup"
+            app:destination="@id/fragment_setup_categories" />
+
+        <action
+            android:id="@+id/nav_action_payment_methods_setup"
+            app:destination="@id/fragment_setup_payment_methods" />
+
+        <action
+            android:id="@+id/nav_action_budgets_setup"
+            app:destination="@id/fragment_setup_budgets" />
 
     </fragment>
 
@@ -43,8 +51,16 @@
             app:destination="@id/fragment_metadata" />
 
         <action
-            android:id="@+id/nav_action_first_setup"
-            app:destination="@id/fragment_setup" />
+            android:id="@+id/nav_action_categories_setup"
+            app:destination="@id/fragment_setup_categories" />
+
+        <action
+            android:id="@+id/nav_action_payment_methods_setup"
+            app:destination="@id/fragment_setup_payment_methods" />
+
+        <action
+            android:id="@+id/nav_action_budgets_setup"
+            app:destination="@id/fragment_setup_budgets" />
 
     </fragment>
 
@@ -66,8 +82,18 @@
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_setup"
-        android:name="com.ramitsuri.expensemanager.ui.fragment.SetupFragment"
-        tools:layout="@layout/fragment_setup" />
+        android:id="@+id/fragment_setup_categories"
+        android:name="com.ramitsuri.expensemanager.ui.fragment.SetupCategoriesFragment"
+        tools:layout="@layout/fragment_setup_categories" />
+
+    <fragment
+        android:id="@+id/fragment_setup_payment_methods"
+        android:name="com.ramitsuri.expensemanager.ui.fragment.SetupPaymentMethodsFragment"
+        tools:layout="@layout/fragment_setup_payment_methods" />
+
+    <fragment
+        android:id="@+id/fragment_setup_budgets"
+        android:name="com.ramitsuri.expensemanager.ui.fragment.SetupBudgetsFragment"
+        tools:layout="@layout/fragment_setup_budgets" />
 
 </navigation>

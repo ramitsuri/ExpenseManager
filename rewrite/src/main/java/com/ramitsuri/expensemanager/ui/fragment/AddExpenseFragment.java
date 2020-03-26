@@ -184,7 +184,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             }
         });
         listCategories.setAdapter(categoriesAdapter);
-        mViewModel.getCategories().observe(this, new Observer<List<String>>() {
+        mViewModel.getCategories().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> categories) {
                 Timber.i("Categories received %s", categories);
@@ -208,20 +208,21 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             }
         });
         listPaymentMethods.setAdapter(paymentMethodsAdapter);
-        mViewModel.getPaymentMethods().observe(this, new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> paymentMethods) {
-                Timber.i("Payment Methods received %s", paymentMethods);
-                String selectedValue = null;
-                selectedValue = mViewModel.getPaymentMethod();
-                paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
-                if (mViewModel.isSplitAvailable()) {
-                    mBtnSplit.setVisibility(View.VISIBLE);
-                } else {
-                    mBtnSplit.setVisibility(View.GONE);
-                }
-            }
-        });
+        mViewModel.getPaymentMethods()
+                .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+                    @Override
+                    public void onChanged(List<String> paymentMethods) {
+                        Timber.i("Payment Methods received %s", paymentMethods);
+                        String selectedValue = null;
+                        selectedValue = mViewModel.getPaymentMethod();
+                        paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
+                        if (mViewModel.isSplitAvailable()) {
+                            mBtnSplit.setVisibility(View.VISIBLE);
+                        } else {
+                            mBtnSplit.setVisibility(View.GONE);
+                        }
+                    }
+                });
 
         // Sheets
         mListSheets = view.findViewById(R.id.list_sheets);
@@ -240,7 +241,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mListSheets.setAdapter(sheetsAdapter);
         LiveData<List<SheetInfo>> sheetInfos = mViewModel.getSheetInfos();
         if (sheetInfos != null) {
-            sheetInfos.observe(this, new Observer<List<SheetInfo>>() {
+            sheetInfos.observe(getViewLifecycleOwner(), new Observer<List<SheetInfo>>() {
                 @Override
                 public void onChanged(List<SheetInfo> sheetInfos) {
                     Timber.i("SheetInfos received %s", sheetInfos);
@@ -428,23 +429,18 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         // Remove from Amount field
         if (mEditAmount.hasFocus()) {
             mEditAmount.clearFocus();
-            if (getActivity() != null) { // close keyboard
-                hideKeyboardFrom(getActivity(), mEditAmount);
-            }
+            hideKeyboardFrom(mEditAmount);
         }
         // Remove from Store field
         if (mEditStore.hasFocus()) {
             mEditStore.clearFocus();
-            if (getActivity() != null) { // close keyboard
-                hideKeyboardFrom(getActivity(), mEditStore);
-            }
+            hideKeyboardFrom(mEditStore);
         }
+
         // Remove from Description field
         if (mEditDescription.hasFocus()) {
             mEditDescription.clearFocus();
-            if (getActivity() != null) { // close keyboard
-                hideKeyboardFrom(getActivity(), mEditDescription);
-            }
+            hideKeyboardFrom(mEditDescription);
         }
     }
 

@@ -12,7 +12,7 @@
         android:theme="@style/BaseTheme">
         <activity
             android:name="com.ramitsuri.expensemanager.ui.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

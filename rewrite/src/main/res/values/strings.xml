@@ -105,9 +105,9 @@
     <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>
     <string name="setup_budget_amount">Amount</string>
     <string name="setup_budget_name">Name</string>
-    <string name="setup_edit_categories">Edit Categories</string>
-    <string name="setup_edit_payment_methods">Edit Payment methods</string>
-    <string name="setup_edit_budgets">Edit Budgets</string>
+    <string name="setup_edit_categories">Edit categories</string>
+    <string name="setup_edit_payment_methods">Edit payment methods</string>
+    <string name="setup_edit_budgets">Edit budgets</string>
     <string name="setup_add_new">Add New</string>
 
     <!-- Menu -->
@@ -132,6 +132,7 @@
 
     <!-- Miscellaneous -->
     <string name="header_title_backup_sync">Backup and Sync</string>
+    <string name="header_title_entities">Entities</string>
     <string name="header_title_spreadsheet">Spreadsheet</string>
     <string name="header_title_general">General</string>
     <string name="settings_title_migrate">Migrate</string>
@@ -140,7 +141,6 @@
     <string name="migration_step_progress_summary">Doing something… Don\'t close the app</string>
     <string name="migration_step_complete_summary">All set! You can continue using the app</string>
     <string name="migration_all_set">You\'re all set!</string>
-    <string name="miscellaneous_sync_entities">Edit entities</string>
 
     <!-- Theme -->
     <string name="theme_light">Light</string>

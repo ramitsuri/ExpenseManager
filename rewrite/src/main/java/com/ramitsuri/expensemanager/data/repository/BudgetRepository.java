@@ -30,6 +30,18 @@ public class BudgetRepository {
         return budgets;
     }
 
+    public MutableLiveData<List<Budget>> getBudgetss() {
+        final MutableLiveData<List<Budget>> budgets = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Budget> values = mDatabase.budgetDao().getAll();
+                budgets.postValue(values);
+            }
+        });
+        return budgets;
+    }
+
     public void setBudgets(final List<Budget> budgets) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override

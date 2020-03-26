@@ -18,7 +18,7 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;

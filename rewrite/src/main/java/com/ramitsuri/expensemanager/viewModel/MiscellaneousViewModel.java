@@ -3,9 +3,9 @@ package com.ramitsuri.expensemanager.viewModel;
 import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
@@ -78,6 +78,10 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean enableDeleteAll() {
+        return BuildConfig.DEBUG;
+    }
+
+    public boolean enableEntities() {
         return BuildConfig.DEBUG;
     }
 

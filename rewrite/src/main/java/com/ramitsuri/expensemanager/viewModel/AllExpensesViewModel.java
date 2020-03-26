@@ -5,7 +5,7 @@ import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.Calculator;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;

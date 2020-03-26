@@ -1,3 +1,19 @@
+BudgetRepository
+    - Add method to get budget in mutable live data form
+Entities
+    - Add code for editing categories, budgets and payment methods (not complete)
+AddExpenseFragment
+    - Observe live data via getViewLifecycleOwner instead of this
+    - Modify hideKeyboard method in BaseFragment to not take context parameter
+MiscellaneousFragment
+    - Show entities in debug app under new header
+    - Move general items to top so there's less moving around of items
+    - Start respective fragments for entities edit
+Remove setup fragment as no longer needed
+Move colors around within the file
+Manifest
+    - Change activity soft input mode to adjustPan but doesn't change anything I think
+
 Fix Expense item ellipsize
 
 Remove Toolbar/SupportActionBar from app as it caused all sorts of issues when restoring state

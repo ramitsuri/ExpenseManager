@@ -29,6 +29,79 @@
                 app:srcCompat="@drawable/ic_up" />
         </LinearLayout>
 
+        <!-- Entities -->
+        <include
+            android:id="@+id/header_entities"
+            layout="@layout/extra_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_edit_categories"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_edit_budgets"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_edit_payment_methods"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- General -->
+        <include
+            android:id="@+id/header_general"
+            layout="@layout/extra_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_theme"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_version"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_sheets"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/item_delete_all"
+            layout="@layout/extra_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- Backup and Sync -->
         <include
             android:id="@+id/header_backup_sync"
             layout="@layout/extra_header"
@@ -61,6 +134,7 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
+        <!-- Spreadsheet -->
         <include
             android:id="@+id/header_spreadsheet"
             layout="@layout/extra_header"
@@ -71,53 +145,6 @@
 
         <include
             android:id="@+id/item_spreadsheet_id"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/header_general"
-            layout="@layout/extra_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_edit_entities"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_theme"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_version"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_sheets"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_delete_all"
             layout="@layout/extra_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

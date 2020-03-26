@@ -2,7 +2,7 @@ package com.ramitsuri.expensemanager.utils;
 
 import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.ExpenseWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

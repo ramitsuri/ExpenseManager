@@ -3,30 +3,37 @@ package com.ramitsuri.expensemanager.ui.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.google.android.material.chip.Chip;
 import com.ramitsuri.expensemanager.R;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
-public class ListPickerMultiSelectionAdapter
-        extends RecyclerView.Adapter<ListPickerMultiSelectionAdapter.ViewHolder> {
+public class ListOptionsItemAdapter
+        extends RecyclerView.Adapter<ListOptionsItemAdapter.ViewHolder> {
 
     @Nullable
     private List<String> mValues;
     @Nullable
-    private ListPickerMultiSelectionCallback mCallback;
+    private ListOptionsItemCallback mCallback;
 
-    public interface ListPickerMultiSelectionCallback {
-        void onItemsChanged(List<String> values);
+    public interface ListOptionsItemCallback {
+        void onItemAddRequested();
+
+        void onItemDeleteRequested(@Nonnull String value);
+
+        void onItemEditRequested(@Nonnull String value);
     }
 
-    public void setCallback(@NonNull ListPickerMultiSelectionCallback callback) {
+    public void setCallback(@NonNull ListOptionsItemCallback callback) {
         mCallback = callback;
     }
 
@@ -44,7 +51,7 @@ public class ListPickerMultiSelectionAdapter
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_picker_multi_selection_item, parent, false);
+                .inflate(R.layout.list_options_item_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -71,24 +78,47 @@ public class ListPickerMultiSelectionAdapter
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private Chip txtValue;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView txtValue;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             txtValue = itemView.findViewById(R.id.value);
-            txtValue.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    txtValue.setChecked(false);
-                }
-            });
-            txtValue.setOnCloseIconClickListener(new View.OnClickListener() {
+            Button btnEdit = itemView.findViewById(R.id.btn_edit);
+            btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        onDeleted(getAdapterPosition());
+                        if (mValues != null) {
+                            if (mCallback != null) {
+                                mCallback.onItemEditRequested(mValues.get(getAdapterPosition()));
+                            } else {
+                                Timber.i("mCallbacks is null");
+                            }
+                        } else {
+                            Timber.i("mValues is null");
+                        }
+                    } else {
+                        Timber.w("getAdapterPosition returned -1");
+                    }
+                }
+            });
+
+            Button btnDelete = itemView.findViewById(R.id.btn_delete);
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        if (mValues != null) {
+                            if (mCallback != null) {
+                                mCallback.onItemDeleteRequested(mValues.get(getAdapterPosition()));
+                            } else {
+                                Timber.i("mCallbacks is null");
+                            }
+                        } else {
+                            Timber.i("mValues is null");
+                        }
                     } else {
                         Timber.w("getAdapterPosition returned -1");
                     }
@@ -98,19 +128,6 @@ public class ListPickerMultiSelectionAdapter
 
         private void bind(final String value) {
             txtValue.setText(value);
-        }
-    }
-
-    private void onDeleted(int deletionIndex) {
-        if (mValues != null) {
-            mValues.remove(deletionIndex);
-            if (mCallback != null) {
-                mCallback.onItemsChanged(getValues());
-            } else {
-                Timber.w("mCallback is null");
-            }
-        } else {
-            Timber.w("mValues is null");
         }
     }
 }

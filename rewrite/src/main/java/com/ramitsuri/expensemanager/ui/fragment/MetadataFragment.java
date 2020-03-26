@@ -83,9 +83,7 @@ public class MetadataFragment extends BaseFragment {
             public void onClick(View v) {
                 mViewModel.onDeleteClicked(editSecret.getText().toString());
                 editSecret.setText("");
-                if (getActivity() != null) { // close keyboard
-                    hideKeyboardFrom(getActivity(), editSecret);
-                }
+                hideKeyboardFrom(editSecret);
             }
         });
 

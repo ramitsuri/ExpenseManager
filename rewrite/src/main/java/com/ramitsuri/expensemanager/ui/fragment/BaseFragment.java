@@ -103,11 +103,29 @@ public class BaseFragment extends Fragment {
         Timber.i("%s OnDetach", this.getClass().getSimpleName());
     }
 
-    void hideKeyboardFrom(Context context, View view) {
+    void hideKeyboardFrom(View view) {
+        Context context = getActivity();
+        if (context == null) {
+            Timber.i("Cannot hide keyboard, context is null");
+            return;
+        }
         InputMethodManager imm =
                 (InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    void showKeyboardFrom(View view) {
+        Context context = getActivity();
+        if (context == null) {
+            Timber.i("Cannot show keyboard, context is null");
+            return;
+        }
+        InputMethodManager imm =
+                (InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         }
     }
 

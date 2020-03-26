@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
@@ -100,19 +99,6 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.drawable.ic_sync,
                 mViewModel.enableHidden());
 
-        // Logs Metadata
-        setupMenuItem(view,
-                R.id.item_sheets,
-                R.string.action_meta_data,
-                R.drawable.ic_logs,
-                mViewModel.enableHidden());
-
-        // Delete all
-        setupMenuItem(view, R.id.item_delete_all,
-                R.string.action_delete,
-                R.drawable.ic_delete,
-                mViewModel.enableDeleteAll());
-
         // Header - Spreadsheet
         setupHeader(view,
                 R.id.header_spreadsheet,
@@ -126,18 +112,38 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.drawable.ic_spreadsheet_id,
                 mViewModel.enableHidden());
 
+        // Header - Entities
+        setupHeader(view,
+                R.id.header_entities,
+                R.string.header_title_entities,
+                mViewModel.enableEntities());
+
+        // Edit Categories
+        setupMenuItem(view,
+                R.id.item_edit_categories,
+                R.string.setup_edit_categories,
+                R.drawable.ic_category,
+                mViewModel.enableEntities());
+
+        // Edit Payment Methods
+        setupMenuItem(view,
+                R.id.item_edit_payment_methods,
+                R.string.setup_edit_payment_methods,
+                R.drawable.ic_payment_method,
+                mViewModel.enableEntities());
+
+        // Edit Budgets
+        setupMenuItem(view,
+                R.id.item_edit_budgets,
+                R.string.setup_edit_budgets,
+                R.drawable.ic_budget,
+                mViewModel.enableEntities());
+
         // Header - General
         setupHeader(view,
                 R.id.header_general,
                 R.string.header_title_general,
                 true);
-
-        // Edit entities
-        setupMenuItem(view,
-                R.id.item_edit_entities,
-                R.string.miscellaneous_sync_entities,
-                R.drawable.ic_edit_entities,
-                BuildConfig.DEBUG);
 
         // Theme
         setupThemeItem(view,
@@ -150,6 +156,19 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_version,
                 R.string.settings_title_version_info,
                 R.drawable.ic_version);
+
+        // Logs Metadata
+        setupMenuItem(view,
+                R.id.item_sheets,
+                R.string.action_meta_data,
+                R.drawable.ic_logs,
+                mViewModel.enableHidden());
+
+        // Delete all
+        setupMenuItem(view, R.id.item_delete_all,
+                R.string.action_delete,
+                R.drawable.ic_delete,
+                mViewModel.enableDeleteAll());
     }
 
     @Nullable
@@ -352,9 +371,19 @@ public class MiscellaneousFragment extends BaseFragment {
                         R.string.common_cancel, null);
                 break;
 
-            case R.id.item_edit_entities:
+            case R.id.item_edit_categories:
                 NavHostFragment.findNavController(MiscellaneousFragment.this)
-                        .navigate(R.id.nav_action_first_setup, null);
+                        .navigate(R.id.nav_action_categories_setup, null);
+                break;
+
+            case R.id.item_edit_budgets:
+                NavHostFragment.findNavController(MiscellaneousFragment.this)
+                        .navigate(R.id.nav_action_budgets_setup, null);
+                break;
+
+            case R.id.item_edit_payment_methods:
+                NavHostFragment.findNavController(MiscellaneousFragment.this)
+                        .navigate(R.id.nav_action_payment_methods_setup, null);
                 break;
         }
     }
