@@ -3,6 +3,8 @@ package com.ramitsuri.expensemanager.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ramitsuri.expensemanager.constants.Constants;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,11 @@ public class Budget implements Parcelable {
         mName = strings.get(0);
         mAmount = new BigDecimal(strings.get(1));
         mCategories = new ArrayList<>();
-        for (int index = 2; index < strings.size(); index++) {
+        int categorySize = Constants.Basic.BUDGET_CATEGORY_COUNT;
+        if (strings.size() < categorySize) {
+            categorySize = strings.size();
+        }
+        for (int index = 2; index < categorySize; index++) {
             String string = strings.get(index);
             if (string.equals(EMPTY_BUDGET)) {
                 continue;

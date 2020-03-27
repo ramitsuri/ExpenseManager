@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.utils;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.work.BackupWorker;
+import com.ramitsuri.expensemanager.work.EntitiesBackupWorker;
 import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
 import com.ramitsuri.expensemanager.work.SyncWorker;
 
@@ -10,11 +11,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
+import androidx.work.ListenableWorker;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
@@ -29,22 +32,9 @@ public class WorkHelper {
      */
     public static void enqueueOneTimeBackup() {
         Timber.i("Enqueue one-time backup invoked");
+
         String tag = getOneTimeWorkTag();
-
-        Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, tag)
-                .build();
-
-        // Request
-        OneTimeWorkRequest backupRequest = new OneTimeWorkRequest
-                .Builder(BackupWorker.class)
-                .setInputData(input)
-                .addTag(tag)
-                .build();
-
-        // Enqueue
-        getInstance()
-                .enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, backupRequest);
+        enqueueOneTimeWork(tag, BackupWorker.class);
     }
 
     /**
@@ -53,29 +43,14 @@ public class WorkHelper {
      */
     public static void enqueuePeriodicBackup() {
         Timber.i("Enqueue scheduled backup invoked");
-        // Prepare
+
         String tag = getPeriodicWorkTag();
-        Constraints constraints = getConstraints();
-        Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, tag)
-                .build();
-
-        // Request
-        PeriodicWorkRequest request = new PeriodicWorkRequest
-                .Builder(BackupWorker.class, 1, TimeUnit.DAYS)
-                .setInputData(input)
-                .addTag(tag)
-                .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 2))
-                .setConstraints(constraints)
-                .build();
-
-        // Enqueue
-        getInstance()
-                .enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.KEEP, request);
+        enqueuePeriodicWork(tag, BackupWorker.class);
     }
 
     public static void cancelPeriodicLegacyBackup() {
         Timber.i("Cancel scheduled backup invoked");
+
         String tag = getPeriodicWorkLegacyTag();
         getInstance()
                 .cancelAllWorkByTag(tag);
@@ -83,6 +58,7 @@ public class WorkHelper {
 
     public static void cancelPeriodicBackup() {
         Timber.i("Cancel scheduled backup invoked");
+
         String tag = getPeriodicWorkTag();
         getInstance()
                 .cancelAllWorkByTag(tag);
@@ -93,22 +69,9 @@ public class WorkHelper {
      */
     public static void enqueueOneTimeSync() {
         Timber.i("Enqueue one-time sync invoked");
+
         String tag = getOneTimeSyncTag();
-
-        Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, tag)
-                .build();
-
-        // Request
-        OneTimeWorkRequest syncRequest = new OneTimeWorkRequest
-                .Builder(SyncWorker.class)
-                .setInputData(input)
-                .addTag(tag)
-                .build();
-
-        // Enqueue
-        getInstance()
-                .enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, syncRequest);
+        enqueueOneTimeWork(tag, SyncWorker.class);
     }
 
     /**
@@ -116,22 +79,29 @@ public class WorkHelper {
      */
     public static void enqueueOneTimeExpenseSync() {
         Timber.i("Enqueue one-time expenses sync invoked");
+
         String tag = getOneTimeExpenseSyncTag();
+        enqueueOneTimeWork(tag, ExpenseSyncWorker.class);
+    }
 
-        Data input = new Data.Builder()
-                .putString(Constants.Work.TYPE, tag)
-                .build();
+    /**
+     * One Time Entities Backup
+     */
+    public static void enqueueOneTimeEntitiesBackup() {
+        Timber.i("Enqueue one-time entities backup invoked");
 
-        // Request
-        OneTimeWorkRequest syncRequest = new OneTimeWorkRequest
-                .Builder(ExpenseSyncWorker.class)
-                .setInputData(input)
-                .addTag(tag)
-                .build();
+        String tag = getOneTimeEntitiesBackupTag();
+        enqueueOneTimeWork(tag, EntitiesBackupWorker.class);
+    }
 
-        // Enqueue
-        getInstance()
-                .enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, syncRequest);
+    /**
+     * Periodic Entities Backup
+     */
+    public static void enqueuePeriodicEntitiesBackup() {
+        Timber.i("Enqueue periodic entities backup invoked");
+        // Prepare
+        String tag = getPeriodicEntitiesBackupTag();
+        enqueuePeriodicWork(tag, EntitiesBackupWorker.class);
     }
 
     public static LiveData<List<WorkInfo>> getWorkStatus(String tag) {
@@ -147,8 +117,16 @@ public class WorkHelper {
         return Constants.Tag.PERIODIC_BACKUP;
     }
 
+    private static String getPeriodicEntitiesBackupTag() {
+        return Constants.Tag.PERIODIC_ENTITIES_BACKUP;
+    }
+
     private static String getOneTimeWorkTag() {
         return Constants.Tag.ONE_TIME_BACKUP;
+    }
+
+    private static String getOneTimeEntitiesBackupTag() {
+        return Constants.Tag.ONE_TIME_ENTITIES_BACKUP;
     }
 
     private static String getOneTimeSyncTag() {
@@ -164,6 +142,43 @@ public class WorkHelper {
                 .setRequiresCharging(false)
                 .setRequiredNetworkType(NetworkType.UNMETERED)
                 .build();
+    }
+
+    private static void enqueueOneTimeWork(String tag,
+            @NonNull Class<? extends ListenableWorker> workerClass) {
+        Data input = new Data.Builder()
+                .putString(Constants.Work.TYPE, tag)
+                .build();
+
+        // Request
+        OneTimeWorkRequest request = new OneTimeWorkRequest
+                .Builder(workerClass)
+                .setInputData(input)
+                .addTag(tag)
+                .build();
+
+        // Enqueue
+        getInstance().enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, request);
+    }
+
+    private static void enqueuePeriodicWork(String tag,
+            @NonNull Class<? extends ListenableWorker> workerClass) {
+        Constraints constraints = getConstraints();
+        Data input = new Data.Builder()
+                .putString(Constants.Work.TYPE, tag)
+                .build();
+
+        // Request
+        PeriodicWorkRequest request = new PeriodicWorkRequest
+                .Builder(workerClass, 1, TimeUnit.DAYS)
+                .setInputData(input)
+                .addTag(tag)
+                .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 2))
+                .setConstraints(constraints)
+                .build();
+
+        // Enqueue
+        getInstance().enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.KEEP, request);
     }
 
     private static Data getInputData(String appName, String accountName, String accountType,

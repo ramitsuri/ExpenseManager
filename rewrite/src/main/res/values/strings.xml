@@ -85,6 +85,7 @@
     <string name="settings_key_migration_step">migration_step</string>
     <string name="settings_key_enable_splitting">enable_splitting</string>
     <string name="settings_key_enable_expense_sync">enable_expense_sync</string>
+    <string name="settings_key_is_entities_edited">is_entities_edited</string>
 
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>

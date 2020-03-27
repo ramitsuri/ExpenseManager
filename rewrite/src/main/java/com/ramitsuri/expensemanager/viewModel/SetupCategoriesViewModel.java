@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,75 +15,93 @@ import androidx.lifecycle.ViewModel;
 
 public class SetupCategoriesViewModel extends ViewModel {
 
-    private MutableLiveData<List<String>> mCategoriesLive;
+    private MutableLiveData<List<String>> mValuesLive;
+    private boolean mChangesMade;
 
     public SetupCategoriesViewModel() {
         super();
 
-        mCategoriesLive = categoryRepo().getCategoryStrings();
+        mValuesLive = repository().getCategoryStrings();
     }
 
-    public LiveData<List<String>> getCategoriesLive() {
-        return mCategoriesLive;
+    public LiveData<List<String>> getValuesLive() {
+        return mValuesLive;
     }
 
-    public boolean addCategory(@Nonnull String value) {
-        List<String> values = mCategoriesLive.getValue();
+    public boolean add(@Nonnull String value) {
+        List<String> values = mValuesLive.getValue();
         if (values == null) {
             values = new ArrayList<>();
         }
-        if (!values.contains(value)) {
+        if (!contains(values, value)) {
             values.add(value);
-            mCategoriesLive.postValue(values);
+            mValuesLive.postValue(values);
+            mChangesMade = true;
             return true;
         }
         return false;
     }
 
-    public boolean editCategory(@Nonnull String oldValue, @Nonnull String newValue) {
-        List<String> values = mCategoriesLive.getValue();
+    public boolean edit(@Nonnull String oldValue, @Nonnull String newValue) {
+        List<String> values = mValuesLive.getValue();
         if (values == null) {
             return false;
         }
-        if (values.contains(newValue)) {
+        if (contains(values, newValue)) {
             return false;
         }
-        if (values.contains(oldValue)) {
+        if (contains(values, oldValue)) {
             int index = values.indexOf(oldValue);
             values.remove(index);
             values.add(index, newValue);
-            mCategoriesLive.postValue(values);
+            mValuesLive.postValue(values);
+            mChangesMade = true;
             return true;
         }
         return false;
     }
 
-    public boolean deleteCategory(@Nonnull String value) {
-        List<String> values = mCategoriesLive.getValue();
+    public boolean delete(@Nonnull String value) {
+        List<String> values = mValuesLive.getValue();
         if (values == null) {
             return false;
         }
         if (values.size() == 1) {
             return false;
         }
-        if (values.contains(value)) {
+        if (contains(values, value)) {
             values.remove(value);
-            mCategoriesLive.postValue(values);
+            mValuesLive.postValue(values);
+            mChangesMade = true;
             return true;
         }
         return false;
     }
 
-    public void saveCategories() {
-        if (categoryRepo() != null) {
-            List<String> values = mCategoriesLive.getValue();
+    public void save() {
+        if (!mChangesMade) {
+            return;
+        }
+        if (repository() != null) {
+            List<String> values = mValuesLive.getValue();
             if (values != null) {
-                categoryRepo().setCategories(values);
+                repository().setCategories(values);
+                // Entities have been edited
+                AppHelper.setEntitiesEdited(true);
             }
         }
     }
 
-    private CategoryRepository categoryRepo() {
+    private CategoryRepository repository() {
         return MainApplication.getInstance().getCategoryRepo();
+    }
+
+    private boolean contains(@Nonnull List<String> values, @Nonnull String value) {
+        for (String string : values) {
+            if (string.equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

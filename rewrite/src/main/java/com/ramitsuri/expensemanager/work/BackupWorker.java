@@ -3,8 +3,8 @@ package com.ramitsuri.expensemanager.work;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.utils.AppHelper;
@@ -64,6 +64,14 @@ public class BackupWorker extends BaseWorker {
             insertLog(workType,
                     Constants.LogResult.FAILURE,
                     "Expenses to backup is null");
+            return Result.failure();
+        }
+
+        if (expensesToBackup.size() == 0) {
+            Timber.i("Expenses to backup size is zero");
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    "Expenses to backup size is zero");
             return Result.failure();
         }
 

@@ -9,7 +9,10 @@ import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
+import com.ramitsuri.expensemanager.entities.Budget;
+import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.SheetRequestHelper;
 import com.ramitsuri.sheetscore.DriveProcessor;
@@ -35,6 +38,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import timber.log.Timber;
@@ -363,6 +367,34 @@ public class SheetRepository {
         try {
             BatchUpdateSpreadsheetRequest requestBody = SheetRequestHelper
                     .getUpdateRequestBody(expenses, editedSheetIds, defaultSheetId);
+            if (requestBody != null) {
+                mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
+                consumerResponse.setSuccessful(true);
+            } else {
+                consumerResponse.setSuccessful(false);
+            }
+        } catch (IOException e) {
+            Timber.e(e);
+            consumerResponse.setSuccessful(false);
+            consumerResponse.setException(e);
+        } catch (Exception e) {
+            Timber.e(e);
+            consumerResponse.setSuccessful(false);
+            consumerResponse.setException(e);
+        }
+        return consumerResponse;
+    }
+
+    public InsertConsumerResponse getInsertEntitiesResponse(@Nonnull String spreadsheetId,
+            @Nullable List<Category> categories,
+            @Nullable List<PaymentMethod> paymentMethods,
+            @Nullable List<Budget> budgets,
+            int entitiesSheetId) {
+        InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
+        try {
+            BatchUpdateSpreadsheetRequest requestBody = SheetRequestHelper
+                    .getUpdateEntitiesRequestBody(categories, paymentMethods, budgets,
+                            entitiesSheetId);
             if (requestBody != null) {
                 mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
                 consumerResponse.setSuccessful(true);

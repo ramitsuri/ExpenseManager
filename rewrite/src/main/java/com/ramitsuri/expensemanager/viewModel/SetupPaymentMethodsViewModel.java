@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,75 +14,94 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class SetupPaymentMethodsViewModel extends ViewModel {
-    private MutableLiveData<List<String>> mPaymentMethodsLive;
+
+    private MutableLiveData<List<String>> mValuesLive;
+    private boolean mChangesMade;
 
     public SetupPaymentMethodsViewModel() {
         super();
 
-        mPaymentMethodsLive = paymentMethodRepo().getPaymentMethodStrings();
+        mValuesLive = repository().getPaymentMethodStrings();
     }
 
-    public LiveData<List<String>> getPaymentMethodsLive() {
-        return mPaymentMethodsLive;
+    public LiveData<List<String>> getValuesLive() {
+        return mValuesLive;
     }
 
-    public boolean addPaymentMethod(@Nonnull String value) {
-        List<String> values = mPaymentMethodsLive.getValue();
+    public boolean add(@Nonnull String value) {
+        List<String> values = mValuesLive.getValue();
         if (values == null) {
             values = new ArrayList<>();
         }
-        if (!values.contains(value)) {
+        if (!contains(values, value)) {
             values.add(value);
-            mPaymentMethodsLive.postValue(values);
+            mValuesLive.postValue(values);
+            mChangesMade = true;
             return true;
         }
         return false;
     }
 
-    public boolean editPaymentMethod(@Nonnull String oldValue, @Nonnull String newValue) {
-        List<String> values = mPaymentMethodsLive.getValue();
+    public boolean edit(@Nonnull String oldValue, @Nonnull String newValue) {
+        List<String> values = mValuesLive.getValue();
         if (values == null) {
             return false;
         }
-        if (values.contains(newValue)) {
+        if (contains(values, newValue)) {
             return false;
         }
-        if (values.contains(oldValue)) {
+        if (contains(values, oldValue)) {
             int index = values.indexOf(oldValue);
             values.remove(index);
             values.add(index, newValue);
-            mPaymentMethodsLive.postValue(values);
+            mValuesLive.postValue(values);
+            mChangesMade = true;
             return true;
         }
         return false;
     }
 
-    public boolean deletePaymentMethod(@Nonnull String value) {
-        List<String> values = mPaymentMethodsLive.getValue();
+    public boolean delete(@Nonnull String value) {
+        List<String> values = mValuesLive.getValue();
         if (values == null) {
             return false;
         }
         if (values.size() == 1) {
             return false;
         }
-        if (values.contains(value)) {
+        if (contains(values, value)) {
             values.remove(value);
-            mPaymentMethodsLive.postValue(values);
+            mValuesLive.postValue(values);
+            mChangesMade = true;
             return true;
         }
         return false;
     }
 
-    public void savePaymentMethods() {
-        if (paymentMethodRepo() != null) {
-            List<String> values = mPaymentMethodsLive.getValue();
+    public void save() {
+        if (!mChangesMade) {
+            return;
+        }
+        if (repository() != null) {
+            List<String> values = mValuesLive.getValue();
             if (values != null) {
-                paymentMethodRepo().setPaymentMethods(values);
+                repository().setPaymentMethods(values);
+                // Entities have been edited
+                AppHelper.setEntitiesEdited(true);
             }
         }
     }
 
-    private PaymentMethodRepository paymentMethodRepo() {
+    private PaymentMethodRepository repository() {
         return MainApplication.getInstance().getPaymentMethodRepo();
+    }
+
+    private boolean contains(@Nonnull List<String> values, @Nonnull String value) {
+        for (String string : values) {
+            if (string.equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

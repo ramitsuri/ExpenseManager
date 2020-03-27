@@ -102,6 +102,14 @@ public class AppHelper {
         PrefHelper.set(getString(R.string.settings_key_enable_expense_sync), enable);
     }
 
+    public static boolean isEntitiesEdited() {
+        return PrefHelper.get(getString(R.string.settings_key_is_entities_edited), false);
+    }
+
+    public static void setEntitiesEdited(boolean edited) {
+        PrefHelper.set(getString(R.string.settings_key_is_entities_edited), edited);
+    }
+
     public static String[] getScopes() {
         return Constants.SCOPES_LIMITED;
     }

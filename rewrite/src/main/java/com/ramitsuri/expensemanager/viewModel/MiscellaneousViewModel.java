@@ -47,6 +47,7 @@ public class MiscellaneousViewModel extends ViewModel {
     public void initiateBackup() {
         Timber.i("Initiating backup");
         WorkHelper.enqueueOneTimeBackup();
+        WorkHelper.enqueueOneTimeEntitiesBackup();
     }
 
     public void syncDataFromSheet() {

@@ -60,6 +60,7 @@ public class MainApplication extends Application {
         // Enqueue work that runs around 2AM - only in non debug apps
         if (!BuildConfig.DEBUG) {
             WorkHelper.enqueuePeriodicBackup();
+            WorkHelper.enqueuePeriodicEntitiesBackup();
         }
     }
 

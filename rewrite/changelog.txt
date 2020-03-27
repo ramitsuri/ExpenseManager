@@ -1,3 +1,36 @@
+Constants
+    - Add tags for entities backup
+    - Move hardcoded sheet names  here - entities, template, calculator (TransformationHelper affected)
+    - Define Max size for budget categories
+SheetRepository
+    - Add method to insert entities in spreadsheet
+Budget
+    - Read only up to max size (5 for now) when recreating budget object from spreadsheet sync
+SetupCategories, SetupPayments
+    - Rename add edit delete methods
+    - Input Edit text will be sentence case
+    - Trim entered value
+    - VM - save entities if changes made
+    - Check if entity exists irrespective of string case
+    - Set AppHelper.entitiesEdited if changes made
+AppHelper
+    - Add helper methods pref to get and set if entities were edited
+SheetRequestHelper
+    - Add method to get update cells request for entities backup
+    - Move some code to create entity row from create entities sheet request to its method
+    - Add method to get hardcoded months list for now
+WorkHelper
+    - Extract repeated code to enqueue work in a separate method
+    - Add helper methods for entities backup work
+BackupWorker
+    - Do not initiate backup if expenses to backup size is 0
+EntitiesBackupWorker
+    - New work for entities backup
+MainApplication
+    - Enqueue entities backup periodic
+MiscFragment
+    - Backup entities as well on backup now pressed
+
 Disable editing spreadsheet id
 
 Enable Edit categories and payment methods

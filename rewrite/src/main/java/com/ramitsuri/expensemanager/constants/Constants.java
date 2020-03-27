@@ -35,19 +35,27 @@ public class Constants {
 
     public class Tag {
         public static final String ONE_TIME_BACKUP = "one_time_backup";
+        public static final String ONE_TIME_ENTITIES_BACKUP = "one_time_entities_backup";
         public static final String SCHEDULED_BACKUP_LEGACY = "scheduled_backup";
         public static final String PERIODIC_BACKUP = "periodic_backup";
+        public static final String PERIODIC_ENTITIES_BACKUP = "periodic_entities_backup";
         public static final String ONE_TIME_SYNC = "one_time_sync";
         public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";
     }
 
     public class Range {
-        public static final String CATEGORIES = "Entities!C1:C20";
+        public static final String CATEGORIES = SheetNames.ENTITIES + "!C1:C20";
         public static final String USER_ENTERED_CATEGORIES = "=" + CATEGORIES;
-        public static final String PAYMENT_METHODS = "Entities!A1:A20";
+        public static final String PAYMENT_METHODS = SheetNames.ENTITIES + "!A1:A20";
         public static final String USER_ENTERED_PAYMENT_METHODS = "=" + PAYMENT_METHODS;
-        public static final String CATEGORIES_PAYMENT_METHODS = "Entities!A1:C20";
-        public static final String BUDGETS = "Entities!G1:M20";
+        public static final String CATEGORIES_PAYMENT_METHODS = SheetNames.ENTITIES + "!A1:C20";
+        public static final String BUDGETS = SheetNames.ENTITIES + "!G1:M20";
+    }
+
+    public class SheetNames {
+        public static final String ENTITIES = "Entities";
+        public static final String TEMPLATE = "Template";
+        public static final String CALCULATOR = "Calculator";
     }
 
     public class SystemTheme {
@@ -80,6 +88,7 @@ public class Constants {
     public class Basic {
         public static final int UNDEFINED = -1;
         public static final String EMPTY_BUDGET = "-";
+        public static final int BUDGET_CATEGORY_COUNT = 5;
         public static final String CALCULATOR_ALL = "CALCULATOR_ALL";
     }
 }

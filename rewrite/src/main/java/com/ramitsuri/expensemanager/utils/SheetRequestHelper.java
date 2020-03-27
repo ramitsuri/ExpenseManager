@@ -28,7 +28,9 @@ import com.google.api.services.sheets.v4.model.TextFormat;
 import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.entities.Budget;
+import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -166,6 +168,58 @@ public class SheetRequestHelper {
         return request;
     }
 
+    public static BatchUpdateSpreadsheetRequest getUpdateEntitiesRequestBody(
+            @Nullable List<Category> categories,
+            @Nullable List<PaymentMethod> paymentMethods,
+            @Nullable List<Budget> budgets,
+            int entitiesSheetId) {
+        BatchUpdateSpreadsheetRequest requestBody = new BatchUpdateSpreadsheetRequest();
+        List<Request> requests = new ArrayList<>();
+
+        Request request = new Request();
+        UpdateCellsRequest updateCellsRequest = new UpdateCellsRequest();
+        updateCellsRequest.setFields("*");
+        updateCellsRequest.setRange(new GridRange()
+                .setSheetId(entitiesSheetId)
+                .setStartColumnIndex(0)
+                .setStartColumnIndex(0));
+
+        List<RowData> rowDataList = new ArrayList<>();
+        boolean stop = false;
+        int rowIndex = 0;
+        while (!stop) {
+            String category = null;
+            if (categories != null && rowIndex < categories.size()) {
+                category = categories.get(rowIndex).getName();
+            }
+            String paymentMethod = null;
+            if (paymentMethods != null && rowIndex < paymentMethods.size()) {
+                paymentMethod = paymentMethods.get(rowIndex).getName();
+            }
+            String month = null;
+            if (rowIndex < getMonths().size()) {
+                month = getMonths().get(rowIndex);
+            }
+            Budget budget = null;
+            if (budgets != null && rowIndex < budgets.size()) {
+                budget = budgets.get(rowIndex);
+            }
+            RowData rowData = getEntitiesRowData(category, paymentMethod, month, budget);
+            rowDataList.add(rowData);
+            stop = rowIndex >= (categories != null ? categories.size() : -1) &&
+                    rowIndex >= (paymentMethods != null ? paymentMethods.size() : -1) &&
+                    rowIndex >= (getMonths().size()) &&
+                    rowIndex >= (budgets != null ? budgets.size() : -1);
+            rowIndex++;
+        }
+        updateCellsRequest.setRows(rowDataList);
+        request.setUpdateCells(updateCellsRequest);
+        requests.add(request);
+
+        requestBody.setRequests(requests);
+        return requestBody;
+    }
+
     public static BatchUpdateSpreadsheetRequest getDuplicateSheetsRequest(
             int sourceSheetId,
             int startIndex,
@@ -276,54 +330,13 @@ public class SheetRequestHelper {
         GridData data = new GridData();
         List<RowData> rowDataList = new ArrayList<>();
         for (int rowIndex = 0; rowIndex < 22; rowIndex++) {
-            RowData rowData = new RowData();
-            List<CellData> valuesList = new ArrayList<>();
-            CellData value;
+            String category = rowIndex < categories.size() ? categories.get(rowIndex) : null;
+            String paymentMethod = rowIndex < paymentMethods.size() ? paymentMethods.get(rowIndex)
+                    : null;
+            String month = rowIndex < getMonths().size() ? getMonths().get(rowIndex) : null;
+            Budget budget = rowIndex < budgets.size() ? budgets.get(rowIndex) : null;
 
-            // Payment Method
-            if (rowIndex < paymentMethods.size()) {
-                value = getValueCell(paymentMethods.get(rowIndex));
-            } else {
-                value = getEmptyCell();
-            }
-            valuesList.add(value);
-
-            // Empty cell
-            value = getEmptyCell();
-            valuesList.add(value);
-
-            // Category
-            if (rowIndex < categories.size()) {
-                value = getValueCell(categories.get(rowIndex));
-            } else {
-                value = getEmptyCell();
-            }
-            valuesList.add(value);
-
-            // Empty cell
-            value = getEmptyCell();
-            valuesList.add(value);
-
-            // Budget
-            if (rowIndex < budgets.size()) {
-                Budget budget = budgets.get(rowIndex);
-
-                value = getValueCell(budget.getName());
-                valuesList.add(value);
-
-                value = getValueCell(budget.getAmount());
-                valuesList.add(value);
-
-                for (String category : budget.getCategories()) {
-                    value = getValueCell(category);
-                    valuesList.add(value);
-                }
-            } else {
-                value = getEmptyCell();
-                valuesList.add(value);
-            }
-
-            rowData.setValues(valuesList);
+            RowData rowData = getEntitiesRowData(category, paymentMethod, month, budget);
             rowDataList.add(rowData);
         }
         data.setRowData(rowDataList);
@@ -549,5 +562,94 @@ public class SheetRequestHelper {
 
         rowData.setValues(valuesList);
         return rowData;
+    }
+
+    private static RowData getEntitiesRowData(@Nullable String category,
+            @Nullable String paymentMethod,
+            String month,
+            @Nullable Budget budget) {
+        RowData rowData = new RowData();
+        List<CellData> valuesList = new ArrayList<>();
+        CellData value;
+
+        // Payment Method
+        if (paymentMethod != null) {
+            value = getValueCell(paymentMethod);
+        } else {
+            value = getEmptyCell();
+        }
+        valuesList.add(value);
+
+        // Empty cell
+        value = getEmptyCell();
+        valuesList.add(value);
+
+        // Category
+        if (category != null) {
+            value = getValueCell(category);
+        } else {
+            value = getEmptyCell();
+        }
+        valuesList.add(value);
+
+        // Empty cell
+        value = getEmptyCell();
+        valuesList.add(value);
+
+        // Month
+        if (month != null) {
+            value = getValueCell(month);
+        } else {
+            value = getEmptyCell();
+        }
+        valuesList.add(value);
+
+        // Empty cell
+        value = getEmptyCell();
+        valuesList.add(value);
+
+        // Budget
+        if (budget != null) {
+            value = getValueCell(budget.getName());
+            valuesList.add(value);
+
+            value = getValueCell(budget.getAmount());
+            valuesList.add(value);
+
+            int count = 0;
+            for (String budgetCategory : budget.getCategories()) {
+                value = getValueCell(budgetCategory);
+                valuesList.add(value);
+                count = count + 1;
+            }
+            for (int i = count; i < Constants.Basic.BUDGET_CATEGORY_COUNT; i++) {
+                value = getValueCell(Constants.Basic.EMPTY_BUDGET);
+                valuesList.add(value);
+            }
+        } else {
+            value = getEmptyCell();
+            valuesList.add(value);
+        }
+
+        rowData.setValues(valuesList);
+
+        return rowData;
+    }
+
+    private static List<String> getMonths() {
+        List<String> months = new ArrayList<>();
+        months.add("Jan");
+        months.add("Feb");
+        months.add("Mar");
+        months.add("Apr");
+        months.add("May");
+        months.add("Jun");
+        months.add("Jul");
+        months.add("Aug");
+        months.add("Sep");
+        months.add("Oct");
+        months.add("Nov");
+        months.add("Dec");
+        return months;
     }
 }

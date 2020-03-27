@@ -2,10 +2,11 @@ package com.ramitsuri.expensemanager.utils;
 
 import android.util.LongSparseArray;
 
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
+import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,9 +59,9 @@ public class TransformationHelper {
         List<SheetInfo> sheetInfos = new ArrayList<>();
         if (input != null) {
             for (SheetInfo sheetInfo : input) {
-                if (sheetInfo.getSheetName().equals("Entities") ||
-                        sheetInfo.getSheetName().equals("Template") ||
-                        sheetInfo.getSheetName().equals("Calculator")) {
+                if (sheetInfo.getSheetName().equals(Constants.SheetNames.ENTITIES) ||
+                        sheetInfo.getSheetName().equals(Constants.SheetNames.TEMPLATE) ||
+                        sheetInfo.getSheetName().equals(Constants.SheetNames.CALCULATOR)) {
                     continue;
                 }
                 sheetInfos.add(sheetInfo);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +84,7 @@ public class SetupCategoriesFragment extends BaseFragment {
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.saveCategories();
+                mViewModel.save();
                 exitToUp();
             }
         });
@@ -118,7 +119,7 @@ public class SetupCategoriesFragment extends BaseFragment {
                     @Override
                     public void onItemDeleteRequested(@Nonnull String value) {
                         Timber.i("Delete requested: %s", value);
-                        if (mViewModel.deleteCategory(value)) {
+                        if (mViewModel.delete(value)) {
                             Timber.i("Delete succeeded");
                         } else {
                             Timber.i("Delete failed");
@@ -134,7 +135,7 @@ public class SetupCategoriesFragment extends BaseFragment {
                     }
                 });
         listItems.setAdapter(adapter);
-        mViewModel.getCategoriesLive()
+        mViewModel.getValuesLive()
                 .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
                     @Override
                     public void onChanged(List<String> strings) {
@@ -149,6 +150,7 @@ public class SetupCategoriesFragment extends BaseFragment {
             return;
         }
         final EditText input = new EditText(context);
+        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         if (value != null) {
             input.setText(value);
             input.setSelection(value.length());
@@ -157,12 +159,12 @@ public class SetupCategoriesFragment extends BaseFragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String newValue = input.getText().toString();
+                        String newValue = input.getText().toString().trim();
                         if (TextUtils.isEmpty(newValue)) {
                             return;
                         }
                         if (value == null) {
-                            if (mViewModel.addCategory(newValue)) {
+                            if (mViewModel.add(newValue)) {
                                 Timber.i("Add succeeded");
                             } else {
                                 Timber.i("Add failed");
@@ -172,7 +174,7 @@ public class SetupCategoriesFragment extends BaseFragment {
                                 }
                             }
                         } else {
-                            if (mViewModel.editCategory(value, newValue)) {
+                            if (mViewModel.edit(value, newValue)) {
                                 Timber.i("Edit succeeded");
                             } else {
                                 Timber.i("Edit failed");

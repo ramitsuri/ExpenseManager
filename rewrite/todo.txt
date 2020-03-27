@@ -9,6 +9,7 @@ Medium
 - Horizontal month list in filter
 
 Low
+- Remove limit on number of budgets, categories and payment methods
 - Save expense on the fly and make it editable on the next run (in case app is killed, information shouldn't be lost)
 - Error messages
 - Scheduled recurring expense
