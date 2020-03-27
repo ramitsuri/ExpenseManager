@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -319,29 +318,6 @@ public class MiscellaneousFragment extends BaseFragment {
                 mViewModel.deleteExpenses();
                 break;
 
-            case R.id.item_spreadsheet_id:
-                Context context = this.getContext();
-                if (context == null) {
-                    return;
-                }
-                final EditText input = new EditText(context);
-                input.setText(mViewModel.getSpreadsheetId());
-                input.setSelection(input.getText().length());
-                DialogInterface.OnClickListener positiveListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mViewModel.setSpreadsheetId(input.getText().toString());
-                            }
-                        };
-
-                DialogHelper.showAlertWithInput(context,
-                        input,
-                        R.string.settings_title_spreadsheet_id,
-                        R.string.common_ok, positiveListener,
-                        R.string.common_cancel, null);
-                break;
-
             case R.id.item_version:
                 if (mViewModel.versionInfoPressSuccess() && getView() != null) {
                     setupViews(getView());
@@ -349,7 +325,7 @@ public class MiscellaneousFragment extends BaseFragment {
                 break;
 
             case R.id.item_theme:
-                context = this.getContext();
+                Context context = this.getContext();
                 if (context == null) {
                     return;
                 }
