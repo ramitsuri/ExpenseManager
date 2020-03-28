@@ -120,23 +120,23 @@ public class MiscellaneousFragment extends BaseFragment {
         // Edit Categories
         setupMenuItem(view,
                 R.id.item_edit_categories,
-                R.string.setup_edit_categories,
+                R.string.common_categories,
                 R.drawable.ic_category,
                 true);
 
         // Edit Payment Methods
         setupMenuItem(view,
                 R.id.item_edit_payment_methods,
-                R.string.setup_edit_payment_methods,
+                R.string.common_payment_methods,
                 R.drawable.ic_payment_method,
                 true);
 
         // Edit Budgets
         setupMenuItem(view,
                 R.id.item_edit_budgets,
-                R.string.setup_edit_budgets,
+                R.string.common_budgets,
                 R.drawable.ic_budget,
-                mViewModel.enableEntities());
+                true);
 
         // Header - General
         setupHeader(view,

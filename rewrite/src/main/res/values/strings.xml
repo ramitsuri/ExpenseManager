@@ -36,6 +36,7 @@
     <string name="common_ok">OK</string>
     <string name="common_budgets">Budgets</string>
     <string name="common_payments">Payments</string>
+    <string name="common_payment_methods">Payment methods</string>
     <string name="common_categories">Categories</string>
     <string name="common_filter">Filter</string>
     <string name="common_next">Next</string>
@@ -108,13 +109,27 @@
     <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>
     <string name="setup_budget_amount">Amount</string>
     <string name="setup_budget_name">Name</string>
-    <string name="setup_edit_categories">Edit categories</string>
-    <string name="setup_edit_payment_methods">Edit payment methods</string>
-    <string name="setup_edit_budgets">Edit budgets</string>
     <string name="setup_add_new">Add New</string>
     <string name="setup_category_exists">Category already exists</string>
     <string name="setup_payment_method_exists">Payment method already exists</string>
     <string name="setup_at_least_one">At least one needs to remain</string>
+    <string name="setup_budget_separator">\u0020\u0020 | \u0020\u0020</string>
+    <string name="setup_budget_none">None</string>
+    <string name="setup_budget_limit">Limit: %1s</string>
+    <string name="setup_budget_categories">Categories: %1s</string>
+    <string name="setup_budget_categories_utilized">All categories already utilized</string>
+    <string name="setup_budget_default_name">Budget</string>
+    <string name="setup_budget_deleted">Budget deleted</string>
+    <string name="setup_budget_edited">Budget edited</string>
+    <string name="setup_budget_added">Budget added</string>
+    <string name="setup_category_deleted">Category deleted</string>
+    <string name="setup_category_edited">Category edited</string>
+    <string name="setup_category_added">Category added</string>
+    <string name="setup_payment_method_deleted">Payment method deleted</string>
+    <string name="setup_payment_method_edited">Payment method edited</string>
+    <string name="setup_payment_method_added">Payment method added</string>
+    <string name="setup_budget_select_one_category">Select at least one</string>
+    <string name="setup_budget_selected_max_category">Max 5 per budget</string>
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>
@@ -138,7 +153,7 @@
 
     <!-- Miscellaneous -->
     <string name="header_title_backup_sync">Backup and Sync</string>
-    <string name="header_title_entities">Entities</string>
+    <string name="header_title_entities">Manage Entities</string>
     <string name="header_title_spreadsheet">Spreadsheet</string>
     <string name="header_title_general">General</string>
     <string name="settings_title_migrate">Migrate</string>

@@ -121,10 +121,14 @@ public class SetupCategoriesFragment extends BaseFragment {
                         Timber.i("Delete requested: %s", value);
                         if (mViewModel.delete(value)) {
                             Timber.i("Delete succeeded");
+                            if (getView() != null) {
+                                Snackbar.make(getView(), R.string.setup_category_deleted,
+                                        Snackbar.LENGTH_SHORT).show();
+                            }
                         } else {
                             Timber.i("Delete failed");
                             Snackbar.make(listItems, R.string.setup_at_least_one,
-                                    Snackbar.LENGTH_LONG).show();
+                                    Snackbar.LENGTH_SHORT).show();
                         }
                     }
 
@@ -166,21 +170,29 @@ public class SetupCategoriesFragment extends BaseFragment {
                         if (value == null) {
                             if (mViewModel.add(newValue)) {
                                 Timber.i("Add succeeded");
+                                if (getView() != null) {
+                                    Snackbar.make(getView(), R.string.setup_category_added,
+                                            Snackbar.LENGTH_SHORT).show();
+                                }
                             } else {
                                 Timber.i("Add failed");
                                 if (getView() != null) {
                                     Snackbar.make(getView(), R.string.setup_category_exists,
-                                            Snackbar.LENGTH_LONG).show();
+                                            Snackbar.LENGTH_SHORT).show();
                                 }
                             }
                         } else {
                             if (mViewModel.edit(value, newValue)) {
                                 Timber.i("Edit succeeded");
+                                if (getView() != null) {
+                                    Snackbar.make(getView(), R.string.setup_category_edited,
+                                            Snackbar.LENGTH_SHORT).show();
+                                }
                             } else {
                                 Timber.i("Edit failed");
                                 if (getView() != null) {
                                     Snackbar.make(getView(), R.string.setup_category_exists,
-                                            Snackbar.LENGTH_LONG).show();
+                                            Snackbar.LENGTH_SHORT).show();
                                 }
                             }
                         }

@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/setup_edit_categories"
+        android:text="@string/common_categories"
         android:textSize="@dimen/text_body1"
         app:layout_constraintBottom_toBottomOf="@id/btn_close"
         app:layout_constraintEnd_toEndOf="parent"

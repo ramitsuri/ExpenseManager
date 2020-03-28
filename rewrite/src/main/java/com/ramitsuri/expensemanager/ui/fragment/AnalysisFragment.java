@@ -1,14 +1,12 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
 import android.app.Dialog;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
@@ -28,7 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
-public class AnalysisFragment extends BottomSheetDialogFragment {
+public class AnalysisFragment extends BaseBottomSheetFragment {
     static final String TAG = AnalysisFragment.class.getName();
 
     static AnalysisFragment newInstance() {
@@ -51,13 +49,7 @@ public class AnalysisFragment extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_analysis, container, false);
-
-        if ((getResources().getConfiguration().uiMode &
-                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
-            Timber.i("Light theme, setting status and nav bar light flag");
-            view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
-                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-        }
+        setSystemUiVisibility(view);
         return view;
     }
 

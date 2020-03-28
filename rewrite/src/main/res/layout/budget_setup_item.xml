@@ -7,67 +7,79 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_small">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_name"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_caption"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Travel, Utilities" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_amount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
-        android:clickable="false"
-        android:focusable="false"
-        android:hint="@string/setup_budget_name"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.45"
-        app:startIconDrawable="@drawable/ic_description">
+        app:layout_constraintTop_toBottomOf="@id/txt_name"
+        tools:text="Limit: $400" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_extra_extra_small"
-            android:clickable="false"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:inputType="textCapSentences" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_amount"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_categories"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
-        android:clickable="false"
-        android:focusable="false"
-        android:hint="@string/setup_budget_amount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.45"
-        app:startIconDrawable="@drawable/ic_amount">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="@dimen/margin_extra_extra_small"
-            android:clickable="false"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:inputType="numberDecimal" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_categories"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_name"
-        tools:itemCount="5"
-        tools:listitem="@layout/list_picker_item" />
+        app:layout_constraintTop_toBottomOf="@id/txt_amount"
+        tools:text="Categories: Travel, entertainment, fun" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_edit"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="@dimen/button_size_extra_small"
+        android:layout_height="@dimen/button_size_extra_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        app:icon="@drawable/ic_edit_entities"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="@dimen/icon_size_medium"
+        app:iconTint="@color/color_teal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/txt_categories"
+        app:layout_constraintTop_toBottomOf="@id/txt_categories"
+        app:shapeAppearanceOverlay="@style/ButtonCircle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_delete"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="@dimen/button_size_extra_small"
+        android:layout_height="@dimen/button_size_extra_small"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        app:icon="@drawable/ic_detail_delete"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="@dimen/icon_size_medium"
+        app:iconTint="@color/color_red"
+        app:layout_constraintBottom_toBottomOf="@id/btn_edit"
+        app:layout_constraintStart_toEndOf="@id/btn_edit"
+        app:layout_constraintTop_toTopOf="@id/btn_edit"
+        app:shapeAppearanceOverlay="@style/ButtonCircle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

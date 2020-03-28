@@ -1,37 +1,43 @@
 package com.ramitsuri.expensemanager.ui.adapter;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
 public class BudgetSetupAdapter extends RecyclerView.Adapter<BudgetSetupAdapter.ViewHolder> {
 
     @Nullable
-    private List<BudgetSetupWrapper> mValues;
+    private List<Budget> mValues;
     @Nullable
     private BudgetSetupAdapterCallback mCallback;
-    private String mSelectedValue;
 
     public interface BudgetSetupAdapterCallback {
-        void onBudgetPicked(BudgetSetupWrapper value);
+        void onItemDeleteRequested(@Nonnull Budget value);
+
+        void onItemEditRequested(@Nonnull Budget value);
     }
 
     public BudgetSetupAdapter() {
     }
 
-    public void setValues(@NonNull List<BudgetSetupWrapper> values) {
+    public void setValues(@NonNull List<Budget> values) {
         mValues = values;
         notifyDataSetChanged();
     }
@@ -67,44 +73,92 @@ public class BudgetSetupAdapter extends RecyclerView.Adapter<BudgetSetupAdapter.
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        EditText name, amount;
-        RecyclerView categories;
-        ListDeleteItemAdapter adapter;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView name, amount, categories;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.edit_text_name);
-            amount = itemView.findViewById(R.id.edit_text_amount);
-            categories = itemView.findViewById(R.id.list_categories);
-            categories.setLayoutManager(
-                    new LinearLayoutManager(categories.getContext(), RecyclerView.HORIZONTAL,
-                            false));
-            if (adapter == null) {
-                adapter = new ListDeleteItemAdapter();
-                adapter.setShowDelete(true);
-            }
-            categories.setAdapter(adapter);
-        }
+            name = itemView.findViewById(R.id.txt_name);
+            amount = itemView.findViewById(R.id.txt_amount);
+            categories = itemView.findViewById(R.id.txt_categories);
 
-        private void bind(final BudgetSetupWrapper value) {
-            name.setText(value.getBudget().getName());
-            amount.setText(
-                    CurrencyHelper.formatForDisplay(false, value.getBudget().getAmount(), true));
-            adapter.setValues(value.getBudget().getCategories());
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                if (mValues != null) {
-
-                } else {
-                    Timber.w("mValues is null");
+            Button btnEdit = itemView.findViewById(R.id.btn_edit);
+            btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        if (mValues != null) {
+                            Budget budget = mValues.get(getAdapterPosition());
+                            if (budget != null) {
+                                if (mCallback != null) {
+                                    mCallback.onItemEditRequested(budget);
+                                } else {
+                                    Timber.i("mCallbacks is null");
+                                }
+                            } else {
+                                Timber.i("Budget or budget is null");
+                            }
+                        } else {
+                            Timber.i("mValues is null");
+                        }
+                    } else {
+                        Timber.w("getAdapterPosition returned -1");
+                    }
                 }
-            } else {
-                Timber.w("getAdapterPosition returned -1");
+            });
+
+            Button btnDelete = itemView.findViewById(R.id.btn_delete);
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        if (mValues != null) {
+                            Budget budget = mValues.get(getAdapterPosition());
+                            if (budget != null) {
+                                if (mCallback != null) {
+                                    mCallback.onItemDeleteRequested(budget);
+                                } else {
+                                    Timber.i("mCallbacks is null");
+                                }
+                            } else {
+                                Timber.i("Budget or wrapper is null");
+                            }
+                        } else {
+                            Timber.i("mValues is null");
+                        }
+                    } else {
+                        Timber.w("getAdapterPosition returned -1");
+                    }
+                }
+            });
+        }
+
+        private void bind(final Budget value) {
+            name.setText(value.getName());
+            amount.setText(getResources().getString(R.string.setup_budget_limit,
+                    CurrencyHelper.formatForDisplay(true, value.getAmount(), true)));
+            categories.setText(getResources().getString(R.string.setup_budget_categories,
+                    getCategoriesString(value.getCategories())));
+        }
+
+        private String getCategoriesString(List<String> categories) {
+            if (categories == null) {
+                return "None";
             }
+            StringBuilder sb = new StringBuilder();
+            int index = 0;
+            for (String category : categories) {
+                if (index != 0) {
+                    sb.append(getResources().getString(R.string.setup_budget_separator));
+                }
+                sb.append(category);
+                index = index + 1;
+            }
+            return sb.toString();
+        }
+
+        private Resources getResources() {
+            return MainApplication.getInstance().getResources();
         }
     }
 }

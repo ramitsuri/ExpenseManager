@@ -1,4 +1,24 @@
 Constants
+    - Add BundleKeys for edit/add budget
+BudgetCategoryWrapper
+    - New class to manage budgets
+BudgetSetupAdapter
+    - Change UI to be nicer
+AddBudgetFragment
+    - New bottom sheet for add/edit budgets
+BaseBottomSheetFragment
+    - Add new base class for bottom sheets and change all bottom sheets to use this
+    - Move system ui(status and nav bar flag) setting to here
+MiscFrag
+    - Enable budget
+    - Edit item and header names
+SetupBudget
+    - Enable add edit delete and save
+Setup Categories, Payments
+    - Show snackbar when operation success
+Remove BudgetSetupWrapper, ListDeleteItemAdapter, ListPickerDialog
+
+Constants
     - Add tags for entities backup
     - Move hardcoded sheet names  here - entities, template, calculator (TransformationHelper affected)
     - Define Max size for budget categories
