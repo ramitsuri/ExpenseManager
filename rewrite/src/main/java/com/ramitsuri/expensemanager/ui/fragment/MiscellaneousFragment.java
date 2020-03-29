@@ -89,7 +89,7 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_sync,
                 R.string.common_sync,
                 R.drawable.ic_sync,
-                mViewModel.enableHidden());
+                mViewModel.enableEntitiesSync());
 
         // Sync Expenses
         setupMenuItem(view,

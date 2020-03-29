@@ -94,6 +94,16 @@ public class MetadataViewModel extends ViewModel {
                 AppHelper.setExpenseSyncEnabled(false);
                 break;
 
+            case SecretMessages.ENABLE_ENTITIES_SYNC:
+                Timber.i("Enabling entities sync");
+                AppHelper.setEntitiesSyncEnabled(true);
+                break;
+
+            case SecretMessages.DISABLE_ENTITIES_SYNC:
+                Timber.i("Disabling entities sync");
+                AppHelper.setEntitiesSyncEnabled(false);
+                break;
+
             default:
                 Timber.i("Secret message means nothing");
         }

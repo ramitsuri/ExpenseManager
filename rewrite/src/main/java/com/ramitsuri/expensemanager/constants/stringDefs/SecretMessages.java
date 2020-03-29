@@ -9,7 +9,9 @@ import androidx.annotation.StringDef;
         SecretMessages.ENABLE_SPLITTING,
         SecretMessages.DISABLE_SPLITTING,
         SecretMessages.ENABLE_EXPENSE_SYNC,
-        SecretMessages.DISABLE_EXPENSE_SYNC
+        SecretMessages.DISABLE_EXPENSE_SYNC,
+        SecretMessages.ENABLE_ENTITIES_SYNC,
+        SecretMessages.DISABLE_ENTITIES_SYNC
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface SecretMessages {
@@ -17,4 +19,6 @@ public @interface SecretMessages {
     String DISABLE_SPLITTING = "DISABLE_SPLITTING";
     String ENABLE_EXPENSE_SYNC = "ENABLE_EXPENSE_SYNC";
     String DISABLE_EXPENSE_SYNC = "DISABLE_EXPENSE_SYNC";
+    String ENABLE_ENTITIES_SYNC = "ENABLE_ENTITIES_SYNC";
+    String DISABLE_ENTITIES_SYNC = "DISABLE_ENTITIES_SYNC";
 }

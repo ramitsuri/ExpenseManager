@@ -82,10 +82,6 @@ public class MiscellaneousViewModel extends ViewModel {
         return BuildConfig.DEBUG;
     }
 
-    public boolean enableEntities() {
-        return BuildConfig.DEBUG;
-    }
-
     public LiveData<String> getSpreadsheetIdLive() {
         return mSpreadsheetId;
     }
@@ -100,7 +96,7 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean versionInfoPressSuccess() {
-        if (mEnableHidden || BuildConfig.DEBUG) {
+        if (enableHidden() ) {
             return false;
         }
         mAboutPressCount = mAboutPressCount + 1;
@@ -166,5 +162,9 @@ public class MiscellaneousViewModel extends ViewModel {
 
     public boolean enableExpenseSync() {
         return enableHidden() && AppHelper.isExpenseSyncEnabled();
+    }
+
+    public boolean enableEntitiesSync() {
+        return enableHidden() && AppHelper.isEntitiesSyncEnabled();
     }
 }
