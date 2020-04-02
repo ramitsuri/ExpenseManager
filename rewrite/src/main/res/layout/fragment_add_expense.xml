@@ -9,38 +9,15 @@
     android:paddingTop="@dimen/padding_small"
     android:paddingEnd="@dimen/padding_small">
 
-    <LinearLayout
-        android:id="@+id/container_sheet_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_extra_small"
-        android:gravity="center_horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/txt_sheet_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_expand"
-            android:drawablePadding="@dimen/margin_extra_extra_small"
-            android:drawableTint="?attr/colorControlNormal"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/text_body1"
-            tools:text="Feb" />
-
-    </LinearLayout>
-
     <ImageView
         android:id="@+id/btn_close"
         android:layout_width="@dimen/button_size_small"
         android:layout_height="@dimen/button_size_small"
         android:contentDescription="@string/content_description_close_fragment"
         android:tint="?attr/colorControlNormal"
-        app:layout_constraintBottom_toBottomOf="@id/container_sheet_name"
+        app:layout_constraintBottom_toBottomOf="@id/btn_done"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/container_sheet_name"
+        app:layout_constraintTop_toTopOf="@id/btn_done"
         app:srcCompat="@drawable/ic_close" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -66,16 +43,14 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_done"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
         android:text="@string/common_save"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:backgroundTint="@color/color_teal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_payment_methods" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_date"
@@ -228,68 +203,5 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/list_categories" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/container_sheets"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/dialog_bg"
-            android:orientation="vertical"
-            tools:visibility="gone">
-
-            <LinearLayout
-                android:id="@+id/container_sheet_name_secondary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_extra_small"
-                android:gravity="center_horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/txt_sheet_name_secondary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:drawableEnd="@drawable/ic_collapse"
-                    android:drawablePadding="@dimen/margin_extra_extra_small"
-                    android:drawableTint="?attr/colorControlNormal"
-                    android:gravity="center_horizontal"
-                    android:textSize="@dimen/text_body1"
-                    tools:text="Feb" />
-
-            </LinearLayout>
-
-            <app:androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list_sheets"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_extra_small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/container_sheet_name_secondary"
-                tools:itemCount="1"
-                tools:listitem="@layout/list_picker_item" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <View
-        android:id="@+id/background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

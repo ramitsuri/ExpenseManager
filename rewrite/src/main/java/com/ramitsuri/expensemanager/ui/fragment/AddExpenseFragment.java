@@ -10,15 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
-import com.ramitsuri.expensemanager.ui.adapter.SheetPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
@@ -34,10 +31,8 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import timber.log.Timber;
@@ -49,14 +44,10 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private AddExpenseViewModel mViewModel;
 
     // Views
-    private ViewGroup mContainerSheets, mContainerSheetName, mContainerSheetNameSecondary;
     private ImageView mBtnClose;
     private EditText mEditStore, mEditAmount, mEditDescription;
     private Button mBtnDone, mBtnDate;
     private MaterialButton mBtnFlag, mBtnSplit;
-    private RecyclerView mListSheets;
-    private TextView mTxtSheetName, mTxtSheetNameSecondary;
-    private View mBackground;
 
     public AddExpenseFragment() {
         // Required empty public constructor
@@ -104,14 +95,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setupViews(View view) {
-        mContainerSheets = view.findViewById(R.id.container_sheets);
-        mContainerSheetName = view.findViewById(R.id.container_sheet_name);
-        mContainerSheetName.setOnClickListener(this);
-        mContainerSheetNameSecondary = view.findViewById(R.id.container_sheet_name_secondary);
-        mContainerSheetNameSecondary.setOnClickListener(this);
-        mBackground = view.findViewById(R.id.background);
-        mBackground.setOnClickListener(this);
-
         // Close
         mBtnClose = view.findViewById(R.id.btn_close);
         mBtnClose.setOnClickListener(this);
@@ -161,12 +144,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             mEditAmount.setText(value);
             mEditAmount.setSelection(value.length());
         }
-
-        // Sheet Name
-        mTxtSheetName = view.findViewById(R.id.txt_sheet_name);
-        mTxtSheetName.setOnClickListener(this);
-        mTxtSheetNameSecondary = view.findViewById(R.id.txt_sheet_name_secondary);
-        mTxtSheetNameSecondary.setOnClickListener(this);
     }
 
     private void setupRecyclerViews(View view) {
@@ -223,39 +200,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                         }
                     }
                 });
-
-        // Sheets
-        mListSheets = view.findViewById(R.id.list_sheets);
-        GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
-        manager.setOrientation(RecyclerView.VERTICAL);
-        mListSheets.setLayoutManager(manager);
-        mListSheets.setHasFixedSize(true);
-
-        final SheetPickerAdapter sheetsAdapter = new SheetPickerAdapter();
-        sheetsAdapter.setCallback(new SheetPickerAdapter.SheetPickerAdapterCallback() {
-            @Override
-            public void onItemPicked(SheetInfo value) {
-                onSheetPicked(value);
-            }
-        });
-        mListSheets.setAdapter(sheetsAdapter);
-        LiveData<List<SheetInfo>> sheetInfos = mViewModel.getSheetInfos();
-        if (sheetInfos != null) {
-            sheetInfos.observe(getViewLifecycleOwner(), new Observer<List<SheetInfo>>() {
-                @Override
-                public void onChanged(List<SheetInfo> sheetInfos) {
-                    Timber.i("SheetInfos received %s", sheetInfos);
-                    int selectedValue = mViewModel.getSheetId();
-                    for (SheetInfo info : sheetInfos) {
-                        if (selectedValue == info.getSheetId()) {
-                            onSheetPicked(info);
-                            break;
-                        }
-                    }
-                    sheetsAdapter.setValues(sheetInfos, selectedValue);
-                }
-            });
-        }
     }
 
     @Override
@@ -270,12 +214,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             handleFlagClicked();
         } else if (view == mBtnSplit) {
             handleSplitClicked();
-        } else if (view == mTxtSheetName || view == mContainerSheetName) {
-            handleChangeSheetClicked();
-        } else if (view == mTxtSheetNameSecondary || view == mContainerSheetNameSecondary) {
-            collapseContainerView();
-        } else if (view == mBackground) {
-            collapseContainerView();
         }
     }
 
@@ -336,10 +274,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         exitToUp();
     }
 
-    private void handleChangeSheetClicked() {
-        expandContainerView();
-    }
-
     private void handleFlagClicked() {
         mViewModel.setFlag(!mViewModel.isFlagged());
         updateExpenseFlag();
@@ -376,15 +310,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         Timber.i("Payment method picked: %s", value);
         mViewModel.setPaymentMethod(value);
         removeFocusAndHideKeyboard();
-    }
-
-    private void onSheetPicked(SheetInfo value) {
-        Timber.i("Sheet picked: %s", value.toString());
-        mTxtSheetName.setText(value.getSheetName());
-        mTxtSheetNameSecondary.setText(value.getSheetName());
-        mViewModel.setSheet(value);
-        removeFocusAndHideKeyboard();
-        collapseContainerView();
     }
 
     @Override
@@ -450,31 +375,5 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private String getDefaultDescriptionValue() {
         return getString(R.string.common_expense);
-    }
-
-    private void collapseContainerView() {
-        Timber.i("Collapsing");
-        ViewGroup.LayoutParams params = mContainerSheets.getLayoutParams();
-        params.height = 0;
-        mContainerSheets.setLayoutParams(params);
-        if (mListSheets != null && mListSheets.getAdapter() != null) {
-            mListSheets.getAdapter().notifyDataSetChanged();
-        }
-        if (mBackground != null) {
-            mBackground.setClickable(false);
-        }
-    }
-
-    private void expandContainerView() {
-        Timber.i("Expanding");
-        ViewGroup.LayoutParams params = mContainerSheets.getLayoutParams();
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        mContainerSheets.setLayoutParams(params);
-        if (mListSheets != null && mListSheets.getAdapter() != null) {
-            mListSheets.getAdapter().notifyDataSetChanged();
-        }
-        if (mBackground != null) {
-            mBackground.setClickable(true);
-        }
     }
 }

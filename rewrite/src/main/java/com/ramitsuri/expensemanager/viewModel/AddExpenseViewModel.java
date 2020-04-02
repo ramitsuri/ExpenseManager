@@ -1,13 +1,10 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import android.text.TextUtils;
-
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
-import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -15,7 +12,6 @@ import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
-import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -40,7 +36,6 @@ public class AddExpenseViewModel extends ViewModel {
     private Integer mOldSheetId;
     private LiveData<List<String>> mCategories;
     private LiveData<List<String>> mPaymentMethods;
-    private LiveData<List<SheetInfo>> mSheetInfos;
     private int mAddMode;
 
     private boolean mChangesMade, mIsSplit;
@@ -52,7 +47,6 @@ public class AddExpenseViewModel extends ViewModel {
         CategoryRepository categoryRepo = MainApplication.getInstance().getCategoryRepo();
         PaymentMethodRepository paymentMethodRepo =
                 MainApplication.getInstance().getPaymentMethodRepo();
-        SheetRepository sheetRepo = MainApplication.getInstance().getSheetRepository();
 
         mCategories = Transformations.map(categoryRepo.getCategories(),
                 new Function<List<Category>, List<String>>() {
@@ -80,18 +74,6 @@ public class AddExpenseViewModel extends ViewModel {
                         return paymentMethodStrings;
                     }
                 });
-        String spreadsheetId = AppHelper.getSpreadsheetId();
-        if (TextUtils.isEmpty(spreadsheetId)) {
-            Timber.i("SpreadsheetId is null or empty");
-        } else {
-            mSheetInfos = Transformations.map(sheetRepo.getSheetInfos(spreadsheetId, false),
-                    new Function<List<SheetInfo>, List<SheetInfo>>() {
-                        @Override
-                        public List<SheetInfo> apply(List<SheetInfo> input) {
-                            return TransformationHelper.filterSheetInfos(input);
-                        }
-                    });
-        }
 
         reset(expense);
     }
@@ -104,18 +86,12 @@ public class AddExpenseViewModel extends ViewModel {
         return mPaymentMethods;
     }
 
-    @Nullable
-    public LiveData<List<SheetInfo>> getSheetInfos() {
-        return mSheetInfos;
-    }
-
     public void add() {
         Expense expense = new Expense(mExpense);
         if (mIsSplit) {
             expense.setAmount(CurrencyHelper.divide(expense.getAmount(), new BigDecimal("2")));
         }
         mExpenseRepo.insert(expense);
-        AppHelper.setDefaultSheetId(expense.getSheetId());
         reset(null);
     }
 
@@ -237,10 +213,6 @@ public class AddExpenseViewModel extends ViewModel {
         setChangesMade();
     }
 
-    public int getSheetId() {
-        return mExpense.getSheetId();
-    }
-
     public boolean isChangesMade() {
         return mChangesMade;
     }
@@ -275,7 +247,6 @@ public class AddExpenseViewModel extends ViewModel {
             mExpense = new Expense();
             mExpense.setDateTime(new Date().getTime());
             mExpense.setAmount(BigDecimal.ZERO);
-            mExpense.setSheetId(AppHelper.getDefaultSheetId());
             mAddMode = Constants.AddExpenseMode.ADD;
         }
     }

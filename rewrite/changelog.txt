@@ -1,3 +1,6 @@
+AddExpense
+    - Remove sheet selection
+
 ExpenseDao
     - Add new method to get expenses in date range (with test)
 ExpenseRepository
