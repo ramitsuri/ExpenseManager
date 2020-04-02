@@ -18,9 +18,9 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
-import com.ramitsuri.expensemanager.entities.SheetInfo;
+import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseAdapter;
+import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
@@ -102,21 +102,21 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         mTextInfo2 = view.findViewById(R.id.txt_expense_info_2);
         mTextInfo3 = view.findViewById(R.id.txt_expense_info_3);
 
-        mViewModel.getSheetName().observe(getViewLifecycleOwner(), new Observer<String>() {
+        mViewModel.getFilterInfo().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
-            public void onChanged(String sheetName) {
-                if (TextUtils.isEmpty(sheetName)) {
-                    sheetName = getString(R.string.common_filter);
+            public void onChanged(String filterInfo) {
+                if (TextUtils.isEmpty(filterInfo)) {
+                    filterInfo = getString(R.string.common_filter);
                 }
                 mTextInfoEmpty.setText(String.format(getString(R.string.all_expenses_empty_message),
-                        sheetName));
-                mTextInfo1.setText(sheetName);
+                        filterInfo));
+                mTextInfo1.setText(filterInfo);
             }
         });
 
         setupListExpenses(view);
 
-        onSheetSelected();
+        onFilterApplied(null);
     }
 
     private void setupListExpenses(View view) {
@@ -257,13 +257,8 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         FilterOptionsFragment fragment = FilterOptionsFragment.newInstance();
         fragment.setCallback(new FilterOptionsFragment.FilterOptionsFragmentCallback() {
             @Override
-            public void onFilterRequested(@NonNull SheetInfo sheetInfo) {
-                if (mViewModel.getSelectedSheetId() != sheetInfo.getSheetId()) {
-                    mViewModel.setSelectedSheetId(sheetInfo.getSheetId());
-                    onSheetSelected();
-                } else {
-                    Timber.i("Same Sheet selected, ignoring request");
-                }
+            public void onFilterRequested(@NonNull Filter filter) {
+                onFilterApplied(filter);
             }
         });
         if (getActivity() != null) {
@@ -287,8 +282,8 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private void onSheetSelected() {
-        mViewModel.refreshExpenseWrappers();
+    private void onFilterApplied(Filter filter) {
+        mViewModel.onExpenseFilterApplied(filter);
     }
 
     private void onExpensesReceived(List<ExpenseWrapper> expenses) {

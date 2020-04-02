@@ -22,6 +22,9 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE sheet_id = :sheetId ORDER BY date_time DESC")
     public abstract List<Expense> getAllForSheet(int sheetId);
 
+    @Query("SELECT * FROM expense WHERE date_time BETWEEN :fromDateTime AND :toDateTime ORDER BY date_time DESC")
+    public abstract List<Expense> getAllForDateRange(long fromDateTime, long toDateTime);
+
     @Query("SELECT * FROM expense WHERE is_starred = 1")
     public abstract List<Expense> getAllStarred();
 

@@ -43,6 +43,7 @@
     <string name="common_done">Done</string>
     <string name="common_previous">Previous</string>
     <string name="common_add_new">Add new</string>
+    <string name="common_month">Month</string>
 
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">History</string>
@@ -56,10 +57,11 @@
     <string name="in_category">in category %1s</string>
     <string name="amount_with_currency">$%1s</string>
     <string name="delete_expense_warning_message">Are you sure you want to delete the expense?</string>
-    <string name="expenses_empty_message">No new expenses!</string>
+    <string name="expenses_empty_message">No expenses!</string>
     <string name="expenses_empty_help_message">tap the ADD EXPENSE button to add a new expense</string>
     <string name="expenses_duplicate_success">Expense duplicated</string>
     <string name="expenses_not_synced">Not synced</string>
+    <string name="expenses_filter_format">%1s - %2s</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -145,7 +147,7 @@
     <string name="all_expenses_filter">Filter</string>
     <string name="all_expenses_modify_filter">Modify Filter</string>
     <string name="all_expenses_go_to_setup">Go To Setup</string>
-    <string name="all_expenses_empty_message">No expenses in %1s!</string>
+    <string name="all_expenses_empty_message">No expenses!\n%1s</string>
     <string name="all_expenses_analysis">Analysis</string>
 
     <!-- Details -->

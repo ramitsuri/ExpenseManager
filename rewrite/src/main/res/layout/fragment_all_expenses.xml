@@ -33,23 +33,13 @@
                 android:layout_height="match_parent"
                 android:padding="@dimen/padding_small">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guide_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent=".6" />
-
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txt_expense_info_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="true"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_caption"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@id/guide_vertical"
-                    app:layout_constraintHorizontal_bias="0"
+                    android:textSize="@dimen/text_body1"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Jan"
@@ -59,9 +49,10 @@
                     android:id="@+id/txt_expense_info_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_extra_small"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_caption"
-                    app:layout_constraintStart_toStartOf="@id/txt_expense_info_1"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/txt_expense_info_1"
                     tools:text="31 expenses"
                     tools:visibility="visible" />
@@ -72,12 +63,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_body1"
+                    android:textSize="@dimen/text_caption"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/guide_vertical"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_expense_info_2"
                     tools:text="$45"
                     tools:visibility="visible" />
 
@@ -193,7 +182,7 @@
             android:id="@+id/txt_expense_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/expenses_empty_message"
+            android:gravity="center_horizontal"
             android:textColor="@color/color_teal"
             android:textSize="@dimen/text_h6"
             android:textStyle="bold"
@@ -202,7 +191,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="@dimen/all_expenses_vertical_bias_percent" />
+            app:layout_constraintVertical_bias="@dimen/all_expenses_vertical_bias_percent"
+            tools:text="No expenses!\nApr 01 - Apr 30" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

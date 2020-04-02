@@ -109,6 +109,20 @@ public class ExpenseDatabaseTest {
                 DummyData.getAllForBackup(sheetIds).size(),
                 mExpenseDao.getAllForBackup(sheetIds).size());
 
+        // get All within date range
+        long start = DummyData.BASE_DATE_TIME;
+        long end = DummyData.BASE_DATE_TIME + DummyData.ONE_DAY;
+        Assert.assertEquals(DummyData.getAllForDateRange(start, end).size(),
+                mExpenseDao.getAllForDateRange(start, end).size());
+        start = DummyData.BASE_DATE_TIME - DummyData.ONE_DAY;
+        end = DummyData.BASE_DATE_TIME + 2 * DummyData.ONE_DAY;
+        Assert.assertEquals(DummyData.getAllForDateRange(start, end).size(),
+                mExpenseDao.getAllForDateRange(start, end).size());
+        start = DummyData.BASE_DATE_TIME - 3 * DummyData.ONE_DAY;
+        end = DummyData.BASE_DATE_TIME + 3 * DummyData.ONE_DAY;
+        Assert.assertEquals(DummyData.getAllForDateRange(start, end).size(),
+                mExpenseDao.getAllForDateRange(start, end).size());
+
         // delete synced
         mExpenseDao.deleteSynced();
         Assert.assertEquals(

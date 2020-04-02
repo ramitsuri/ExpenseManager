@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DummyData {
+
+    public static long BASE_DATE_TIME = 1565818852014L;
+    public static long ONE_DAY = 86400000;
+
     public static String[] getCategories() {
         return new String[] {
                 "Food",
@@ -109,13 +113,11 @@ public class DummyData {
 
     public static List<Expense> getExpenses() {
         List<Expense> expenses = new ArrayList<>();
-        long base = 1565818852014L;
-        long oneDay = 86400000;
 
         Expense expense = new Expense();
         expense.setAmount(BigDecimal.ZERO);
         expense.setCategory(getCategories()[0]);
-        expense.setDateTime(base);
+        expense.setDateTime(BASE_DATE_TIME);
         expense.setPaymentMethod(getPaymentMethods()[0]);
         expense.setDescription(getDescriptions()[0]);
         expense.setStore(getStores()[0]);
@@ -127,7 +129,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("10.00"));
         expense.setCategory(getCategories()[1]);
-        expense.setDateTime(base);
+        expense.setDateTime(BASE_DATE_TIME);
         expense.setPaymentMethod(getPaymentMethods()[2]);
         expense.setDescription(getDescriptions()[4]);
         expense.setStore(getStores()[5]);
@@ -139,7 +141,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("7.43"));
         expense.setCategory(getCategories()[4]);
-        expense.setDateTime(base + oneDay);
+        expense.setDateTime(BASE_DATE_TIME + ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[0]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[9]);
@@ -151,7 +153,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("17.56"));
         expense.setCategory(getCategories()[2]);
-        expense.setDateTime(base + oneDay);
+        expense.setDateTime(BASE_DATE_TIME + ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[8]);
         expense.setDescription(getDescriptions()[12]);
         expense.setStore(getStores()[13]);
@@ -163,7 +165,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("123.98"));
         expense.setCategory(getCategories()[7]);
-        expense.setDateTime(base - oneDay);
+        expense.setDateTime(BASE_DATE_TIME - ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[3]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[7]);
@@ -175,7 +177,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("45"));
         expense.setCategory(getCategories()[6]);
-        expense.setDateTime(base + 3 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME + 3 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[4]);
         expense.setDescription(getDescriptions()[4]);
         expense.setStore(getStores()[3]);
@@ -187,7 +189,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1399"));
         expense.setCategory(getCategories()[0]);
-        expense.setDateTime(base - 2 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[11]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[10]);
@@ -199,7 +201,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(BigDecimal.ZERO);
         expense.setCategory(getCategories()[3]);
-        expense.setDateTime(base + 3 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME + 3 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[11]);
         expense.setDescription(getDescriptions()[2]);
         expense.setStore(getStores()[5]);
@@ -211,7 +213,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("13.45"));
         expense.setCategory(getCategories()[5]);
-        expense.setDateTime(base - oneDay);
+        expense.setDateTime(BASE_DATE_TIME - ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[3]);
         expense.setStore(getStores()[1]);
@@ -223,7 +225,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("15"));
         expense.setCategory(getCategories()[3]);
-        expense.setDateTime(base + 2 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME + 2 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[3]);
         expense.setDescription(getDescriptions()[9]);
         expense.setStore(getStores()[2]);
@@ -235,7 +237,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("15.45"));
         expense.setCategory(getCategories()[5]);
-        expense.setDateTime(base - 2 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[10]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[13]);
@@ -247,7 +249,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1.40"));
         expense.setCategory(getCategories()[8]);
-        expense.setDateTime(base - 2 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[10]);
@@ -259,7 +261,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1.40"));
         expense.setCategory(getCategories()[8]);
-        expense.setDateTime(base - 2 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[10]);
@@ -271,7 +273,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("31.90"));
         expense.setCategory(getCategories()[2]);
-        expense.setDateTime(base + 2 * oneDay);
+        expense.setDateTime(BASE_DATE_TIME + 2 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[2]);
         expense.setDescription(getDescriptions()[9]);
         expense.setStore(getStores()[2]);
@@ -323,35 +325,42 @@ public class DummyData {
         return expenses;
     }
 
+    public static List<Expense> getAllForDateRange(long fromDateTime, long toDateTime) {
+        List<Expense> expenses = new ArrayList<>();
+        for (Expense expense : getExpenses()) {
+            if (expense.getDateTime() <= toDateTime && expense.getDateTime() >= fromDateTime) {
+                expenses.add(expense);
+            }
+        }
+        return expenses;
+    }
+
     public static List<Log> getLogs() {
         List<Log> logs = new ArrayList<>();
 
-        long base = 1565818852014L;
-        long oneDay = 86400000;
-
         Log log = new Log();
-        log.setTime(base - 10 * oneDay);
+        log.setTime(BASE_DATE_TIME - 10 * ONE_DAY);
         log.setType(Constants.Tag.ONE_TIME_BACKUP);
         log.setResult(Constants.LogResult.SUCCESS);
         log.setMessage(null);
         log.setIsAcknowledged(false);
 
         log = new Log();
-        log.setTime(base - 5 * oneDay);
+        log.setTime(BASE_DATE_TIME - 5 * ONE_DAY);
         log.setType(Constants.Tag.ONE_TIME_BACKUP);
         log.setResult(Constants.LogResult.SUCCESS);
         log.setMessage(null);
         log.setIsAcknowledged(true);
 
         log = new Log();
-        log.setTime(base - 6 * oneDay);
+        log.setTime(BASE_DATE_TIME - 6 * ONE_DAY);
         log.setType(Constants.Tag.SCHEDULED_BACKUP_LEGACY);
         log.setResult(Constants.LogResult.SUCCESS);
         log.setMessage(null);
         log.setIsAcknowledged(false);
 
         log = new Log();
-        log.setTime(base + 10 * oneDay);
+        log.setTime(BASE_DATE_TIME + 10 * ONE_DAY);
         log.setType(Constants.Tag.SCHEDULED_BACKUP_LEGACY);
         log.setResult(Constants.LogResult.FAILURE);
         log.setMessage(null);

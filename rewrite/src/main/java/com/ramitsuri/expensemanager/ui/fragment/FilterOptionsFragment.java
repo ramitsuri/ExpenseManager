@@ -8,20 +8,18 @@ import android.view.ViewGroup;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.entities.SheetInfo;
-import com.ramitsuri.expensemanager.ui.adapter.SheetPickerAdapter;
+import com.ramitsuri.expensemanager.entities.Filter;
+import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanager.viewModel.FilterOptionsViewModel;
 
-import java.util.List;
+import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class FilterOptionsFragment extends BaseBottomSheetFragment {
@@ -35,10 +33,11 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     @Nonnull
     private FilterOptionsViewModel mViewModel;
 
+    @Nullable
     private FilterOptionsFragmentCallback mCallback;
 
     public interface FilterOptionsFragmentCallback {
-        void onFilterRequested(@NonNull SheetInfo sheetInfo);
+        void onFilterRequested(@NonNull Filter filter);
     }
 
     public void setCallback(@NonNull FilterOptionsFragmentCallback callback) {
@@ -68,33 +67,41 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     }
 
     private void setupViews(@NonNull View view) {
-        RecyclerView listSheets = view.findViewById(R.id.list_sheets);
-        int numberOfColumns = getResources().getInteger(R.integer.sheets_grid_columns);
-        GridLayoutManager manager = new GridLayoutManager(getActivity(), numberOfColumns);
-        manager.setOrientation(RecyclerView.VERTICAL);
-        listSheets.setLayoutManager(manager);
+        RecyclerView listSheets = view.findViewById(R.id.list_months);
+        listSheets.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         listSheets.setHasFixedSize(true);
 
-        final SheetPickerAdapter adapter = new SheetPickerAdapter();
+        final ListPickerAdapter adapter = new ListPickerAdapter();
+        adapter.setValues(Arrays.asList(getMonths()), null);
         listSheets.setAdapter(adapter);
-        adapter.setCallback(new SheetPickerAdapter.SheetPickerAdapterCallback() {
+        adapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
             @Override
-            public void onItemPicked(SheetInfo value) {
+            public void onItemPicked(String month) {
                 dismiss();
-                if (mCallback != null) {
-                    mCallback.onFilterRequested(value);
-                }
+                onMonthPicked(month);
             }
         });
-        LiveData<List<SheetInfo>> sheetInfoList = mViewModel.getSheetInfos();
-        if (sheetInfoList != null) {
-            sheetInfoList.observe(getViewLifecycleOwner(),
-                    new Observer<List<SheetInfo>>() {
-                        @Override
-                        public void onChanged(List<SheetInfo> sheetInfos) {
-                            adapter.setValues(sheetInfos);
-                        }
-                    });
+    }
+
+    /**
+     * Converts picked month into its corresponding index in the range 0 - 11
+     */
+    private void onMonthPicked(String pickedMonth) {
+        int index = 0;
+        for (String month : getMonths()) {
+            if (pickedMonth.equalsIgnoreCase(month)) {
+                Filter filter = mViewModel.onMonthPicked(index);
+                if (mCallback != null) {
+                    mCallback.onFilterRequested(filter);
+                }
+                break;
+            }
+            index = index + 1;
         }
+    }
+
+    private String[] getMonths() {
+        return getResources().getStringArray(R.array.months);
     }
 }

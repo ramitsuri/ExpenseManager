@@ -2,15 +2,15 @@ package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
-import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
-import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.Calculator;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -18,39 +18,25 @@ import javax.annotation.Nullable;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+import timber.log.Timber;
 
 public class AllExpensesViewModel extends ViewModel {
 
     private ExpenseRepository mRepository;
-    private SheetRepository mSheetRepository;
 
     private List<Expense> mExpenses;
-    private int mSelectedSheetId;
+    private Filter mFilter;
+    private MutableLiveData<String> mFilterInfo;
 
     public AllExpensesViewModel() {
         super();
         mRepository = MainApplication.getInstance().getExpenseRepo();
-        mSheetRepository = MainApplication.getInstance().getSheetRepository();
-        setSelectedSheetId(AppHelper.getDefaultSheetId());
-    }
-
-    /*
-     * Sheet infos
-     */
-
-    public int getSelectedSheetId() {
-        return mSelectedSheetId;
-    }
-
-    public void setSelectedSheetId(int selectedSheetId) {
-        mSelectedSheetId = selectedSheetId;
-        mSheetRepository.refreshSheetName(selectedSheetId);
-    }
-
-    public LiveData<String> getSheetName() {
-        return mSheetRepository.getSheetName();
+        mFilter = getDefaultFilter();
+        mFilterInfo = new MutableLiveData<>();
+        updateFilterInfo();
     }
 
     /*
@@ -90,22 +76,61 @@ public class AllExpensesViewModel extends ViewModel {
         return calculator.getExpenseTotalValue();
     }
 
-    public void refreshExpenseWrappers() {
-        mRepository.getFromSheet(mSelectedSheetId);
+    public void onExpenseFilterApplied(@Nullable Filter filter) {
+        if (filter == null) {
+            filter = getDefaultFilter();
+        }
+        Timber.i("Filtering for %s", filter.toString());
+        mFilter = filter;
+        mRepository.getForFilter(mFilter);
+        updateFilterInfo();
     }
 
     public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
         Expense duplicate = new Expense(expense);
         duplicate.setIsSynced(false);
-        return mRepository.insertAndGet(duplicate, expense.getSheetId());
+        return mRepository.insertAndGet(duplicate, mFilter);
     }
 
     public void deleteExpense(@Nonnull Expense expense) {
-        mRepository.delete(expense, expense.getSheetId());
+        mRepository.delete(expense, mFilter);
         // Backed up expense was deleted, update Edited Sheets table to add this expense's sheet id
         if (expense.isSynced()) {
             MainApplication.getInstance().getEditedSheetRepo()
                     .insertEditedSheet(new EditedSheet(expense.getSheetId()));
         }
+    }
+
+    public LiveData<String> getFilterInfo() {
+        return mFilterInfo;
+    }
+
+    private void updateFilterInfo() {
+        mFilterInfo.postValue(mFilter.toFriendlyString());
+    }
+
+    @Nonnull
+    private Filter getDefaultFilter() {
+        Calendar calendar = Calendar.getInstance();
+
+        // First day of month - 00:00:00 001ms
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 1);
+        long fromDateTime = calendar.getTimeInMillis();
+
+        // Last Day of month - 23:59:59 999ms
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        long toDateTime = calendar.getTimeInMillis();
+
+        return new Filter()
+                .setFromDateTime(fromDateTime)
+                .setToDateTime(toDateTime);
     }
 }

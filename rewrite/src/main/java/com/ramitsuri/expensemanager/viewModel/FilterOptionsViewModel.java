@@ -1,45 +1,43 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import android.text.TextUtils;
+import com.ramitsuri.expensemanager.entities.Filter;
 
-import com.ramitsuri.expensemanager.MainApplication;
-import com.ramitsuri.expensemanager.data.repository.SheetRepository;
-import com.ramitsuri.expensemanager.entities.SheetInfo;
-import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.expensemanager.utils.TransformationHelper;
+import java.util.Calendar;
 
-import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.arch.core.util.Function;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
-import timber.log.Timber;
 
 public class FilterOptionsViewModel extends ViewModel {
-    private LiveData<List<SheetInfo>> mSheetInfos;
+
+    private Filter mFilter;
+    private Calendar mCalendar;
 
     public FilterOptionsViewModel() {
         super();
-        SheetRepository sheetRepo = MainApplication.getInstance().getSheetRepository();
-
-        String spreadsheetId = AppHelper.getSpreadsheetId();
-        if (TextUtils.isEmpty(spreadsheetId)) {
-            Timber.i("SpreadsheetId is null or empty");
-        } else {
-            mSheetInfos = Transformations.map(sheetRepo.getSheetInfos(spreadsheetId, false),
-                    new Function<List<SheetInfo>, List<SheetInfo>>() {
-                        @Override
-                        public List<SheetInfo> apply(List<SheetInfo> input) {
-                            return TransformationHelper.filterSheetInfos(input);
-                        }
-                    });
-        }
+        mFilter = new Filter();
+        mCalendar = Calendar.getInstance();
     }
 
-    @Nullable
-    public LiveData<List<SheetInfo>> getSheetInfos() {
-        return mSheetInfos;
+    public Filter onMonthPicked(int monthIndex) {
+        mCalendar.set(Calendar.MONTH, monthIndex);
+
+        // First day of month - 00:00:00 001ms
+        mCalendar.set(Calendar.DAY_OF_MONTH, mCalendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        mCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        mCalendar.set(Calendar.MINUTE, 0);
+        mCalendar.set(Calendar.SECOND, 0);
+        mCalendar.set(Calendar.MILLISECOND, 1);
+        long fromDateTime = mCalendar.getTimeInMillis();
+
+        // Last Day of month - 23:59:59 999ms
+        mCalendar.set(Calendar.DAY_OF_MONTH, mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        mCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        mCalendar.set(Calendar.MINUTE, 59);
+        mCalendar.set(Calendar.SECOND, 59);
+        mCalendar.set(Calendar.MILLISECOND, 999);
+        long toDateTime = mCalendar.getTimeInMillis();
+
+        return mFilter
+                .setFromDateTime(fromDateTime)
+                .setToDateTime(toDateTime);
     }
 }

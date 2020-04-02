@@ -1,3 +1,18 @@
+ExpenseDao
+    - Add new method to get expenses in date range (with test)
+ExpenseRepository
+    - Remove method to fetch sheets from Spreadsheet
+    - Add method to get expenses for a filter (only from and to date time for now)
+    - Modify insertAndGet() and delete() to take in filter parameter instead of previously sheet id, so that expenses can be refreshed for the supplied filter
+Filter
+    - New object to create filters - right now only from and to date time
+AllExpenses
+    - Modify code to remove getting expenses for sheet, instead get it for to and from date time filter
+    - Display name of filter applied instead of sheet name
+    - Change CardView UI slightly
+FilterOptions
+    - Change to show months instead of sheets
+
 Hide Entities Sync
 Add an option to enable it via secret messages
 
