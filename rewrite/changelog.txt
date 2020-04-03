@@ -1,3 +1,14 @@
+SheetRepo
+    - Remove DriveProcessor instance
+    - Remove Database instance
+    - Not saving Executors object for now
+    - remove all of the background thread methods for now
+    - Remove copy spreadsheet code, insert range, get range, get sheet infos
+MiscellaneousVM
+    - Remove code to get set spreadsheet id
+    - Remove SpreadsheetRepo object
+    - Remove restore access code
+
 AddExpense
     - Remove sheet selection
 

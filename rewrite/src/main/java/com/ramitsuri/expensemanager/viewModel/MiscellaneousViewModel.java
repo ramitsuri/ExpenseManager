@@ -1,17 +1,11 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import android.text.TextUtils;
-
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
-import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
-
-import javax.annotation.Nullable;
 
 import androidx.annotation.ArrayRes;
 import androidx.lifecycle.LiveData;
@@ -26,12 +20,9 @@ public class MiscellaneousViewModel extends ViewModel {
     private boolean mEnableHidden;
     private MutableLiveData<String> mSpreadsheetId;
     private MutableLiveData<String> mCurrentTheme;
-    private SheetRepository mRepository;
 
     public MiscellaneousViewModel() {
         super();
-
-        mRepository = MainApplication.getInstance().getSheetRepository();
 
         mDeleteLastPressTime = 0;
 
@@ -86,17 +77,8 @@ public class MiscellaneousViewModel extends ViewModel {
         return mSpreadsheetId;
     }
 
-    public String getSpreadsheetId() {
-        return AppHelper.getSpreadsheetId();
-    }
-
-    public void setSpreadsheetId(String spreadsheetId) {
-        AppHelper.setSpreadsheetId(spreadsheetId);
-        mSpreadsheetId.postValue(spreadsheetId);
-    }
-
     public boolean versionInfoPressSuccess() {
-        if (enableHidden() ) {
+        if (enableHidden()) {
             return false;
         }
         mAboutPressCount = mAboutPressCount + 1;
@@ -145,19 +127,6 @@ public class MiscellaneousViewModel extends ViewModel {
         }
         AppHelper.setCurrentTheme(theme);
         mCurrentTheme.postValue(theme);
-    }
-
-    // Used only to get the exception to restore access
-    @Nullable
-    public LiveData<EntitiesConsumerResponse> restoreAccess() {
-        String spreadsheetId = AppHelper.getSpreadsheetId();
-        if (TextUtils.isEmpty(spreadsheetId)) {
-            Timber.i("SpreadsheetId is null or empty");
-            return null;
-        }
-        MainApplication.getInstance()
-                .refreshSheetRepo(AppHelper.getAccountName(), AppHelper.getAccountType());
-        return mRepository.getEntityData(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
     }
 
     public boolean enableExpenseSync() {

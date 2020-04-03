@@ -97,7 +97,6 @@ public class MainApplication extends Application {
 
     public void initSheetRepo(String accountName, String accountType) {
         AppExecutors appExecutors = AppExecutors.getInstance();
-        ExpenseManagerDatabase database = ExpenseManagerDatabase.getInstance();
         String appName = getString(R.string.app_name);
 
         if (TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
@@ -109,7 +108,7 @@ public class MainApplication extends Application {
         Account account = new Account(accountName, accountType);
 
         mSheetRepository = new SheetRepository(this, appName, account,
-                Arrays.asList(AppHelper.getScopes()), appExecutors, database);
+                Arrays.asList(AppHelper.getScopes()), appExecutors);
     }
 
     public void refreshSheetRepo(String accountName, String accountType) {
