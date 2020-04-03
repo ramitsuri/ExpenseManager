@@ -1,3 +1,10 @@
+Filter
+    - Have a calendar instance so that other classes have no knowledge of how to get the filter
+    - Have code to instantiate a default filter as well as with month index and set to and from dates when month changes
+AllExpensesVM, FilterOptionsVM
+    - Remove Calendar instance
+
+
 ExpenseDao
     - Remove method to update sheet id, modify updateExpense transaction
     - Remove method to delete all synced for sheet id

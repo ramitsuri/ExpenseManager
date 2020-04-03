@@ -10,7 +10,6 @@ import com.ramitsuri.expensemanager.utils.Calculator;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -111,26 +110,6 @@ public class AllExpensesViewModel extends ViewModel {
 
     @Nonnull
     private Filter getDefaultFilter() {
-        Calendar calendar = Calendar.getInstance();
-
-        // First day of month - 00:00:00 001ms
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 1);
-        long fromDateTime = calendar.getTimeInMillis();
-
-        // Last Day of month - 23:59:59 999ms
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-        long toDateTime = calendar.getTimeInMillis();
-
-        return new Filter()
-                .setFromDateTime(fromDateTime)
-                .setToDateTime(toDateTime);
+        return new Filter();
     }
 }
