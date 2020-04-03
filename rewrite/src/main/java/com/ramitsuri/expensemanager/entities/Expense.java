@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class Expense implements Parcelable {
         mSheetId = in.readInt();
     }
 
-    public Expense(List<Object> objects, int sheetId) {
+    public Expense(List<Object> objects) {
         mDateTime = DateHelper.fromSheetsDate(((BigDecimal)objects.get(0)).intValue());
         mDescription = (String)objects.get(1);
         mStore = (String)objects.get(2);
@@ -86,7 +88,6 @@ public class Expense implements Parcelable {
             mIsStarred = objects.get(6).equals(FLAG);
         }
         mIsSynced = true;
-        mSheetId = sheetId;
     }
 
     public Expense(Expense expense) {
@@ -98,7 +99,6 @@ public class Expense implements Parcelable {
         mCategory = expense.getCategory();
         mIsStarred = expense.isStarred();
         mIsSynced = expense.isSynced();
-        mSheetId = expense.getSheetId();
     }
 
     @Override
@@ -200,6 +200,7 @@ public class Expense implements Parcelable {
         mSheetId = sheetId;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Expense { " +

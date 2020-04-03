@@ -1,3 +1,16 @@
+ExpenseDao
+    - Remove method to update sheet id, modify updateExpense transaction
+    - Remove method to delete all synced for sheet id
+    - Remove Insert list method that deleted expenses for a sheet, now just using insert(List)
+Expense
+    - Remove sheet id parameter from constructor used to create instance with objects from sheet sync
+    - Remove setting sheet id when making a copy via constructor
+TransformationHelper
+    - Modify get expense range method to return just the list of ranges
+ExpenseSync
+    - Deleting synced expenses before saving
+    - Remove sheet id usage, now saving all expenses based on if range is correct and a row represents an expense
+
 SheetRepo
     - Remove DriveProcessor instance
     - Remove Database instance

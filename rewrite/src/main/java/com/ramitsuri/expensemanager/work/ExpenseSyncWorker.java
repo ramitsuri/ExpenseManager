@@ -3,8 +3,8 @@ package com.ramitsuri.expensemanager.work;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
@@ -15,7 +15,6 @@ import com.ramitsuri.sheetscore.consumerResponse.RangesConsumerResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
@@ -72,9 +71,8 @@ public class ExpenseSyncWorker extends BaseWorker {
             return Result.failure();
         }
 
-        Map<String, Integer> expensesRangeMap = TransformationHelper
+        List<String> expenseRanges = TransformationHelper
                 .getExpenseRanges(TransformationHelper.filterSheetInfos(sheetInfos));
-        List<String> expenseRanges = new ArrayList<>(expensesRangeMap.keySet());
 
         // Expenses
         RangesConsumerResponse ranges = MainApplication.getInstance().getSheetRepository()
@@ -86,39 +84,36 @@ public class ExpenseSyncWorker extends BaseWorker {
                     Constants.LogResult.FAILURE,
                     message);
         } else {
+            // Delete existing synced expenses
+            ExpenseManagerDatabase.getInstance().expenseDao().deleteSynced();
             StringBuilder sb = new StringBuilder();
             sb.append("Saving expenses;");
             for (RangeConsumerResponse value : ranges.getValues()) {
-                Integer sheetId = null;
                 List<Expense> expenses = new ArrayList<>();
                 String rangeName = value.getRange();
                 if (!TextUtils.isEmpty(rangeName) && rangeName.contains("!") &&
                         !TextUtils.isEmpty(rangeName.split("!")[0])) {
-                    sheetId = expensesRangeMap
-                            .get(rangeName.split("!")[0] + Constants.Sheets.EXPENSE_RANGE);
-                    if (sheetId != null && value.getObjectLists() != null) {
+                    if (value.getObjectLists() != null) {
                         for (List<Object> objects : value.getObjectLists()) {
                             if (objects == null || objects.size() < 5) {
                                 sb.append("Objects in object lists null or size less than 5;");
                                 continue;
                             }
-                            Expense expense = new Expense(objects, sheetId);
+                            Expense expense = new Expense(objects);
                             expenses.add(expense);
                         }
                     } else {
-                        sb.append("SheetId or object lists in range null;");
+                        sb.append("Object lists in range null;");
                     }
                 } else {
                     sb.append("Invalid rangeName;");
                 }
-                if (sheetId != null) {
-                    sb.append("Range: ")
-                            .append(rangeName)
-                            .append(" count: ")
-                            .append(expenses.size())
-                            .append(";");
-                    ExpenseManagerDatabase.getInstance().expenseDao().insert(expenses, sheetId);
-                }
+                sb.append("Range: ")
+                        .append(rangeName)
+                        .append(" count: ")
+                        .append(expenses.size())
+                        .append(";");
+                ExpenseManagerDatabase.getInstance().expenseDao().insert(expenses);
             }
             Timber.i(sb.toString());
             insertLog(workType,

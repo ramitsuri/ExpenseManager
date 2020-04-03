@@ -9,9 +9,7 @@ import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -70,11 +68,11 @@ public class TransformationHelper {
         return sheetInfos;
     }
 
-    public static Map<String, Integer> getExpenseRanges(@Nonnull List<SheetInfo> sheetInfos) {
-        Map<String, Integer> map = new HashMap<>();
+    public static List<String> getExpenseRanges(@Nonnull List<SheetInfo> sheetInfos) {
+        List<String> ranges = new ArrayList<>();
         for (SheetInfo info : sheetInfos) {
-            map.put(info.getSheetName() + EXPENSE_RANGE, info.getSheetId());
+            ranges.add(info.getSheetName() + EXPENSE_RANGE);
         }
-        return map;
+        return ranges;
     }
 }

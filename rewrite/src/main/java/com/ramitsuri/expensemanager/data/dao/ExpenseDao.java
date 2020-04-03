@@ -70,9 +70,6 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET store =:store WHERE mId = :id")
     abstract void updateStore(int id, String store);
 
-    @Query("UPDATE expense SET sheet_id = :sheetId WHERE mId = :id")
-    public abstract void updateSheetId(int id, int sheetId);
-
     @Query("UPDATE expense SET is_starred =:isStarred WHERE mId = :id")
     abstract void updateIsStarred(int id, boolean isStarred);
 
@@ -100,9 +97,6 @@ public abstract class ExpenseDao {
     @Query("DELETE FROM expense WHERE is_synced = 1")
     public abstract void deleteSynced();
 
-    @Query("DELETE FROM expense WHERE sheet_id = :sheetId AND is_synced = 1")
-    public abstract void deleteAllSyncedForSheet(int sheetId);
-
     /*
      * TRANSACTION
      */
@@ -120,14 +114,7 @@ public abstract class ExpenseDao {
         updateCategory(expense.getId(), expense.getCategory());
         updateDescription(expense.getId(), expense.getDescription());
         updateStore(expense.getId(), expense.getStore());
-        updateSheetId(expense.getId(), expense.getSheetId());
         updateIsStarred(expense.getId(), expense.isStarred());
         updateIsSynced(expense.getId(), expense.isSynced());
-    }
-
-    @Transaction
-    public void insert(List<Expense> expenses, int sheetId) {
-        deleteAllSyncedForSheet(sheetId);
-        insert(expenses);
     }
 }
