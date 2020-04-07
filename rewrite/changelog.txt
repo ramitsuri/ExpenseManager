@@ -1,4 +1,7 @@
 Filter
+    - Fix bug where expenses won't show up as filter looks for time >= 00:00:00.001
+
+Filter
     - Have a calendar instance so that other classes have no knowledge of how to get the filter
     - Have code to instantiate a default filter as well as with month index and set to and from dates when month changes
 AllExpensesVM, FilterOptionsVM

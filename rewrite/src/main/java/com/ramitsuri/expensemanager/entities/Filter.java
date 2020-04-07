@@ -62,7 +62,7 @@ public class Filter {
         mCalendar.set(Calendar.HOUR_OF_DAY, 0);
         mCalendar.set(Calendar.MINUTE, 0);
         mCalendar.set(Calendar.SECOND, 0);
-        mCalendar.set(Calendar.MILLISECOND, 1);
+        mCalendar.set(Calendar.MILLISECOND, 0);
         mFromDateTime = mCalendar.getTimeInMillis();
 
         // Last Day of month - 23:59:59 999ms
