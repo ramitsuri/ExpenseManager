@@ -47,16 +47,15 @@ public class BackupWorker extends BaseWorker {
             return Result.failure();
         }
 
-        List<Integer> editedSheetIds =
-                ExpenseManagerDatabase.getInstance().editedSheetDao().getAll();
+        List<Integer> editedMonths = ExpenseManagerDatabase.getInstance().editedSheetDao().getAll();
 
         // Expenses
         List<Expense> expensesToBackup;
-        if (editedSheetIds == null || editedSheetIds.size() == 0) {
+        if (editedMonths == null || editedMonths.size() == 0) {
             expensesToBackup = ExpenseManagerDatabase.getInstance().expenseDao().getAllUnsynced();
         } else {
             expensesToBackup = ExpenseManagerDatabase.getInstance().expenseDao()
-                    .getAllForBackup(editedSheetIds);
+                    .getAllForBackup(editedMonths);
         }
 
         if (expensesToBackup == null) {
@@ -76,7 +75,7 @@ public class BackupWorker extends BaseWorker {
         }
 
         InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
-                .getInsertRangeResponse(spreadsheetId, expensesToBackup, editedSheetIds,
+                .getInsertRangeResponse(spreadsheetId, expensesToBackup, editedMonths,
                         defaultSheetId);
         if (response.isSuccessful()) {
             ExpenseManagerDatabase.getInstance().expenseDao().updateUnsynced();
@@ -91,6 +90,10 @@ public class BackupWorker extends BaseWorker {
                     Constants.LogResult.FAILURE,
                     response.getException().getMessage());
         }
+
+        insertLog(workType,
+                Constants.LogResult.FAILURE,
+                "Unknown reason");
         return Result.failure();
     }
 }

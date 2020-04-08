@@ -16,6 +16,7 @@ public class DateHelper {
     private static final String FORMAT_FRIENDLY = "MMM dd"; // Sep 21
     private static final String FORMAT_EXPANDED = "EEEE, MMMM"; // Thursday, September 21
     private static final String FORMAT_DAY = "dd"; // 21
+    private static final String FORMAT_FULL = "EE MMM dd HH:mm:ss zzz yyyy";
     private static String[] DAY_SUFFIXES =
             {"0th", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th",
                     "10th", "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th",
@@ -36,6 +37,12 @@ public class DateHelper {
         int day = Integer.parseInt(formatDayOfMonth.format(date));
 
         return format.format(date) + " " + DAY_SUFFIXES[day];
+    }
+
+    public static String getFullDate(long date, TimeZone timeZone) {
+        SimpleDateFormat format = new SimpleDateFormat(FORMAT_FULL, Locale.getDefault());
+        format.setTimeZone(timeZone);
+        return format.format(date);
     }
 
     public static String getJustDay(long date) {
@@ -74,20 +81,12 @@ public class DateHelper {
         return potentialDate - offset;
     }
 
-    public static long toDaysSinceStartOfTime(long date) {
-        return date / MILLI_SECONDS_IN_DAY;
-    }
-
-    public static long toDay(long daysFromStartOfTime) {
-        return daysFromStartOfTime * MILLI_SECONDS_IN_DAY;
-    }
-
     public static int getYearFromDate(LocalDate localDate) {
         return localDate.getYear();
     }
 
     /**
-     * return month in range 1-12
+     * return month in range 0-11
      */
     public static int getMonthFromDate(LocalDate localDate) {
         return localDate.getMonthValue() - 1;
@@ -98,11 +97,30 @@ public class DateHelper {
     }
 
     public static LocalDate getLocalDate(Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return getLocalDate(date, null);
+    }
+
+    public static LocalDate getLocalDate(Date date, TimeZone timeZone) {
+        if (timeZone == null) {
+            timeZone = AppHelper.getTimeZone();
+        }
+        ZoneId zoneId = timeZone.toZoneId();
+        return date.toInstant().atZone(zoneId).toLocalDate();
+    }
+
+    public static int getMonthIndexFromDate(long date) {
+        return getMonthIndexFromDate(date, null);
+    }
+
+    public static int getMonthIndexFromDate(long date, TimeZone timeZone) {
+        if (timeZone == null) {
+            timeZone = AppHelper.getTimeZone();
+        }
+        return getMonthFromDate(getLocalDate(new Date(date), timeZone));
     }
 
     /**
-     * Takes in month in range 1-12
+     * Takes in month in range 0-11
      */
     public static long getDateFromYearMonthDay(int year, int month, int day) {
         LocalDate localDate = LocalDate.of(year, month + 1, day);
@@ -128,5 +146,27 @@ public class DateHelper {
             timeDesired = timeDesired + TimeUnit.DAYS.toMillis(1);
         }
         return Duration.ofMillis(timeDesired - timeNow);
+    }
+
+    public static long getFirstDayOfCurrentYear() {
+        Calendar calendar = Calendar.getInstance(AppHelper.getTimeZone());
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
+    }
+
+    public static long getLastDayOfCurrentYear() {
+        Calendar calendar = Calendar.getInstance(AppHelper.getTimeZone());
+        calendar.set(Calendar.MONTH, 11);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTimeInMillis();
     }
 }

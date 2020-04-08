@@ -300,6 +300,26 @@ public class DateHelperTest {
         }
     }
 
+    @Test
+    public void testGetMonthIndex() {
+        TimeZone timeZone = TimeZone.getTimeZone("America/New_York"); // EST
+        Calendar calendar = Calendar.getInstance(timeZone);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.YEAR, 2020);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 30);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0); // 00:30:00.000
+
+        while (calendar.get(Calendar.YEAR) != 2021) {
+            assertEquals(calendar.get(Calendar.MONTH),
+                    DateHelper.getMonthIndexFromDate(calendar.getTime().getTime(), timeZone));
+
+            calendar.add(Calendar.MINUTE, 1);
+        }
+    }
+
     private long getMinutes(int hourOfDay, int minutes) {
         long value = 0;
         if (hourOfDay < 2) {

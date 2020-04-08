@@ -1,15 +1,22 @@
 package com.ramitsuri.expensemanager.data.dao;
 
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Filter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.RawQuery;
 import androidx.room.Transaction;
+import androidx.sqlite.db.SimpleSQLiteQuery;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 @Dao
 public abstract class ExpenseDao {
@@ -17,7 +24,7 @@ public abstract class ExpenseDao {
      * SELECT
      */
     @Query("SELECT * FROM expense ORDER BY date_time DESC")
-    public abstract LiveData<List<Expense>> getAll();
+    public abstract List<Expense> getAll();
 
     @Query("SELECT * FROM expense WHERE sheet_id = :sheetId ORDER BY date_time DESC")
     public abstract List<Expense> getAllForSheet(int sheetId);
@@ -31,8 +38,8 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract List<Expense> getAllUnsynced();
 
-    @Query("SELECT * FROM expense WHERE is_synced = 0 OR sheet_id IN (:sheetIds)")
-    public abstract List<Expense> getAllForBackup(List<Integer> sheetIds);
+    @RawQuery
+    public abstract List<Expense> getAllForBackup(SupportSQLiteQuery query);
 
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract LiveData<List<Expense>> getAllUnsyncedLiveData();
@@ -104,6 +111,27 @@ public abstract class ExpenseDao {
     public Expense insertAndGetExpense(Expense expense) {
         long id = insert(expense);
         return getExpense(id);
+    }
+
+    @Transaction
+    public List<Expense> getAllForBackup(@Nonnull List<Integer> monthIndices) {
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT * FROM expense WHERE is_synced = 0");
+        List<Object> args = new ArrayList<>();
+
+        for (Integer index : monthIndices) {
+            // Create a filter for every month to get start and end date time
+            Filter filter = new Filter()
+                    .setMonthIndex(index);
+            queryBuilder.append(" OR");
+            queryBuilder.append(" (date_time BETWEEN ? AND ?)");
+            args.add(filter.getFromDateTime());
+            args.add(filter.getToDateTime());
+        }
+        // SELECT * FROM expense WHERE is_synced = 0 OR (date_time BETWEEN ? AND ?) OR
+        // (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?)
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
+        return getAllForBackup(query);
     }
 
     @Transaction

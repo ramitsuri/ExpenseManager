@@ -40,8 +40,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testGetAll() throws Exception {
         // Get all
-        Assert.assertEquals(DummyData.getExpenses().size(),
-                LiveDataTestUtil.getValue(mExpenseDao.getAll()).size());
+        Assert.assertEquals(DummyData.getExpenses().size(), mExpenseDao.getAll().size());
         Log.d(TAG, mExpenseDao.getAll().toString());
     }
 
@@ -64,11 +63,31 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testGetAllForBackup() throws Exception {
         // get All for backup
-        List<Integer> sheetIds = new ArrayList<>();
-        sheetIds.add(1);
+        List<Integer> monthIndices = new ArrayList<>();
+        monthIndices.add(6);
+        monthIndices.add(5);
+        monthIndices.add(4);
         Assert.assertEquals(
-                DummyData.getAllForBackup(sheetIds).size(),
-                mExpenseDao.getAllForBackup(sheetIds).size());
+                DummyData.getAllForBackup(monthIndices).size(),
+                mExpenseDao.getAllForBackup(monthIndices).size());
+
+        monthIndices = new ArrayList<>();
+        monthIndices.add(0);
+        Assert.assertEquals(
+                DummyData.getAllForBackup(monthIndices).size(),
+                mExpenseDao.getAllForBackup(monthIndices).size());
+
+        monthIndices = new ArrayList<>();
+        monthIndices.add(11);
+        monthIndices.add(9);
+        Assert.assertEquals(
+                DummyData.getAllForBackup(monthIndices).size(),
+                mExpenseDao.getAllForBackup(monthIndices).size());
+
+        monthIndices = new ArrayList<>();
+        Assert.assertEquals(
+                DummyData.getAllForBackup(monthIndices).size(),
+                mExpenseDao.getAllForBackup(monthIndices).size());
     }
 
     @Test
@@ -94,8 +113,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         mExpenseDao.deleteSynced();
         Assert.assertEquals(
                 0,
-                LiveDataTestUtil.getValue(mExpenseDao.getAll()).size() -
-                        mExpenseDao.getAllUnsynced().size());
+                mExpenseDao.getAll().size() - mExpenseDao.getAllUnsynced().size());
     }
 
     @Test
@@ -104,7 +122,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         mExpenseDao.deleteAll();
         Assert.assertEquals(
                 0,
-                LiveDataTestUtil.getValue(mExpenseDao.getAll()).size());
+                mExpenseDao.getAll().size());
     }
 
     @Test
@@ -115,7 +133,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         }
         Assert.assertEquals(
                 DummyData.getExpenses().size(),
-                LiveDataTestUtil.getValue(mExpenseDao.getAll()).size());
+                mExpenseDao.getAll().size());
     }
 
     @Test
@@ -130,7 +148,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testSetStarred() throws Exception {
         // set starred
-        List<Expense> expenses = LiveDataTestUtil.getValue(mExpenseDao.getAll());
+        List<Expense> expenses = mExpenseDao.getAll();
         for (Expense expense : expenses) {
             if (!expense.isStarred()) {
                 mExpenseDao.setStarred(expense.getId());
@@ -145,7 +163,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testSetUnstarred() throws Exception {
         // set unstarred
-        mExpenseDao.setUnstarred(LiveDataTestUtil.getValue(mExpenseDao.getAll()).get(3).getId());
+        mExpenseDao.setUnstarred(mExpenseDao.getAll().get(3).getId());
         Assert.assertEquals(
                 DummyData.getAllStarred().size(),
                 mExpenseDao.getAllStarred().size());

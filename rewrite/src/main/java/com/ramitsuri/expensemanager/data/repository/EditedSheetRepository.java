@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
-import com.ramitsuri.expensemanager.entities.Log;
 
 import java.util.List;
 
@@ -17,10 +16,12 @@ public class EditedSheetRepository {
 
     private AppExecutors mExecutors;
     private ExpenseManagerDatabase mDatabase;
+    private MutableLiveData<List<Integer>> mEditedMonths;
 
     public EditedSheetRepository(AppExecutors executors, ExpenseManagerDatabase database) {
         mExecutors = executors;
         mDatabase = database;
+        mEditedMonths = new MutableLiveData<>();
     }
 
     public void insertEditedSheet(final EditedSheet editedSheet) {
@@ -36,23 +37,25 @@ public class EditedSheetRepository {
         });
     }
 
-    public LiveData<List<Integer>> getAllEditedSheets() {
-        final MutableLiveData<List<Integer>> editedSheetsIds = new MutableLiveData<>();
+    public LiveData<List<Integer>> getEditedMonths() {
+        return mEditedMonths;
+    }
+
+    public void refreshEditedMonths() {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 List<Integer> values = mDatabase.editedSheetDao().getAll();
-                editedSheetsIds.postValue(values);
+                mEditedMonths.postValue(values);
             }
         });
-        return editedSheetsIds;
     }
 
     public void deleteAll() {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                mDatabase.logDao().deleteAll();
+                mDatabase.editedSheetDao().deleteAll();
             }
         });
     }

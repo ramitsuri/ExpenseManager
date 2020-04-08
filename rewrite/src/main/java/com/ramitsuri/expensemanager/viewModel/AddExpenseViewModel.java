@@ -9,16 +9,14 @@ import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
-import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
+import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +31,7 @@ public class AddExpenseViewModel extends ViewModel {
     private ExpenseRepository mExpenseRepo;
 
     private Expense mExpense;
-    private Integer mOldSheetId;
+    private Integer mOldMonthIndex;
     private LiveData<List<String>> mCategories;
     private LiveData<List<String>> mPaymentMethods;
     private int mAddMode;
@@ -104,18 +102,20 @@ public class AddExpenseViewModel extends ViewModel {
         }
         boolean wasSynced = mExpense.isSynced();
         mExpenseRepo.edit(expense);
-        // Backed up expense was edited, update Edited Sheets table to add this expense's sheet id
+        // Backed up expense was edited, update EditedSheets table to add this expense's month index
         if (wasSynced) { // Backed up expense was edited
-            int editedSheetId;
-            // Expense was moved from old sheet to new sheet
-            // Old sheet would need to be rewritten as an expense from that was deleted
-            if (mOldSheetId != null) {
-                editedSheetId = mOldSheetId;
-            } else { // Sheet wasn't changed so current sheet would need to be rewritten
-                editedSheetId = expense.getSheetId();
+            int editedMonthIndex;
+            if (mOldMonthIndex != null) {
+                // Expense date was changed to fall in a different sheet
+                // Old sheet would need to be rewritten as an expense from that was deleted
+                editedMonthIndex = mOldMonthIndex;
+            } else {
+                // Date's month wasn't changed so sheet corresponding to expense's month would
+                // need to be rewritten
+                editedMonthIndex = DateHelper.getMonthIndexFromDate(expense.getDateTime());
             }
             MainApplication.getInstance().getEditedSheetRepo()
-                    .insertEditedSheet(new EditedSheet(editedSheetId));
+                    .insertEditedSheet(new EditedSheet(editedMonthIndex));
         }
         reset(null);
     }
@@ -125,6 +125,17 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setDate(long date) {
+        int oldMonthIndex = DateHelper.getMonthIndexFromDate(mExpense.getDateTime());
+        int newMonthIndex = DateHelper.getMonthIndexFromDate(date);
+        boolean monthChanged = oldMonthIndex != newMonthIndex;
+        if (monthChanged) {
+            // A backed up expense is basically being deleted from the sheet corresponding to
+            // old month. Save the old month so that sheet holding expenses for that month
+            // can be updated.
+            if (mExpense.isSynced()) {
+                mOldMonthIndex = oldMonthIndex;
+            }
+        }
         mExpense.setDateTime(date);
         setChangesMade();
     }
@@ -192,18 +203,6 @@ public class AddExpenseViewModel extends ViewModel {
         return mExpense.getDescription();
     }
 
-    public void setSheet(@Nonnull SheetInfo sheetInfo) {
-        boolean changesMade = sheetInfo.getSheetId() != mExpense.getSheetId();
-        if (changesMade) {
-            // A backed up expense is basically being deleted from the old sheet. Save it so that
-            // it can be updated.
-            if (mExpense.isSynced()) {
-                mOldSheetId = mExpense.getSheetId();
-            }
-            mExpense.setSheetId(sheetInfo.getSheetId());
-        }
-    }
-
     public boolean isFlagged() {
         return mExpense.isStarred();
     }
@@ -239,7 +238,7 @@ public class AddExpenseViewModel extends ViewModel {
 
     private void reset(@Nullable Expense expense) {
         mIsSplit = false;
-        mOldSheetId = null;
+        mOldMonthIndex = null;
         if (expense != null) {
             mExpense = expense;
             mAddMode = Constants.AddExpenseMode.EDIT;

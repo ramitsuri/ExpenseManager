@@ -7,6 +7,7 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.utils.Calculator;
+import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
@@ -95,8 +96,8 @@ public class AllExpensesViewModel extends ViewModel {
         mRepository.delete(expense, mFilter);
         // Backed up expense was deleted, update Edited Sheets table to add this expense's sheet id
         if (expense.isSynced()) {
-            MainApplication.getInstance().getEditedSheetRepo()
-                    .insertEditedSheet(new EditedSheet(expense.getSheetId()));
+            MainApplication.getInstance().getEditedSheetRepo().insertEditedSheet(
+                    new EditedSheet(DateHelper.getMonthIndexFromDate(expense.getDateTime())));
         }
     }
 

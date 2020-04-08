@@ -1,3 +1,27 @@
+Edit synced Expenses
+ExpenseDao
+    - modify getAllForBackup() to take in a query that is created at runtime in a transaction method
+EditedSheetRepo
+    - Add a member variable because of refresh issue (similar to Log)
+DummyData
+    - Modify expense dates to be in different months and 2020
+DatePickerDialog
+    - Add min and max date to restrict entry to current year only
+DateHelper
+    - Add method to print full date
+    - Remove toDaysSinceStartOfTime() and toDay()
+    - Add method to getLocalDate for time zone
+    - Add getMonthIndexFromDate
+    - Add methods getFirstDayOfCurrentYear and getLastDayOfCurrentYear
+AddExpenseVM
+    - Modify edit synced logic to consider expense's date's month index
+    - Remove method to set expense sheet
+AllExpensesVM
+    - Save expense's date's month when synced expense is deleted
+BackupWorker (Expense)
+    - Rename editedSheetIds to editedMonths
+    - Add unknown failure log when work fails without reason
+
 Cleanup Database tests
     - Add new base db test class
     - Add new classes for all tables extending from the base class

@@ -7,6 +7,7 @@ import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class DummyData {
 
-    public static long BASE_DATE_TIME = 1565818852014L;
+    public static long BASE_DATE_TIME = 1565818852014L; // Wed Aug 14 2019 17:40:52
     public static long ONE_DAY = 86400000;
 
     public static String[] getCategories() {
@@ -117,7 +118,7 @@ public class DummyData {
         Expense expense = new Expense();
         expense.setAmount(BigDecimal.ZERO);
         expense.setCategory(getCategories()[0]);
-        expense.setDateTime(BASE_DATE_TIME);
+        expense.setDateTime(BASE_DATE_TIME + 365 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[0]);
         expense.setDescription(getDescriptions()[0]);
         expense.setStore(getStores()[0]);
@@ -129,7 +130,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("10.00"));
         expense.setCategory(getCategories()[1]);
-        expense.setDateTime(BASE_DATE_TIME);
+        expense.setDateTime(BASE_DATE_TIME + 325 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[2]);
         expense.setDescription(getDescriptions()[4]);
         expense.setStore(getStores()[5]);
@@ -141,7 +142,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("7.43"));
         expense.setCategory(getCategories()[4]);
-        expense.setDateTime(BASE_DATE_TIME + ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 340 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[0]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[9]);
@@ -153,7 +154,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("17.56"));
         expense.setCategory(getCategories()[2]);
-        expense.setDateTime(BASE_DATE_TIME + ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 200 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[8]);
         expense.setDescription(getDescriptions()[12]);
         expense.setStore(getStores()[13]);
@@ -165,7 +166,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("123.98"));
         expense.setCategory(getCategories()[7]);
-        expense.setDateTime(BASE_DATE_TIME - ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 150 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[3]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[7]);
@@ -177,7 +178,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("45"));
         expense.setCategory(getCategories()[6]);
-        expense.setDateTime(BASE_DATE_TIME + 3 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 300 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[4]);
         expense.setDescription(getDescriptions()[4]);
         expense.setStore(getStores()[3]);
@@ -189,7 +190,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1399"));
         expense.setCategory(getCategories()[0]);
-        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 223 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[11]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[10]);
@@ -201,7 +202,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(BigDecimal.ZERO);
         expense.setCategory(getCategories()[3]);
-        expense.setDateTime(BASE_DATE_TIME + 3 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 311 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[11]);
         expense.setDescription(getDescriptions()[2]);
         expense.setStore(getStores()[5]);
@@ -213,7 +214,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("13.45"));
         expense.setCategory(getCategories()[5]);
-        expense.setDateTime(BASE_DATE_TIME - ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 213 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[3]);
         expense.setStore(getStores()[1]);
@@ -225,7 +226,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("15"));
         expense.setCategory(getCategories()[3]);
-        expense.setDateTime(BASE_DATE_TIME + 2 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 198 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[3]);
         expense.setDescription(getDescriptions()[9]);
         expense.setStore(getStores()[2]);
@@ -237,7 +238,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("15.45"));
         expense.setCategory(getCategories()[5]);
-        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 199 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[10]);
         expense.setDescription(getDescriptions()[10]);
         expense.setStore(getStores()[13]);
@@ -249,7 +250,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1.40"));
         expense.setCategory(getCategories()[8]);
-        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 450 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[10]);
@@ -261,7 +262,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("1.40"));
         expense.setCategory(getCategories()[8]);
-        expense.setDateTime(BASE_DATE_TIME - 2 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 410 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[5]);
         expense.setDescription(getDescriptions()[7]);
         expense.setStore(getStores()[10]);
@@ -273,7 +274,7 @@ public class DummyData {
         expense = new Expense();
         expense.setAmount(new BigDecimal("31.90"));
         expense.setCategory(getCategories()[2]);
-        expense.setDateTime(BASE_DATE_TIME + 2 * ONE_DAY);
+        expense.setDateTime(BASE_DATE_TIME + 178 * ONE_DAY);
         expense.setPaymentMethod(getPaymentMethods()[2]);
         expense.setDescription(getDescriptions()[9]);
         expense.setStore(getStores()[2]);
@@ -315,10 +316,13 @@ public class DummyData {
         return expenses;
     }
 
-    public static List<Expense> getAllForBackup(List<Integer> sheetIds) {
+    public static List<Expense> getAllForBackup(List<Integer> monthIndices) {
         List<Expense> expenses = new ArrayList<>();
         for (Expense expense : getExpenses()) {
-            if (!expense.isSynced() || sheetIds.contains(expense.getSheetId())) {
+            if (!expense.isSynced() ||
+                    monthIndices
+                            .contains(DateHelper.getMonthIndexFromDate(expense.getDateTime()))) {
+                // Expense is not synced or expense's month is contained in supplied month indices
                 expenses.add(expense);
             }
         }

@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,6 +49,8 @@ public class DatePickerDialog extends DialogFragment {
             int day = getArguments().getInt(Constants.BundleKeys.DATE_PICKER_DAY);
 
             DatePicker datePicker = view.findViewById(R.id.date_picker);
+            datePicker.setMinDate(DateHelper.getFirstDayOfCurrentYear()); // Jan 1 00:00:00
+            datePicker.setMaxDate(DateHelper.getLastDayOfCurrentYear()); // Dec 31 23:59:59
             datePicker.init(year, month, day, mListener);
         }
     }
