@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.viewModel;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class SetupCategoriesViewModel extends ViewModel {
         if (values == null) {
             values = new ArrayList<>();
         }
-        if (!contains(values, value)) {
+        if (!ObjectHelper.contains(values, value)) {
             values.add(value);
             mValuesLive.postValue(values);
             mChangesMade = true;
@@ -47,10 +48,10 @@ public class SetupCategoriesViewModel extends ViewModel {
         if (values == null) {
             return false;
         }
-        if (contains(values, newValue)) {
+        if (ObjectHelper.contains(values, newValue)) {
             return false;
         }
-        if (contains(values, oldValue)) {
+        if (ObjectHelper.contains(values, oldValue)) {
             int index = values.indexOf(oldValue);
             values.remove(index);
             values.add(index, newValue);
@@ -69,7 +70,7 @@ public class SetupCategoriesViewModel extends ViewModel {
         if (values.size() == 1) {
             return false;
         }
-        if (contains(values, value)) {
+        if (ObjectHelper.contains(values, value)) {
             values.remove(value);
             mValuesLive.postValue(values);
             mChangesMade = true;
@@ -94,14 +95,5 @@ public class SetupCategoriesViewModel extends ViewModel {
 
     private CategoryRepository repository() {
         return MainApplication.getInstance().getCategoryRepo();
-    }
-
-    private boolean contains(@Nonnull List<String> values, @Nonnull String value) {
-        for (String string : values) {
-            if (string.equalsIgnoreCase(value)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

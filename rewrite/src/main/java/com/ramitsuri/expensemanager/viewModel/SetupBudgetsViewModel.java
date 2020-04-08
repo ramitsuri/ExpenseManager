@@ -6,6 +6,7 @@ import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.ui.adapter.BudgetCategoryWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,10 +104,10 @@ public class SetupBudgetsViewModel extends ViewModel {
                 for (String category : mAllCategories) {
                     BudgetCategoryWrapper wrapper = new BudgetCategoryWrapper(category);
                     if (budget != null && budget.getCategories() != null &&
-                            contains(budget.getCategories(), category)) { // Contained in budget
+                            ObjectHelper.contains(budget.getCategories(), category)) { // Contained in budget
                         wrapper.setSelected(true);
                         wrapper.setAvailable(true);
-                    } else if (contains(usedCategories, category)) {
+                    } else if (ObjectHelper.contains(usedCategories, category)) {
                         wrapper.setSelected(false);
                         wrapper.setAvailable(false);
                     } else {
@@ -162,20 +163,11 @@ public class SetupBudgetsViewModel extends ViewModel {
                     budget.getCategories().size() == value.getCategories().size()) {
                 boolean contains = false;
                 for (String category : value.getCategories()) {
-                    contains = contains(budget.getCategories(), category);
+                    contains = ObjectHelper.contains(budget.getCategories(), category);
                 }
                 if (contains) {
                     return true;
                 }
-            }
-        }
-        return false;
-    }
-
-    private boolean contains(@Nonnull List<String> values, @Nonnull String value) {
-        for (String string : values) {
-            if (string.equalsIgnoreCase(value)) {
-                return true;
             }
         }
         return false;

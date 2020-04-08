@@ -1,3 +1,5 @@
+Add ObjectHelper class containing "contains(List<String>, String)"
+
 Move Prefs to a StringDef class
 
 Expense
