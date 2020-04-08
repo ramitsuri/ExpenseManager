@@ -1,3 +1,17 @@
+Expense
+    - No longer converting date when recreating expense from sheet as date will now be stored as it is
+Filter
+    - Creating Calendar instance with App's time zone
+    - No longer showing the whole date in toString, for easier comparison with expense date
+AppHelper
+    - Add method to save and get time zone
+DateHelper
+    - Using app's time zone instead of device time zone
+SheetRequestHelper
+    - Create spreadsheet with app time zone
+    - Increase expense sheet columns to 10
+    - Remove any additional formatting and conditions when putting expense in sheet, they'll be saved as it is
+
 Filter
     - Fix bug where expenses won't show up as filter looks for time >= 00:00:00.001
 
@@ -6,7 +20,6 @@ Filter
     - Have code to instantiate a default filter as well as with month index and set to and from dates when month changes
 AllExpensesVM, FilterOptionsVM
     - Remove Calendar instance
-
 
 ExpenseDao
     - Remove method to update sheet id, modify updateExpense transaction

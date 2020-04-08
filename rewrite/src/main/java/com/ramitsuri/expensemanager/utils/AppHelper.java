@@ -1,11 +1,14 @@
 package com.ramitsuri.expensemanager.utils;
 
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
+
+import java.util.TimeZone;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -116,6 +119,21 @@ public class AppHelper {
 
     public static void setEntitiesEdited(boolean edited) {
         PrefHelper.set(getString(R.string.settings_key_is_entities_edited), edited);
+    }
+
+    public static TimeZone getTimeZone() {
+        String tzId = PrefHelper.get(getString(R.string.settings_key_time_zone_id), null);
+        if (!TextUtils.isEmpty(tzId)) {
+            return TimeZone.getTimeZone(tzId);
+        }
+
+        // Timezone ID unavailable, falling back to device timezone
+        setTimeZoneId(TimeZone.getDefault().getID());
+        return TimeZone.getDefault();
+    }
+
+    public static void setTimeZoneId(String tzId) {
+        PrefHelper.set(getString(R.string.settings_key_time_zone_id), tzId);
     }
 
     public static String[] getScopes() {

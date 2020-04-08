@@ -49,7 +49,7 @@ public class DateHelper {
 
     public static long toSheetsDate(long date, @Nullable TimeZone timeZone) {
         if (timeZone == null) {
-            timeZone = TimeZone.getDefault();
+            timeZone = AppHelper.getTimeZone();
         }
         long offset = 0;
         if (timeZone.observesDaylightTime()) {
@@ -65,7 +65,7 @@ public class DateHelper {
     public static long fromSheetsDate(long sheetsDate, @Nullable TimeZone timeZone) {
         long potentialDate = (sheetsDate - SHEETS_DATE_OFFSET) * MILLI_SECONDS_IN_DAY;
         if (timeZone == null) {
-            timeZone = TimeZone.getDefault();
+            timeZone = AppHelper.getTimeZone();
         }
         long offset = 0;
         if (timeZone.observesDaylightTime()) {

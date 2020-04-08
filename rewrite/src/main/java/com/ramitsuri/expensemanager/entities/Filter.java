@@ -3,10 +3,10 @@ package com.ramitsuri.expensemanager.entities;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +18,7 @@ public class Filter {
     private long mToDateTime;
 
     public Filter() {
-        mCalendar = Calendar.getInstance();
+        mCalendar = Calendar.getInstance(AppHelper.getTimeZone());
         setMonthIndex(Constants.Basic.UNDEFINED);
     }
 
@@ -40,8 +40,8 @@ public class Filter {
     @Nonnull
     public String toString() {
         return "Filter{" +
-                "mFromDateTime=" + new Date(mFromDateTime) +
-                ", mToDateTime=" + new Date(mToDateTime) +
+                "mFromDateTime=" + mFromDateTime +
+                ", mToDateTime=" + mToDateTime +
                 '}';
     }
 

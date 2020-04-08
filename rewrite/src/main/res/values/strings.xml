@@ -90,6 +90,7 @@
     <string name="settings_key_enable_expense_sync">enable_expense_sync</string>
     <string name="settings_key_enable_entities_sync">enable_entities_sync</string>
     <string name="settings_key_is_entities_edited">is_entities_edited</string>
+    <string name="settings_key_time_zone_id">settings_time_zone_id</string>
 
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>

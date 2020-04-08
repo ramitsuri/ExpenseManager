@@ -3,8 +3,6 @@ package com.ramitsuri.expensemanager.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.ramitsuri.expensemanager.utils.DateHelper;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -78,7 +76,7 @@ public class Expense implements Parcelable {
     }
 
     public Expense(List<Object> objects) {
-        mDateTime = DateHelper.fromSheetsDate(((BigDecimal)objects.get(0)).intValue());
+        mDateTime = ((BigDecimal)objects.get(0)).longValue();
         mDescription = (String)objects.get(1);
         mStore = (String)objects.get(2);
         mAmount = (BigDecimal)objects.get(3);

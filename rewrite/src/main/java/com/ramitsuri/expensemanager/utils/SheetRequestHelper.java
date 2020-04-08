@@ -5,18 +5,14 @@ import android.util.SparseArray;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.sheets.v4.model.AppendCellsRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
-import com.google.api.services.sheets.v4.model.BooleanCondition;
 import com.google.api.services.sheets.v4.model.CellData;
 import com.google.api.services.sheets.v4.model.CellFormat;
 import com.google.api.services.sheets.v4.model.Color;
-import com.google.api.services.sheets.v4.model.ConditionValue;
-import com.google.api.services.sheets.v4.model.DataValidationRule;
 import com.google.api.services.sheets.v4.model.DuplicateSheetRequest;
 import com.google.api.services.sheets.v4.model.ExtendedValue;
 import com.google.api.services.sheets.v4.model.GridData;
 import com.google.api.services.sheets.v4.model.GridProperties;
 import com.google.api.services.sheets.v4.model.GridRange;
-import com.google.api.services.sheets.v4.model.NumberFormat;
 import com.google.api.services.sheets.v4.model.Padding;
 import com.google.api.services.sheets.v4.model.Request;
 import com.google.api.services.sheets.v4.model.RowData;
@@ -37,19 +33,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.ramitsuri.expensemanager.constants.Constants.Range.USER_ENTERED_CATEGORIES;
-import static com.ramitsuri.expensemanager.constants.Constants.Range.USER_ENTERED_PAYMENT_METHODS;
-import static com.ramitsuri.expensemanager.constants.Constants.Sheets.DATE;
-import static com.ramitsuri.expensemanager.constants.Constants.Sheets.DATE_IS_VALID;
-import static com.ramitsuri.expensemanager.constants.Constants.Sheets.DATE_PATTERN;
 import static com.ramitsuri.expensemanager.constants.Constants.Sheets.FLAG;
-import static com.ramitsuri.expensemanager.constants.Constants.Sheets.ONE_OF_LIST;
-import static com.ramitsuri.expensemanager.constants.Constants.Sheets.ONE_OF_RANGE;
 
 public class SheetRequestHelper {
 
@@ -130,7 +118,7 @@ public class SheetRequestHelper {
         properties.setTitle(spreadsheetTitle)
                 .setLocale(Locale.forLanguageTag(Locale.getDefault().toLanguageTag()).toString())
                 .setAutoRecalc("ON_CHANGE")
-                .setTimeZone(TimeZone.getDefault().getID())
+                .setTimeZone(AppHelper.getTimeZone().getID())
                 .setDefaultFormat(new CellFormat()
                         .setBackgroundColor(new Color()
                                 .setBlue(1f)
@@ -245,7 +233,7 @@ public class SheetRequestHelper {
 
     private static Sheet getExpenseSheet(String title, int index) {
         int rows = 300;
-        int columns = 7;
+        int columns = 10;
         Sheet sheet = new Sheet();
         sheet.setProperties(getSheetProperties(title, index, rows, columns));
 
@@ -259,11 +247,6 @@ public class SheetRequestHelper {
 
             // Date
             value = getEmptyCell();
-            value.setUserEnteredFormat(
-                    new CellFormat().setNumberFormat(
-                            new NumberFormat().setType(DATE).setPattern(DATE_PATTERN)));
-            value.setDataValidation(new DataValidationRule()
-                    .setCondition(new BooleanCondition().setType(DATE_IS_VALID)));
             valuesList.add(value);
 
             // Description
@@ -280,29 +263,14 @@ public class SheetRequestHelper {
 
             // Payment Method
             value = getEmptyCell();
-            value.setDataValidation(new DataValidationRule()
-                    .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
-                            .setValues(getPaymentMethodConditionValues()))
-                    .setStrict(true)
-                    .setShowCustomUi(true));
             valuesList.add(value);
 
             // Category
             value = getEmptyCell();
-            value.setDataValidation(new DataValidationRule()
-                    .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
-                            .setValues(getCategoriesConditionValues()))
-                    .setStrict(true)
-                    .setShowCustomUi(true));
             valuesList.add(value);
 
             // Flag
             value = getEmptyCell();
-            value.setDataValidation(new DataValidationRule()
-                    .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
-                            .setValues(getFlagConditionValues()))
-                    .setStrict(true)
-                    .setShowCustomUi(true));
             valuesList.add(value);
 
             rowData.setValues(valuesList);
@@ -391,36 +359,6 @@ public class SheetRequestHelper {
                 .setTextFormat(new TextFormat().setFontFamily("Roboto").setFontSize(10));
     }
 
-    private static ArrayList<ConditionValue> getPaymentMethodConditionValues() {
-        ArrayList<ConditionValue> conditionValues = new ArrayList<>();
-
-        ConditionValue value = new ConditionValue();
-        value.setUserEnteredValue(USER_ENTERED_PAYMENT_METHODS);
-        conditionValues.add(value);
-
-        return conditionValues;
-    }
-
-    private static ArrayList<ConditionValue> getCategoriesConditionValues() {
-        ArrayList<ConditionValue> conditionValues = new ArrayList<>();
-
-        ConditionValue value = new ConditionValue();
-        value.setUserEnteredValue(USER_ENTERED_CATEGORIES);
-        conditionValues.add(value);
-
-        return conditionValues;
-    }
-
-    private static ArrayList<ConditionValue> getFlagConditionValues() {
-        ArrayList<ConditionValue> conditionValues = new ArrayList<>();
-
-        ConditionValue value = new ConditionValue();
-        value.setUserEnteredValue(FLAG);
-        conditionValues.add(value);
-
-        return conditionValues;
-    }
-
     private static SparseArray<List<Expense>> getAppendMap(@Nonnull List<Expense> expenses,
             int defaultSheetId) {
         SparseArray<List<Expense>> map = new SparseArray<>();
@@ -497,13 +435,9 @@ public class SheetRequestHelper {
 
         // Date
         values = new CellData();
-        values.setUserEnteredValue(new ExtendedValue()
-                .setNumberValue((double)DateHelper.toSheetsDate(expense.getDateTime())));
-        values.setUserEnteredFormat(
-                new CellFormat().setNumberFormat(
-                        new NumberFormat().setType(DATE).setPattern(DATE_PATTERN)));
-        values.setDataValidation(new DataValidationRule()
-                .setCondition(new BooleanCondition().setType(DATE_IS_VALID)));
+        values.setUserEnteredValue(
+                new ExtendedValue()
+                        .setNumberValue((double)expense.getDateTime()));
         valuesList.add(values);
 
         // Description
@@ -516,47 +450,37 @@ public class SheetRequestHelper {
         // Store
         values = new CellData();
         values.setUserEnteredValue(
-                new ExtendedValue().setStringValue(String.valueOf(expense.getStore())));
+                new ExtendedValue()
+                        .setStringValue(String.valueOf(expense.getStore())));
         valuesList.add(values);
 
         // Amount
         values = new CellData();
         values.setUserEnteredValue(
-                new ExtendedValue().setNumberValue(expense.getAmount().doubleValue()));
+                new ExtendedValue()
+                        .setNumberValue(expense.getAmount().doubleValue()));
         valuesList.add(values);
 
         // Payment Method
         values = new CellData();
-        values.setUserEnteredValue(new ExtendedValue()
-                .setStringValue(String.valueOf(expense.getPaymentMethod())));
-        values.setDataValidation(new DataValidationRule()
-                .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
-                        .setValues(getPaymentMethodConditionValues()))
-                .setStrict(true)
-                .setShowCustomUi(true));
+        values.setUserEnteredValue(
+                new ExtendedValue()
+                        .setStringValue(String.valueOf(expense.getPaymentMethod())));
         valuesList.add(values);
 
         // Category
         values = new CellData();
-        values.setUserEnteredValue(new ExtendedValue()
-                .setStringValue(String.valueOf(expense.getCategory())));
-        values.setDataValidation(new DataValidationRule()
-                .setCondition(new BooleanCondition().setType(ONE_OF_RANGE)
-                        .setValues(getCategoriesConditionValues()))
-                .setStrict(true)
-                .setShowCustomUi(true));
+        values.setUserEnteredValue(
+                new ExtendedValue()
+                        .setStringValue(String.valueOf(expense.getCategory())));
         valuesList.add(values);
 
         // Flag
         if (expense.isStarred()) {
             values = new CellData();
-            values.setUserEnteredValue(new ExtendedValue()
-                    .setStringValue(FLAG));
-            values.setDataValidation(new DataValidationRule()
-                    .setCondition(new BooleanCondition().setType(ONE_OF_LIST)
-                            .setValues(getFlagConditionValues()))
-                    .setStrict(true)
-                    .setShowCustomUi(true));
+            values.setUserEnteredValue(
+                    new ExtendedValue()
+                            .setStringValue(FLAG));
             valuesList.add(values);
         }
 
