@@ -1,3 +1,5 @@
+Move Prefs to a StringDef class
+
 Expense
     - No longer converting date when recreating expense from sheet as date will now be stored as it is
 Filter

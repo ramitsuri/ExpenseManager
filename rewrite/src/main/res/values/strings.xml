@@ -75,23 +75,6 @@
     <string name="settings_summary_theme">Theme</string>
     <string name="settings_hidden_options_enabled">You have enabled hidden options</string>
 
-    <!-- Settings Keys-->
-    <string name="settings_key_spreadsheet_id">settings_spreadsheet_id</string>
-    <string name="settings_key_sheet_id">settings_sheet_id</string>
-    <string name="settings_key_auto_backup">settings_auto_backup</string>
-    <string name="settings_key_theme">settings_theme</string>
-    <string name="settings_key_version_info">version_info</string>
-    <string name="settings_key_account_name">settings_account_name</string>
-    <string name="settings_key_account_type">settings_account_type</string>
-    <string name="settings_key_enable_debug_options">enable_debug_options</string>
-    <string name="settings_key_default_sheet_id">default_sheet_id</string>
-    <string name="settings_key_migration_step">migration_step</string>
-    <string name="settings_key_enable_splitting">enable_splitting</string>
-    <string name="settings_key_enable_expense_sync">enable_expense_sync</string>
-    <string name="settings_key_enable_entities_sync">enable_entities_sync</string>
-    <string name="settings_key_is_entities_edited">is_entities_edited</string>
-    <string name="settings_key_time_zone_id">settings_time_zone_id</string>
-
     <!-- Add/Edit Expense -->
     <string name="add_expense">Add Expense</string>
     <string name="add_expense_description">Description</string>
