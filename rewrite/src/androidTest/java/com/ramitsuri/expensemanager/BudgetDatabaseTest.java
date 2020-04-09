@@ -31,7 +31,7 @@ public class BudgetDatabaseTest extends BaseDatabaseTest {
     }
 
     @Test
-    public void testBudgets() {
+    public void testUpdateCategory() {
         Assert.assertEquals(DummyData.getBudgets().size(), mBudgetDao.getAll().size());
 
         mBudgetDao.updateCategory("Food", "Foods");
@@ -43,9 +43,12 @@ public class BudgetDatabaseTest extends BaseDatabaseTest {
             }
         }
         Assert.assertTrue(contains);
+    }
 
+    @Test
+    public void testDeleteCategory() {
         mBudgetDao.deleteCategory("Food");
-        contains = false;
+        boolean contains = false;
         for (Budget budget : mBudgetDao.getAll()) {
             contains = ObjectHelper.contains(budget.getCategories(), "Food");
             if (contains) {
@@ -62,8 +65,11 @@ public class BudgetDatabaseTest extends BaseDatabaseTest {
                 break;
             }
         }
-        Assert.assertTrue(contains);
+        Assert.assertFalse(contains);
+    }
 
+    @Test
+    public void testDeleteAll() {
         mBudgetDao.deleteAll();
         Assert.assertEquals(0, mBudgetDao.getAll().size());
     }

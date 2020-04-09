@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.util.Pair;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
@@ -7,9 +9,7 @@ import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -21,13 +21,13 @@ public class SetupCategoriesViewModel extends ViewModel {
 
     private MutableLiveData<List<String>> mValuesLive;
     private boolean mChangesMade;
-    private Map<String, String> mEditedCategories;
+    private List<Pair<String, String>> mEditedCategories;
 
     public SetupCategoriesViewModel() {
         super();
 
         mValuesLive = repository().getCategoryStrings();
-        mEditedCategories = new HashMap<>();
+        mEditedCategories = new ArrayList<>();
     }
 
     public LiveData<List<String>> getValuesLive() {
@@ -68,10 +68,6 @@ public class SetupCategoriesViewModel extends ViewModel {
         return false;
     }
 
-    private void updateEditedCategories(@Nonnull String oldValue, @Nonnull String newValue) {
-        //if(mEditedCategories.containsKey(oldValue))
-    }
-
     public boolean delete(@Nonnull String value) {
         List<String> values = mValuesLive.getValue();
         if (values == null) {
@@ -84,6 +80,7 @@ public class SetupCategoriesViewModel extends ViewModel {
             values.remove(value);
             mValuesLive.postValue(values);
             mChangesMade = true;
+            mEditedCategories.add(new Pair<>(value, (String)null));
             return true;
         }
         return false;
@@ -101,6 +98,11 @@ public class SetupCategoriesViewModel extends ViewModel {
                 AppHelper.setEntitiesEdited(true);
             }
         }
+        if (budgetRepository() != null) {
+            if (mEditedCategories.size() > 0) {
+                budgetRepository().updateCategories(mEditedCategories);
+            }
+        }
     }
 
     private CategoryRepository repository() {
@@ -109,5 +111,9 @@ public class SetupCategoriesViewModel extends ViewModel {
 
     private BudgetRepository budgetRepository() {
         return MainApplication.getInstance().getBudgetRepository();
+    }
+
+    private void updateEditedCategories(@Nonnull String oldValue, @Nonnull String newValue) {
+        mEditedCategories.add(new Pair<>(oldValue, newValue));
     }
 }

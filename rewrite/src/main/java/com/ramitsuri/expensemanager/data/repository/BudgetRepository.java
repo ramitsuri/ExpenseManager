@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.data.repository;
 
+import android.util.Pair;
+
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Budget;
@@ -47,6 +49,15 @@ public class BudgetRepository {
             @Override
             public void run() {
                 mDatabase.budgetDao().setAll(budgets);
+            }
+        });
+    }
+
+    public void updateCategories(final List<Pair<String, String>> categoryPairs) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.budgetDao().updateCategories(categoryPairs);
             }
         });
     }

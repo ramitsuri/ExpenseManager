@@ -1,3 +1,12 @@
+BudgetDatabaseTest
+    - New class to test budget dao
+BudgetDao
+    - New method to update categories when categories were deleted or edited
+    - Add methods to edit, delete categories from budgets
+CategoriesSetup
+    - Add categories that are updated or deleted to List of Pairs
+    - Run update categories in budgets method on save categories
+
 SheetPickerAdapter
     - Rename to MonthPickerAdapter
     - Modify to use Strings

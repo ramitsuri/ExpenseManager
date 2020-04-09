@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.data.dao;
 
+import android.util.Pair;
+
 import com.ramitsuri.expensemanager.data.converter.ListConverter;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
@@ -52,6 +54,19 @@ public abstract class BudgetDao {
                 String newCategories = ListConverter.toString(categories);
                 updateCategories(newCategories, budget.getId());
                 break;
+            }
+        }
+    }
+
+    @Transaction
+    public void updateCategories(List<Pair<String, String>> categoryPairs) {
+        for (Pair<String, String> categoryPair : categoryPairs) {
+            String first = categoryPair.first;
+            String second = categoryPair.second;
+            if (second == null) { // Category was deleted
+                deleteCategory(first);
+            } else { // Category was edited
+                updateCategory(first, second);
             }
         }
     }
