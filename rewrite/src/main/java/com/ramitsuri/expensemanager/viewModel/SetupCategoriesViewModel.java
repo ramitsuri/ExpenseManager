@@ -1,12 +1,15 @@
 package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -18,11 +21,13 @@ public class SetupCategoriesViewModel extends ViewModel {
 
     private MutableLiveData<List<String>> mValuesLive;
     private boolean mChangesMade;
+    private Map<String, String> mEditedCategories;
 
     public SetupCategoriesViewModel() {
         super();
 
         mValuesLive = repository().getCategoryStrings();
+        mEditedCategories = new HashMap<>();
     }
 
     public LiveData<List<String>> getValuesLive() {
@@ -57,9 +62,14 @@ public class SetupCategoriesViewModel extends ViewModel {
             values.add(index, newValue);
             mValuesLive.postValue(values);
             mChangesMade = true;
+            updateEditedCategories(oldValue, newValue);
             return true;
         }
         return false;
+    }
+
+    private void updateEditedCategories(@Nonnull String oldValue, @Nonnull String newValue) {
+        //if(mEditedCategories.containsKey(oldValue))
     }
 
     public boolean delete(@Nonnull String value) {
@@ -95,5 +105,9 @@ public class SetupCategoriesViewModel extends ViewModel {
 
     private CategoryRepository repository() {
         return MainApplication.getInstance().getCategoryRepo();
+    }
+
+    private BudgetRepository budgetRepository() {
+        return MainApplication.getInstance().getBudgetRepository();
     }
 }
