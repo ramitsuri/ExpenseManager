@@ -128,13 +128,6 @@ public class SyncWorker extends BaseWorker {
             for (SheetMetadata sheetMetadata : response.getSheetMetadataList()) {
                 sheetInfos.add(new SheetInfo(sheetMetadata));
             }
-            // Set default sheet id
-            if (AppHelper.getDefaultSheetId() == Constants.Basic.UNDEFINED) {
-                List<SheetInfo> filtered = TransformationHelper.filterSheetInfos(sheetInfos);
-                if (filtered.size() > 0) {
-                    AppHelper.setDefaultSheetId(filtered.get(0).getSheetId());
-                }
-            }
             ExpenseManagerDatabase.getInstance().sheetDao().setAll(sheetInfos);
             insertLog(workType,
                     Constants.LogResult.SUCCESS,

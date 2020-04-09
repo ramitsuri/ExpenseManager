@@ -11,6 +11,7 @@ import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.SheetRequestHelper;
 import com.ramitsuri.sheetscore.SheetsProcessor;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
@@ -163,12 +164,12 @@ public class SheetRepository {
 
     public InsertConsumerResponse getInsertRangeResponse(@Nonnull String spreadsheetId,
             @NonNull List<Expense> expenses,
-            List<Integer> editedSheetIds,
-            int defaultSheetId) {
+            @Nullable List<Integer> editedMonths,
+            @Nonnull List<SheetInfo> sheetInfos) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
             BatchUpdateSpreadsheetRequest requestBody = SheetRequestHelper
-                    .getUpdateRequestBody(expenses, editedSheetIds, defaultSheetId);
+                    .getUpdateRequestBody(expenses, editedMonths, sheetInfos);
             if (requestBody != null) {
                 mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
                 consumerResponse.setSuccessful(true);

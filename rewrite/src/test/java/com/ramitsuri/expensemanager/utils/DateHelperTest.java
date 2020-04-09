@@ -201,7 +201,7 @@ public class DateHelperTest {
 
         for (int i = 1; i <= 3650; i++) {
             LocalDate localDate = DateHelper.getLocalDate(calendar1.getTime());
-            assertEquals(calendar1.get(Calendar.MONTH) + 1, DateHelper.getMonthFromDate(localDate));
+            assertEquals(calendar1.get(Calendar.MONTH), DateHelper.getMonthFromDate(localDate));
             calendar1.add(Calendar.DAY_OF_MONTH, 1);
         }
     }
@@ -242,7 +242,7 @@ public class DateHelperTest {
             int year = calendar1.get(Calendar.YEAR);
             int month = calendar1.get(Calendar.MONTH);
             int day = calendar1.get(Calendar.DAY_OF_MONTH);
-            long timeInMillis = DateHelper.getDateFromYearMonthDay(year, month + 1, day);
+            long timeInMillis = DateHelper.getDateFromYearMonthDay(year, month, day);
             Date actualDate = new Date(timeInMillis);
             assertEquals(calendar1.getTime(), actualDate);
             calendar1.add(Calendar.DAY_OF_MONTH, 1);

@@ -1,11 +1,12 @@
 High
 - Easier setup after first start - edit budget, category etc
-- Determine sheet based on month
 - Save time zone in backup
 
 Medium
+- Fix filter month
 - Tap on budget/payment/category to view filtered expenses
 - Fix fragment refreshing
+- Add income support
 
 Low
 - Widget with total used

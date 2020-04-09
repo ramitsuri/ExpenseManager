@@ -4,9 +4,13 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.BuildConfig;
+import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.stringDefs.PrefKeys;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.TimeZone;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -76,14 +80,6 @@ public class AppHelper {
         return BuildConfig.VERSION_NAME;
     }
 
-    public static void setDefaultSheetId(int sheetId) {
-        PrefHelper.set(PrefKeys.DEFAULT_SHEET_ID, sheetId);
-    }
-
-    public static int getDefaultSheetId() {
-        return PrefHelper.get(PrefKeys.DEFAULT_SHEET_ID, Constants.Basic.UNDEFINED);
-    }
-
     public static boolean isSplittingEnabled() {
         return PrefHelper.get(PrefKeys.ENABLE_SPLITTING, false);
     }
@@ -133,5 +129,11 @@ public class AppHelper {
 
     public static String[] getScopes() {
         return Constants.SCOPES_LIMITED;
+    }
+
+    public static List<String> getMonths() {
+        String[] monthArray =
+                MainApplication.getInstance().getResources().getStringArray(R.array.months);
+        return Arrays.asList(monthArray);
     }
 }

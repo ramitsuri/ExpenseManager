@@ -1,3 +1,25 @@
+Backup synced edited expenses
+SheetRepository
+    - Take in SheetInfos parameter to deduce sheet id during insert getInsertRangeResponse()
+DummyData
+    - Add months and sheetinfos dummy data
+AppHelper
+    - Remove default sheet ids methods
+    - Add a method to get months from string arrays
+ObjectHelper
+    - Add method to test if sheetinfos are valid
+    - Add tests
+SheetRequestHelper
+    - Use AppHelper's getMonths()
+    - Modify append map and update map to be formed on sheetinfos basis on the fly
+BackupWorker (Expenses)
+    - Remove default sheet id get from prefs
+    - Allow expenses size 0 to be backed up (possible when all synced expenses for a month were edited or removed)
+    - Get sheetinfos and supply it to sheet request formation
+SyncWorker (Entities)
+    - Remove setting default sheet id
+At this point there shouldn't be any usages of Expense.sheetId within the scope of the app
+
 Edit synced Expenses
 ExpenseDao
     - modify getAllForBackup() to take in a query that is created at runtime in a transaction method

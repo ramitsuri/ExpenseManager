@@ -27,6 +27,7 @@ import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -43,13 +44,14 @@ public class SheetRequestHelper {
 
     public static BatchUpdateSpreadsheetRequest getUpdateRequestBody(
             @Nonnull List<Expense> expensesToBackup,
-            @Nullable List<Integer> editedSheetIds,
-            int defaultSheetId) {
+            @Nullable List<Integer> editedMonths,
+            @Nonnull List<SheetInfo> sheetInfos) {
         BatchUpdateSpreadsheetRequest requestBody = new BatchUpdateSpreadsheetRequest();
         List<Request> requests = new ArrayList<>();
 
         // Update whole sheets that had deleted or edited expenses
-        SparseArray<List<Expense>> updateMap = getUpdateMap(expensesToBackup, editedSheetIds);
+        SparseArray<List<Expense>> updateMap =
+                getUpdateMap(expensesToBackup, sheetInfos, editedMonths);
         for (int i = 0; i < updateMap.size(); i++) {
             int sheetId = updateMap.keyAt(i);
             List<Expense> expenses = updateMap.get(updateMap.keyAt(i));
@@ -76,7 +78,7 @@ public class SheetRequestHelper {
         }
 
         // Append new expenses to their sheets
-        SparseArray<List<Expense>> appendMap = getAppendMap(expensesToBackup, defaultSheetId);
+        SparseArray<List<Expense>> appendMap = getAppendMap(expensesToBackup, sheetInfos);
         for (int i = 0; i < appendMap.size(); i++) {
             int sheetId = appendMap.keyAt(i);
             List<Expense> expenses = appendMap.get(appendMap.keyAt(i));
@@ -185,8 +187,8 @@ public class SheetRequestHelper {
                 paymentMethod = paymentMethods.get(rowIndex).getName();
             }
             String month = null;
-            if (rowIndex < getMonths().size()) {
-                month = getMonths().get(rowIndex);
+            if (rowIndex < AppHelper.getMonths().size()) {
+                month = AppHelper.getMonths().get(rowIndex);
             }
             Budget budget = null;
             if (budgets != null && rowIndex < budgets.size()) {
@@ -196,7 +198,7 @@ public class SheetRequestHelper {
             rowDataList.add(rowData);
             stop = rowIndex >= (categories != null ? categories.size() : -1) &&
                     rowIndex >= (paymentMethods != null ? paymentMethods.size() : -1) &&
-                    rowIndex >= (getMonths().size()) &&
+                    rowIndex >= (AppHelper.getMonths().size()) &&
                     rowIndex >= (budgets != null ? budgets.size() : -1);
             rowIndex++;
         }
@@ -301,7 +303,9 @@ public class SheetRequestHelper {
             String category = rowIndex < categories.size() ? categories.get(rowIndex) : null;
             String paymentMethod = rowIndex < paymentMethods.size() ? paymentMethods.get(rowIndex)
                     : null;
-            String month = rowIndex < getMonths().size() ? getMonths().get(rowIndex) : null;
+            String month =
+                    rowIndex < AppHelper.getMonths().size() ? AppHelper.getMonths().get(rowIndex) :
+                            null;
             Budget budget = rowIndex < budgets.size() ? budgets.get(rowIndex) : null;
 
             RowData rowData = getEntitiesRowData(category, paymentMethod, month, budget);
@@ -359,17 +363,15 @@ public class SheetRequestHelper {
                 .setTextFormat(new TextFormat().setFontFamily("Roboto").setFontSize(10));
     }
 
+    @Nonnull
     private static SparseArray<List<Expense>> getAppendMap(@Nonnull List<Expense> expenses,
-            int defaultSheetId) {
+            @Nonnull List<SheetInfo> sheetInfos) {
         SparseArray<List<Expense>> map = new SparseArray<>();
         for (Expense expense : expenses) {
-            int sheetId;
-            // Expense doesn't have a sheet id
-            if (expense.getSheetId() == Constants.Basic.UNDEFINED) {
-                sheetId = defaultSheetId;
-            } else { // Expense has a sheet id
-                sheetId = expense.getSheetId();
-            }
+            int monthIndex = DateHelper.getMonthIndexFromDate(expense.getDateTime());
+
+            int sheetId = getSheetIdFromMonthIndex(sheetInfos, monthIndex);
+
             // Add expense to map
             List<Expense> expenseList = map.get(sheetId);
             if (expenseList == null) {
@@ -390,30 +392,38 @@ public class SheetRequestHelper {
      * This is because there isn't a way right now to just update the sheet rows for expenses that
      * were edited. The whole sheet would be emptied, and these expenses will be added to it.
      */
+    @Nonnull
     private static SparseArray<List<Expense>> getUpdateMap(@Nonnull List<Expense> expenses,
-            @Nullable List<Integer> editedSheetIds) {
+            @Nonnull List<SheetInfo> sheetInfos,
+            @Nullable List<Integer> editedMonths) {
         SparseArray<List<Expense>> map = new SparseArray<>();
-        if (editedSheetIds == null || editedSheetIds.size() == 0) {
+        if (editedMonths == null || editedMonths.size() == 0) {
             return map;
         }
-        if (expenses.size() == 0) {
-            for (Integer editedSheetId : editedSheetIds) {
-                map.put(editedSheetId, new ArrayList<Expense>());
-            }
+
+        // Initialize all entries with empty expenses
+        for (Integer editedMonth : editedMonths) {
+            int sheetId = getSheetIdFromMonthIndex(sheetInfos, editedMonth);
+            map.put(sheetId, new ArrayList<Expense>());
         }
+
         for (Iterator<Expense> iterator = expenses.iterator(); iterator.hasNext(); ) {
             Expense expense = iterator.next();
-            if (!editedSheetIds.contains(expense.getSheetId())) {
-                // Sheet id for the expense is not one of those which has a backed up expense
-                // that was edited. This expense will be taken care of in append request
-                continue;
-            } else {
-                // This is an expense that was edited after it was backed up or an expense from the
-                // same sheet id. Add it to update map and remove it from original list so that
-                // it isn't read again when generating Append map.
+            int monthIndex = DateHelper.getMonthIndexFromDate(expense.getDateTime());
+            if (editedMonths.contains(monthIndex)) {
+                // This is an expense that was edited after it was backed up or an expense whose
+                // date time falls in a month that had other synced expense edited or deleted.
+                // Add it to update map and remove it from original list so that it isn't read
+                // again when generating Append map.
                 iterator.remove();
+            } else {
+                // This expense's date time doesn't fall in a month that needs to be updated
+                // (from edit or delete synced expense).
+                // In other words, this expense will be appended to a sheet.
+                // This expense will be taken care of in append request
+                continue;
             }
-            int sheetId = expense.getSheetId();
+            int sheetId = getSheetIdFromMonthIndex(sheetInfos, monthIndex);
 
             // Add expense to map
             List<Expense> expenseList = map.get(sheetId);
@@ -560,20 +570,14 @@ public class SheetRequestHelper {
         return rowData;
     }
 
-    private static List<String> getMonths() {
-        List<String> months = new ArrayList<>();
-        months.add("Jan");
-        months.add("Feb");
-        months.add("Mar");
-        months.add("Apr");
-        months.add("May");
-        months.add("Jun");
-        months.add("Jul");
-        months.add("Aug");
-        months.add("Sep");
-        months.add("Oct");
-        months.add("Nov");
-        months.add("Dec");
-        return months;
+    private static int getSheetIdFromMonthIndex(@Nonnull List<SheetInfo> sheetInfos,
+            int monthIndex) {
+        String month = AppHelper.getMonths().get(monthIndex);
+        for (SheetInfo info : sheetInfos) {
+            if (info.getSheetName().equalsIgnoreCase(month)) {
+                return info.getSheetId();
+            }
+        }
+        return Constants.Basic.UNDEFINED;
     }
 }
