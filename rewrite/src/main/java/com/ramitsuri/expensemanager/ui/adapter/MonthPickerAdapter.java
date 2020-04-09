@@ -5,9 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.chip.Chip;
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 import java.util.List;
 
@@ -16,44 +14,23 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
-public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.ViewHolder> {
+public class MonthPickerAdapter extends RecyclerView.Adapter<MonthPickerAdapter.ViewHolder> {
 
     @Nullable
-    private List<SheetInfo> mValues;
+    private List<String> mValues;
     @Nullable
-    private SheetPickerAdapterCallback mCallback;
-    private int mSelectedId;
-    private boolean mShowSelection;
+    private MonthPickerAdapterCallback mCallback;
 
-    public interface SheetPickerAdapterCallback {
-        void onItemPicked(SheetInfo value);
+    public interface MonthPickerAdapterCallback {
+        void onValuePicked(String value);
     }
 
-    public SheetPickerAdapter() {
-    }
-
-    public void setValues(@NonNull List<SheetInfo> values, int selectedId) {
+    public void setValues(@NonNull List<String> values) {
         mValues = values;
-        mShowSelection = true;
-        if (selectedId == Constants.Basic.UNDEFINED &&
-                values.size() > 0) { // Select first value in case selection is null
-            SheetInfo firstItem = values.get(0);
-            // Send callback with selected value when selected value was not found (new expense)
-            Timber.i("Selecting first value from list %s", firstItem.toString());
-            onSelectionMade(firstItem);
-        } else {
-            mSelectedId = selectedId;
-            notifyDataSetChanged();
-        }
-    }
-
-    public void setValues(@NonNull List<SheetInfo> values) {
-        mValues = values;
-        mShowSelection = true;
         notifyDataSetChanged();
     }
 
-    public void setCallback(@NonNull SheetPickerAdapterCallback callback) {
+    public void setCallback(@NonNull MonthPickerAdapterCallback callback) {
         mCallback = callback;
     }
 
@@ -84,10 +61,9 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
         }
     }
 
-    private void onSelectionMade(SheetInfo selectedValue) {
+    private void onSelectionMade(String selectedValue) {
         if (mCallback != null) {
-            mSelectedId = selectedValue.getSheetId();
-            mCallback.onItemPicked(selectedValue);
+            mCallback.onValuePicked(selectedValue);
             notifyDataSetChanged();
         } else {
             Timber.w("mCallback is null");
@@ -105,17 +81,9 @@ public class SheetPickerAdapter extends RecyclerView.Adapter<SheetPickerAdapter.
             txtValue.setOnClickListener(this);
         }
 
-        private void bind(final SheetInfo value) {
-            txtValue.setText(value.getSheetName());
-            if (mShowSelection) {
-                if (value.getSheetId() == mSelectedId) {
-                    txtValue.setChecked(true);
-                } else {
-                    txtValue.setChecked(false);
-                }
-            } else {
-                txtValue.setChecked(false);
-            }
+        private void bind(final String value) {
+            txtValue.setText(value);
+            txtValue.setChecked(false);
         }
 
         @Override

@@ -1,3 +1,11 @@
+SheetPickerAdapter
+    - Rename to MonthPickerAdapter
+    - Modify to use Strings
+FilterOptions
+    - Use MonthPickerAdapter for months
+AllExpenses
+    - Remove coordinator layout and made fab a child of constraintlayout due to an issue where fab would hide the bottom row of expenses
+
 Backup synced edited expenses
 SheetRepository
     - Take in SheetInfos parameter to deduce sheet id during insert getInsertRangeResponse()

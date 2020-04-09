@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Filter;
-import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
+import com.ramitsuri.expensemanager.ui.adapter.MonthPickerAdapter;
 import com.ramitsuri.expensemanager.viewModel.FilterOptionsViewModel;
 
 import java.util.Arrays;
@@ -72,14 +72,14 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         listSheets.setHasFixedSize(true);
 
-        final ListPickerAdapter adapter = new ListPickerAdapter();
-        adapter.setValues(Arrays.asList(getMonths()), null);
+        final MonthPickerAdapter adapter = new MonthPickerAdapter();
+        adapter.setValues(Arrays.asList(getMonths()));
         listSheets.setAdapter(adapter);
-        adapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
+        adapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
             @Override
-            public void onItemPicked(String month) {
+            public void onValuePicked(String value) {
                 dismiss();
-                onMonthPicked(month);
+                onMonthPicked(value);
             }
         });
     }
