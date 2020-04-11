@@ -170,8 +170,7 @@ public class SetupBudgetsFragment extends BaseFragment {
         AddBudgetFragment fragment = AddBudgetFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.BundleKeys.SELECTED_BUDGET, value);
-        bundle.putParcelableArrayList(Constants.BundleKeys.ALL_CATEGORIES,
-                mViewModel.getCategoryWrappers(value));
+        bundle.putParcelableArrayList(Constants.BundleKeys.ALL_CATEGORIES, categoryWrappers);
         fragment.setArguments(bundle);
         fragment.setCallback(new AddBudgetFragment.AddBudgetCallback() {
             @Override

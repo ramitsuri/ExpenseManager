@@ -1,22 +1,18 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
-import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.SetupPaymentMethodsViewModel;
 
 import java.util.List;
@@ -149,60 +145,56 @@ public class SetupPaymentMethodsFragment extends BaseFragment {
     }
 
     private void showAddEntityDialog(@Nullable final String value) {
-        Context context = getContext();
-        if (context == null) {
+        if (getActivity() == null) {
+            Timber.e("getActivity() returned null when showing details fragment");
             return;
         }
-        final EditText input = new EditText(context);
-        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        if (value != null) {
-            input.setText(value);
-            input.setSelection(value.length());
-        }
-        DialogInterface.OnClickListener positiveListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String newValue = input.getText().toString().trim();
-                        if (TextUtils.isEmpty(newValue)) {
-                            return;
+        Timber.i("Showing payment method in bottom sheet");
+        AddEntityFragment fragment = AddEntityFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.BundleKeys.SELECTED_ENTITY, value);
+        fragment.setArguments(bundle);
+        fragment.setCallback(new AddEntityFragment.AddEntityCallback() {
+            @Override
+            public void onChanged(@Nullable String newValue) {
+                if (TextUtils.isEmpty(newValue)) {
+                    Timber.i("New value is empty, ignoring");
+                    return;
+                }
+                if (value == null) { // Add
+                    if (mViewModel.add(newValue)) {
+                        Timber.i("Add succeeded");
+                        if (getView() != null) {
+                            Snackbar.make(getView(), R.string.setup_payment_method_added,
+                                    Snackbar.LENGTH_SHORT).show();
                         }
-                        if (value == null) {
-                            if (mViewModel.add(newValue)) {
-                                Timber.i("Add succeeded");
-                                if (getView() != null) {
-                                    Snackbar.make(getView(), R.string.setup_payment_method_added,
-                                            Snackbar.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Timber.i("Add failed");
-                                if (getView() != null) {
-                                    Snackbar.make(getView(), R.string.setup_payment_method_exists,
-                                            Snackbar.LENGTH_SHORT).show();
-                                }
-                            }
-                        } else {
-                            if (mViewModel.edit(value, newValue)) {
-                                Timber.i("Edit succeeded");
-                                if (getView() != null) {
-                                    Snackbar.make(getView(), R.string.setup_payment_method_edited,
-                                            Snackbar.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Timber.i("Edit failed");
-                                if (getView() != null) {
-                                    Snackbar.make(getView(), R.string.setup_payment_method_exists,
-                                            Snackbar.LENGTH_SHORT).show();
-                                }
-                            }
+                    } else {
+                        Timber.i("Add failed");
+                        if (getView() != null) {
+                            Snackbar.make(getView(), R.string.setup_payment_method_exists,
+                                    Snackbar.LENGTH_SHORT).show();
                         }
                     }
-                };
-
-        DialogHelper.showAlertWithInput(context,
-                input,
-                R.string.setup_add_new,
-                R.string.common_ok, positiveListener,
-                R.string.common_cancel, null);
+                } else { // Edit
+                    if (newValue.equalsIgnoreCase(value)) {
+                        Timber.i("New value same as old, ignoring");
+                    }
+                    if (mViewModel.edit(value, newValue)) {
+                        Timber.i("Edit succeeded");
+                        if (getView() != null) {
+                            Snackbar.make(getView(), R.string.setup_payment_method_edited,
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Timber.i("Edit failed");
+                        if (getView() != null) {
+                            Snackbar.make(getView(), R.string.setup_payment_method_exists,
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
+        fragment.show(getActivity().getSupportFragmentManager(), AddEntityFragment.TAG);
     }
 }

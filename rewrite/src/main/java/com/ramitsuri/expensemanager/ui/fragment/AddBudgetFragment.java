@@ -70,7 +70,6 @@ public class AddBudgetFragment extends BaseBottomSheetFragment {
             Budget budget = getArguments().getParcelable(Constants.BundleKeys.SELECTED_BUDGET);
             if (budget == null) {
                 budget = new Budget();
-                budget.setCategories(new ArrayList<String>());
             }
             List<BudgetCategoryWrapper> categories =
                     getArguments().getParcelableArrayList(Constants.BundleKeys.ALL_CATEGORIES);
@@ -138,7 +137,7 @@ public class AddBudgetFragment extends BaseBottomSheetFragment {
         });
         listCategories.setAdapter(adapter);
 
-        // Edit button
+        // Done button
         final Button btnDone = view.findViewById(R.id.btn_done);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,3 +1,32 @@
+UI and Misc fixes
+Pref
+    - Add new first setup done pref (used to add default entities)
+Budget
+    - Initialize categories in budget constructor
+Categories and Payment methods
+    - Move add edit to a bottom sheet similar to budget
+AppHelper
+    - Add methods for first run boolean
+MainApp
+    - Using first run as a way to know if default entities need to be added or not
+    - Add default budgets
+Setup Entities
+     - Change edit and delete buttons to  be square instead of circle
+     - Add coordinator layout for snackbar dismiss
+MiscFrag
+    - Change color od headers to teal
+    - Make up button independent of rest of frag so it doesn't scroll
+Modify all close and up buttons to be recommended size
+AddExpense, Expense detail
+    - Add tooltip to buttons with only icons
+AllExpenses
+    - Add coordinator layout back as Snackbar needs it to be dismissed
+ExpenseDetail
+    - Make buttons to be only icons so they fit better
+
+Delete unused icons
+
+
 BudgetDatabaseTest
     - New class to test budget dao
 BudgetDao

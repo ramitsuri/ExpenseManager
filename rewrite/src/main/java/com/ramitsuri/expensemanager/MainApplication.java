@@ -12,10 +12,13 @@ import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
+import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,10 +51,11 @@ public class MainApplication extends Application {
 
         initSheetRepo();
 
-        if (TextUtils.isEmpty(AppHelper.getSpreadsheetId())) {
-            addDefaultData();
-        } else {
+        if (AppHelper.isFirstRunComplete()) {
             Timber.i("Application has already been set up");
+        } else {
+            addDefaultData();
+            AppHelper.setFirstRunComplete(true);
         }
 
         // Cancel legacy work that ran at random time based on when auto backup toggle was enabled
@@ -132,6 +136,26 @@ public class MainApplication extends Application {
         List<String> paymentMethods =
                 Arrays.asList(getResources().getStringArray(R.array.payment_methods));
         getPaymentMethodRepo().setPaymentMethods(paymentMethods);
+
+        // Add categories to budgets such that each budget has max 3 categories
+        int maxSize = 3;
+        List<Budget> budgets = new ArrayList<>();
+        int budgetSize = categories.size() / maxSize + (categories.size() % maxSize == 0 ? 0 : 1);
+        for (int i = 0; i < budgetSize; i++) {
+            Budget budget = new Budget();
+            budget.setName(getResources().getString(R.string.default_budget_format, i + 1));
+            budget.setAmount(new BigDecimal("100"));
+            int categoryIndex = i * maxSize;
+            while (categories.size() > categoryIndex && budget.getCategories().size() < maxSize) {
+                List<String> budgetCategories = budget.getCategories();
+                budgetCategories.add(categories.get(categoryIndex));
+                budget.setCategories(budgetCategories);
+                categoryIndex = categoryIndex + 1;
+            }
+            budgets.add(budget);
+        }
+
+        getBudgetRepository().setBudgets(budgets);
     }
 
     public CategoryRepository getCategoryRepo() {

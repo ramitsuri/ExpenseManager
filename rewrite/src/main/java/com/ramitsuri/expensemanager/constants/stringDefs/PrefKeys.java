@@ -16,7 +16,8 @@ import androidx.annotation.StringDef;
         PrefKeys.ENABLE_EXPENSE_SYNC,
         PrefKeys.ENABLE_ENTITIES_SYNC,
         PrefKeys.IS_ENTITIES_EDITED,
-        PrefKeys.TIME_ZONE_ID
+        PrefKeys.TIME_ZONE_ID,
+        PrefKeys.IS_FIRST_RUN_COMPLETE
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -31,6 +32,7 @@ public @interface PrefKeys {
     String ENABLE_ENTITIES_SYNC = "enable_entities_sync";
     String IS_ENTITIES_EDITED = "is_entities_edited";
     String TIME_ZONE_ID = "settings_time_zone_id";
+    String IS_FIRST_RUN_COMPLETE = "is_first_run_complete";
     String AUTO_BACKUP = "settings_auto_backup";
     String VERSION_INFO = "version_info";
     String ENABLE_DEBUG_OPTIONS = "enable_debug_options";

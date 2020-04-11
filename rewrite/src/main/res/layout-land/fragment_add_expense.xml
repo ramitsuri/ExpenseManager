@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/btn_close"
-        android:layout_width="@dimen/button_size_small"
-        android:layout_height="@dimen/button_size_small"
+        android:layout_width="@dimen/button_size_extra_small"
+        android:layout_height="@dimen/button_size_extra_small"
         android:contentDescription="@string/content_description_close_fragment"
         android:tint="?attr/colorControlNormal"
         app:layout_constraintBottom_toBottomOf="@id/btn_done"
@@ -94,6 +94,7 @@
         android:layout_marginStart="@dimen/margin_extra_small"
         android:stateListAnimator="@null"
         android:textColor="?attr/colorControlNormal"
+        android:tooltipText="@string/common_flag"
         app:backgroundTint="@color/bg_grey"
         app:icon="@drawable/ic_flag_off"
         app:iconGravity="textStart"
@@ -114,6 +115,7 @@
         android:layout_marginStart="@dimen/margin_extra_small"
         android:stateListAnimator="@null"
         android:textColor="?attr/colorControlNormal"
+        android:tooltipText="@string/add_expense_divide_by_2"
         android:visibility="gone"
         app:backgroundTint="@color/bg_grey"
         app:icon="@drawable/ic_split_off"
@@ -194,7 +196,7 @@
             android:id="@+id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="flagNoExtractUi"
+            android:imeOptions="flagNoExtractUi|actionDone"
             android:inputType="textCapSentences" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -205,7 +207,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:text="@string/common_category"
-        android:textSize="@dimen/text_body1"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
@@ -217,7 +219,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:text="@string/common_payment_method"
-        android:textSize="@dimen/text_body1"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"

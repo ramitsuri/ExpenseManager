@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:ellipsize="end"
     android:singleLine="true"
-    android:textColor="?attr/colorControlNormal"
+    android:textColor="@color/color_teal"
     android:textSize="@dimen/text_caption"
     android:textStyle="bold"
     app:layout_constraintEnd_toEndOf="parent"

@@ -1,155 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/padding_small"
+    android:paddingTop="@dimen/padding_small"
+    android:paddingEnd="@dimen/padding_small">
 
-    <LinearLayout
-        android:id="@+id/layout"
+    <ImageView
+        android:id="@+id/btn_close"
+        android:layout_width="@dimen/button_size_small"
+        android:layout_height="@dimen/button_size_small"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/content_description_close_fragment"
+        android:padding="@dimen/padding_extra_extra_small"
+        android:tint="?attr/colorControlNormal"
+        app:srcCompat="@drawable/ic_up" />
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/padding_small"
-        android:paddingTop="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_small">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_extra_small">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- Entities -->
+            <include
+                android:id="@+id/header_entities"
+                layout="@layout/extra_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:visibility="visible" />
 
-            <ImageView
-                android:id="@+id/btn_close"
-                android:layout_width="@dimen/button_size_small"
-                android:layout_height="@dimen/button_size_small"
-                android:contentDescription="@string/content_description_close_fragment"
-                android:tint="?attr/colorControlNormal"
-                app:srcCompat="@drawable/ic_up" />
+            <include
+                android:id="@+id/item_edit_categories"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_edit_payment_methods"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_edit_budgets"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- General -->
+            <include
+                android:id="@+id/header_general"
+                layout="@layout/extra_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_theme"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_version"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_sheets"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_delete_all"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- Backup and Sync -->
+            <include
+                android:id="@+id/header_backup_sync"
+                layout="@layout/extra_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_backup"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_sync"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_sync_expenses"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- Spreadsheet -->
+            <include
+                android:id="@+id/header_spreadsheet"
+                layout="@layout/extra_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/item_spreadsheet_id"
+                layout="@layout/extra_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
-        <!-- Entities -->
-        <include
-            android:id="@+id/header_entities"
-            layout="@layout/extra_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:visibility="visible" />
+    </androidx.core.widget.NestedScrollView>
 
-        <include
-            android:id="@+id/item_edit_categories"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_edit_budgets"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_edit_payment_methods"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <!-- General -->
-        <include
-            android:id="@+id/header_general"
-            layout="@layout/extra_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_theme"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_version"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_sheets"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_delete_all"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <!-- Backup and Sync -->
-        <include
-            android:id="@+id/header_backup_sync"
-            layout="@layout/extra_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_backup"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_sync"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_sync_expenses"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <!-- Spreadsheet -->
-        <include
-            android:id="@+id/header_spreadsheet"
-            layout="@layout/extra_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/item_spreadsheet_id"
-            layout="@layout/extra_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>

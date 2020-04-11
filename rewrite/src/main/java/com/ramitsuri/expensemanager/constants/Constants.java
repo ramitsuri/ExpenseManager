@@ -16,6 +16,7 @@ public class Constants {
         public static final String DATE_PICKER_DAY = "date_picker_day";
         public static final String SELECTED_EXPENSE = "selected_expense";
         public static final String SELECTED_BUDGET = "selected_budget";
+        public static final String SELECTED_ENTITY = "selected_entity";
         public static final String ALL_CATEGORIES = "all_categories";
         public static final String SHEET_INFOS = "sheet_infos";
         public static final String SELECTED_SHEET_ID = "selected_sheet_id";

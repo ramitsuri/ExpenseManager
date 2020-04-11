@@ -136,4 +136,12 @@ public class AppHelper {
                 MainApplication.getInstance().getResources().getStringArray(R.array.months);
         return Arrays.asList(monthArray);
     }
+
+    public static boolean isFirstRunComplete() {
+        return PrefHelper.get(PrefKeys.IS_FIRST_RUN_COMPLETE, false);
+    }
+
+    public static void setFirstRunComplete(boolean complete) {
+        PrefHelper.set(PrefKeys.IS_FIRST_RUN_COMPLETE, complete);
+    }
 }

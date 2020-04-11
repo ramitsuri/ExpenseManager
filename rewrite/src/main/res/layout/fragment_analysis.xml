@@ -11,6 +11,7 @@
         android:layout_width="@dimen/button_size_small"
         android:layout_height="@dimen/button_size_small"
         android:contentDescription="@string/content_description_close_fragment"
+        android:padding="@dimen/padding_extra_extra_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -33,6 +33,7 @@ public class Budget implements Parcelable {
     private List<String> mCategories;
 
     public Budget() {
+        mCategories = new ArrayList<>();
     }
 
     protected Budget(Parcel in) {

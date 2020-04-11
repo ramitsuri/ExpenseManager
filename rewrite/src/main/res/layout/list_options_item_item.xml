@@ -20,35 +20,38 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_edit"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="@dimen/button_size_extra_small"
-        android:layout_height="@dimen/button_size_extra_small"
+        android:layout_width="@dimen/button_size_small"
+        android:layout_height="@dimen/button_size_small"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:insetLeft="0dp"
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
         android:padding="0dp"
-        app:icon="@drawable/ic_edit_entities"
+        android:tooltipText="@string/common_edit"
+        app:backgroundTint="@android:color/transparent"
+        app:icon="@drawable/ic_edit"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconSize="@dimen/icon_size_medium"
         app:iconTint="@color/color_teal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/value"
-        app:layout_constraintTop_toBottomOf="@id/value"
-        app:shapeAppearanceOverlay="@style/ButtonCircle" />
+        app:layout_constraintTop_toBottomOf="@id/value" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_delete"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="@dimen/button_size_extra_small"
-        android:layout_height="@dimen/button_size_extra_small"
+        android:layout_width="@dimen/button_size_small"
+        android:layout_height="@dimen/button_size_small"
         android:layout_marginStart="@dimen/margin_extra_small"
         android:insetLeft="0dp"
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
         android:padding="0dp"
+        android:tooltipText="@string/common_delete"
+        app:backgroundTint="@android:color/transparent"
         app:icon="@drawable/ic_detail_delete"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
@@ -56,6 +59,5 @@
         app:iconTint="@color/color_red"
         app:layout_constraintBottom_toBottomOf="@id/btn_edit"
         app:layout_constraintStart_toEndOf="@id/btn_edit"
-        app:layout_constraintTop_toTopOf="@id/btn_edit"
-        app:shapeAppearanceOverlay="@style/ButtonCircle" />
+        app:layout_constraintTop_toTopOf="@id/btn_edit" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,6 +29,7 @@
     <string name="common_save">Save</string>
     <string name="common_change">Change</string>
     <string name="common_flagged">Flagged</string>
+    <string name="common_flag">Flag</string>
     <string name="common_empty"> </string>
     <string name="common_cancel">Cancel</string>
     <string name="common_store">Store</string>
@@ -42,9 +43,7 @@
     <string name="common_next">Next</string>
     <string name="common_done">Done</string>
     <string name="common_previous">Previous</string>
-    <string name="common_add_new">Add new</string>
     <string name="common_month">Month</string>
-
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">History</string>
     <string name="common_extra_tab">Setup</string>
@@ -91,6 +90,7 @@
     <string name="you_have_unsaved_changes">You have unsaved changes</string>
     <string name="add_expense_save_expense">Save expense</string>
     <string name="add_expense_sheet_id_help">Will be saved to %1s</string>
+    <string name="add_expense_divide_by_2">Divide by 2</string>
 
     <!-- Setup -->
     <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>
@@ -117,6 +117,10 @@
     <string name="setup_payment_method_added">Payment method added</string>
     <string name="setup_budget_select_one_category">Select at least one</string>
     <string name="setup_budget_selected_max_category">Max 5 per budget</string>
+    <string name="setup_category_add_new">Add new category</string>
+    <string name="setup_payment_method_add_new">Add new payment method</string>
+    <string name="setup_budget_add_new">Add new budget</string>
+    <string name="default_budget_format">Budget %1d</string>
 
     <!-- Menu -->
     <string name="action_settings">Settings</string>
