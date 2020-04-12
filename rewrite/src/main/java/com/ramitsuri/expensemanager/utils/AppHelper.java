@@ -13,36 +13,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatDelegate;
 
 public class AppHelper {
-
-    public static String getAccountName() {
-        return PrefHelper.get(PrefKeys.ACCOUNT_NAME, null);
-    }
-
-    public static void setAccountName(String accountName) {
-        PrefHelper.set(PrefKeys.ACCOUNT_NAME, accountName);
-    }
-
-    public static String getAccountType() {
-        return PrefHelper.get(PrefKeys.ACCOUNT_TYPE, null);
-    }
-
-    public static void setAccountType(String accountType) {
-        PrefHelper.set(PrefKeys.ACCOUNT_TYPE, accountType);
-    }
-
     public static String getSpreadsheetId() {
         return PrefHelper.get(PrefKeys.SPREADSHEET_ID, null);
     }
 
     public static void setSpreadsheetId(String spreadsheetId) {
         PrefHelper.set(PrefKeys.SPREADSHEET_ID, spreadsheetId);
-    }
-
-    public static String getCurrentSheetId() {
-        return PrefHelper.get(PrefKeys.SHEET_ID, null);
     }
 
     public static String getCurrentTheme() {
@@ -143,5 +124,14 @@ public class AppHelper {
 
     public static void setFirstRunComplete(boolean complete) {
         PrefHelper.set(PrefKeys.IS_FIRST_RUN_COMPLETE, complete);
+    }
+
+    @Nullable
+    public static String getBackupInfoStatus() {
+        return PrefHelper.get(PrefKeys.BACKUP_INFO_STATUS, null);
+    }
+
+    public static void setBackupInfoStatus(String backupInfoStatus) {
+        PrefHelper.set(PrefKeys.BACKUP_INFO_STATUS, backupInfoStatus);
     }
 }

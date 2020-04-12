@@ -1,3 +1,43 @@
+Create Spreadsheet
+BackupInfoStatus
+    - New constants class for status about connection to Google spreadsheets
+Prefs
+    - Save BackupInfoStatus on sheet operation termination
+CreateSpreadsheetWork
+    - New worker to create spreadsheet
+SheetRepository
+    - Add background executor task for spreadsheet creation (is not used)
+    - Save backup info status on operation termination
+BudgetSetup
+    - Fix bug with empty amount when adding or editing
+MiscFragment
+    - Add backup info item for status on connection to Google Spreadsheets
+    - Based on status, allow spreadsheet creation
+    - Add code to sign into Google and get account etc
+    - Add code to get sign in account and intent via MainApp context
+    - Enqueue create spreadsheet work and transform status
+    - Initialize sheet repo when account received
+AppHelper
+    - Remove get set account name and type methods (might not be needed, will evaluate)
+PrefHelper
+    - Use androidx PreferenceManager
+SheetRequestHelper
+    - Remove entities sheet index and template index from create request
+    - Add months to the same request so it's not hardcoded
+    - Create months sheets
+    - Increase expense sheet column count to 20
+    - Remove any formatting from expense sheet for cells when creating new
+WorkHelper
+    - Add helper methods for Create Spreadsheet work
+Entities backup
+    - Remove condition that skipped backup when budget size was 0
+Expense Sync
+    - Null checking SheetRepo
+MainApp
+    - Not initializing sheet repo on app create
+    - Reduce sheet repo initialize code
+    - Remove code to cancel periodic backup (should no longer be necessary)
+
 UI and Misc fixes
 Pref
     - Add new first setup done pref (used to add default entities)

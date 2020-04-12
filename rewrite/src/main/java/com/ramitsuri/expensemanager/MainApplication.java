@@ -2,7 +2,6 @@ package com.ramitsuri.expensemanager;
 
 import android.accounts.Account;
 import android.app.Application;
-import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
@@ -15,12 +14,14 @@ import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import timber.log.Timber;
 
@@ -49,22 +50,11 @@ public class MainApplication extends Application {
 
         initDataRepos();
 
-        initSheetRepo();
-
         if (AppHelper.isFirstRunComplete()) {
             Timber.i("Application has already been set up");
         } else {
             addDefaultData();
             AppHelper.setFirstRunComplete(true);
-        }
-
-        // Cancel legacy work that ran at random time based on when auto backup toggle was enabled
-        WorkHelper.cancelPeriodicLegacyBackup();
-        WorkHelper.cancelPeriodicBackup();
-        // Enqueue work that runs around 2AM - only in non debug apps
-        if (!BuildConfig.DEBUG) {
-            WorkHelper.enqueuePeriodicBackup();
-            WorkHelper.enqueuePeriodicEntitiesBackup();
         }
     }
 
@@ -92,41 +82,15 @@ public class MainApplication extends Application {
         mEditedSheetRepo = new EditedSheetRepository(appExecutors, database);
     }
 
-    private void initSheetRepo() {
-        String accountName = AppHelper.getAccountName();
-        String accountType = AppHelper.getAccountType();
-
-        initSheetRepo(accountName, accountType);
-    }
-
-    public void initSheetRepo(String accountName, String accountType) {
-        AppExecutors appExecutors = AppExecutors.getInstance();
+    public void refreshSheetRepo(@Nonnull Account account) {
         String appName = getString(R.string.app_name);
-
-        if (TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
-            Timber.i("Account Name - %s / Account Type - %s null or empty",
-                    accountName, accountType);
-            return;
+        List<String> scopes = Arrays.asList(AppHelper.getScopes());
+        if (mSheetRepository == null) {
+            mSheetRepository =
+                    new SheetRepository(this, appName, account, scopes, AppExecutors.getInstance());
+        } else {
+            mSheetRepository.refreshProcessors(this, appName, account, scopes);
         }
-
-        Account account = new Account(accountName, accountType);
-
-        mSheetRepository = new SheetRepository(this, appName, account,
-                Arrays.asList(AppHelper.getScopes()), appExecutors);
-    }
-
-    public void refreshSheetRepo(String accountName, String accountType) {
-        String appName = getString(R.string.app_name);
-
-        if (TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountType)) {
-            Timber.i("Account Name - %s / Account Type - %s null or empty",
-                    accountName, accountType);
-            return;
-        }
-
-        Account account = new Account(accountName, accountType);
-        mSheetRepository
-                .refreshProcessors(this, appName, account, Arrays.asList(AppHelper.getScopes()));
     }
 
     private void addDefaultData() {
@@ -158,30 +122,37 @@ public class MainApplication extends Application {
         getBudgetRepository().setBudgets(budgets);
     }
 
+    @Nonnull
     public CategoryRepository getCategoryRepo() {
         return mCategoryRepo;
     }
 
+    @Nonnull
     public PaymentMethodRepository getPaymentMethodRepo() {
         return mPaymentMethodRepo;
     }
 
+    @Nonnull
     public ExpenseRepository getExpenseRepo() {
         return mExpenseRepo;
     }
 
+    @Nonnull
     public LogRepository getLogRepo() {
         return mLogRepo;
     }
 
+    @Nullable
     public SheetRepository getSheetRepository() {
         return mSheetRepository;
     }
 
+    @Nonnull
     public BudgetRepository getBudgetRepository() {
         return mBudgetRepository;
     }
 
+    @Nonnull
     public EditedSheetRepository getEditedSheetRepo() {
         return mEditedSheetRepo;
     }

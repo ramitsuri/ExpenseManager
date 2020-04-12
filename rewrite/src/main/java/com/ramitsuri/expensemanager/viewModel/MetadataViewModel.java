@@ -24,9 +24,6 @@ public class MetadataViewModel extends ViewModel {
     private LiveData<List<String>> mLogs;
 
     public MetadataViewModel() {
-        if (MainApplication.getInstance().getSheetRepository() == null) {
-            Timber.e("Sheet repo is null");
-        }
         mLogRepository = MainApplication.getInstance().getLogRepo();
 
         mLogs = Transformations.map(mLogRepository.getLogs(),

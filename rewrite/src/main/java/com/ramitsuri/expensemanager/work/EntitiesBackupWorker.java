@@ -83,18 +83,17 @@ public class EntitiesBackupWorker extends BaseWorker {
         List<Budget> budgets =
                 ExpenseManagerDatabase.getInstance().budgetDao().getAll();
         if (categories == null || categories.size() == 0 ||
-                paymentMethods == null || paymentMethods.size() == 0 ||
-                budgets == null || budgets.size() == 0) {
-            Timber.i("Categories, payment methods or budgets are empty. This shouldn't happen");
+                paymentMethods == null || paymentMethods.size() == 0) {
+            Timber.i("Categories or payment methods are empty. This shouldn't happen");
             insertLog(workType,
                     Constants.LogResult.FAILURE,
-                    "Categories, payment methods or budgets are empty. This shouldn't happen");
+                    "Categories, or payment methods are empty. This shouldn't happen");
             return Result.failure();
         }
 
         InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
                 .getInsertEntitiesResponse(spreadsheetId, categories, paymentMethods, budgets,
-                        entitiesSheetId);
+                        AppHelper.getMonths(), entitiesSheetId);
         if (response.isSuccessful()) {
             // Entities have been backed up, now they're in unedited state
             AppHelper.setEntitiesEdited(false);

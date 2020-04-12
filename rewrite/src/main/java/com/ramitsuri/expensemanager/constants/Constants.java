@@ -44,6 +44,7 @@ public class Constants {
         public static final String PERIODIC_ENTITIES_BACKUP = "periodic_entities_backup";
         public static final String ONE_TIME_SYNC = "one_time_sync";
         public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";
+        public static final String ONE_TIME_CREATE_SPREADSHEET = "one_time_create_spreadsheet";
     }
 
     public class Range {

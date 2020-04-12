@@ -3,17 +3,22 @@ package com.ramitsuri.expensemanager.data.repository;
 import android.accounts.Account;
 import android.content.Context;
 
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.ramitsuri.expensemanager.AppExecutors;
+import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.SheetRequestHelper;
 import com.ramitsuri.sheetscore.SheetsProcessor;
+import com.ramitsuri.sheetscore.consumerResponse.CreateSpreadsheetConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.RangeConsumerResponse;
@@ -22,6 +27,7 @@ import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 import com.ramitsuri.sheetscore.consumerResponse.SheetsMetadataConsumerResponse;
 import com.ramitsuri.sheetscore.intdef.Dimension;
 import com.ramitsuri.sheetscore.spreadsheetResponse.BaseResponse;
+import com.ramitsuri.sheetscore.spreadsheetResponse.CreateSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.SpreadsheetSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.ValueRangeSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.ValueRangesSpreadsheetResponse;
@@ -34,16 +40,45 @@ import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import timber.log.Timber;
 
 public class SheetRepository {
 
     private SheetsProcessor mSheetsProcessor;
+    private AppExecutors mExecutors;
 
     public SheetRepository(@NonNull Context context, @NonNull String appName,
             @NonNull Account account, @NonNull List<String> scopes,
             @NonNull AppExecutors executors) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
+        mExecutors = executors;
+    }
+
+    public LiveData<CreateSpreadsheetConsumerResponse> createSpreadsheet(
+            @Nonnull final String spreadsheetTitle,
+            @Nonnull final String entitiesSheetTitle,
+            @Nonnull final List<String> paymentMethods,
+            @Nonnull final List<String> categories,
+            @Nonnull final List<String> months,
+            @Nonnull final List<Budget> budgets) {
+        final MutableLiveData<CreateSpreadsheetConsumerResponse> responseLiveData =
+                new MutableLiveData<>();
+        mExecutors.networkIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                CreateSpreadsheetConsumerResponse response = getCreateSpreadsheetResponse(
+                        spreadsheetTitle,
+                        entitiesSheetTitle,
+                        paymentMethods,
+                        categories,
+                        months,
+                        budgets);
+                responseLiveData.postValue(response);
+            }
+        });
+        return responseLiveData;
     }
 
     public SheetsMetadataConsumerResponse getSheetsMetadataResponse(@Nonnull String spreadsheetId) {
@@ -62,13 +97,12 @@ public class SheetRepository {
                     sheetMetadataList.add(sheetMetadata);
                 }
                 consumerResponse.setSheetMetadataList(sheetMetadataList);
+                onOperationSuccess();
             }
         } catch (IOException e) {
             Timber.e(e);
             consumerResponse.setException(e);
-        } catch (Exception e) {
-            Timber.e(e);
-            consumerResponse.setException(e);
+            onOperationException(e);
         }
         return consumerResponse;
     }
@@ -102,14 +136,13 @@ public class SheetRepository {
                     }
                     entityLists.add(entityList);
                 }
+                onOperationSuccess();
             }
             consumerResponse.setStringLists(entityLists);
         } catch (IOException e) {
             Timber.e(e);
             consumerResponse.setException(e);
-        } catch (Exception e) {
-            Timber.e(e);
-            consumerResponse.setException(e);
+            onOperationException(e);
         }
         return consumerResponse;
     }
@@ -149,15 +182,14 @@ public class SheetRepository {
                         value.setObjectLists(responseObjectLists);
                         values.add(value);
                     }
+                    onOperationSuccess();
                 }
             }
             consumerResponse.setValues(values);
         } catch (IOException e) {
             Timber.e(e);
             consumerResponse.setException(e);
-        } catch (Exception e) {
-            Timber.e(e);
-            consumerResponse.setException(e);
+            onOperationException(e);
         }
         return consumerResponse;
     }
@@ -173,6 +205,7 @@ public class SheetRepository {
             if (requestBody != null) {
                 mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
                 consumerResponse.setSuccessful(true);
+                onOperationSuccess();
             } else {
                 consumerResponse.setSuccessful(false);
             }
@@ -180,10 +213,7 @@ public class SheetRepository {
             Timber.e(e);
             consumerResponse.setSuccessful(false);
             consumerResponse.setException(e);
-        } catch (Exception e) {
-            Timber.e(e);
-            consumerResponse.setSuccessful(false);
-            consumerResponse.setException(e);
+            onOperationException(e);
         }
         return consumerResponse;
     }
@@ -192,15 +222,17 @@ public class SheetRepository {
             @Nullable List<Category> categories,
             @Nullable List<PaymentMethod> paymentMethods,
             @Nullable List<Budget> budgets,
+            @Nonnull List<String> months,
             int entitiesSheetId) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
             BatchUpdateSpreadsheetRequest requestBody = SheetRequestHelper
-                    .getUpdateEntitiesRequestBody(categories, paymentMethods, budgets,
+                    .getUpdateEntitiesRequestBody(categories, paymentMethods, budgets, months,
                             entitiesSheetId);
             if (requestBody != null) {
                 mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
                 consumerResponse.setSuccessful(true);
+                onOperationSuccess();
             } else {
                 consumerResponse.setSuccessful(false);
             }
@@ -208,10 +240,41 @@ public class SheetRepository {
             Timber.e(e);
             consumerResponse.setSuccessful(false);
             consumerResponse.setException(e);
-        } catch (Exception e) {
+            onOperationException(e);
+        }
+        return consumerResponse;
+    }
+
+    public CreateSpreadsheetConsumerResponse getCreateSpreadsheetResponse(
+            @Nonnull String spreadsheetTitle,
+            @Nonnull String entitiesSheetTitle,
+            @Nonnull List<String> paymentMethods,
+            @Nonnull List<String> categories,
+            @Nonnull List<String> months,
+            @Nonnull List<Budget> budgets) {
+        CreateSpreadsheetConsumerResponse consumerResponse =
+                new CreateSpreadsheetConsumerResponse();
+        try {
+            Spreadsheet requestBody = SheetRequestHelper
+                    .getCreateRequestBody(spreadsheetTitle, entitiesSheetTitle,
+                            paymentMethods, categories, months, budgets);
+            CreateSpreadsheetResponse response =
+                    (CreateSpreadsheetResponse)mSheetsProcessor.createSheet(requestBody);
+            String spreadsheetId = response.getResponse().getSpreadsheetId();
+            List<SheetMetadata> sheets = new ArrayList<>();
+            for (Sheet sheet : response.getResponse().getSheets()) {
+                SheetMetadata sheetMetadata =
+                        new SheetMetadata(sheet.getProperties().getSheetId(),
+                                sheet.getProperties().getTitle());
+                sheets.add(sheetMetadata);
+            }
+            consumerResponse.setSpreadsheetId(spreadsheetId);
+            consumerResponse.setSheetMetadataList(sheets);
+            onOperationSuccess();
+        } catch (IOException e) {
             Timber.e(e);
-            consumerResponse.setSuccessful(false);
             consumerResponse.setException(e);
+            onOperationException(e);
         }
         return consumerResponse;
     }
@@ -220,5 +283,15 @@ public class SheetRepository {
             @NonNull Account account, @NonNull List<String> scopes) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
         //mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
+    }
+
+    private void onOperationSuccess() {
+        AppHelper.setBackupInfoStatus(BackupInfoStatus.OK);
+    }
+
+    private void onOperationException(Exception e) {
+        if (e instanceof UserRecoverableAuthIOException) {
+            AppHelper.setBackupInfoStatus(BackupInfoStatus.ERROR);
+        }
     }
 }

@@ -162,9 +162,16 @@ public class AddBudgetFragment extends BaseBottomSheetFragment {
                 if (TextUtils.isEmpty(name)) {
                     name = getString(R.string.setup_budget_default_name);
                 }
+                String amountString = editAmount.getText().toString().trim();
+                BigDecimal amount;
+                if (TextUtils.isEmpty(amountString)) {
+                    amount = BigDecimal.ZERO;
+                } else {
+                    amount = new BigDecimal(amountString);
+                }
                 if (mCallback != null) {
                     budget.setName(name);
-                    budget.setAmount(new BigDecimal(editAmount.getText().toString().trim()));
+                    budget.setAmount(amount);
                     budget.setCategories(selectedCategories);
                     dismiss();
                     mCallback.onChanged(budget);

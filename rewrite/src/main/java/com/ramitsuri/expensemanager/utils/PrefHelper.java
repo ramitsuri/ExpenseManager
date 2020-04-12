@@ -1,9 +1,10 @@
 package com.ramitsuri.expensemanager.utils;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.ramitsuri.expensemanager.MainApplication;
+
+import androidx.preference.PreferenceManager;
 
 public class PrefHelper {
 

@@ -5,7 +5,6 @@
     </plurals>
 
     <string name="app_name">Expenses</string>
-    <string name="spreadsheet_name">Expenses - %1$s</string>
     <string name="hello_add_fragment">Hello Add fragment</string>
     <string name="hello_settings_fragment">Hello Settings fragment</string>
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
@@ -143,7 +142,7 @@
         backed up expenses</string>
 
     <!-- Miscellaneous -->
-    <string name="header_title_backup_sync">Backup and Sync</string>
+    <string name="header_title_backup_sync">Backup</string>
     <string name="header_title_entities">Manage Entities</string>
     <string name="header_title_spreadsheet">Spreadsheet</string>
     <string name="header_title_general">General</string>
@@ -153,6 +152,12 @@
     <string name="migration_step_progress_summary">Doing something… Don\'t close the app</string>
     <string name="migration_step_complete_summary">All set! You can continue using the app</string>
     <string name="migration_all_set">You\'re all set!</string>
+    <string name="miscellaneous_backup_info_enabled">Enabled! Tap to diagnose issues</string>
+    <string name="miscellaneous_backup_info_not_enabled">Not enabled! Tap to setup</string>
+    <string name="miscellaneous_backup_info_creating">Doing something</string>
+    <string name="miscellaneous_backup_info_error">Error! Tap to resolve</string>
+    <string name="miscellaneous_backup_info_good">Enabled! Everything\'s good</string>
+    <string name="miscellaneous_backup_info_title">Auto backup</string>
 
     <!-- Theme -->
     <string name="theme_light">Light</string>
@@ -165,5 +170,9 @@
     <string name="analysis_used_format">%1s/%2s</string>
     <string name="analysis_remaining_format">%1s left</string>
     <string name="analysis_overused_format">%1s over</string>
+
+    <!-- Spreadsheet -->
+    <string name="spreadsheet_entities_sheet_title">Entities</string>
+    <string name="spreadsheet_title_format">Expenses %1d</string>
 
 </resources>

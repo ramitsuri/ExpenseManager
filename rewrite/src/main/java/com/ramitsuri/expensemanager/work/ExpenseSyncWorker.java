@@ -32,6 +32,14 @@ public class ExpenseSyncWorker extends BaseWorker {
         String workType = getInputData().getString(Constants.Work.TYPE);
         String message;
 
+        if (MainApplication.getInstance().getSheetRepository() == null) {
+            Timber.i("Sheet repo null");
+            insertLog(workType,
+                    Constants.LogResult.FAILURE,
+                    "Sheet repo null");
+            return Result.failure();
+        }
+
         if (ExpenseManagerDatabase.getInstance().sheetDao() == null) {
             message = "Sheet dao null";
             Timber.e(message);

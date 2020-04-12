@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.utils;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.work.BackupWorker;
+import com.ramitsuri.expensemanager.work.CreateSpreadsheetWorker;
 import com.ramitsuri.expensemanager.work.EntitiesBackupWorker;
 import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
 import com.ramitsuri.expensemanager.work.SyncWorker;
@@ -104,6 +105,16 @@ public class WorkHelper {
         enqueuePeriodicWork(tag, EntitiesBackupWorker.class);
     }
 
+    /**
+     * One time create spreadsheet
+     */
+    public static void enqueueOneTimeCreateSpreadsheet() {
+        Timber.i("Enqueue one-time spreadsheet creation invoked");
+
+        String tag = getOneTimeCreateSpreadsheetTag();
+        enqueueOneTimeWork(tag, CreateSpreadsheetWorker.class);
+    }
+
     public static LiveData<List<WorkInfo>> getWorkStatus(String tag) {
         return getInstance()
                 .getWorkInfosByTagLiveData(tag);
@@ -135,6 +146,10 @@ public class WorkHelper {
 
     private static String getOneTimeExpenseSyncTag() {
         return Constants.Tag.ONE_TIME_EXPENSE_SYNC;
+    }
+
+    public static String getOneTimeCreateSpreadsheetTag() {
+        return Constants.Tag.ONE_TIME_CREATE_SPREADSHEET;
     }
 
     private static Constraints getConstraints() {

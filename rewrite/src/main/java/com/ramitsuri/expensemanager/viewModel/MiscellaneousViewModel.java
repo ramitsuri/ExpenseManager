@@ -1,16 +1,31 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.accounts.Account;
+import android.content.Intent;
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
+import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
+import com.ramitsuri.sheetscore.googleSignIn.SignInResponse;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import androidx.annotation.ArrayRes;
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+import androidx.work.WorkInfo;
 import timber.log.Timber;
 
 public class MiscellaneousViewModel extends ViewModel {
@@ -18,8 +33,8 @@ public class MiscellaneousViewModel extends ViewModel {
     private long mDeleteLastPressTime;
     private int mAboutPressCount;
     private boolean mEnableHidden;
-    private MutableLiveData<String> mSpreadsheetId;
     private MutableLiveData<String> mCurrentTheme;
+    private MutableLiveData<String> mBackupInfoStatus;
 
     public MiscellaneousViewModel() {
         super();
@@ -28,11 +43,11 @@ public class MiscellaneousViewModel extends ViewModel {
 
         mAboutPressCount = 0;
 
-        mSpreadsheetId = new MutableLiveData<>();
-        mSpreadsheetId.postValue(AppHelper.getSpreadsheetId());
-
         mCurrentTheme = new MutableLiveData<>();
         mCurrentTheme.postValue(AppHelper.getCurrentTheme());
+
+        mBackupInfoStatus = new MutableLiveData<>();
+        postBackupInfoStatus();
     }
 
     public void initiateBackup() {
@@ -73,8 +88,8 @@ public class MiscellaneousViewModel extends ViewModel {
         return BuildConfig.DEBUG;
     }
 
-    public LiveData<String> getSpreadsheetIdLive() {
-        return mSpreadsheetId;
+    public String getSpreadsheetId() {
+        return AppHelper.getSpreadsheetId();
     }
 
     public boolean versionInfoPressSuccess() {
@@ -135,5 +150,78 @@ public class MiscellaneousViewModel extends ViewModel {
 
     public boolean enableEntitiesSync() {
         return enableHidden() && AppHelper.isEntitiesSyncEnabled();
+    }
+
+    @Nonnull
+    public LiveData<String> getBackupInfoStatus() {
+        return mBackupInfoStatus;
+    }
+
+    public LiveData<Boolean> onBackupInfoClicked() {
+        if (TextUtils.isEmpty(getSpreadsheetId())) { // Create spreadsheet
+            Timber.i("Spreadsheet id is empty, initiating create spreadsheet");
+            mBackupInfoStatus.postValue(BackupInfoStatus.CREATING);
+            WorkHelper.enqueueOneTimeCreateSpreadsheet();
+            // Transform work info to post status for backup info. if work has completed,
+            // a new status needs to be posted so progress can be hidden
+            return Transformations
+                    .map(WorkHelper.getWorkStatus(WorkHelper.getOneTimeCreateSpreadsheetTag()),
+                            new Function<List<WorkInfo>, Boolean>() {
+                                @Override
+                                public Boolean apply(List<WorkInfo> workInfoList) {
+                                    if (workInfoList != null && workInfoList.size() > 0) {
+                                        WorkInfo info = workInfoList.get(0);
+                                        if (info.getState().isFinished()) {
+                                            postBackupInfoStatus();
+                                            return true;
+                                        }
+                                    }
+                                    return null;
+                                }
+                            });
+        }
+        return null;
+    }
+
+    @Nullable
+    public Account getSignInAccount() {
+        AccountManager accountManager = new AccountManager();
+        SignInResponse response =
+                accountManager.prepareSignIn(MainApplication.getInstance(), AppHelper.getScopes());
+        if (response.getGoogleSignInAccount() != null) {
+            Account account = response.getGoogleSignInAccount().getAccount();
+            if (account != null) {
+                Timber.i("Signed in as %s", account.name);
+                onAccountInfoReceived(account);
+                return account;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public Intent getSignInIntent() {
+        AccountManager accountManager = new AccountManager();
+        SignInResponse response =
+                accountManager.prepareSignIn(MainApplication.getInstance(), AppHelper.getScopes());
+        return response.getGoogleSignInIntent();
+    }
+
+    private void onAccountInfoReceived(@Nonnull Account account) {
+        Timber.i("On account received %s", account.name);
+        MainApplication.getInstance().refreshSheetRepo(account);
+    }
+
+    private void postBackupInfoStatus() {
+        String savedBackupInfoStatus = AppHelper.getBackupInfoStatus();
+        if (TextUtils.isEmpty(getSpreadsheetId())) {
+            mBackupInfoStatus.postValue(BackupInfoStatus.NO);
+        } else if (savedBackupInfoStatus == null) {
+            mBackupInfoStatus.postValue(BackupInfoStatus.MAYBE);
+        } else if (savedBackupInfoStatus.equals(BackupInfoStatus.ERROR)) {
+            mBackupInfoStatus.postValue(BackupInfoStatus.ERROR);
+        } else {
+            mBackupInfoStatus.postValue(BackupInfoStatus.OK);
+        }
     }
 }
