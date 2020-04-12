@@ -191,7 +191,6 @@ public class MiscellaneousViewModel extends ViewModel {
         if (response.getGoogleSignInAccount() != null) {
             Account account = response.getGoogleSignInAccount().getAccount();
             if (account != null) {
-                Timber.i("Signed in as %s", account.name);
                 onAccountInfoReceived(account);
                 return account;
             }
@@ -214,14 +213,14 @@ public class MiscellaneousViewModel extends ViewModel {
 
     private void postBackupInfoStatus() {
         String savedBackupInfoStatus = AppHelper.getBackupInfoStatus();
-        if (TextUtils.isEmpty(getSpreadsheetId())) {
+        if (TextUtils.isEmpty(getSpreadsheetId())) { // No spreadsheet id, no connection
             mBackupInfoStatus.postValue(BackupInfoStatus.NO);
-        } else if (savedBackupInfoStatus == null) {
-            mBackupInfoStatus.postValue(BackupInfoStatus.MAYBE);
-        } else if (savedBackupInfoStatus.equals(BackupInfoStatus.ERROR)) {
+        } else if (BackupInfoStatus.ERROR.equals(savedBackupInfoStatus)) { // Error
             mBackupInfoStatus.postValue(BackupInfoStatus.ERROR);
-        } else {
+        } else if (BackupInfoStatus.OK.equals(savedBackupInfoStatus)) { // All good
             mBackupInfoStatus.postValue(BackupInfoStatus.OK);
+        } else { // Maybe connected
+            mBackupInfoStatus.postValue(BackupInfoStatus.MAYBE);
         }
     }
 }

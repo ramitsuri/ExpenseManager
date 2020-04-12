@@ -1,3 +1,11 @@
+Minor fixes
+MiscFragment
+    - Add logging for sign in process
+    - Reorder post backup info status conditions to prioritize non null status from prefs
+Budget Setup
+    - Remove restriction on editing budget if all categories used
+Use SheetsCore 3.1.1 that doesn't need full Google profile for sign in
+
 Cleanup
 Workers
     - Move logging to BaseWorker

@@ -448,8 +448,11 @@ public class MiscellaneousFragment extends BaseFragment {
     private void handleBackupInfoClicked() {
         Account account = mViewModel.getSignInAccount();
         if (account == null) {
+            Timber.i("Account null, attempting sign in");
             signIn();
             return;
+        } else {
+            Timber.i("Signed in as %s", account.name);
         }
         // Create or possibly fetch existing spreadsheet
         LiveData<Boolean> resultReceived = mViewModel.onBackupInfoClicked();
@@ -468,7 +471,10 @@ public class MiscellaneousFragment extends BaseFragment {
     private void signIn() {
         Intent intent = mViewModel.getSignInIntent();
         if (intent != null) {
+            Timber.i("Sign in intent received, requesting auth");
             startActivityForResult(intent, GOOGLE_SIGN_IN);
+        } else {
+            Timber.i("Sign in intent null, dead end");
         }
     }
 

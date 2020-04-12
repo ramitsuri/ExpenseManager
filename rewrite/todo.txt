@@ -1,16 +1,16 @@
 High
-- Easier setup after first start - edit budget, category etc
-- Save time zone in backup
-- Save empty budgets (?)
+- Add income support
+- Transition for existing users
 
 Medium
 - Tap on budget/payment/category to view filtered expenses
-- Fix fragment refreshing
-- Add income support
+- Restore access
+- Save time zone in backup
 
 Low
-- Widget with total used
 - Remove limit on number of budgets, categories and payment methods
 - Save expense on the fly and make it editable on the next run (in case app is killed, information shouldn't be lost)
-- Error messages
+- Widget with total used
 - Scheduled recurring expense
+- Fix fragment refreshing
+- Error messages

@@ -84,39 +84,41 @@ public class SetupBudgetsViewModel extends ViewModel {
         if (!mChangesMade) {
             return;
         }
-        if (repository() != null) {
-            List<Budget> values = mValuesLive.getValue();
-            if (values != null) {
-                repository().setBudgets(values);
-                // Entities have been edited
-                AppHelper.setEntitiesEdited(true);
-            }
+        List<Budget> values = mValuesLive.getValue();
+        if (values != null) {
+            repository().setBudgets(values);
+            // Entities have been edited
+            AppHelper.setEntitiesEdited(true);
         }
     }
 
     @Nullable
     public ArrayList<BudgetCategoryWrapper> getCategoryWrappers(@Nullable Budget budget) {
-        ArrayList<BudgetCategoryWrapper> categoryWrappers = null;
+        ArrayList<BudgetCategoryWrapper> categoryWrappers;
         List<String> usedCategories = getUsedCategories();
-        if (mAllCategories != null && usedCategories != null) {
-            if (mAllCategories.size() != usedCategories.size()) {
-                categoryWrappers = new ArrayList<>();
-                for (String category : mAllCategories) {
-                    BudgetCategoryWrapper wrapper = new BudgetCategoryWrapper(category);
-                    if (budget != null && budget.getCategories() != null &&
-                            ObjectHelper.contains(budget.getCategories(), category)) { // Contained in budget
-                        wrapper.setSelected(true);
-                        wrapper.setAvailable(true);
-                    } else if (ObjectHelper.contains(usedCategories, category)) {
-                        wrapper.setSelected(false);
-                        wrapper.setAvailable(false);
-                    } else {
-                        wrapper.setSelected(false);
-                        wrapper.setAvailable(true);
-                    }
-                    categoryWrappers.add(wrapper);
-                }
+        if (mAllCategories == null || usedCategories == null) {
+            return null;
+        }
+        if (budget == null && mAllCategories.size() == usedCategories.size()) {
+            // New budget requested but all categories already being used
+            return null;
+        }
+        categoryWrappers = new ArrayList<>();
+        for (String category : mAllCategories) {
+            BudgetCategoryWrapper wrapper = new BudgetCategoryWrapper(category);
+            if (budget != null && budget.getCategories() != null &&
+                    ObjectHelper.contains(budget.getCategories(),
+                            category)) { // Contained in budget
+                wrapper.setSelected(true);
+                wrapper.setAvailable(true);
+            } else if (ObjectHelper.contains(usedCategories, category)) {
+                wrapper.setSelected(false);
+                wrapper.setAvailable(false);
+            } else {
+                wrapper.setSelected(false);
+                wrapper.setAvailable(true);
             }
+            categoryWrappers.add(wrapper);
         }
         return categoryWrappers;
     }
