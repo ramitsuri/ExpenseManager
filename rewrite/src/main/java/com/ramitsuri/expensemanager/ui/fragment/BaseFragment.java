@@ -130,15 +130,16 @@ public class BaseFragment extends Fragment {
     }
 
     void logWorkStatus(final String workTag) {
-        WorkHelper.getWorkStatus(workTag).observe(this, new Observer<List<WorkInfo>>() {
-            @Override
-            public void onChanged(List<WorkInfo> workInfos) {
-                if (workInfos != null && !workInfos.isEmpty() && workInfos.get(0) != null) {
-                    Timber.i("Work status %s", workInfos.get(0).toString());
-                    insertLog(workTag, "null", workInfos.get(0).getState().toString());
-                }
-            }
-        });
+        WorkHelper.getWorkStatus(workTag)
+                .observe(getViewLifecycleOwner(), new Observer<List<WorkInfo>>() {
+                    @Override
+                    public void onChanged(List<WorkInfo> workInfos) {
+                        if (workInfos != null && !workInfos.isEmpty() && workInfos.get(0) != null) {
+                            Timber.i("Work status %s", workInfos.get(0).toString());
+                            insertLog(workTag, "null", workInfos.get(0).getState().toString());
+                        }
+                    }
+                });
     }
 
     private void insertLog(String type, String result, String message) {

@@ -1,3 +1,23 @@
+Transition plan for existing users
+ExpenseDao
+    - Add new method to make all expenses unsynced
+    - Add test for the new method
+BaseFragment
+    - Use getViewLifecycleOwner instead of this for work status live data logging
+Create Spreadsheet
+    - Add Logs sheet for future use
+WorkHelper
+    - Add method to cancel periodic entities backup
+MiscVM
+    - enqueue periodic backups when everything looks ok in backup status info
+MainApplication
+    - Transition plan for existing users
+    - If spreadsheet Id already exists then
+        - Cancel all periodic work
+        - Set all expenses to unsynced so backup picks them up
+        - Set first run to complete
+        - Set spreadsheet id to null
+
 Minor fixes
 MiscFragment
     - Add logging for sign in process

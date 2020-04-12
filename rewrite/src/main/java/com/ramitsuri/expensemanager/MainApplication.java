@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager;
 
 import android.accounts.Account;
 import android.app.Application;
+import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
@@ -14,6 +15,7 @@ import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -50,11 +52,33 @@ public class MainApplication extends Application {
 
         initDataRepos();
 
+        // TODO remove once transition complete and start enqueue periodic works
+        transitionExistingUsers();
+
         if (AppHelper.isFirstRunComplete()) {
             Timber.i("Application has already been set up");
         } else {
             addDefaultData();
             AppHelper.setFirstRunComplete(true);
+        }
+    }
+
+    private void transitionExistingUsers() {
+        if (BuildConfig.DEBUG) {
+            return;
+        }
+        if (!TextUtils.isEmpty(AppHelper.getSpreadsheetId())) { // Already existing users
+            // Cancel existing works
+            WorkHelper.cancelPeriodicLegacyBackup();
+            WorkHelper.cancelPeriodicBackup();
+            WorkHelper.cancelPeriodicEntitiesBackup();
+
+            // Update existing expenses to unsynced state so that expense backup will pick them up
+            getExpenseRepo().updateSetAllUnsynced();
+
+            // Set first run complete so that default data doesn't overwrite real data
+            AppHelper.setFirstRunComplete(true);
+            AppHelper.setSpreadsheetId(null);
         }
     }
 

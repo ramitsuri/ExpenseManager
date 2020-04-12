@@ -150,6 +150,9 @@ public class SheetRequestHelper {
         sheets.add(getEntitiesSheet(entitiesSheetTitle, index,
                 paymentMethods, categories, budgets, months));
 
+        // Add logs sheet as well for future use
+        sheets.add(getExpenseSheet("Logs", index + 1));
+
         request.setSheets(sheets);
         return request;
     }

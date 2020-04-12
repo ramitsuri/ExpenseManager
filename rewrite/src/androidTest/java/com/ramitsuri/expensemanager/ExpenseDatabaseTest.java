@@ -168,4 +168,12 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
                 DummyData.getAllStarred().size(),
                 mExpenseDao.getAllStarred().size());
     }
+
+    @Test
+    public void testUpdateSetAllUnsynced() {
+        Assert.assertNotEquals(mExpenseDao.getAllUnsynced().size(), mExpenseDao.getAll().size());
+
+        mExpenseDao.updateSetAllUnsynced();
+        Assert.assertEquals(mExpenseDao.getAllUnsynced().size(), mExpenseDao.getAll().size());
+    }
 }

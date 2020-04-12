@@ -219,6 +219,10 @@ public class MiscellaneousViewModel extends ViewModel {
             mBackupInfoStatus.postValue(BackupInfoStatus.ERROR);
         } else if (BackupInfoStatus.OK.equals(savedBackupInfoStatus)) { // All good
             mBackupInfoStatus.postValue(BackupInfoStatus.OK);
+            // TODO move to MainApp onCreate once transition complete
+            // Enqueue periodic backups
+            WorkHelper.enqueuePeriodicBackup();
+            WorkHelper.enqueuePeriodicEntitiesBackup();
         } else { // Maybe connected
             mBackupInfoStatus.postValue(BackupInfoStatus.MAYBE);
         }

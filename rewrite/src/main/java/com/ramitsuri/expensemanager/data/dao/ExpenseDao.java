@@ -86,6 +86,9 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
     public abstract void updateUnsynced();
 
+    @Query("UPDATE expense SET is_synced = 0")
+    public abstract void updateSetAllUnsynced();
+
     @Query("UPDATE expense SET is_starred = 1 WHERE mId = :id")
     public abstract void setStarred(int id);
 

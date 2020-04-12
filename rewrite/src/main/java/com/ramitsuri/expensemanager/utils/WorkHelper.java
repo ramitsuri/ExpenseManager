@@ -105,6 +105,14 @@ public class WorkHelper {
         enqueuePeriodicWork(tag, EntitiesBackupWorker.class);
     }
 
+    public static void cancelPeriodicEntitiesBackup() {
+        Timber.i("Cancel scheduled entities backup invoked");
+
+        String tag = getPeriodicEntitiesBackupTag();
+        getInstance()
+                .cancelAllWorkByTag(tag);
+    }
+
     /**
      * One time create spreadsheet
      */

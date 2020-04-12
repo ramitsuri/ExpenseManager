@@ -90,6 +90,15 @@ public class ExpenseRepository {
         });
     }
 
+    public void updateSetAllUnsynced() {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.expenseDao().updateSetAllUnsynced();
+            }
+        });
+    }
+
     public LiveData<Expense> insertAndGet(@Nonnull final Expense expense,
             @Nonnull Filter filter) {
         final MutableLiveData<Expense> duplicate = new MutableLiveData<>();
