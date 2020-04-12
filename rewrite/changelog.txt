@@ -1,3 +1,13 @@
+Cleanup
+Workers
+    - Move logging to BaseWorker
+SyncWorker (Entities)
+    - Remove null checks for category and payment method repos
+ExpenseDetails
+    - Reduce buttons sizes
+FilterFrag
+    - Add bottom margin to reduce interference with system gestures
+
 Create Spreadsheet
 BackupInfoStatus
     - New constants class for status about connection to Google spreadsheets

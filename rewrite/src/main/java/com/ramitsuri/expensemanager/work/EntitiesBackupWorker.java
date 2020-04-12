@@ -17,7 +17,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
-import timber.log.Timber;
 
 public class EntitiesBackupWorker extends BaseWorker {
 
@@ -33,28 +32,19 @@ public class EntitiesBackupWorker extends BaseWorker {
 
         boolean isEntitiesEdited = AppHelper.isEntitiesEdited();
         if (!isEntitiesEdited) {
-            Timber.i("Entities weren't edited");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Entities weren't edited");
+            onFailure(workType, "Entities weren't edited");
             return Result.failure();
         }
 
         if (MainApplication.getInstance().getSheetRepository() == null) {
-            Timber.i("Sheet repo null");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Sheet repo is null");
+            onFailure(workType, "Sheet repo is null");
             return Result.failure();
         }
 
         // Spreadsheet Id
         String spreadsheetId = AppHelper.getSpreadsheetId();
         if (TextUtils.isEmpty(spreadsheetId)) {
-            Timber.i("Spreadsheet id is empty or null");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Spreadsheet id is empty or null");
+            onFailure(workType, "Spreadsheet id is empty or null");
             return Result.failure();
         }
 
@@ -68,10 +58,7 @@ public class EntitiesBackupWorker extends BaseWorker {
             }
         }
         if (entitiesSheetId == Constants.Basic.UNDEFINED) {
-            Timber.i("Cannot find record of entities sheet id");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Cannot find record of entities sheet id");
+            onFailure(workType, "Cannot find record of entities sheet id");
             return Result.failure();
         }
 
@@ -84,10 +71,7 @@ public class EntitiesBackupWorker extends BaseWorker {
                 ExpenseManagerDatabase.getInstance().budgetDao().getAll();
         if (categories == null || categories.size() == 0 ||
                 paymentMethods == null || paymentMethods.size() == 0) {
-            Timber.i("Categories or payment methods are empty. This shouldn't happen");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Categories, or payment methods are empty. This shouldn't happen");
+            onFailure(workType, "Categories, or payment methods are empty. This shouldn't happen");
             return Result.failure();
         }
 
@@ -97,15 +81,14 @@ public class EntitiesBackupWorker extends BaseWorker {
         if (response.isSuccessful()) {
             // Entities have been backed up, now they're in unedited state
             AppHelper.setEntitiesEdited(false);
-            insertLog(workType,
-                    Constants.LogResult.SUCCESS,
-                    "Entities backup successful");
+            onSuccess(workType, "Entities backup successful");
             return Result.success();
         } else if (response.getException() != null) {
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    response.getException().getMessage());
+            onFailure(workType, response.getException().getMessage());
+            return Result.failure();
         }
+
+        onFailure(workType, "Unknown reason");
         return Result.failure();
     }
 }

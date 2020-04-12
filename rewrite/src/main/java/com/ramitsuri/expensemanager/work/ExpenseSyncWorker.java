@@ -18,7 +18,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
-import timber.log.Timber;
 
 public class ExpenseSyncWorker extends BaseWorker {
 
@@ -30,52 +29,32 @@ public class ExpenseSyncWorker extends BaseWorker {
     @Override
     public Result doWork() {
         String workType = getInputData().getString(Constants.Work.TYPE);
-        String message;
 
         if (MainApplication.getInstance().getSheetRepository() == null) {
-            Timber.i("Sheet repo null");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Sheet repo null");
+            onFailure(workType, "Sheet repo null");
             return Result.failure();
         }
 
         if (ExpenseManagerDatabase.getInstance().sheetDao() == null) {
-            message = "Sheet dao null";
-            Timber.e(message);
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    message);
+            onFailure(workType, "Sheet dao null");
             return Result.failure();
         }
 
         if (ExpenseManagerDatabase.getInstance().expenseDao() == null) {
-            message = "Expense dao null";
-            Timber.e(message);
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    message);
+            onFailure(workType, "Expense dao null");
             return Result.failure();
         }
 
         // Spreadsheet Id
         String spreadsheetId = AppHelper.getSpreadsheetId();
         if (TextUtils.isEmpty(spreadsheetId)) {
-            message = "Spreadsheet id is empty or null";
-            Timber.e(message);
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    message);
+            onFailure(workType, "Spreadsheet id is empty or null");
             return Result.failure();
         }
 
         List<SheetInfo> sheetInfos = ExpenseManagerDatabase.getInstance().sheetDao().getAll();
         if (sheetInfos == null || sheetInfos.size() == 0) {
-            message = "Sheet infos null or size 0";
-            Timber.e(message);
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    message);
+            onFailure(workType, "Sheet infos null or size 0");
             return Result.failure();
         }
 
@@ -86,11 +65,8 @@ public class ExpenseSyncWorker extends BaseWorker {
         RangesConsumerResponse ranges = MainApplication.getInstance().getSheetRepository()
                 .getRangesDataResponse(spreadsheetId, expenseRanges);
         if (ranges == null || ranges.getValues().size() == 0) {
-            message = "Attempting to save expenses, list size should be > 2";
-            Timber.i(message);
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    message);
+            onFailure(workType, "Attempting to save expenses, list size should be > 2");
+            return Result.failure();
         } else {
             // Delete existing synced expenses
             ExpenseManagerDatabase.getInstance().expenseDao().deleteSynced();
@@ -123,12 +99,8 @@ public class ExpenseSyncWorker extends BaseWorker {
                         .append(";");
                 ExpenseManagerDatabase.getInstance().expenseDao().insert(expenses);
             }
-            Timber.i(sb.toString());
-            insertLog(workType,
-                    Constants.LogResult.SUCCESS,
-                    sb.toString());
+            onSuccess(workType, sb.toString());
+            return Result.success();
         }
-
-        return Result.success();
     }
 }

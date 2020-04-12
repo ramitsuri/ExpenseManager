@@ -25,7 +25,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
-import timber.log.Timber;
 
 public class CreateSpreadsheetWorker extends BaseWorker {
 
@@ -41,10 +40,7 @@ public class CreateSpreadsheetWorker extends BaseWorker {
 
         SheetRepository repository = MainApplication.getInstance().getSheetRepository();
         if (repository == null) {
-            Timber.i("Sheet repo null");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Sheet repo is null");
+            onFailure(workType, "Sheet repo is null");
             return Result.failure();
         }
 
@@ -57,10 +53,7 @@ public class CreateSpreadsheetWorker extends BaseWorker {
                 ExpenseManagerDatabase.getInstance().budgetDao().getAll();
         if (categories == null || categories.size() == 0 ||
                 paymentMethods == null || paymentMethods.size() == 0) {
-            Timber.i("Categories or payment methods are empty. This shouldn't happen");
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    "Categories, or payment methods are empty. This shouldn't happen");
+            onFailure(workType, "Categories, or payment methods are empty. This shouldn't happen");
             return Result.failure();
         }
         List<String> categoryStrings = new ArrayList<>();
@@ -93,19 +86,14 @@ public class CreateSpreadsheetWorker extends BaseWorker {
                 sheetInfos.add(new SheetInfo(sheetMetadata));
             }
             ExpenseManagerDatabase.getInstance().sheetDao().setAll(sheetInfos);
-            insertLog(workType,
-                    Constants.LogResult.SUCCESS,
-                    "Spreadsheet created successfully, id and sheets info saved");
+            onSuccess(workType, "Spreadsheet created successfully, id and sheets info saved");
             return Result.success();
         } else if (response.getException() != null) {
-            insertLog(workType,
-                    Constants.LogResult.FAILURE,
-                    response.getException().getMessage());
+            onFailure(workType, response.getException().getMessage());
+            return Result.failure();
         }
 
-        insertLog(workType,
-                Constants.LogResult.FAILURE,
-                "Unknown reason");
+        onFailure(workType, "Unknown reason");
         return Result.failure();
     }
 
