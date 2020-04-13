@@ -1,3 +1,15 @@
+Add income to filter (WIP)
+ExpenseDao
+    - Add method to get results for query
+    - Null check from and to date time in getAllForBackup as they are Long now instead of long
+    - Add method "getForFilter" to generate the ultimate filter query
+ExpenseRepo
+    - Modify getForFilter method to pass down a filter to ExpenseDao method getForFilter
+Filter
+    - Add isIncome
+    - Make from and to times Long from long
+    - Change friendlyString method
+
 Transition plan for existing users
 ExpenseDao
     - Add new method to make all expenses unsynced

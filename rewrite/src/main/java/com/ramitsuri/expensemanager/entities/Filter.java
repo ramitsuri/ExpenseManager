@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.entities;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
@@ -9,13 +11,15 @@ import com.ramitsuri.expensemanager.utils.DateHelper;
 import java.util.Calendar;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Filter {
     private Calendar mCalendar;
 
     private int mMonthIndex;
-    private long mFromDateTime;
-    private long mToDateTime;
+    private Long mFromDateTime;
+    private Long mToDateTime;
+    private Boolean mIsIncome;
 
     public Filter() {
         mCalendar = Calendar.getInstance(AppHelper.getTimeZone());
@@ -28,12 +32,23 @@ public class Filter {
         return this;
     }
 
-    public long getFromDateTime() {
+    @Nullable
+    public Long getFromDateTime() {
         return mFromDateTime;
     }
 
-    public long getToDateTime() {
+    @Nullable
+    public Long getToDateTime() {
         return mToDateTime;
+    }
+
+    @Nullable
+    public Boolean getIsIncome() {
+        return mIsIncome;
+    }
+
+    public void setIsIncome(boolean isIncome) {
+        mIsIncome = isIncome;
     }
 
     @Override
@@ -42,14 +57,29 @@ public class Filter {
         return "Filter{" +
                 "mFromDateTime=" + mFromDateTime +
                 ", mToDateTime=" + mToDateTime +
+                ", mIsIncome=" + mIsIncome +
                 '}';
     }
 
+    @Nullable
     public String toFriendlyString() {
-        return MainApplication.getInstance().getResources()
-                .getString(R.string.expenses_filter_format,
-                        DateHelper.getFriendlyDate(mFromDateTime),
-                        DateHelper.getFriendlyDate(mToDateTime));
+        StringBuilder sb = new StringBuilder();
+        if (mIsIncome != null) {
+            sb.append(MainApplication.getInstance().getResources()
+                    .getString(R.string.expenses_filter_incomes));
+        }
+
+        if (!TextUtils.isEmpty(sb.toString())) {
+            sb.append(" ");
+        }
+
+        if (mFromDateTime != null && mToDateTime != null) {
+            sb.append(MainApplication.getInstance().getResources()
+                    .getString(R.string.expenses_filter_date_range_format,
+                            DateHelper.getFriendlyDate(mFromDateTime),
+                            DateHelper.getFriendlyDate(mToDateTime)));
+        }
+        return sb.toString();
     }
 
     private void onMonthIndexSet(int monthIndex) {

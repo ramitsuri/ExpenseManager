@@ -37,14 +37,11 @@ public class ExpenseRepository {
         });
     }
 
-    public void getForFilter(@Nonnull Filter filter) {
-        final long fromDateTime = filter.getFromDateTime();
-        final long toDateTime = filter.getToDateTime();
+    public void getForFilter(@Nonnull final Filter filter) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                List<Expense> values =
-                        mDatabase.expenseDao().getAllForDateRange(fromDateTime, toDateTime);
+                List<Expense> values = mDatabase.expenseDao().getForFilter(filter);
                 mExpenses.postValue(values);
             }
         });

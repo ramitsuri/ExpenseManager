@@ -41,6 +41,9 @@ public abstract class ExpenseDao {
     @RawQuery
     public abstract List<Expense> getAllForBackup(SupportSQLiteQuery query);
 
+    @RawQuery
+    public abstract List<Expense> getForQuery(SupportSQLiteQuery query);
+
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract LiveData<List<Expense>> getAllUnsyncedLiveData();
 
@@ -126,15 +129,45 @@ public abstract class ExpenseDao {
             // Create a filter for every month to get start and end date time
             Filter filter = new Filter()
                     .setMonthIndex(index);
-            queryBuilder.append(" OR");
-            queryBuilder.append(" (date_time BETWEEN ? AND ?)");
-            args.add(filter.getFromDateTime());
-            args.add(filter.getToDateTime());
+            if (filter.getFromDateTime() != null && filter.getToDateTime() != null) {
+                queryBuilder.append(" OR");
+                queryBuilder.append(" (date_time BETWEEN ? AND ?)");
+                args.add(filter.getFromDateTime());
+                args.add(filter.getToDateTime());
+            }
         }
         // SELECT * FROM expense WHERE is_synced = 0 OR (date_time BETWEEN ? AND ?) OR
         // (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?)
         SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
         return getAllForBackup(query);
+    }
+
+    @Transaction
+    public List<Expense> getForFilter(@Nonnull Filter filter) {
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT * FROM expense");
+        List<Object> args = new ArrayList<>();
+
+        // Is income
+        if (filter.getIsIncome() != null) {
+            queryBuilder.append(" WHERE is_income = ?");
+            args.add(filter.getIsIncome());
+        }
+
+        // Date range
+        if (filter.getToDateTime() != null && filter.getFromDateTime() != null) {
+            if (queryBuilder.indexOf("WHERE") == -1) {
+                queryBuilder.append(" WHERE");
+            } else {
+                queryBuilder.append(" AND");
+            }
+            queryBuilder.append(" (date_time BETWEEN ? AND ?)");
+            args.add(filter.getFromDateTime());
+            args.add(filter.getToDateTime());
+        }
+
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
+        return getForQuery(query);
     }
 
     @Transaction
