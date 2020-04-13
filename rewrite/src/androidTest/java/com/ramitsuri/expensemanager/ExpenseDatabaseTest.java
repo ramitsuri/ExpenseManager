@@ -2,8 +2,8 @@ package com.ramitsuri.expensemanager;
 
 import android.util.Log;
 
-import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
+import com.ramitsuri.expensemanager.data.dummy.Expenses;
 import com.ramitsuri.expensemanager.entities.Expense;
 
 import org.junit.Assert;
@@ -32,7 +32,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         super.createDb();
         mExpenseDao = mDb.expenseDao();
 
-        for (Expense expense : DummyData.getExpenses()) {
+        for (Expense expense : Expenses.getExpenses()) {
             mExpenseDao.insert(expense);
         }
     }
@@ -40,7 +40,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testGetAll() throws Exception {
         // Get all
-        Assert.assertEquals(DummyData.getExpenses().size(), mExpenseDao.getAll().size());
+        Assert.assertEquals(Expenses.getExpenses().size(), mExpenseDao.getAll().size());
         Log.d(TAG, mExpenseDao.getAll().toString());
     }
 
@@ -48,7 +48,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     public void testGetAllStarred() throws Exception {
         // Get all starred
         Assert.assertEquals(
-                DummyData.getAllStarred().size(),
+                Expenses.getAllStarred().size(),
                 mExpenseDao.getAllStarred().size());
     }
 
@@ -56,7 +56,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     public void testGetAllUnsynced() throws Exception {
         // get All unsynced
         Assert.assertEquals(
-                DummyData.getAllUnsynced().size(),
+                Expenses.getAllUnsynced().size(),
                 mExpenseDao.getAllUnsynced().size());
     }
 
@@ -68,42 +68,42 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         monthIndices.add(5);
         monthIndices.add(4);
         Assert.assertEquals(
-                DummyData.getAllForBackup(monthIndices).size(),
+                Expenses.getAllForBackup(monthIndices).size(),
                 mExpenseDao.getAllForBackup(monthIndices).size());
 
         monthIndices = new ArrayList<>();
         monthIndices.add(0);
         Assert.assertEquals(
-                DummyData.getAllForBackup(monthIndices).size(),
+                Expenses.getAllForBackup(monthIndices).size(),
                 mExpenseDao.getAllForBackup(monthIndices).size());
 
         monthIndices = new ArrayList<>();
         monthIndices.add(11);
         monthIndices.add(9);
         Assert.assertEquals(
-                DummyData.getAllForBackup(monthIndices).size(),
+                Expenses.getAllForBackup(monthIndices).size(),
                 mExpenseDao.getAllForBackup(monthIndices).size());
 
         monthIndices = new ArrayList<>();
         Assert.assertEquals(
-                DummyData.getAllForBackup(monthIndices).size(),
+                Expenses.getAllForBackup(monthIndices).size(),
                 mExpenseDao.getAllForBackup(monthIndices).size());
     }
 
     @Test
     public void testGetAllForDateRange() throws Exception {
         // get All within date range
-        long start = DummyData.BASE_DATE_TIME;
-        long end = DummyData.BASE_DATE_TIME + DummyData.ONE_DAY;
-        Assert.assertEquals(DummyData.getAllForDateRange(start, end).size(),
+        long start = Expenses.BASE_DATE_TIME;
+        long end = Expenses.BASE_DATE_TIME + Expenses.ONE_DAY;
+        Assert.assertEquals(Expenses.getAllForDateRange(start, end).size(),
                 mExpenseDao.getAllForDateRange(start, end).size());
-        start = DummyData.BASE_DATE_TIME - DummyData.ONE_DAY;
-        end = DummyData.BASE_DATE_TIME + 2 * DummyData.ONE_DAY;
-        Assert.assertEquals(DummyData.getAllForDateRange(start, end).size(),
+        start = Expenses.BASE_DATE_TIME - Expenses.ONE_DAY;
+        end = Expenses.BASE_DATE_TIME + 2 * Expenses.ONE_DAY;
+        Assert.assertEquals(Expenses.getAllForDateRange(start, end).size(),
                 mExpenseDao.getAllForDateRange(start, end).size());
-        start = DummyData.BASE_DATE_TIME - 3 * DummyData.ONE_DAY;
-        end = DummyData.BASE_DATE_TIME + 3 * DummyData.ONE_DAY;
-        Assert.assertEquals(DummyData.getAllForDateRange(start, end).size(),
+        start = Expenses.BASE_DATE_TIME - 3 * Expenses.ONE_DAY;
+        end = Expenses.BASE_DATE_TIME + 3 * Expenses.ONE_DAY;
+        Assert.assertEquals(Expenses.getAllForDateRange(start, end).size(),
                 mExpenseDao.getAllForDateRange(start, end).size());
     }
 
@@ -128,11 +128,11 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testAddAll() throws Exception {
         // add all
-        for (Expense expense : DummyData.getExpenses()) {
+        for (Expense expense : Expenses.getExpenses()) {
             mExpenseDao.insert(expense);
         }
         Assert.assertEquals(
-                DummyData.getExpenses().size(),
+                Expenses.getExpenses().size(),
                 mExpenseDao.getAll().size());
     }
 
@@ -156,7 +156,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
             }
         }
         Assert.assertEquals(
-                DummyData.getAllStarred().size() + 1,
+                Expenses.getAllStarred().size() + 1,
                 mExpenseDao.getAllStarred().size());
     }
 
@@ -165,7 +165,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         // set unstarred
         mExpenseDao.setUnstarred(mExpenseDao.getAll().get(3).getId());
         Assert.assertEquals(
-                DummyData.getAllStarred().size(),
+                Expenses.getAllStarred().size(),
                 mExpenseDao.getAllStarred().size());
     }
 

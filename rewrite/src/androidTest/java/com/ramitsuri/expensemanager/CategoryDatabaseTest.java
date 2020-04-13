@@ -2,8 +2,8 @@ package com.ramitsuri.expensemanager;
 
 import android.util.Log;
 
-import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.data.dao.CategoryDao;
+import com.ramitsuri.expensemanager.data.dummy.Categories;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,14 +27,14 @@ public class CategoryDatabaseTest extends BaseDatabaseTest {
         super.createDb();
         mCategoryDao = mDb.categoryDao();
 
-        mCategoryDao.insertAll(DummyData.getAllCategories());
+        mCategoryDao.insertAll(Categories.getAllCategories());
     }
 
     @Test
     public void categoryTest() throws Exception {
         // get all
         Assert.assertEquals(
-                DummyData.getCategories().length,
+                Categories.getCategories().length,
                 mCategoryDao.getAll().size());
         Log.d(TAG, mCategoryDao.getAll().toString());
 
@@ -45,9 +45,9 @@ public class CategoryDatabaseTest extends BaseDatabaseTest {
                 mCategoryDao.getAll().size());
 
         // set all
-        mCategoryDao.setAll(DummyData.getAllCategories());
+        mCategoryDao.setAll(Categories.getAllCategories());
         Assert.assertEquals(
-                DummyData.getCategories().length,
+                Categories.getCategories().length,
                 mCategoryDao.getAll().size());
     }
 }

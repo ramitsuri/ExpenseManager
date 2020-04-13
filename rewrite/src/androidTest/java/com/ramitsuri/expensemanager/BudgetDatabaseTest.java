@@ -1,7 +1,7 @@
 package com.ramitsuri.expensemanager;
 
-import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.data.dao.BudgetDao;
+import com.ramitsuri.expensemanager.data.dummy.Budgets;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
@@ -27,12 +27,12 @@ public class BudgetDatabaseTest extends BaseDatabaseTest {
         super.createDb();
         mBudgetDao = mDb.budgetDao();
 
-        mBudgetDao.setAll(DummyData.getBudgets());
+        mBudgetDao.setAll(Budgets.getBudgets());
     }
 
     @Test
     public void testUpdateCategory() {
-        Assert.assertEquals(DummyData.getBudgets().size(), mBudgetDao.getAll().size());
+        Assert.assertEquals(Budgets.getBudgets().size(), mBudgetDao.getAll().size());
 
         mBudgetDao.updateCategory("Food", "Foods");
         boolean contains = false;

@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.utils;
 
-import com.ramitsuri.expensemanager.data.DummyData;
+import com.ramitsuri.expensemanager.data.dummy.Categories;
+import com.ramitsuri.expensemanager.data.dummy.SheetInfos;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.sheetscore.consumerResponse.SheetMetadata;
 
@@ -16,25 +17,25 @@ public class ObjectHelperTest {
     @Test
     public void testContains() {
         assertTrue(ObjectHelper.contains(
-                Arrays.asList(DummyData.getCategories()), DummyData.getCategories()[0]));
+                Arrays.asList(Categories.getCategories()), Categories.getCategories()[0]));
 
         assertTrue(ObjectHelper.contains(
-                Arrays.asList(DummyData.getCategories()),
-                DummyData.getCategories()[0].toLowerCase()));
+                Arrays.asList(Categories.getCategories()),
+                Categories.getCategories()[0].toLowerCase()));
 
         assertFalse(ObjectHelper.contains(
-                Arrays.asList(DummyData.getCategories()),
+                Arrays.asList(Categories.getCategories()),
                 ""));
 
         assertFalse(ObjectHelper.contains(
-                Arrays.asList(DummyData.getCategories()),
+                Arrays.asList(Categories.getCategories()),
                 "haram"));
     }
 
     @Test
     public void testIsSheetInfosValid() {
-        List<String> months = DummyData.getMonths();
-        List<SheetInfo> sheetInfos = DummyData.getSheetInfos();
+        List<String> months = SheetInfos.getMonths();
+        List<SheetInfo> sheetInfos = SheetInfos.getSheetInfos();
 
         assertTrue(ObjectHelper.isSheetInfosValid(sheetInfos, months));
 

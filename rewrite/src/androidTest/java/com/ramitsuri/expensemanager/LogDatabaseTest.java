@@ -1,7 +1,7 @@
 package com.ramitsuri.expensemanager;
 
-import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.data.dao.LogDao;
+import com.ramitsuri.expensemanager.data.dummy.Logs;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,14 +26,14 @@ public class LogDatabaseTest extends BaseDatabaseTest {
         super.createDb();
         mLogDao = mDb.logDao();
 
-        for (com.ramitsuri.expensemanager.entities.Log log : DummyData.getLogs()) {
+        for (com.ramitsuri.expensemanager.entities.Log log : Logs.getLogs()) {
             mLogDao.insert(log);
         }
     }
 
     @Test
     public void logsTest() {
-        Assert.assertEquals(DummyData.getUnacknowledgedLogs().size(),
+        Assert.assertEquals(Logs.getUnacknowledgedLogs().size(),
                 mLogDao.getUnacknowledged().size());
     }
 

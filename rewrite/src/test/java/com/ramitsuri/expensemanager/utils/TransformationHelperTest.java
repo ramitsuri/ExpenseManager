@@ -1,6 +1,6 @@
 package com.ramitsuri.expensemanager.utils;
 
-import com.ramitsuri.expensemanager.data.DummyData;
+import com.ramitsuri.expensemanager.data.dummy.Expenses;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 
@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class TransformationHelperTest {
     @Test
     public void testToExpenseWrapperList() {
-        List<Expense> input = DummyData.getExpenses();
+        List<Expense> input = Expenses.getExpenses();
         List<ExpenseWrapper> output = TransformationHelper.toExpenseWrapperList(input);
         assertNotNull(output);
         assertTrue(input.size() < output.size());

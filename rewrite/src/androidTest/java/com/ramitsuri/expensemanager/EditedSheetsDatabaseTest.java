@@ -2,8 +2,8 @@ package com.ramitsuri.expensemanager;
 
 import android.database.sqlite.SQLiteConstraintException;
 
-import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.data.dao.EditedSheetDao;
+import com.ramitsuri.expensemanager.data.dummy.EditedSheets;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 
 import org.junit.Assert;
@@ -30,7 +30,7 @@ public class EditedSheetsDatabaseTest extends BaseDatabaseTest {
 
         mEditedSheetDao = mDb.editedSheetDao();
 
-        for (EditedSheet editedSheet : DummyData.getEditedSheets()) {
+        for (EditedSheet editedSheet : EditedSheets.getEditedSheets()) {
             mEditedSheetDao.insert(editedSheet);
         }
     }
@@ -38,17 +38,17 @@ public class EditedSheetsDatabaseTest extends BaseDatabaseTest {
     @Test(expected = SQLiteConstraintException.class)
     public void editedSheetsTest() {
         // 1
-        Assert.assertEquals(DummyData.getEditedSheets().size(), mEditedSheetDao.getAll().size());
+        Assert.assertEquals(EditedSheets.getEditedSheets().size(), mEditedSheetDao.getAll().size());
 
         // 2
         mEditedSheetDao.deleteAll();
         Assert.assertEquals(0, mEditedSheetDao.getAll().size());
 
         // 3
-        for (EditedSheet editedSheet : DummyData.getEditedSheets()) {
+        for (EditedSheet editedSheet : EditedSheets.getEditedSheets()) {
             mEditedSheetDao.insert(editedSheet);
         }
         // Will throw exception
-        mEditedSheetDao.insert(DummyData.getEditedSheets().get(0));
+        mEditedSheetDao.insert(EditedSheets.getEditedSheets().get(0));
     }
 }

@@ -2,8 +2,8 @@ package com.ramitsuri.expensemanager;
 
 import android.util.Log;
 
-import com.ramitsuri.expensemanager.data.DummyData;
 import com.ramitsuri.expensemanager.data.dao.PaymentMethodDao;
+import com.ramitsuri.expensemanager.data.dummy.PaymentMethods;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,14 +27,14 @@ public class PaymentMethodDatabaseTest extends BaseDatabaseTest {
     public void createDb() {
         super.createDb();
         mPaymentMethodDao = mDb.paymentMethodDao();
-        mPaymentMethodDao.insertAll(DummyData.getAllPaymentMethods());
+        mPaymentMethodDao.insertAll(PaymentMethods.getAllPaymentMethods());
     }
 
     @Test
     public void paymentMethodTest() throws Exception {
         // get all
         Assert.assertEquals(
-                DummyData.getPaymentMethods().length,
+                PaymentMethods.getPaymentMethods().length,
                 mPaymentMethodDao.getAll().size());
         Log.d(TAG, mPaymentMethodDao.getAll().toString());
 
@@ -45,9 +45,9 @@ public class PaymentMethodDatabaseTest extends BaseDatabaseTest {
                 mPaymentMethodDao.getAll().size());
 
         // set all
-        mPaymentMethodDao.setAll(DummyData.getAllPaymentMethods());
+        mPaymentMethodDao.setAll(PaymentMethods.getAllPaymentMethods());
         Assert.assertEquals(
-                DummyData.getPaymentMethods().length,
+                PaymentMethods.getPaymentMethods().length,
                 mPaymentMethodDao.getAll().size());
     }
 }
