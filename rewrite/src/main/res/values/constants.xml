@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="values_grid_view_rows">2</integer>
+    <integer name="values_grid_view_rows_reduced">1</integer>
     <integer name="sheets_grid_view_rows">1</integer>
     <integer name="expenses_grid_columns">1</integer>
     <integer name="sheets_grid_columns">3</integer>

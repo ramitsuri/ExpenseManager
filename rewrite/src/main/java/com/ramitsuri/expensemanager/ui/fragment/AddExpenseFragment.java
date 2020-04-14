@@ -120,6 +120,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         // Split
         mBtnSplit = view.findViewById(R.id.btn_split);
         mBtnSplit.setOnClickListener(this);
+        if (mViewModel.isSplitAvailable()) {
+            mBtnSplit.setVisibility(View.VISIBLE);
+        } else {
+            mBtnSplit.setVisibility(View.GONE);
+        }
 
         // Store
         String value = mViewModel.getStore();
@@ -148,10 +153,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private void setupRecyclerViews(View view) {
         // Categories
-        RecyclerView listCategories = view.findViewById(R.id.list_categories);
-        listCategories.setLayoutManager(new StaggeredGridLayoutManager(
+        final RecyclerView listCategories = view.findViewById(R.id.list_categories);
+        final StaggeredGridLayoutManager categoryLayout = new StaggeredGridLayoutManager(
                 getResources().getInteger(R.integer.values_grid_view_rows),
-                StaggeredGridLayoutManager.HORIZONTAL));
+                StaggeredGridLayoutManager.HORIZONTAL);
+        listCategories.setLayoutManager(categoryLayout);
         listCategories.setHasFixedSize(true);
         final ListPickerAdapter categoriesAdapter = new ListPickerAdapter();
         categoriesAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
@@ -165,17 +171,21 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onChanged(List<String> categories) {
                 Timber.i("Categories received %s", categories);
-                String selectedValue = null;
-                selectedValue = mViewModel.getCategory();
+                String selectedValue = mViewModel.getCategory();
                 categoriesAdapter.setValues(categories, selectedValue);
+                if (categories.size() <= 5) {
+                    categoryLayout.setSpanCount(getResources()
+                            .getInteger(R.integer.values_grid_view_rows_reduced));
+                }
             }
         });
 
         // Payment Methods
-        RecyclerView listPaymentMethods = view.findViewById(R.id.list_payment_methods);
-        listPaymentMethods.setLayoutManager(new StaggeredGridLayoutManager(
+        final RecyclerView listPaymentMethods = view.findViewById(R.id.list_payment_methods);
+        final StaggeredGridLayoutManager paymentLayout = new StaggeredGridLayoutManager(
                 getResources().getInteger(R.integer.values_grid_view_rows),
-                StaggeredGridLayoutManager.HORIZONTAL));
+                StaggeredGridLayoutManager.HORIZONTAL);
+        listPaymentMethods.setLayoutManager(paymentLayout);
         listPaymentMethods.setHasFixedSize(true);
         final ListPickerAdapter paymentMethodsAdapter = new ListPickerAdapter();
         paymentMethodsAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
@@ -190,13 +200,11 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                     @Override
                     public void onChanged(List<String> paymentMethods) {
                         Timber.i("Payment Methods received %s", paymentMethods);
-                        String selectedValue = null;
-                        selectedValue = mViewModel.getPaymentMethod();
+                        String selectedValue = mViewModel.getPaymentMethod();
                         paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
-                        if (mViewModel.isSplitAvailable()) {
-                            mBtnSplit.setVisibility(View.VISIBLE);
-                        } else {
-                            mBtnSplit.setVisibility(View.GONE);
+                        if (paymentMethods.size() <= 5) {
+                            paymentLayout.setSpanCount(getResources()
+                                    .getInteger(R.integer.values_grid_view_rows_reduced));
                         }
                     }
                 });

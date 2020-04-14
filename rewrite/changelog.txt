@@ -1,3 +1,8 @@
+UI changes
+AddExpense
+    - Make adaptive row count for categories and payment methods when adding new expense
+    - Move split button availability to setupViews from get payment methods observer
+
 Add income support (WIP)
 Database Migration
     - To v7 to add income column to expense
