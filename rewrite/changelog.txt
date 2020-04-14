@@ -1,3 +1,7 @@
+Remove transition
+Remove transition code
+Enqueue periodic works on app create
+
 UI changes
 AddExpense
     - Make adaptive row count for categories and payment methods when adding new expense

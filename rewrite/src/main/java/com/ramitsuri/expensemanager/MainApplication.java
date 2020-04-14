@@ -52,8 +52,11 @@ public class MainApplication extends Application {
 
         initDataRepos();
 
-        // TODO remove once transition complete and start enqueue periodic works
-        transitionExistingUsers();
+        // Enqueue periodic backups
+        if (!BuildConfig.DEBUG) {
+            WorkHelper.enqueuePeriodicBackup();
+            WorkHelper.enqueuePeriodicEntitiesBackup();
+        }
 
         if (AppHelper.isFirstRunComplete()) {
             Timber.i("Application has already been set up");
