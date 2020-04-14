@@ -127,4 +127,25 @@ public class DatabaseMigrationTest {
         // but you need to validate that the data was migrated properly.
         db.execSQL("INSERT INTO EditedSheet(sheet_id) VALUES(32211)");
     }
+
+    @Test
+    public void migrate6To7() throws IOException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 6);
+
+        // db has schema version 6. insert some data using SQL queries.
+        // You cannot use DAO classes because they expect the latest schema.
+        db.execSQL("SELECT * FROM Expense");
+
+        // Prepare for the next version.
+        db.close();
+
+        // Re-open the database with version 7 and provide
+        // MIGRATION_6_7 as the migration process.
+        db = helper.runMigrationsAndValidate(TEST_DB, 7, true, DatabaseMigration.MIGRATION_6_7);
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+        db.execSQL(
+                "INSERT INTO Expense(amount,payment_method,category,description,store,sheet_id,date_time,is_synced,is_starred,is_income) VALUES('20.00','chase','fun','movie','sunray',1544454,7843,1,1,1)");
+    }
 }

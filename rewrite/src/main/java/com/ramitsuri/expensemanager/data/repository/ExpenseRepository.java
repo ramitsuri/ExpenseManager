@@ -27,21 +27,21 @@ public class ExpenseRepository {
         return mExpenses;
     }
 
-    public void getFromSheet(final int sheetId) {
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Expense> values = mDatabase.expenseDao().getAllForSheet(sheetId);
-                mExpenses.postValue(values);
-            }
-        });
-    }
-
     public void getForFilter(@Nonnull final Filter filter) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 List<Expense> values = mDatabase.expenseDao().getForFilter(filter);
+                mExpenses.postValue(values);
+            }
+        });
+    }
+
+    public void getIncomes() {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Expense> values = mDatabase.expenseDao().getIncomes();
                 mExpenses.postValue(values);
             }
         });

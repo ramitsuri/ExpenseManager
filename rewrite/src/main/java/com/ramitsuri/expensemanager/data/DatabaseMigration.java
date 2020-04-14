@@ -67,4 +67,13 @@ public class DatabaseMigration {
                     "CREATE UNIQUE INDEX `index_EditedSheet_sheet_id` ON `EditedSheet` (`sheet_id`)");
         }
     };
+
+    public static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `Expense` " +
+                    "ADD COLUMN " +
+                    "'is_income' INTEGER NOT NULL DEFAULT 0");
+        }
+    };
 }

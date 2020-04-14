@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
 import com.ramitsuri.expensemanager.data.dummy.Expenses;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Filter;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +33,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         super.createDb();
         mExpenseDao = mDb.expenseDao();
 
-        for (Expense expense : Expenses.getExpenses()) {
+        for (Expense expense : Expenses.all()) {
             mExpenseDao.insert(expense);
         }
     }
@@ -40,8 +41,8 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testGetAll() throws Exception {
         // Get all
-        Assert.assertEquals(Expenses.getExpenses().size(), mExpenseDao.getAll().size());
-        Log.d(TAG, mExpenseDao.getAll().toString());
+        Assert.assertEquals(Expenses.getExpenses().size(), mExpenseDao.getExpenses().size());
+        Log.d(TAG, mExpenseDao.getExpenses().toString());
     }
 
     @Test
@@ -96,15 +97,15 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         long start = Expenses.BASE_DATE_TIME;
         long end = Expenses.BASE_DATE_TIME + Expenses.ONE_DAY;
         Assert.assertEquals(Expenses.getAllForDateRange(start, end).size(),
-                mExpenseDao.getAllForDateRange(start, end).size());
+                mExpenseDao.getExpensesForDateRange(start, end).size());
         start = Expenses.BASE_DATE_TIME - Expenses.ONE_DAY;
         end = Expenses.BASE_DATE_TIME + 2 * Expenses.ONE_DAY;
         Assert.assertEquals(Expenses.getAllForDateRange(start, end).size(),
-                mExpenseDao.getAllForDateRange(start, end).size());
+                mExpenseDao.getExpensesForDateRange(start, end).size());
         start = Expenses.BASE_DATE_TIME - 3 * Expenses.ONE_DAY;
         end = Expenses.BASE_DATE_TIME + 3 * Expenses.ONE_DAY;
         Assert.assertEquals(Expenses.getAllForDateRange(start, end).size(),
-                mExpenseDao.getAllForDateRange(start, end).size());
+                mExpenseDao.getExpensesForDateRange(start, end).size());
     }
 
     @Test
@@ -113,7 +114,8 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         mExpenseDao.deleteSynced();
         Assert.assertEquals(
                 0,
-                mExpenseDao.getAll().size() - mExpenseDao.getAllUnsynced().size());
+                mExpenseDao.getIncomes().size() + mExpenseDao.getExpenses().size()
+                        - mExpenseDao.getAllUnsynced().size());
     }
 
     @Test
@@ -122,18 +124,21 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         mExpenseDao.deleteAll();
         Assert.assertEquals(
                 0,
-                mExpenseDao.getAll().size());
+                mExpenseDao.getExpenses().size());
+        Assert.assertEquals(
+                0,
+                mExpenseDao.getIncomes().size());
     }
 
     @Test
     public void testAddAll() throws Exception {
         // add all
-        for (Expense expense : Expenses.getExpenses()) {
-            mExpenseDao.insert(expense);
-        }
+        mExpenseDao.deleteAll();
+        mExpenseDao.insert(Expenses.all());
+
         Assert.assertEquals(
-                Expenses.getExpenses().size(),
-                mExpenseDao.getAll().size());
+                Expenses.all().size(),
+                mExpenseDao.getExpenses().size() + mExpenseDao.getIncomes().size());
     }
 
     @Test
@@ -148,7 +153,7 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testSetStarred() throws Exception {
         // set starred
-        List<Expense> expenses = mExpenseDao.getAll();
+        List<Expense> expenses = mExpenseDao.getExpenses();
         for (Expense expense : expenses) {
             if (!expense.isStarred()) {
                 mExpenseDao.setStarred(expense.getId());
@@ -163,17 +168,59 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testSetUnstarred() throws Exception {
         // set unstarred
-        mExpenseDao.setUnstarred(mExpenseDao.getAll().get(3).getId());
+        mExpenseDao.setUnstarred(mExpenseDao.getExpenses().get(3).getId());
         Assert.assertEquals(
-                Expenses.getAllStarred().size(),
+                Expenses.getAllStarred().size() - 1,
                 mExpenseDao.getAllStarred().size());
     }
 
     @Test
     public void testUpdateSetAllUnsynced() {
-        Assert.assertNotEquals(mExpenseDao.getAllUnsynced().size(), mExpenseDao.getAll().size());
+        Assert.assertNotEquals(mExpenseDao.getAllUnsynced().size(),
+                mExpenseDao.getExpenses().size());
 
         mExpenseDao.updateSetAllUnsynced();
-        Assert.assertEquals(mExpenseDao.getAllUnsynced().size(), mExpenseDao.getAll().size());
+        Assert.assertEquals(mExpenseDao.getAllUnsynced().size(),
+                mExpenseDao.getExpenses().size() + mExpenseDao.getIncomes().size());
+    }
+
+    @Test
+    public void testGetIncomes() {
+        Assert.assertEquals(Expenses.getIncomes().size(), mExpenseDao.getIncomes().size());
+    }
+
+    @Test
+    public void testGetForFilter() {
+        Filter filter;
+        for (int i = 0; i < 12; i++) {
+            filter = new Filter();
+            filter.setMonthIndex(i);
+            Assert.assertEquals(Expenses.getForFilter(filter).size(),
+                    mExpenseDao.getForFilter(filter).size());
+        }
+        filter = new Filter();
+        for (int i = 0; i < 12; i++) {
+            filter.setMonthIndex(i);
+            filter.setIsIncome(true);
+            Assert.assertEquals(Expenses.getForFilter(filter).size(),
+                    mExpenseDao.getForFilter(filter).size());
+        }
+        filter = new Filter();
+        for (int i = 0; i < 12; i++) {
+            filter.setMonthIndex(i);
+            filter.setIsIncome(false);
+            Assert.assertEquals(Expenses.getForFilter(filter).size(),
+                    mExpenseDao.getForFilter(filter).size());
+        }
+
+        filter = new Filter();
+        filter.setIsIncome(true);
+        Assert.assertEquals(Expenses.getForFilter(filter).size(),
+                mExpenseDao.getForFilter(filter).size());
+
+        filter = new Filter();
+        filter.setIsIncome(false);
+        Assert.assertEquals(Expenses.getForFilter(filter).size(),
+                mExpenseDao.getForFilter(filter).size());
     }
 }

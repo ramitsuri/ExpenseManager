@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -23,14 +22,11 @@ public abstract class ExpenseDao {
     /*
      * SELECT
      */
-    @Query("SELECT * FROM expense ORDER BY date_time DESC")
-    public abstract List<Expense> getAll();
+    @Query("SELECT * FROM expense WHERE is_income = 0 ORDER BY date_time DESC")
+    public abstract List<Expense> getExpenses();
 
-    @Query("SELECT * FROM expense WHERE sheet_id = :sheetId ORDER BY date_time DESC")
-    public abstract List<Expense> getAllForSheet(int sheetId);
-
-    @Query("SELECT * FROM expense WHERE date_time BETWEEN :fromDateTime AND :toDateTime ORDER BY date_time DESC")
-    public abstract List<Expense> getAllForDateRange(long fromDateTime, long toDateTime);
+    @Query("SELECT * FROM expense WHERE date_time BETWEEN :fromDateTime AND :toDateTime AND is_income = 0 ORDER BY date_time DESC")
+    public abstract List<Expense> getExpensesForDateRange(long fromDateTime, long toDateTime);
 
     @Query("SELECT * FROM expense WHERE is_starred = 1")
     public abstract List<Expense> getAllStarred();
@@ -44,11 +40,11 @@ public abstract class ExpenseDao {
     @RawQuery
     public abstract List<Expense> getForQuery(SupportSQLiteQuery query);
 
-    @Query("SELECT * FROM expense WHERE is_synced = 0")
-    public abstract LiveData<List<Expense>> getAllUnsyncedLiveData();
-
     @Query("SELECT * FROM expense WHERE mId = :id")
     public abstract Expense getExpense(long id);
+
+    @Query("SELECT * FROM expense WHERE is_income = 1 ORDER BY date_time DESC")
+    public abstract List<Expense> getIncomes();
 
     /*
      * INSERT
@@ -151,7 +147,7 @@ public abstract class ExpenseDao {
         // Is income
         if (filter.getIsIncome() != null) {
             queryBuilder.append(" WHERE is_income = ?");
-            args.add(filter.getIsIncome());
+            args.add(filter.getIsIncome() ? 1 : 0);
         }
 
         // Date range
@@ -161,7 +157,7 @@ public abstract class ExpenseDao {
             } else {
                 queryBuilder.append(" AND");
             }
-            queryBuilder.append(" (date_time BETWEEN ? AND ?)");
+            queryBuilder.append(" date_time BETWEEN ? AND ?");
             args.add(filter.getFromDateTime());
             args.add(filter.getToDateTime());
         }

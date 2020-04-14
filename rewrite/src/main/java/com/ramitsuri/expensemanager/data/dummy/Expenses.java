@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.data.dummy;
 
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.math.BigDecimal;
@@ -49,7 +50,7 @@ public class Expenses {
         };
     }
 
-    public static List<Expense> getExpenses() {
+    public static List<Expense> all() {
         List<Expense> expenses = new ArrayList<>();
 
         Expense expense = new Expense();
@@ -220,12 +221,74 @@ public class Expenses {
         expense.setSheetId(-1);
         expenses.add(expense);
 
+        expense = new Expense();
+        expense.setAmount(new BigDecimal("2000"));
+        expense.setCategory(Categories.getCategories()[2]);
+        expense.setDateTime(BASE_DATE_TIME + 365 * ONE_DAY);
+        expense.setPaymentMethod(PaymentMethods.getPaymentMethods()[2]);
+        expense.setDescription(getDescriptions()[9]);
+        expense.setStore(getStores()[2]);
+        expense.setIsStarred(true);
+        expense.setIsSynced(true);
+        expense.setSheetId(-1);
+        expense.setIsIncome(true);
+        expenses.add(expense);
+
+        expense = new Expense();
+        expense.setAmount(new BigDecimal("31.90"));
+        expense.setCategory(Categories.getCategories()[2]);
+        expense.setDateTime(BASE_DATE_TIME + 335 * ONE_DAY);
+        expense.setPaymentMethod(PaymentMethods.getPaymentMethods()[2]);
+        expense.setDescription(getDescriptions()[9]);
+        expense.setStore(getStores()[2]);
+        expense.setIsStarred(true);
+        expense.setIsSynced(true);
+        expense.setSheetId(-1);
+        expense.setIsIncome(true);
+        expenses.add(expense);
+
+        expense = new Expense();
+        expense.setAmount(new BigDecimal("31.90"));
+        expense.setCategory(Categories.getCategories()[2]);
+        expense.setDateTime(BASE_DATE_TIME + 305 * ONE_DAY);
+        expense.setPaymentMethod(PaymentMethods.getPaymentMethods()[2]);
+        expense.setDescription(getDescriptions()[9]);
+        expense.setStore(getStores()[2]);
+        expense.setIsStarred(true);
+        expense.setIsSynced(true);
+        expense.setSheetId(-1);
+        expense.setIsIncome(true);
+        expenses.add(expense);
+
+        expense = new Expense();
+        expense.setAmount(new BigDecimal("1500"));
+        expense.setCategory(Categories.getCategories()[2]);
+        expense.setDateTime(BASE_DATE_TIME + 275 * ONE_DAY);
+        expense.setPaymentMethod(PaymentMethods.getPaymentMethods()[2]);
+        expense.setDescription(getDescriptions()[9]);
+        expense.setStore(getStores()[2]);
+        expense.setIsStarred(true);
+        expense.setIsSynced(true);
+        expense.setSheetId(-1);
+        expense.setIsIncome(true);
+        expenses.add(expense);
+
+        return expenses;
+    }
+
+    public static List<Expense> getExpenses() {
+        List<Expense> expenses = new ArrayList<>();
+        for (Expense expense : all()) {
+            if (!expense.isIncome()) {
+                expenses.add(expense);
+            }
+        }
         return expenses;
     }
 
     public static List<Expense> getAllStarred() {
         List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : getExpenses()) {
+        for (Expense expense : all()) {
             if (expense.isStarred()) {
                 expenses.add(expense);
             }
@@ -235,7 +298,7 @@ public class Expenses {
 
     public static List<Expense> getAllUnsynced() {
         List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : getExpenses()) {
+        for (Expense expense : all()) {
             if (!expense.isSynced()) {
                 expenses.add(expense);
             }
@@ -245,7 +308,7 @@ public class Expenses {
 
     public static List<Expense> getAllsynced() {
         List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : getExpenses()) {
+        for (Expense expense : all()) {
             if (expense.isSynced()) {
                 expenses.add(expense);
             }
@@ -255,7 +318,7 @@ public class Expenses {
 
     public static List<Expense> getAllForBackup(List<Integer> monthIndices) {
         List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : getExpenses()) {
+        for (Expense expense : all()) {
             if (!expense.isSynced() ||
                     monthIndices
                             .contains(DateHelper.getMonthIndexFromDate(expense.getDateTime()))) {
@@ -268,11 +331,50 @@ public class Expenses {
 
     public static List<Expense> getAllForDateRange(long fromDateTime, long toDateTime) {
         List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : getExpenses()) {
+        for (Expense expense : all()) {
             if (expense.getDateTime() <= toDateTime && expense.getDateTime() >= fromDateTime) {
                 expenses.add(expense);
             }
         }
         return expenses;
+    }
+
+    public static List<Expense> getIncomes() {
+        List<Expense> expenses = new ArrayList<>();
+        for (Expense expense : all()) {
+            if (expense.isIncome()) {
+                expenses.add(expense);
+            }
+        }
+        return expenses;
+    }
+
+    public static List<Expense> getForFilter(Filter filter) {
+        List<Expense> afterDateFilter = new ArrayList<>();
+        for (Expense expense : all()) {
+            if (filter.getFromDateTime() != null && filter.getToDateTime() != null) {
+                if (expense.getDateTime() <= filter.getToDateTime() &&
+                        expense.getDateTime() >= filter.getFromDateTime()) {
+                    afterDateFilter.add(expense);
+                }
+            } else {
+                afterDateFilter.add(expense);
+            }
+        }
+
+        List<Expense> afterIncomeFilter = new ArrayList<>();
+        for (Expense expense : afterDateFilter) {
+            if (filter.getIsIncome() != null) {
+                if (filter.getIsIncome() && expense.isIncome()) {
+                    afterIncomeFilter.add(expense);
+                } else if (!filter.getIsIncome() && !expense.isIncome()) {
+                    afterIncomeFilter.add(expense);
+                }
+            } else {
+                afterIncomeFilter.add(expense);
+            }
+        }
+
+        return afterIncomeFilter;
     }
 }

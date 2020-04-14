@@ -1,3 +1,19 @@
+Add income support (WIP)
+Database Migration
+    - To v7 to add income column to expense
+Constants
+    - Add INCOME constant
+    - Change expenses range to A:H to include income column
+ExpenseDao
+    - Return non income expenses in get all (also renamed to get expenses)
+    - Return non income expense in getExpensesForDateRange
+    - Modify get for filter to properly get income expenses
+Expense
+    - Recognize income column when recreating expense from sheet
+SheetRequest
+    - Add income column when uploading expense
+    - Fix issue with flag column where it's not taking space if not flagged and income would go in column flag
+
 Add income to filter (WIP)
 ExpenseDao
     - Add method to get results for query

@@ -13,6 +13,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import static com.ramitsuri.expensemanager.constants.Constants.Sheets.FLAG;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.INCOME;
 
 @Entity
 public class Expense implements Parcelable {
@@ -47,6 +48,9 @@ public class Expense implements Parcelable {
     @ColumnInfo(name = "sheet_id")
     private int mSheetId;
 
+    @ColumnInfo(name = "is_income")
+    private boolean mIsIncome;
+
     public static final Creator<Expense> CREATOR = new Creator<Expense>() {
         @Override
         public Expense createFromParcel(Parcel in) {
@@ -73,6 +77,7 @@ public class Expense implements Parcelable {
         mIsSynced = in.readByte() != 0;
         mIsStarred = in.readByte() != 0;
         mSheetId = in.readInt();
+        mIsIncome = in.readByte() != 0;
     }
 
     public Expense(List<Object> objects) {
@@ -86,6 +91,9 @@ public class Expense implements Parcelable {
             mIsStarred = objects.get(6).equals(FLAG);
         }
         mIsSynced = true;
+        if (objects.size() >= 8) {
+            mIsIncome = objects.get(7).equals(INCOME);
+        }
     }
 
     public Expense(Expense expense) {
@@ -97,6 +105,7 @@ public class Expense implements Parcelable {
         mCategory = expense.getCategory();
         mIsStarred = expense.isStarred();
         mIsSynced = expense.isSynced();
+        mIsIncome = expense.isIncome();
     }
 
     @Override
@@ -116,6 +125,7 @@ public class Expense implements Parcelable {
         parcel.writeByte((byte)(mIsSynced ? 1 : 0));
         parcel.writeByte((byte)(mIsStarred ? 1 : 0));
         parcel.writeInt(mSheetId);
+        parcel.writeByte((byte)(mIsIncome ? 1 : 0));
     }
 
     public int getId() {
@@ -198,6 +208,14 @@ public class Expense implements Parcelable {
         mSheetId = sheetId;
     }
 
+    public boolean isIncome() {
+        return mIsIncome;
+    }
+
+    public void setIsIncome(boolean income) {
+        mIsIncome = income;
+    }
+
     @NotNull
     @Override
     public String toString() {
@@ -212,6 +230,7 @@ public class Expense implements Parcelable {
                 ", mIsSynced = " + mIsSynced +
                 ", mIsStarred = " + mIsStarred +
                 ", mSheetId = " + mSheetId +
+                ", mIsIncome = " + mIsIncome +
                 " }\n";
     }
 }

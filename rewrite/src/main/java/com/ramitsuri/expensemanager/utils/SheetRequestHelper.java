@@ -39,6 +39,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.ramitsuri.expensemanager.constants.Constants.Sheets.FLAG;
+import static com.ramitsuri.expensemanager.constants.Constants.Sheets.INCOME;
 
 public class SheetRequestHelper {
 
@@ -449,13 +450,23 @@ public class SheetRequestHelper {
         valuesList.add(values);
 
         // Flag
+
+        values = new CellData();
         if (expense.isStarred()) {
-            values = new CellData();
             values.setUserEnteredValue(
                     new ExtendedValue()
                             .setStringValue(FLAG));
-            valuesList.add(values);
         }
+        valuesList.add(values);
+
+        // Flag
+        values = new CellData();
+        if (expense.isIncome()) {
+            values.setUserEnteredValue(
+                    new ExtendedValue()
+                            .setStringValue(INCOME));
+        }
+        valuesList.add(values);
 
         rowData.setValues(valuesList);
         return rowData;
