@@ -111,6 +111,7 @@ public class AllExpensesViewModel extends ViewModel {
 
     @Nonnull
     private Filter getDefaultFilter() {
-        return new Filter();
+        return new Filter()
+                .setCurrentMonth();
     }
 }

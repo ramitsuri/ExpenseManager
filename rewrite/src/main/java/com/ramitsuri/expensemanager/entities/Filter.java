@@ -24,12 +24,17 @@ public class Filter {
     public Filter() {
         mIsIncome = false;
         mCalendar = Calendar.getInstance(AppHelper.getTimeZone());
-        setMonthIndex(Constants.Basic.UNDEFINED);
     }
 
     public Filter setMonthIndex(int monthIndex) {
         mMonthIndex = monthIndex;
         onMonthIndexSet(monthIndex);
+        return this;
+    }
+
+    public Filter setCurrentMonth() {
+        mMonthIndex = Constants.Basic.UNDEFINED;
+        onMonthIndexSet(mMonthIndex);
         return this;
     }
 
@@ -48,8 +53,9 @@ public class Filter {
         return mIsIncome;
     }
 
-    public void setIsIncome(boolean isIncome) {
+    public Filter setIsIncome(boolean isIncome) {
         mIsIncome = isIncome;
+        return this;
     }
 
     @Override

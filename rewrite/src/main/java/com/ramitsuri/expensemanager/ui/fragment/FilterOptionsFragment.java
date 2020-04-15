@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ramitsuri.expensemanager.R;
@@ -78,10 +79,27 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         adapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
             @Override
             public void onValuePicked(String value) {
-                dismiss();
                 onMonthPicked(value);
+                dismiss();
             }
         });
+
+        Button btnIncome = view.findViewById(R.id.btn_get_income);
+        btnIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Filter filter = mViewModel.onGetIncome();
+                if (mCallback != null) {
+                    mCallback.onFilterRequested(filter);
+                }
+                dismiss();
+            }
+        });
+        if (mViewModel.isIncomeAvailable()) {
+            btnIncome.setVisibility(View.VISIBLE);
+        } else {
+            btnIncome.setVisibility(View.GONE);
+        }
     }
 
     /**

@@ -1,3 +1,13 @@
+Add get incomes filter
+Filter
+    - Not setting month in default constructor as date time might not always be wanted
+    - Add new method to set current month as the month which just set any month on calendar
+FilterOptions
+    - Add button to get incomes (temp)
+AllExpensesVM
+    - Set current month on filter as Filter constructor no longer does it
+
+
 Add income handling and filtering
 PrefKeys
     - Add new key for enabling income
