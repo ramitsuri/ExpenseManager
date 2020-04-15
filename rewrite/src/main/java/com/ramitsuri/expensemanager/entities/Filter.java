@@ -22,6 +22,7 @@ public class Filter {
     private Boolean mIsIncome;
 
     public Filter() {
+        mIsIncome = false;
         mCalendar = Calendar.getInstance(AppHelper.getTimeZone());
         setMonthIndex(Constants.Basic.UNDEFINED);
     }
@@ -64,7 +65,7 @@ public class Filter {
     @Nullable
     public String toFriendlyString() {
         StringBuilder sb = new StringBuilder();
-        if (mIsIncome != null) {
+        if (mIsIncome != null && mIsIncome) {
             sb.append(MainApplication.getInstance().getResources()
                     .getString(R.string.expenses_filter_incomes));
         }

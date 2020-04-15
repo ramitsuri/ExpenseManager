@@ -1,3 +1,18 @@
+Add income handling and filtering
+PrefKeys
+    - Add new key for enabling income
+SecretMessage, AppHelper
+    - Add income keys and helper methods
+ExpenseDao
+    - Update "update" transaction to set expense's income status as well
+Filter
+    - Initialize isIncome with false
+    - Add isIncome to friendly string only if not null and true
+AddExpense
+    - Add income switch (toggle)
+    - Enable if enabled via secret message
+    - Save income expense with category as "Income"
+
 Remove transition
 Remove transition code
 Enqueue periodic works on app create

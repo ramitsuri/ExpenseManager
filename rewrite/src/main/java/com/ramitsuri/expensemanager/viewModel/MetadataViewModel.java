@@ -101,6 +101,16 @@ public class MetadataViewModel extends ViewModel {
                 AppHelper.setEntitiesSyncEnabled(false);
                 break;
 
+            case SecretMessages.ENABLE_INCOME:
+                Timber.i("Enabling income");
+                AppHelper.setIncomeEnabled(true);
+                break;
+
+            case SecretMessages.DISABLE_INCOME:
+                Timber.i("Disabling income");
+                AppHelper.setIncomeEnabled(false);
+                break;
+
             default:
                 Timber.i("Secret message means nothing");
         }

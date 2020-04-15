@@ -16,6 +16,7 @@ import androidx.room.RawQuery;
 import androidx.room.Transaction;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.sqlite.db.SupportSQLiteQuery;
+import timber.log.Timber;
 
 @Dao
 public abstract class ExpenseDao {
@@ -81,6 +82,9 @@ public abstract class ExpenseDao {
 
     @Query("UPDATE expense SET is_synced =:isSynced WHERE mId = :id")
     abstract void updateIsSynced(int id, boolean isSynced);
+
+    @Query("UPDATE expense SET is_income =:isIncome WHERE mId = :id")
+    abstract void updateIsIncome(int id, boolean isIncome);
 
     @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
     public abstract void updateUnsynced();
@@ -163,6 +167,7 @@ public abstract class ExpenseDao {
         }
 
         SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
+        Timber.i("Getting for query - %s", query.getSql());
         return getForQuery(query);
     }
 
@@ -176,5 +181,6 @@ public abstract class ExpenseDao {
         updateStore(expense.getId(), expense.getStore());
         updateIsStarred(expense.getId(), expense.isStarred());
         updateIsSynced(expense.getId(), expense.isSynced());
+        updateIsIncome(expense.getId(), expense.isIncome());
     }
 }

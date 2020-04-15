@@ -134,4 +134,12 @@ public class AppHelper {
     public static void setBackupInfoStatus(String backupInfoStatus) {
         PrefHelper.set(PrefKeys.BACKUP_INFO_STATUS, backupInfoStatus);
     }
+
+    public static boolean isIncomeEnabled() {
+        return PrefHelper.get(PrefKeys.ENABLE_INCOME, false);
+    }
+
+    public static void setIncomeEnabled(boolean enable) {
+        PrefHelper.set(PrefKeys.ENABLE_INCOME, enable);
+    }
 }

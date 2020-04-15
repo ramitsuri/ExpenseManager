@@ -11,7 +11,9 @@ import androidx.annotation.StringDef;
         SecretMessages.ENABLE_EXPENSE_SYNC,
         SecretMessages.DISABLE_EXPENSE_SYNC,
         SecretMessages.ENABLE_ENTITIES_SYNC,
-        SecretMessages.DISABLE_ENTITIES_SYNC
+        SecretMessages.DISABLE_ENTITIES_SYNC,
+        SecretMessages.ENABLE_INCOME,
+        SecretMessages.DISABLE_INCOME
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface SecretMessages {
@@ -21,4 +23,6 @@ public @interface SecretMessages {
     String DISABLE_EXPENSE_SYNC = "DISABLE_EXPENSE_SYNC";
     String ENABLE_ENTITIES_SYNC = "ENABLE_ENTITIES_SYNC";
     String DISABLE_ENTITIES_SYNC = "DISABLE_ENTITIES_SYNC";
+    String ENABLE_INCOME = "ENABLE_INCOME";
+    String DISABLE_INCOME = "DISABLE_INCOME";
 }

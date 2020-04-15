@@ -89,6 +89,9 @@ public class AddExpenseViewModel extends ViewModel {
         if (mIsSplit) {
             expense.setAmount(CurrencyHelper.divide(expense.getAmount(), new BigDecimal("2")));
         }
+        if (expense.isIncome()) { // Set category to "INCOME" always
+            expense.setCategory(Constants.Basic.INCOME);
+        }
         mExpenseRepo.insert(expense);
         reset(null);
     }
@@ -99,6 +102,9 @@ public class AddExpenseViewModel extends ViewModel {
         expense.setIsSynced(false);
         if (mIsSplit) {
             expense.setAmount(CurrencyHelper.divide(expense.getAmount(), new BigDecimal("2")));
+        }
+        if (expense.isIncome()) { // Set category to "INCOME" always
+            expense.setCategory(Constants.Basic.INCOME);
         }
         boolean wasSynced = mExpense.isSynced();
         mExpenseRepo.edit(expense);
@@ -234,6 +240,18 @@ public class AddExpenseViewModel extends ViewModel {
 
     public void setSplit() {
         mIsSplit = !mIsSplit;
+    }
+
+    public boolean isIncomeAvailable() {
+        return AppHelper.isIncomeEnabled();
+    }
+
+    public boolean isIncome() {
+        return mExpense.isIncome();
+    }
+
+    public void setIncome(boolean isIncome) {
+        mExpense.setIsIncome(isIncome);
     }
 
     private void reset(@Nullable Expense expense) {

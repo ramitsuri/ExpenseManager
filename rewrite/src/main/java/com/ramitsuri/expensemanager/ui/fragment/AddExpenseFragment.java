@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -30,6 +31,7 @@ import java.util.List;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -89,9 +91,9 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mViewModel = new ViewModelProvider(this, new ViewModelFactory(expense))
                 .get(AddExpenseViewModel.class);
 
-        setupViews(view);
-
         setupRecyclerViews(view);
+
+        setupViews(view);
     }
 
     private void setupViews(View view) {
@@ -126,6 +128,24 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             mBtnSplit.setVisibility(View.GONE);
         }
 
+        // Income
+        SwitchCompat btnIncome = view.findViewById(R.id.toggle_income);
+        btnIncome.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mViewModel.setIncome(isChecked);
+            }
+        });
+        if (mViewModel.isIncomeAvailable()) {
+            btnIncome.setVisibility(View.VISIBLE);
+        } else {
+            btnIncome.setVisibility(View.GONE);
+        }
+
+        /*
+         * Set values from expense on views
+         */
+
         // Store
         String value = mViewModel.getStore();
         if (!TextUtils.isEmpty(value) && !value.equals(getDefaultStoreValue())) {
@@ -149,6 +169,9 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             mEditAmount.setText(value);
             mEditAmount.setSelection(value.length());
         }
+
+        // Income
+        btnIncome.setChecked(mViewModel.isIncome());
     }
 
     private void setupRecyclerViews(View view) {

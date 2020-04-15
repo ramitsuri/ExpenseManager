@@ -95,5 +95,6 @@ public class Constants {
         public static final String EMPTY_BUDGET = "-";
         public static final int BUDGET_CATEGORY_COUNT = 5;
         public static final String CALCULATOR_ALL = "CALCULATOR_ALL";
+        public static final String INCOME = "Income";
     }
 }
