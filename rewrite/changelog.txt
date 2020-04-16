@@ -1,3 +1,11 @@
+UI improvements
+Splash screen
+    - Add splash screen with app logo
+    - Add activity theme set to display splash screen
+    - Activity theme gets updated when activity is ready to be drawn
+Animations
+    - Add entry exit animations for all fragments
+
 Add get incomes filter
 Filter
     - Not setting month in default constructor as date time might not always be wanted

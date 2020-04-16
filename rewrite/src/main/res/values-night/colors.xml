@@ -4,10 +4,10 @@
 
     <color name="color_red">#f44336</color>
     <color name="color_teal">#009c6b</color>
+    <color name="color_splash_logo">#f5f5f5</color>
 
     <color name="grey">#75e1eff7</color>
     <color name="bg_grey">#262626</color>
-    <color name="bg_grey_inverse">#f5f5f5</color>
 
     <color name="dialog_bg">#121212</color>
     <color name="bottom_nav_bg">#40000000</color>

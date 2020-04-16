@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.BaseTheme);
         super.onCreate(savedInstanceState);
         Timber.i("onCreate");
 
