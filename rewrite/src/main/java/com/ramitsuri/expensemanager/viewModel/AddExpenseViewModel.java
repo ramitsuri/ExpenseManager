@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
@@ -34,6 +36,7 @@ public class AddExpenseViewModel extends ViewModel {
     private Integer mOldMonthIndex;
     private LiveData<List<String>> mCategories;
     private LiveData<List<String>> mPaymentMethods;
+    private LiveData<List<String>> mStores;
     private int mAddMode;
 
     private boolean mChangesMade, mIsSplit;
@@ -73,6 +76,8 @@ public class AddExpenseViewModel extends ViewModel {
                     }
                 });
 
+        mStores = mExpenseRepo.getStores();
+
         reset(expense);
     }
 
@@ -82,6 +87,19 @@ public class AddExpenseViewModel extends ViewModel {
 
     public LiveData<List<String>> getPaymentMethods() {
         return mPaymentMethods;
+    }
+
+    @Nullable
+    public LiveData<List<String>> getStores() {
+        return mStores;
+    }
+
+    public void onStoreValueChanged(@Nonnull String startsWith) {
+        mExpenseRepo.refreshStores(startsWith);
+    }
+
+    public LiveData<Expense> getForStore(@Nonnull String store) {
+        return mExpenseRepo.getForStore(store);
     }
 
     public void add() {
@@ -272,5 +290,9 @@ public class AddExpenseViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         Timber.i("View model cleared");
+    }
+
+    public boolean enableEntitiesAutoComplete() {
+        return mAddMode == Constants.AddExpenseMode.ADD;
     }
 }

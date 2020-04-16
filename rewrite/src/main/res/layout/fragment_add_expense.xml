@@ -101,18 +101,19 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_store"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:hint="@string/common_store"
         android:nextFocusForward="@+id/edit_text_description"
+        app:endIconMode="none"
         app:layout_constraintEnd_toStartOf="@id/btn_split"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_amount"
         app:startIconDrawable="@drawable/ic_store">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <AutoCompleteTextView
             android:id="@+id/edit_text_store"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

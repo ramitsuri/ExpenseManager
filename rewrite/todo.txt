@@ -1,5 +1,5 @@
 High
-- Add income support
+- Filters
 
 Medium
 - Tap on budget/payment/category to view filtered expenses

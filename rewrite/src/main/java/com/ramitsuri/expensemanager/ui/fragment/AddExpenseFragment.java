@@ -2,11 +2,14 @@ package com.ramitsuri.expensemanager.ui.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -33,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,10 +48,13 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     // Data
     private AddExpenseViewModel mViewModel;
+    private ListPickerAdapter mCategoriesAdapter;
+    private ListPickerAdapter mPaymentsAdapter;
 
     // Views
     private ImageView mBtnClose;
-    private EditText mEditStore, mEditAmount, mEditDescription;
+    private EditText mEditAmount, mEditDescription;
+    private AutoCompleteTextView mEditStore;
     private Button mBtnDone, mBtnDate;
     private MaterialButton mBtnFlag, mBtnSplit;
 
@@ -172,6 +179,9 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
         // Income
         btnIncome.setChecked(mViewModel.isIncome());
+
+        setupStoreAutoComplete();
+        setupEntitiesAutoComplete();
     }
 
     private void setupRecyclerViews(View view) {
@@ -182,20 +192,20 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 StaggeredGridLayoutManager.HORIZONTAL);
         listCategories.setLayoutManager(categoryLayout);
         listCategories.setHasFixedSize(true);
-        final ListPickerAdapter categoriesAdapter = new ListPickerAdapter();
-        categoriesAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
+        mCategoriesAdapter = new ListPickerAdapter();
+        mCategoriesAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
             @Override
             public void onItemPicked(String value) {
-                onCategoryPicked(value);
+                onCategoryPicked(value, true);
             }
         });
-        listCategories.setAdapter(categoriesAdapter);
+        listCategories.setAdapter(mCategoriesAdapter);
         mViewModel.getCategories().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> categories) {
                 Timber.i("Categories received %s", categories);
                 String selectedValue = mViewModel.getCategory();
-                categoriesAdapter.setValues(categories, selectedValue);
+                mCategoriesAdapter.setValues(categories, selectedValue);
                 if (categories.size() <= 5) {
                     categoryLayout.setSpanCount(getResources()
                             .getInteger(R.integer.values_grid_view_rows_reduced));
@@ -210,27 +220,99 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                 StaggeredGridLayoutManager.HORIZONTAL);
         listPaymentMethods.setLayoutManager(paymentLayout);
         listPaymentMethods.setHasFixedSize(true);
-        final ListPickerAdapter paymentMethodsAdapter = new ListPickerAdapter();
-        paymentMethodsAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
+        mPaymentsAdapter = new ListPickerAdapter();
+        mPaymentsAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
             @Override
             public void onItemPicked(String value) {
-                onPaymentMethodPicked(value);
+                onPaymentMethodPicked(value, true);
             }
         });
-        listPaymentMethods.setAdapter(paymentMethodsAdapter);
+        listPaymentMethods.setAdapter(mPaymentsAdapter);
         mViewModel.getPaymentMethods()
                 .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
                     @Override
                     public void onChanged(List<String> paymentMethods) {
                         Timber.i("Payment Methods received %s", paymentMethods);
                         String selectedValue = mViewModel.getPaymentMethod();
-                        paymentMethodsAdapter.setValues(paymentMethods, selectedValue);
+                        mPaymentsAdapter.setValues(paymentMethods, selectedValue);
                         if (paymentMethods.size() <= 5) {
                             paymentLayout.setSpanCount(getResources()
                                     .getInteger(R.integer.values_grid_view_rows_reduced));
                         }
                     }
                 });
+    }
+
+    private void setupStoreAutoComplete() {
+        if (getContext() == null) {
+            Timber.i("getContext is null, cannot setup store autocomplete adapter");
+            return;
+        }
+        // Autocomplete on store edit text
+        final ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(getContext(), R.layout.spinner_item);
+        LiveData<List<String>> stores = mViewModel.getStores();
+        if (stores != null) {
+            stores.observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+                @Override
+                public void onChanged(List<String> stores) {
+                    Timber.i("Autocomplete stores: %s", stores);
+                    adapter.clear();
+                    adapter.addAll(stores);
+                }
+            });
+        }
+        mEditStore.setAdapter(adapter);
+        mEditStore.setThreshold(1);
+
+        mEditStore.addTextChangedListener(new TextWatcherHelper() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null) {
+                    mViewModel.onStoreValueChanged(s.toString().trim());
+                }
+            }
+        });
+    }
+
+    private void setupEntitiesAutoComplete() {
+        if (!mViewModel.enableEntitiesAutoComplete()) {
+            return;
+        }
+        mEditStore.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Timber.i("Store EditText has focus, skip auto selections");
+                    return;
+                } else {
+                    Timber.i("Might apply auto selections based on store value");
+                }
+                String text = mEditStore.getText().toString().trim();
+                if (TextUtils.isEmpty(text)) {
+                    return;
+                }
+                mViewModel.getForStore(text).observe(getViewLifecycleOwner(),
+                        new Observer<Expense>() {
+                            @Override
+                            public void onChanged(Expense expense) {
+                                if (expense == null) {
+                                    return;
+                                }
+                                String category = expense.getCategory();
+                                if (!TextUtils.isEmpty(category)) {
+                                    mCategoriesAdapter.setSelectedValue(category);
+                                    onCategoryPicked(category, false);
+                                }
+                                String paymentMethod = expense.getPaymentMethod();
+                                if (!TextUtils.isEmpty(paymentMethod)) {
+                                    mPaymentsAdapter.setSelectedValue(paymentMethod);
+                                    onPaymentMethodPicked(paymentMethod, false);
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     @Override
@@ -331,16 +413,20 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    private void onCategoryPicked(String value) {
+    private void onCategoryPicked(String value, boolean hideKeyboard) {
         Timber.i("Category picked: %s", value);
         mViewModel.setCategory(value);
-        removeFocusAndHideKeyboard();
+        if (hideKeyboard) {
+            removeFocusAndHideKeyboard();
+        }
     }
 
-    private void onPaymentMethodPicked(String value) {
+    private void onPaymentMethodPicked(String value, boolean hideKeyboard) {
         Timber.i("Payment method picked: %s", value);
         mViewModel.setPaymentMethod(value);
-        removeFocusAndHideKeyboard();
+        if (hideKeyboard) {
+            removeFocusAndHideKeyboard();
+        }
     }
 
     @Override

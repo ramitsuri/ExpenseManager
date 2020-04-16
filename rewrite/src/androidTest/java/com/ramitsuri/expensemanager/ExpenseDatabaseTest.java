@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
@@ -222,5 +223,58 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         filter.setIsIncome(false);
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
+    }
+
+    @Test
+    public void testGetStores() {
+        String startsWith = "PN";
+        Assert.assertEquals(Expenses.getStores(startsWith).size(),
+                mExpenseDao.getStores(startsWith).size());
+
+        startsWith = "pn";
+        Assert.assertEquals(Expenses.getStores(startsWith).size(),
+                mExpenseDao.getStores(startsWith).size());
+
+        startsWith = "CO";
+        Assert.assertEquals(Expenses.getStores(startsWith).size(),
+                mExpenseDao.getStores(startsWith).size());
+
+        startsWith = "zx";
+        Assert.assertEquals(Expenses.getStores(startsWith).size(),
+                mExpenseDao.getStores(startsWith).size());
+
+        startsWith = "H";
+        Assert.assertEquals(Expenses.getStores(startsWith).size(),
+                mExpenseDao.getStores(startsWith).size());
+
+        startsWith = "Jess";
+        Assert.assertEquals(Expenses.getStores(startsWith).size(),
+                mExpenseDao.getStores(startsWith).size());
+    }
+
+    @Test
+    public void testGetEntities() {
+        String store = "Publix";
+
+        Assert.assertNotNull(Expenses.getForStore(store));
+        Assert.assertNotNull(mExpenseDao.getForStore(store));
+        Assert.assertEquals(Objects.requireNonNull(Expenses.getForStore(store)).getCategory(),
+                mExpenseDao.getForStore(store).getCategory());
+        Assert.assertEquals(Objects.requireNonNull(Expenses.getForStore(store)).getPaymentMethod(),
+                mExpenseDao.getForStore(store).getPaymentMethod());
+
+        store = "publix";
+
+        Assert.assertNotNull(Expenses.getForStore(store));
+        Assert.assertNotNull(mExpenseDao.getForStore(store));
+        Assert.assertEquals(Objects.requireNonNull(Expenses.getForStore(store)).getCategory(),
+                mExpenseDao.getForStore(store).getCategory());
+        Assert.assertEquals(Objects.requireNonNull(Expenses.getForStore(store)).getPaymentMethod(),
+                mExpenseDao.getForStore(store).getPaymentMethod());
+
+        store = "Root down";
+
+        Assert.assertNull(Expenses.getForStore(store));
+        Assert.assertNull(mExpenseDao.getForStore(store));
     }
 }

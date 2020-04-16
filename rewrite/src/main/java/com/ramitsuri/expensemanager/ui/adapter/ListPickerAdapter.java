@@ -6,8 +6,11 @@ import android.view.ViewGroup;
 
 import com.google.android.material.chip.Chip;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +41,16 @@ public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.Vi
             Timber.i("Selecting first value from list %s", mSelectedValue);
             onSelectionMade(mSelectedValue);
         } else {
+            mSelectedValue = selectedValue;
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setSelectedValue(@Nonnull String selectedValue) {
+        if (mValues == null) {
+            return;
+        }
+        if (ObjectHelper.contains(mValues, selectedValue)) {
             mSelectedValue = selectedValue;
             notifyDataSetChanged();
         }

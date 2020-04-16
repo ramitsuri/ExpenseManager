@@ -1,3 +1,24 @@
+Expense autocomplete
+ExpenseDao
+    - Add method to get suggestions for store starts with
+    - Add method to get first expense for entered store to auto complete category and payment method
+    - Add tests for both
+ExpenseRepo
+    - Add Stores mutable live data for store auto complete (can be revisited to be similar to getExpenseForStore)
+    - Add method to refresh store suggestions
+    - Add method to get expense for store
+ListPickerAdapter
+    - Add method set selected value so that auto complete value can be set when adding expense
+AddExpense
+    - Make Category and Payment adapter class member
+    - Change Store EditText to AutoCompleteTextView
+    - Setup autocomplete on store
+    - Setup category, payment auto selection on store entry (only in add mode as user might not be aware that changing store will result in new category, payment method)
+TextWatcherHelper
+    - New class that implements TextWatcher so that implementors don't have to define all methods
+
+
+
 UI improvements
 Splash screen
     - Add splash screen with app logo

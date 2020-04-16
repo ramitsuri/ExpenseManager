@@ -47,6 +47,12 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE is_income = 1 ORDER BY date_time DESC")
     public abstract List<Expense> getIncomes();
 
+    @Query("SELECT DISTINCT store FROM expense WHERE store LIKE :startsWith || '%' ORDER BY date_time DESC")
+    public abstract List<String> getStores(String startsWith);
+
+    @Query("SELECT * FROM expense WHERE store LIKE :store ORDER BY date_time DESC LIMIT 1")
+    public abstract Expense getForStore(String store);
+
     /*
      * INSERT
      */

@@ -16,11 +16,13 @@ public class ExpenseRepository {
     private AppExecutors mExecutors;
     private ExpenseManagerDatabase mDatabase;
     private MutableLiveData<List<Expense>> mExpenses;
+    private MutableLiveData<List<String>> mStores;
 
     public ExpenseRepository(AppExecutors executors, ExpenseManagerDatabase database) {
         mExecutors = executors;
         mDatabase = database;
         mExpenses = new MutableLiveData<>();
+        mStores = new MutableLiveData<>();
     }
 
     public LiveData<List<Expense>> getExpenses() {
@@ -45,6 +47,32 @@ public class ExpenseRepository {
                 mExpenses.postValue(values);
             }
         });
+    }
+
+    public LiveData<List<String>> getStores() {
+        return mStores;
+    }
+
+    public void refreshStores(final String startsWith) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<String> values = mDatabase.expenseDao().getStores(startsWith);
+                mStores.postValue(values);
+            }
+        });
+    }
+
+    public LiveData<Expense> getForStore(@Nonnull final String store) {
+        final MutableLiveData<Expense> expense = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Expense value = mDatabase.expenseDao().getForStore(store);
+                expense.postValue(value);
+            }
+        });
+        return expense;
     }
 
     public void insert(final Expense expense) {
