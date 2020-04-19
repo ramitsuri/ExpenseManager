@@ -223,6 +223,35 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         filter.setIsIncome(false);
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
+
+        filter = new Filter();
+        filter.setMonthIndex(7);
+        filter.setIsIncome(false);
+        filter.setStarred(false);
+        List<String> categories = new ArrayList<>();
+        categories.add("Food");
+        categories.add("Travel");
+        categories.add("Groceries");
+        filter.setCategories(categories);
+        List<String> payments = new ArrayList<>();
+        payments.add("Chase");
+        payments.add("amazon");
+        filter.setPaymentMethods(payments);
+        Assert.assertEquals(Expenses.getForFilter(filter).size(),
+                mExpenseDao.getForFilter(filter).size());
+
+        filter = new Filter();
+        filter.setMonthIndex(5);
+        filter.setIsIncome(false);
+        filter.setStarred(false);
+        categories = new ArrayList<>();
+        categories.add("Utilities");
+        filter.setCategories(categories);
+        payments = new ArrayList<>();
+        payments.add("Card4");
+        filter.setPaymentMethods(payments);
+        Assert.assertEquals(Expenses.getForFilter(filter).size(),
+                mExpenseDao.getForFilter(filter).size());
     }
 
     @Test

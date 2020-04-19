@@ -21,34 +21,34 @@ public class Expense implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private int mId;
 
-    @ColumnInfo(name = "date_time")
+    @ColumnInfo(name = COL_DATE_TIME)
     private long mDateTime;
 
-    @ColumnInfo(name = "amount")
+    @ColumnInfo(name = COL_AMOUNT)
     private BigDecimal mAmount;
 
-    @ColumnInfo(name = "payment_method")
+    @ColumnInfo(name = COL_PAYMENT)
     private String mPaymentMethod;
 
-    @ColumnInfo(name = "category")
+    @ColumnInfo(name = COL_CATEGORY)
     private String mCategory;
 
-    @ColumnInfo(name = "description")
+    @ColumnInfo(name = COL_DESCRIPTION)
     private String mDescription;
 
-    @ColumnInfo(name = "store")
+    @ColumnInfo(name = COL_STORE)
     private String mStore;
 
-    @ColumnInfo(name = "is_synced")
+    @ColumnInfo(name = COL_SYNCED)
     private boolean mIsSynced;
 
-    @ColumnInfo(name = "is_starred")
+    @ColumnInfo(name = COL_STARRED)
     private boolean mIsStarred;
 
-    @ColumnInfo(name = "sheet_id")
+    @ColumnInfo(name = COL_SHEET_ID)
     private int mSheetId;
 
-    @ColumnInfo(name = "is_income")
+    @ColumnInfo(name = COL_INCOME)
     private boolean mIsIncome;
 
     public static final Creator<Expense> CREATOR = new Creator<Expense>() {
@@ -233,4 +233,16 @@ public class Expense implements Parcelable {
                 ", mIsIncome = " + mIsIncome +
                 " }\n";
     }
+
+    public static final String TABLE = "expense";
+    public static final String COL_DATE_TIME = "date_time";
+    public static final String COL_AMOUNT = "amount";
+    public static final String COL_PAYMENT = "payment_method";
+    public static final String COL_CATEGORY = "category";
+    public static final String COL_DESCRIPTION = "description";
+    public static final String COL_STORE = "store";
+    public static final String COL_SYNCED = "is_synced";
+    public static final String COL_STARRED = "is_starred";
+    public static final String COL_SHEET_ID = "sheet_id";
+    public static final String COL_INCOME = "is_income";
 }

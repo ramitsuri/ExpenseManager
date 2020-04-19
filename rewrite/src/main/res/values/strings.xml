@@ -177,4 +177,9 @@
     <string name="spreadsheet_entities_sheet_title">Entities</string>
     <string name="spreadsheet_title_format">Expenses %1d</string>
 
+    <!-- Filters -->
+    <string name="filter_options_quick_filters">Quick filters</string>
+    <string name="filter_options_show_income">Show income</string>
+    <string name="filter_options_show_flagged">Show flagged</string>
+
 </resources>

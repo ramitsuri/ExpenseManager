@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager.data.dummy;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.utils.DateHelper;
+import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -354,20 +355,9 @@ public class Expenses {
     }
 
     public static List<Expense> getForFilter(Filter filter) {
-        List<Expense> afterDateFilter = new ArrayList<>();
-        for (Expense expense : all()) {
-            if (filter.getFromDateTime() != null && filter.getToDateTime() != null) {
-                if (expense.getDateTime() <= filter.getToDateTime() &&
-                        expense.getDateTime() >= filter.getFromDateTime()) {
-                    afterDateFilter.add(expense);
-                }
-            } else {
-                afterDateFilter.add(expense);
-            }
-        }
-
+        // Income
         List<Expense> afterIncomeFilter = new ArrayList<>();
-        for (Expense expense : afterDateFilter) {
+        for (Expense expense : all()) {
             if (filter.getIsIncome() != null) {
                 if (filter.getIsIncome() && expense.isIncome()) {
                     afterIncomeFilter.add(expense);
@@ -378,8 +368,68 @@ public class Expenses {
                 afterIncomeFilter.add(expense);
             }
         }
+        // Date range
+        List<Expense> afterDateFilter = new ArrayList<>();
+        for (Expense expense : afterIncomeFilter) {
+            if (filter.getFromDateTime() != null && filter.getToDateTime() != null) {
+                if (expense.getDateTime() <= filter.getToDateTime() &&
+                        expense.getDateTime() >= filter.getFromDateTime()) {
+                    afterDateFilter.add(expense);
+                }
+            } else {
+                afterDateFilter.add(expense);
+            }
+        }
+        // Categories
+        List<Expense> afterCategoriesFilter = new ArrayList<>();
+        for (Expense expense : afterDateFilter) {
+            if (filter.getCategories() != null) {
+                if (ObjectHelper.contains(filter.getCategories(), expense.getCategory())) {
+                    afterCategoriesFilter.add(expense);
+                }
+            } else {
+                afterCategoriesFilter.add(expense);
+            }
+        }
+        // Payment Methods
+        List<Expense> afterPaymentsFilter = new ArrayList<>();
+        for (Expense expense : afterCategoriesFilter) {
+            if (filter.getPaymentMethods() != null) {
+                if (ObjectHelper.contains(filter.getPaymentMethods(), expense.getPaymentMethod())) {
+                    afterPaymentsFilter.add(expense);
+                }
+            } else {
+                afterPaymentsFilter.add(expense);
+            }
+        }
+        // Synced
+        List<Expense> afterSyncedFilter = new ArrayList<>();
+        for (Expense expense : afterPaymentsFilter) {
+            if (filter.getIsSynced() != null) {
+                if (filter.getIsSynced() && expense.isSynced()) {
+                    afterSyncedFilter.add(expense);
+                } else if (!filter.getIsSynced() && !expense.isSynced()) {
+                    afterSyncedFilter.add(expense);
+                }
+            } else {
+                afterSyncedFilter.add(expense);
+            }
+        }
+        // Starred
+        List<Expense> afterStarredFilter = new ArrayList<>();
+        for (Expense expense : afterSyncedFilter) {
+            if (filter.getIsStarred() != null) {
+                if (filter.getIsStarred() && expense.isStarred()) {
+                    afterStarredFilter.add(expense);
+                } else if (!filter.getIsStarred() && !expense.isStarred()) {
+                    afterStarredFilter.add(expense);
+                }
+            } else {
+                afterStarredFilter.add(expense);
+            }
+        }
 
-        return afterIncomeFilter;
+        return afterStarredFilter;
     }
 
     public static Set<String> getStores(String startsWith) {

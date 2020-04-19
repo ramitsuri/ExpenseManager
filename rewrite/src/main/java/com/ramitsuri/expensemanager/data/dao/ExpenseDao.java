@@ -50,6 +50,12 @@ public abstract class ExpenseDao {
     @Query("SELECT DISTINCT store FROM expense WHERE store LIKE :startsWith || '%' ORDER BY date_time DESC")
     public abstract List<String> getStores(String startsWith);
 
+    @Query("SELECT DISTINCT category FROM expense WHERE is_income = 0")
+    public abstract List<String> getCategories();
+
+    @Query("SELECT DISTINCT payment_method FROM expense WHERE is_income = 0")
+    public abstract List<String> getPaymentMethods();
+
     @Query("SELECT * FROM expense WHERE store LIKE :store ORDER BY date_time DESC LIMIT 1")
     public abstract Expense getForStore(String store);
 
@@ -167,9 +173,71 @@ public abstract class ExpenseDao {
             } else {
                 queryBuilder.append(" AND");
             }
-            queryBuilder.append(" date_time BETWEEN ? AND ?");
+            queryBuilder.append(" (date_time BETWEEN ? AND ?)");
             args.add(filter.getFromDateTime());
             args.add(filter.getToDateTime());
+        }
+
+        // Categories
+        if (filter.getCategories() != null && filter.getCategories().size() > 0) {
+            if (queryBuilder.indexOf("WHERE") == -1) {
+                queryBuilder.append(" WHERE");
+            } else {
+                queryBuilder.append(" AND");
+            }
+            queryBuilder.append(" category IN (");
+            StringBuilder placeholders = new StringBuilder();
+            for (int i = 0; i < filter.getCategories().size(); i++) {
+                if (i != 0) {
+                    placeholders.append(",");
+                }
+                placeholders.append("?");
+                args.add(filter.getCategories().get(i));
+            }
+            queryBuilder.append(placeholders.toString());
+            queryBuilder.append(")");
+        }
+
+        // Payment Methods
+        if (filter.getPaymentMethods() != null && filter.getPaymentMethods().size() > 0) {
+            if (queryBuilder.indexOf("WHERE") == -1) {
+                queryBuilder.append(" WHERE");
+            } else {
+                queryBuilder.append(" AND");
+            }
+            queryBuilder.append(" payment_method IN (");
+            StringBuilder placeholders = new StringBuilder();
+            for (int i = 0; i < filter.getPaymentMethods().size(); i++) {
+                if (i != 0) {
+                    placeholders.append(",");
+                }
+                placeholders.append("?");
+                args.add(filter.getPaymentMethods().get(i));
+            }
+            queryBuilder.append(placeholders.toString());
+            queryBuilder.append(")");
+        }
+
+        // Synced
+        if (filter.getIsSynced() != null) {
+            if (queryBuilder.indexOf("WHERE") == -1) {
+                queryBuilder.append(" WHERE");
+            } else {
+                queryBuilder.append(" AND");
+            }
+            queryBuilder.append(" is_synced = ?");
+            args.add(filter.getIsSynced() ? 1 : 0);
+        }
+
+        // Starred
+        if (filter.getIsStarred() != null) {
+            if (queryBuilder.indexOf("WHERE") == -1) {
+                queryBuilder.append(" WHERE");
+            } else {
+                queryBuilder.append(" AND");
+            }
+            queryBuilder.append(" is_starred = ?");
+            args.add(filter.getIsStarred() ? 1 : 0);
         }
 
         SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());

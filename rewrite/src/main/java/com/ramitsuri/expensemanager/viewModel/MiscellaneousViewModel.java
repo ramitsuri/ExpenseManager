@@ -185,17 +185,11 @@ public class MiscellaneousViewModel extends ViewModel {
 
     @Nullable
     public Account getSignInAccount() {
-        AccountManager accountManager = new AccountManager();
-        SignInResponse response =
-                accountManager.prepareSignIn(MainApplication.getInstance(), AppHelper.getScopes());
-        if (response.getGoogleSignInAccount() != null) {
-            Account account = response.getGoogleSignInAccount().getAccount();
-            if (account != null) {
-                onAccountInfoReceived(account);
-                return account;
-            }
+        Account account = MainApplication.getInstance().getSignInAccount();
+        if (account != null) {
+            onAccountInfoReceived(account);
         }
-        return null;
+        return account;
     }
 
     @Nullable

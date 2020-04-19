@@ -16,6 +16,8 @@ import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
+import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
+import com.ramitsuri.sheetscore.googleSignIn.SignInResponse;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public class MainApplication extends Application {
         initTimber();
 
         initDataRepos();
+
+        initSheetRepo();
 
         // Enqueue periodic backups
         if (!BuildConfig.DEBUG) {
@@ -109,7 +113,18 @@ public class MainApplication extends Application {
         mEditedSheetRepo = new EditedSheetRepository(appExecutors, database);
     }
 
+    private void initSheetRepo() {
+        Timber.i("Attempting to initialize sheet repo");
+        Account account = getSignInAccount();
+        if (account != null) {
+            refreshSheetRepo(account);
+        } else {
+            Timber.i("Account is null");
+        }
+    }
+
     public void refreshSheetRepo(@Nonnull Account account) {
+        Timber.i("Refreshing sheet repo");
         String appName = getString(R.string.app_name);
         List<String> scopes = Arrays.asList(AppHelper.getScopes());
         if (mSheetRepository == null) {
@@ -182,5 +197,16 @@ public class MainApplication extends Application {
     @Nonnull
     public EditedSheetRepository getEditedSheetRepo() {
         return mEditedSheetRepo;
+    }
+
+    @Nullable
+    public Account getSignInAccount() {
+        AccountManager accountManager = new AccountManager();
+        SignInResponse response =
+                accountManager.prepareSignIn(getInstance(), AppHelper.getScopes());
+        if (response.getGoogleSignInAccount() != null) {
+            return response.getGoogleSignInAccount().getAccount();
+        }
+        return null;
     }
 }

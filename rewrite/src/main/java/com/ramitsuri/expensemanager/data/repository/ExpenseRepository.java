@@ -53,6 +53,30 @@ public class ExpenseRepository {
         return mStores;
     }
 
+    public LiveData<List<String>> getCategories() {
+        final MutableLiveData<List<String>> categories = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<String> values = mDatabase.expenseDao().getCategories();
+                categories.postValue(values);
+            }
+        });
+        return categories;
+    }
+
+    public LiveData<List<String>> getPaymentMethods() {
+        final MutableLiveData<List<String>> paymentMethods = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<String> values = mDatabase.expenseDao().getPaymentMethods();
+                paymentMethods.postValue(values);
+            }
+        });
+        return paymentMethods;
+    }
+
     public void refreshStores(final String startsWith) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override

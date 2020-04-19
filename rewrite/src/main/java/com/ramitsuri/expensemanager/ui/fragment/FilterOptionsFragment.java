@@ -14,14 +14,17 @@ import com.ramitsuri.expensemanager.ui.adapter.MonthPickerAdapter;
 import com.ramitsuri.expensemanager.viewModel.FilterOptionsViewModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import timber.log.Timber;
 
 public class FilterOptionsFragment extends BaseBottomSheetFragment {
 
@@ -68,14 +71,15 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     }
 
     private void setupViews(@NonNull View view) {
-        RecyclerView listSheets = view.findViewById(R.id.list_months);
-        listSheets.setLayoutManager(
+        // Months
+        RecyclerView listMonths = view.findViewById(R.id.list_months);
+        listMonths.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        listSheets.setHasFixedSize(true);
+        listMonths.setHasFixedSize(true);
 
         final MonthPickerAdapter adapter = new MonthPickerAdapter();
         adapter.setValues(Arrays.asList(getMonths()));
-        listSheets.setAdapter(adapter);
+        listMonths.setAdapter(adapter);
         adapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
             @Override
             public void onValuePicked(String value) {
@@ -84,6 +88,52 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
             }
         });
 
+        // Categories
+        final RecyclerView listCategories = view.findViewById(R.id.list_categories);
+        listCategories.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        listCategories.setHasFixedSize(true);
+        final MonthPickerAdapter categoriesAdapter = new MonthPickerAdapter();
+        categoriesAdapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
+            @Override
+            public void onValuePicked(String value) {
+                onCategoryPicked(value);
+                dismiss();
+            }
+        });
+        listCategories.setAdapter(categoriesAdapter);
+        mViewModel.getCategories().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> categories) {
+                Timber.i("Categories received %s", categories);
+                categoriesAdapter.setValues(categories);
+            }
+        });
+
+        // Payment Methods
+        final RecyclerView listPaymentMethods = view.findViewById(R.id.list_payment_methods);
+        listPaymentMethods.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        listPaymentMethods.setHasFixedSize(true);
+        final MonthPickerAdapter paymentsAdapter = new MonthPickerAdapter();
+        paymentsAdapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
+            @Override
+            public void onValuePicked(String value) {
+                onPaymentMethodPicked(value);
+                dismiss();
+            }
+        });
+        listPaymentMethods.setAdapter(paymentsAdapter);
+        mViewModel.getPaymentMethods()
+                .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+                    @Override
+                    public void onChanged(List<String> paymentMethods) {
+                        Timber.i("Payment Methods received %s", paymentMethods);
+                        paymentsAdapter.setValues(paymentMethods);
+                    }
+                });
+
+        // Income
         Button btnIncome = view.findViewById(R.id.btn_get_income);
         btnIncome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +150,19 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         } else {
             btnIncome.setVisibility(View.GONE);
         }
+
+        // Starred
+        Button btnStarred = view.findViewById(R.id.btn_get_starred);
+        btnStarred.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Filter filter = mViewModel.onGetStarred();
+                if (mCallback != null) {
+                    mCallback.onFilterRequested(filter);
+                }
+                dismiss();
+            }
+        });
     }
 
     /**
@@ -116,6 +179,20 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
                 break;
             }
             index = index + 1;
+        }
+    }
+
+    private void onCategoryPicked(String category) {
+        Filter filter = mViewModel.onCategoryPicked(category);
+        if (mCallback != null) {
+            mCallback.onFilterRequested(filter);
+        }
+    }
+
+    private void onPaymentMethodPicked(String paymentMethod) {
+        Filter filter = mViewModel.onPaymentMethodPicked(paymentMethod);
+        if (mCallback != null) {
+            mCallback.onFilterRequested(filter);
         }
     }
 

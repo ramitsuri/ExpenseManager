@@ -9,6 +9,7 @@ import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,6 +21,10 @@ public class Filter {
     private Long mFromDateTime;
     private Long mToDateTime;
     private Boolean mIsIncome;
+    private List<String> mCategories;
+    private List<String> mPaymentMethods;
+    private Boolean mIsSynced;
+    private Boolean mIsStarred;
 
     public Filter() {
         mIsIncome = false;
@@ -58,6 +63,42 @@ public class Filter {
         return this;
     }
 
+    public List<String> getCategories() {
+        return mCategories;
+    }
+
+    public Filter setCategories(List<String> categories) {
+        mCategories = categories;
+        return this;
+    }
+
+    public List<String> getPaymentMethods() {
+        return mPaymentMethods;
+    }
+
+    public Filter setPaymentMethods(List<String> paymentMethods) {
+        mPaymentMethods = paymentMethods;
+        return this;
+    }
+
+    public Boolean getIsSynced() {
+        return mIsSynced;
+    }
+
+    public Filter setSynced(Boolean synced) {
+        mIsSynced = synced;
+        return this;
+    }
+
+    public Boolean getIsStarred() {
+        return mIsStarred;
+    }
+
+    public Filter setStarred(Boolean starred) {
+        mIsStarred = starred;
+        return this;
+    }
+
     @Override
     @Nonnull
     public String toString() {
@@ -65,6 +106,10 @@ public class Filter {
                 "mFromDateTime=" + mFromDateTime +
                 ", mToDateTime=" + mToDateTime +
                 ", mIsIncome=" + mIsIncome +
+                ", mCategories=" + mCategories +
+                ", mPaymentMethods=" + mPaymentMethods +
+                ", mIsSynced=" + mIsSynced +
+                ", mIsStarred=" + mIsStarred +
                 '}';
     }
 

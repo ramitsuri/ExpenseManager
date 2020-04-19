@@ -1,3 +1,22 @@
+More Filters
+ExpenseDao
+    - Add methods to get categories and payment methods from saved expenses
+    - Enhanced getForFilter to have payment methods, categories, starred, synced
+ExpenseRepo
+    - Add methods for get categories and payment methods
+Expense
+    - Move column names to constant fields (trial)
+Filter
+    - Add categories, payment methods, synced, starred filters
+FilterOptions
+    - Add filters for above in UI
+MiscellaneousVM
+    - Move some of the get account code to MainApp
+MainApp
+    - Init sheet repo onCreate
+    - Try getting account, if not null, refresh sheet repo so that if app dies, sheet repo doesn't become null
+    - Fixes an issue where after app dying, sheet repo won't refresh and workers would fail
+
 Expense autocomplete
 ExpenseDao
     - Add method to get suggestions for store starts with
