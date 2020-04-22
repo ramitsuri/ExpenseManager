@@ -1,3 +1,5 @@
+Change logo
+
 More Filters
 ExpenseDao
     - Add methods to get categories and payment methods from saved expenses
