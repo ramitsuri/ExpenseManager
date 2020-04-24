@@ -140,7 +140,7 @@ public class WorkHelper {
         return Constants.Tag.PERIODIC_ENTITIES_BACKUP;
     }
 
-    private static String getOneTimeWorkTag() {
+    public static String getOneTimeWorkTag() {
         return Constants.Tag.ONE_TIME_BACKUP;
     }
 

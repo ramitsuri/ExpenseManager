@@ -1,3 +1,15 @@
+Work status logging
+PrefKeys
+    - Add key for work log enabled
+SecretMessages
+    - Add new keys for work log enable and disable
+AllExpensesFrag
+    - Log periodic and one time expense backup work status
+BaseFrag
+    - Log (in db) work status if enabled
+SecretMessageHelper
+    - Move code of handling secret messages here from MetadataVM
+
 Modify logo
 
 Change logo

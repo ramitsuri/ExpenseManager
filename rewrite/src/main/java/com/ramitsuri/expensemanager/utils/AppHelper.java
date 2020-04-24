@@ -142,4 +142,12 @@ public class AppHelper {
     public static void setIncomeEnabled(boolean enable) {
         PrefHelper.set(PrefKeys.ENABLE_INCOME, enable);
     }
+
+    public static boolean isWorkLogEnabled() {
+        return PrefHelper.get(PrefKeys.ENABLE_WORK_LOG, false);
+    }
+
+    public static void setWorkLogEnabled(boolean enable) {
+        PrefHelper.set(PrefKeys.ENABLE_WORK_LOG, enable);
+    }
 }

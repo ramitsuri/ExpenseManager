@@ -19,7 +19,8 @@ import androidx.annotation.StringDef;
         PrefKeys.TIME_ZONE_ID,
         PrefKeys.IS_FIRST_RUN_COMPLETE,
         PrefKeys.BACKUP_INFO_STATUS,
-        PrefKeys.ENABLE_INCOME
+        PrefKeys.ENABLE_INCOME,
+        PrefKeys.ENABLE_WORK_LOG
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -37,6 +38,7 @@ public @interface PrefKeys {
     String IS_FIRST_RUN_COMPLETE = "is_first_run_complete";
     String BACKUP_INFO_STATUS = "backup_info_status";
     String ENABLE_INCOME = "enable_income";
+    String ENABLE_WORK_LOG = "enable_work_log";
     String AUTO_BACKUP = "settings_auto_backup";
     String VERSION_INFO = "version_info";
     String ENABLE_DEBUG_OPTIONS = "enable_debug_options";

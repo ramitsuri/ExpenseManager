@@ -3,10 +3,9 @@ package com.ramitsuri.expensemanager.viewModel;
 import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.MainApplication;
-import com.ramitsuri.expensemanager.constants.stringDefs.SecretMessages;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.entities.Log;
-import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,49 +69,6 @@ public class MetadataViewModel extends ViewModel {
             Timber.i("Secret is not empty, not deleting logs");
         }
 
-        switch (secret.trim().toUpperCase()) {
-            case SecretMessages.ENABLE_SPLITTING:
-                Timber.i("Enabling splitting");
-                AppHelper.setSplittingEnabled(true);
-                break;
-
-            case SecretMessages.DISABLE_SPLITTING:
-                Timber.i("Disabling splitting");
-                AppHelper.setSplittingEnabled(false);
-                break;
-
-            case SecretMessages.ENABLE_EXPENSE_SYNC:
-                Timber.i("Enabling expense sync");
-                AppHelper.setExpenseSyncEnabled(true);
-                break;
-
-            case SecretMessages.DISABLE_EXPENSE_SYNC:
-                Timber.i("Disabling expense sync");
-                AppHelper.setExpenseSyncEnabled(false);
-                break;
-
-            case SecretMessages.ENABLE_ENTITIES_SYNC:
-                Timber.i("Enabling entities sync");
-                AppHelper.setEntitiesSyncEnabled(true);
-                break;
-
-            case SecretMessages.DISABLE_ENTITIES_SYNC:
-                Timber.i("Disabling entities sync");
-                AppHelper.setEntitiesSyncEnabled(false);
-                break;
-
-            case SecretMessages.ENABLE_INCOME:
-                Timber.i("Enabling income");
-                AppHelper.setIncomeEnabled(true);
-                break;
-
-            case SecretMessages.DISABLE_INCOME:
-                Timber.i("Disabling income");
-                AppHelper.setIncomeEnabled(false);
-                break;
-
-            default:
-                Timber.i("Secret message means nothing");
-        }
+        SecretMessageHelper.onSecretMessageEntered(secret);
     }
 }

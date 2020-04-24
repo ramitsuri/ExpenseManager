@@ -24,6 +24,7 @@ import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.expensemanager.viewModel.AllExpensesViewModel;
 
 import java.math.BigDecimal;
@@ -117,6 +118,9 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         setupListExpenses(view);
 
         onFilterApplied(null);
+
+        logWorkStatus(WorkHelper.getPeriodicWorkTag());
+        logWorkStatus(WorkHelper.getOneTimeWorkTag());
     }
 
     private void setupListExpenses(View view) {
