@@ -10,6 +10,7 @@ import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
 import com.ramitsuri.sheetscore.googleSignIn.SignInResponse;
@@ -84,6 +85,10 @@ public class MiscellaneousViewModel extends ViewModel {
         return mEnableHidden || BuildConfig.DEBUG;
     }
 
+    public boolean enableBackupNow() {
+        return enableHidden() && SecretMessageHelper.isBackupNowEnabled();
+    }
+
     public boolean enableDeleteAll() {
         return BuildConfig.DEBUG;
     }
@@ -145,11 +150,11 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean enableExpenseSync() {
-        return enableHidden() && AppHelper.isExpenseSyncEnabled();
+        return enableHidden() && SecretMessageHelper.isExpenseSyncEnabled();
     }
 
     public boolean enableEntitiesSync() {
-        return enableHidden() && AppHelper.isEntitiesSyncEnabled();
+        return enableHidden() && SecretMessageHelper.isEntitiesSyncEnabled();
     }
 
     @Nonnull

@@ -1,3 +1,14 @@
+Hide backup now
+PrefKeys
+    - Add new pref key for backup now enabled
+SecretMessages
+    - Add new keys for enable disable backup now
+SecretMessahesHelper
+    - Move secret message code here from AppHelper
+    - Make setters private
+MiscVM
+    - Hide backup now option
+
 Enhance filter with multiple selection - UI (WIP)
 FilterWrapper
     - New class for all the filter adapters

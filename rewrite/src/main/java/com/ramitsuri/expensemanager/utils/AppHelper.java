@@ -61,30 +61,6 @@ public class AppHelper {
         return BuildConfig.VERSION_NAME;
     }
 
-    public static boolean isSplittingEnabled() {
-        return PrefHelper.get(PrefKeys.ENABLE_SPLITTING, false);
-    }
-
-    public static void setSplittingEnabled(boolean enable) {
-        PrefHelper.set(PrefKeys.ENABLE_SPLITTING, enable);
-    }
-
-    public static boolean isExpenseSyncEnabled() {
-        return PrefHelper.get(PrefKeys.ENABLE_EXPENSE_SYNC, false);
-    }
-
-    public static void setExpenseSyncEnabled(boolean enable) {
-        PrefHelper.set(PrefKeys.ENABLE_EXPENSE_SYNC, enable);
-    }
-
-    public static boolean isEntitiesSyncEnabled() {
-        return PrefHelper.get(PrefKeys.ENABLE_ENTITIES_SYNC, false);
-    }
-
-    public static void setEntitiesSyncEnabled(boolean enable) {
-        PrefHelper.set(PrefKeys.ENABLE_ENTITIES_SYNC, enable);
-    }
-
     public static boolean isEntitiesEdited() {
         return PrefHelper.get(PrefKeys.IS_ENTITIES_EDITED, false);
     }
@@ -133,21 +109,5 @@ public class AppHelper {
 
     public static void setBackupInfoStatus(String backupInfoStatus) {
         PrefHelper.set(PrefKeys.BACKUP_INFO_STATUS, backupInfoStatus);
-    }
-
-    public static boolean isIncomeEnabled() {
-        return PrefHelper.get(PrefKeys.ENABLE_INCOME, false);
-    }
-
-    public static void setIncomeEnabled(boolean enable) {
-        PrefHelper.set(PrefKeys.ENABLE_INCOME, enable);
-    }
-
-    public static boolean isWorkLogEnabled() {
-        return PrefHelper.get(PrefKeys.ENABLE_WORK_LOG, false);
-    }
-
-    public static void setWorkLogEnabled(boolean enable) {
-        PrefHelper.set(PrefKeys.ENABLE_WORK_LOG, enable);
     }
 }

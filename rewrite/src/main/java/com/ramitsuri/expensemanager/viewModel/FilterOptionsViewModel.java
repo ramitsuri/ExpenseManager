@@ -3,7 +3,7 @@ package com.ramitsuri.expensemanager.viewModel;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.entities.Filter;
-import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +63,6 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public boolean isIncomeAvailable() {
-        return AppHelper.isIncomeEnabled();
+        return SecretMessageHelper.isIncomeEnabled();
     }
 }

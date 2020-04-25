@@ -10,7 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.entities.Log;
-import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.List;
@@ -138,7 +138,7 @@ public class BaseFragment extends Fragment {
                         if (workInfos != null && !workInfos.isEmpty() && workInfos.get(0) != null) {
                             WorkInfo info = workInfos.get(0);
                             Timber.i("Work status %s", info.toString());
-                            if (AppHelper.isWorkLogEnabled()) {
+                            if (SecretMessageHelper.isWorkLogEnabled()) {
                                 insertLog(workTag, "null", info.getState().toString() + " | " +
                                         info.getRunAttemptCount());
                             }

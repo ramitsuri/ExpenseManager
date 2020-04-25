@@ -20,7 +20,8 @@ import androidx.annotation.StringDef;
         PrefKeys.IS_FIRST_RUN_COMPLETE,
         PrefKeys.BACKUP_INFO_STATUS,
         PrefKeys.ENABLE_INCOME,
-        PrefKeys.ENABLE_WORK_LOG
+        PrefKeys.ENABLE_WORK_LOG,
+        PrefKeys.ENABLE_BACKUP_NOW
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -39,6 +40,7 @@ public @interface PrefKeys {
     String BACKUP_INFO_STATUS = "backup_info_status";
     String ENABLE_INCOME = "enable_income";
     String ENABLE_WORK_LOG = "enable_work_log";
+    String ENABLE_BACKUP_NOW = "enable_backup_now";
     String AUTO_BACKUP = "settings_auto_backup";
     String VERSION_INFO = "version_info";
     String ENABLE_DEBUG_OPTIONS = "enable_debug_options";

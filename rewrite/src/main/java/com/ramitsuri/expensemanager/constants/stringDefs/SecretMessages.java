@@ -19,7 +19,9 @@ import androidx.annotation.StringDef;
         SecretMessages.CANCEL_ONE_TIME,
         SecretMessages.CANCEL_PERIODIC,
         SecretMessages.ENQUEUE_ONE_TIME,
-        SecretMessages.ENQUEUE_PERIODIC
+        SecretMessages.ENQUEUE_PERIODIC,
+        SecretMessages.ENABLE_BACKUP_NOW,
+        SecretMessages.DISABLE_BACKUP_NOW
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface SecretMessages {
@@ -37,4 +39,6 @@ public @interface SecretMessages {
     String CANCEL_PERIODIC = "CANCEL_PERIODIC";
     String ENQUEUE_ONE_TIME = "ENQUEUE_ONE_TIME";
     String ENQUEUE_PERIODIC = "ENQUEUE_PERIODIC";
+    String ENABLE_BACKUP_NOW = "ENABLE_BACKUP_NOW";
+    String DISABLE_BACKUP_NOW = "DISABLE_BACKUP_NOW";
 }

@@ -9,9 +9,9 @@ import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
-import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
+import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -249,7 +249,7 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public boolean isSplitAvailable() {
-        return AppHelper.isSplittingEnabled();
+        return SecretMessageHelper.isSplittingEnabled();
     }
 
     public boolean isSplit() {
@@ -261,7 +261,7 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public boolean isIncomeAvailable() {
-        return AppHelper.isIncomeEnabled();
+        return SecretMessageHelper.isIncomeEnabled();
     }
 
     public boolean isIncome() {

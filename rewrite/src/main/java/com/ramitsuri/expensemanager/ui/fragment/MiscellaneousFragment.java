@@ -98,7 +98,7 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_backup,
                 R.string.common_sync_now,
                 R.drawable.ic_backup,
-                mViewModel.enableHidden());
+                mViewModel.enableBackupNow());
 
         // Sync
         setupMenuItem(view,
