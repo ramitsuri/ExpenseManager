@@ -1,3 +1,12 @@
+Figure out why work won't work
+SecretMessages
+    - Add messages for cancel, enqueue work
+WorkHelper
+    - Add methods for cancelling one time expense and entities backup
+    - Change all work policy to replace existing work
+MainApplication
+    - Cancel existing periodic backups and schedule new ones
+
 Work status logging
 PrefKeys
     - Add key for work log enabled

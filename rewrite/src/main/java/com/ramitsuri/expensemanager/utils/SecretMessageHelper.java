@@ -60,6 +60,30 @@ public class SecretMessageHelper {
                 AppHelper.setWorkLogEnabled(false);
                 break;
 
+            case SecretMessages.CANCEL_ONE_TIME:
+                Timber.i("Cancel all one time work");
+                WorkHelper.cancelOneTimeBackup();
+                WorkHelper.cancelOneTimeEntitiesBackup();
+                break;
+
+            case SecretMessages.CANCEL_PERIODIC:
+                Timber.i("Cancel all periodic work");
+                WorkHelper.cancelPeriodicBackup();
+                WorkHelper.cancelPeriodicEntitiesBackup();
+                break;
+
+            case SecretMessages.ENQUEUE_ONE_TIME:
+                Timber.i("Enqueue all one time work");
+                WorkHelper.enqueueOneTimeBackup();
+                WorkHelper.enqueueOneTimeEntitiesBackup();
+                break;
+
+            case SecretMessages.ENQUEUE_PERIODIC:
+                Timber.i("Enqueue all periodic work");
+                WorkHelper.enqueuePeriodicBackup();
+                WorkHelper.enqueuePeriodicEntitiesBackup();
+                break;
+
             default:
                 Timber.i("Secret message means nothing");
         }

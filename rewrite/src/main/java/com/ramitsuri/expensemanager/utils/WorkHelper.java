@@ -38,6 +38,14 @@ public class WorkHelper {
         enqueueOneTimeWork(tag, BackupWorker.class);
     }
 
+    public static void cancelOneTimeBackup() {
+        Timber.i("Cancel one time backup invoked");
+
+        String tag = getOneTimeWorkTag();
+        getInstance()
+                .cancelAllWorkByTag(tag);
+    }
+
     /**
      * Periodic Backup
      * Runs once a day around 2AM
@@ -93,6 +101,14 @@ public class WorkHelper {
 
         String tag = getOneTimeEntitiesBackupTag();
         enqueueOneTimeWork(tag, EntitiesBackupWorker.class);
+    }
+
+    public static void cancelOneTimeEntitiesBackup() {
+        Timber.i("Cancel one time entities backup invoked");
+
+        String tag = getOneTimeEntitiesBackupTag();
+        getInstance()
+                .cancelAllWorkByTag(tag);
     }
 
     /**
@@ -181,7 +197,7 @@ public class WorkHelper {
                 .build();
 
         // Enqueue
-        getInstance().enqueueUniqueWork(tag, ExistingWorkPolicy.KEEP, request);
+        getInstance().enqueueUniqueWork(tag, ExistingWorkPolicy.REPLACE, request);
     }
 
     private static void enqueuePeriodicWork(String tag,
@@ -201,7 +217,7 @@ public class WorkHelper {
                 .build();
 
         // Enqueue
-        getInstance().enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.KEEP, request);
+        getInstance().enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.REPLACE, request);
     }
 
     private static Data getInputData(String appName, String accountName, String accountType,
