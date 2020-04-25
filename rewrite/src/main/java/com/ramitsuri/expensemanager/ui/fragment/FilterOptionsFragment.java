@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.entities.Filter;
-import com.ramitsuri.expensemanager.ui.adapter.MonthPickerAdapter;
+import com.ramitsuri.expensemanager.ui.adapter.FilterAdapter;
+import com.ramitsuri.expensemanager.ui.adapter.FilterWrapper;
 import com.ramitsuri.expensemanager.viewModel.FilterOptionsViewModel;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -67,102 +67,210 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(FilterOptionsViewModel.class);
-        setupViews(view);
+        setupMonths(view);
+        setupCategories(view);
+        setupPaymentMethods(view);
+        setupFlagStatus(view);
+        setupIncomeStatus(view);
     }
 
-    private void setupViews(@NonNull View view) {
+    private void setupMonths(@NonNull View view) {
         // Months
-        RecyclerView listMonths = view.findViewById(R.id.list_months);
-        listMonths.setLayoutManager(
+        RecyclerView list = view.findViewById(R.id.list_months);
+        list.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        listMonths.setHasFixedSize(true);
+        list.setHasFixedSize(true);
 
-        final MonthPickerAdapter adapter = new MonthPickerAdapter();
-        adapter.setValues(Arrays.asList(getMonths()));
-        listMonths.setAdapter(adapter);
-        adapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
+        final FilterAdapter adapter = new FilterAdapter();
+        List<FilterWrapper> wrappers = new ArrayList<>();
+        for (String month : getMonths()) {
+            wrappers.add(new FilterWrapper(month, false));
+        }
+        adapter.setValues(wrappers);
+        list.setAdapter(adapter);
+        adapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
             @Override
-            public void onValuePicked(String value) {
-                onMonthPicked(value);
-                dismiss();
+            public void onSelected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemSelected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New months: %s", values);
+            }
+
+            @Override
+            public void onUnselected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemUnselected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New months: %s", values);
             }
         });
+    }
 
+    private void setupCategories(@NonNull View view) {
         // Categories
-        final RecyclerView listCategories = view.findViewById(R.id.list_categories);
-        listCategories.setLayoutManager(
+        final RecyclerView list = view.findViewById(R.id.list_categories);
+        list.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        listCategories.setHasFixedSize(true);
-        final MonthPickerAdapter categoriesAdapter = new MonthPickerAdapter();
-        categoriesAdapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
+        list.setHasFixedSize(true);
+        final FilterAdapter adapter = new FilterAdapter();
+        adapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
             @Override
-            public void onValuePicked(String value) {
-                onCategoryPicked(value);
-                dismiss();
+            public void onSelected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemSelected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New categories: %s", values);
+            }
+
+            @Override
+            public void onUnselected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemUnselected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New categories: %s", values);
             }
         });
-        listCategories.setAdapter(categoriesAdapter);
+        list.setAdapter(adapter);
         mViewModel.getCategories().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> categories) {
                 Timber.i("Categories received %s", categories);
-                categoriesAdapter.setValues(categories);
+                List<FilterWrapper> wrappers = new ArrayList<>();
+                for (String category : categories) {
+                    wrappers.add(new FilterWrapper(category, false));
+                }
+                adapter.setValues(wrappers);
             }
         });
+    }
 
+    private void setupPaymentMethods(@NonNull View view) {
         // Payment Methods
-        final RecyclerView listPaymentMethods = view.findViewById(R.id.list_payment_methods);
-        listPaymentMethods.setLayoutManager(
+        final RecyclerView list = view.findViewById(R.id.list_payment_methods);
+        list.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        listPaymentMethods.setHasFixedSize(true);
-        final MonthPickerAdapter paymentsAdapter = new MonthPickerAdapter();
-        paymentsAdapter.setCallback(new MonthPickerAdapter.MonthPickerAdapterCallback() {
+        list.setHasFixedSize(true);
+        final FilterAdapter adapter = new FilterAdapter();
+        adapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
             @Override
-            public void onValuePicked(String value) {
-                onPaymentMethodPicked(value);
-                dismiss();
+            public void onSelected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemSelected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New payments: %s", values);
+            }
+
+            @Override
+            public void onUnselected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemUnselected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New payments: %s", values);
             }
         });
-        listPaymentMethods.setAdapter(paymentsAdapter);
+        list.setAdapter(adapter);
         mViewModel.getPaymentMethods()
                 .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
                     @Override
                     public void onChanged(List<String> paymentMethods) {
                         Timber.i("Payment Methods received %s", paymentMethods);
-                        paymentsAdapter.setValues(paymentMethods);
+                        List<FilterWrapper> wrappers = new ArrayList<>();
+                        for (String paymentMethod : paymentMethods) {
+                            wrappers.add(new FilterWrapper(paymentMethod, false));
+                        }
+                        adapter.setValues(wrappers);
                     }
                 });
+    }
 
-        // Income
-        Button btnIncome = view.findViewById(R.id.btn_get_income);
-        btnIncome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Filter filter = mViewModel.onGetIncome();
-                if (mCallback != null) {
-                    mCallback.onFilterRequested(filter);
-                }
-                dismiss();
-            }
-        });
-        if (mViewModel.isIncomeAvailable()) {
-            btnIncome.setVisibility(View.VISIBLE);
-        } else {
-            btnIncome.setVisibility(View.GONE);
+    private void setupIncomeStatus(@NonNull View view) {
+        if (!mViewModel.isIncomeAvailable()) {
+            return;
         }
-
-        // Starred
-        Button btnStarred = view.findViewById(R.id.btn_get_starred);
-        btnStarred.setOnClickListener(new View.OnClickListener() {
+        // Income
+        final FilterAdapter adapter = new FilterAdapter();
+        List<FilterWrapper> wrappers = new ArrayList<>();
+        wrappers.add(new FilterWrapper(getString(R.string.filter_options_income_incomes), false));
+        wrappers.add(new FilterWrapper(getString(R.string.filter_options_income_expenses), false));
+        adapter.setValues(wrappers);
+        adapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
             @Override
-            public void onClick(View v) {
-                Filter filter = mViewModel.onGetStarred();
-                if (mCallback != null) {
-                    mCallback.onFilterRequested(filter);
+            public void onSelected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemSelected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
                 }
-                dismiss();
+                adapter.setValues(values);
+                Timber.i("New incomes: %s", values);
+            }
+
+            @Override
+            public void onUnselected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemUnselected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New incomes: %s", values);
             }
         });
+
+        final RecyclerView list = view.findViewById(R.id.list_income_status);
+        list.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        list.setHasFixedSize(true);
+        list.setAdapter(adapter);
+        list.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.text_header_income_status).setVisibility(View.VISIBLE);
+    }
+
+    private void setupFlagStatus(@NonNull View view) {
+        // Flag
+        final FilterAdapter adapter = new FilterAdapter();
+        List<FilterWrapper> wrappers = new ArrayList<>();
+        wrappers.add(new FilterWrapper(getString(R.string.filter_options_flag_flagged), false));
+        wrappers.add(new FilterWrapper(getString(R.string.filter_options_flag_not_flagged), false));
+        adapter.setValues(wrappers);
+        adapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
+            @Override
+            public void onSelected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemSelected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New flag status: %s", values);
+            }
+
+            @Override
+            public void onUnselected(FilterWrapper value) {
+                List<FilterWrapper> values = onItemUnselected(adapter.getValues(), value);
+                if (values == null) {
+                    return;
+                }
+                adapter.setValues(values);
+                Timber.i("New flag status: %s", values);
+            }
+        });
+
+        final RecyclerView list = view.findViewById(R.id.list_flag_status);
+        list.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        list.setHasFixedSize(true);
+        list.setAdapter(adapter);
     }
 
     /**
@@ -198,5 +306,35 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
 
     private String[] getMonths() {
         return getResources().getStringArray(R.array.months);
+    }
+
+    @Nullable
+    private List<FilterWrapper> onItemSelected(List<FilterWrapper> values, FilterWrapper item) {
+        FilterWrapper newValue = new FilterWrapper(item.getValue(), true);
+        if (values == null) {
+            return null;
+        }
+        int index = values.indexOf(item);
+        if (index == -1) {
+            return null;
+        }
+        values.remove(item);
+        values.add(index, newValue);
+        return values;
+    }
+
+    @Nullable
+    private List<FilterWrapper> onItemUnselected(List<FilterWrapper> values, FilterWrapper item) {
+        FilterWrapper newValue = new FilterWrapper(item.getValue(), false);
+        if (values == null) {
+            return null;
+        }
+        int index = values.indexOf(item);
+        if (index == -1) {
+            return null;
+        }
+        values.remove(item);
+        values.add(index, newValue);
+        return values;
     }
 }

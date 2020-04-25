@@ -1,3 +1,17 @@
+Enhance filter with multiple selection - UI (WIP)
+FilterWrapper
+    - New class for all the filter adapters
+Rename MonthPickerAdapter to FilterAdapter
+    - Use FilterWrappers instead of String in it
+    - Modify callbacks to "selected" "unselected"
+    - Use item layout that shows selection state
+AddBudgetFragment
+    - Handle an edge case where when selecting/unselecting category, category might not be found in budget's categories
+FilterOptionsFragment
+    - Use recycler views for all filters
+    - Make all filters have option to select multiple items
+    - Remove "Quick Filters" help text
+
 Figure out why work won't work
 SecretMessages
     - Add messages for cancel, enqueue work

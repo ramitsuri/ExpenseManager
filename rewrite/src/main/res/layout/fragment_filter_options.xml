@@ -10,17 +10,6 @@
     android:paddingEnd="@dimen/padding_small"
     android:paddingBottom="@dimen/padding_medium">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/filter_options_quick_filters"
-        android:textSize="@dimen/text_body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_done"
         style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -43,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_help" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_months"
@@ -105,30 +94,56 @@
         tools:itemCount="1"
         tools:listitem="@layout/list_picker_item" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_get_income"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="0dp"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_header_flag_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
-        android:text="@string/filter_options_show_income"
-        android:textAllCaps="false"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@id/btn_get_starred"
+        android:text="@string/filter_options_flag_header"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_payment_methods"
+        app:layout_constraintTop_toBottomOf="@id/list_payment_methods" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_flag_status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_header_flag_status"
+        tools:itemCount="1"
+        tools:listitem="@layout/list_picker_item" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_header_income_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:text="@string/filter_options_income_header"
+        android:textSize="@dimen/text_caption"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_flag_status"
         tools:visibility="visible" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_get_starred"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_income_status"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:text="@string/filter_options_show_flagged"
-        android:textAllCaps="false"
+        android:orientation="horizontal"
+        android:scrollbars="none"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_get_income"
-        app:layout_constraintTop_toBottomOf="@id/list_payment_methods" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_header_income_status"
+        tools:itemCount="1"
+        tools:listitem="@layout/list_picker_item"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

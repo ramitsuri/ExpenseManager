@@ -14,20 +14,27 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
-public class MonthPickerAdapter extends RecyclerView.Adapter<MonthPickerAdapter.ViewHolder> {
+public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.ViewHolder> {
 
     @Nullable
-    private List<String> mValues;
+    private List<FilterWrapper> mValues;
     @Nullable
     private MonthPickerAdapterCallback mCallback;
 
     public interface MonthPickerAdapterCallback {
-        void onValuePicked(String value);
+        void onSelected(FilterWrapper value);
+
+        void onUnselected(FilterWrapper value);
     }
 
-    public void setValues(@NonNull List<String> values) {
+    public void setValues(@NonNull List<FilterWrapper> values) {
         mValues = values;
         notifyDataSetChanged();
+    }
+
+    @Nullable
+    public List<FilterWrapper> getValues() {
+        return mValues;
     }
 
     public void setCallback(@NonNull MonthPickerAdapterCallback callback) {
@@ -38,7 +45,7 @@ public class MonthPickerAdapter extends RecyclerView.Adapter<MonthPickerAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_picker_item, parent, false);
+                .inflate(R.layout.list_selection_item_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -61,15 +68,6 @@ public class MonthPickerAdapter extends RecyclerView.Adapter<MonthPickerAdapter.
         }
     }
 
-    private void onSelectionMade(String selectedValue) {
-        if (mCallback != null) {
-            mCallback.onValuePicked(selectedValue);
-            notifyDataSetChanged();
-        } else {
-            Timber.w("mCallback is null");
-        }
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         private Chip txtValue;
@@ -81,16 +79,25 @@ public class MonthPickerAdapter extends RecyclerView.Adapter<MonthPickerAdapter.
             txtValue.setOnClickListener(this);
         }
 
-        private void bind(final String value) {
-            txtValue.setText(value);
-            txtValue.setChecked(false);
+        private void bind(final FilterWrapper value) {
+            txtValue.setText(value.getValue());
+            txtValue.setChecked(value.isSelected());
         }
 
         @Override
         public void onClick(View view) {
             if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                 if (mValues != null) {
-                    onSelectionMade(mValues.get(getAdapterPosition()));
+                    if (mCallback != null) {
+                        FilterWrapper item = mValues.get(getAdapterPosition());
+                        if (item.isSelected()) { // Unselected
+                            mCallback.onUnselected(mValues.get(getAdapterPosition()));
+                        } else { // Selected
+                            mCallback.onSelected(mValues.get(getAdapterPosition()));
+                        }
+                    } else {
+                        Timber.w("mCallbacks is null");
+                    }
                 } else {
                     Timber.w("mValues is null");
                 }

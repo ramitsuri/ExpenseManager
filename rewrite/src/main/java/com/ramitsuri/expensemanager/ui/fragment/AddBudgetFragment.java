@@ -115,6 +115,9 @@ public class AddBudgetFragment extends BaseBottomSheetFragment {
                 newValue.setSelected(true);
                 newValue.setAvailable(true);
                 int index = categories.indexOf(value);
+                if (index == -1) {
+                    return;
+                }
                 categories.remove(value);
                 categories.add(index, newValue);
                 Collections.sort(categories, new SortCategories());
@@ -128,6 +131,9 @@ public class AddBudgetFragment extends BaseBottomSheetFragment {
                 newValue.setSelected(false);
                 newValue.setAvailable(true);
                 int index = categories.indexOf(value);
+                if (index == -1) {
+                    return;
+                }
                 categories.remove(value);
                 categories.add(index, newValue);
                 Collections.sort(categories, new SortCategories());
