@@ -1,3 +1,23 @@
+Filter changes
+ExpenseDao
+    - Remove getAllForBackup() and just use getForQuery method instead
+    - Move query generation to Filter
+Filter
+    - Make parcelable with custom implementation
+    - Convert date times to be a SparseArray so that multiple months can be added
+    - Add methods to add remove category, payment method instead of set
+    - Make calendar instance local so that it gets reset when adding new months
+    - Move Query generation from ExpenseDao
+    - Add default generation to set incomes false and current month
+FilterOptions
+    - Take in a Filter parameter from AllExpenses to auto fill current filters
+    - Add multi selection of filters
+    - Change income and flag filters to be recycler view
+    - Do not dismiss fragment on filter apply so that multiple can be applied
+    - Add a clear filter button
+ViewModelFactory
+    - Add new implementation for creating FilterOptionsViewModel
+
 UI Changes
 AddExpense
     - Change ImageView up button to Button

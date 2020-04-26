@@ -4,7 +4,6 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -16,7 +15,6 @@ import androidx.room.RawQuery;
 import androidx.room.Transaction;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.sqlite.db.SupportSQLiteQuery;
-import timber.log.Timber;
 
 @Dao
 public abstract class ExpenseDao {
@@ -34,9 +32,6 @@ public abstract class ExpenseDao {
 
     @Query("SELECT * FROM expense WHERE is_synced = 0")
     public abstract List<Expense> getAllUnsynced();
-
-    @RawQuery
-    public abstract List<Expense> getAllForBackup(SupportSQLiteQuery query);
 
     @RawQuery
     public abstract List<Expense> getForQuery(SupportSQLiteQuery query);
@@ -133,115 +128,20 @@ public abstract class ExpenseDao {
 
     @Transaction
     public List<Expense> getAllForBackup(@Nonnull List<Integer> monthIndices) {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT * FROM expense WHERE is_synced = 0");
-        List<Object> args = new ArrayList<>();
-
+        Filter filter = new Filter()
+                .setSynced(false);
         for (Integer index : monthIndices) {
-            // Create a filter for every month to get start and end date time
-            Filter filter = new Filter()
-                    .setMonthIndex(index);
-            if (filter.getFromDateTime() != null && filter.getToDateTime() != null) {
-                queryBuilder.append(" OR");
-                queryBuilder.append(" (date_time BETWEEN ? AND ?)");
-                args.add(filter.getFromDateTime());
-                args.add(filter.getToDateTime());
-            }
+            filter.addMonthIndex(index);
         }
         // SELECT * FROM expense WHERE is_synced = 0 OR (date_time BETWEEN ? AND ?) OR
         // (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?)
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
-        return getAllForBackup(query);
+        SimpleSQLiteQuery query = filter.toQuery();
+        return getForQuery(query);
     }
 
     @Transaction
     public List<Expense> getForFilter(@Nonnull Filter filter) {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT * FROM expense");
-        List<Object> args = new ArrayList<>();
-
-        // Is income
-        if (filter.getIsIncome() != null) {
-            queryBuilder.append(" WHERE is_income = ?");
-            args.add(filter.getIsIncome() ? 1 : 0);
-        }
-
-        // Date range
-        if (filter.getToDateTime() != null && filter.getFromDateTime() != null) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" (date_time BETWEEN ? AND ?)");
-            args.add(filter.getFromDateTime());
-            args.add(filter.getToDateTime());
-        }
-
-        // Categories
-        if (filter.getCategories() != null && filter.getCategories().size() > 0) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" category IN (");
-            StringBuilder placeholders = new StringBuilder();
-            for (int i = 0; i < filter.getCategories().size(); i++) {
-                if (i != 0) {
-                    placeholders.append(",");
-                }
-                placeholders.append("?");
-                args.add(filter.getCategories().get(i));
-            }
-            queryBuilder.append(placeholders.toString());
-            queryBuilder.append(")");
-        }
-
-        // Payment Methods
-        if (filter.getPaymentMethods() != null && filter.getPaymentMethods().size() > 0) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" payment_method IN (");
-            StringBuilder placeholders = new StringBuilder();
-            for (int i = 0; i < filter.getPaymentMethods().size(); i++) {
-                if (i != 0) {
-                    placeholders.append(",");
-                }
-                placeholders.append("?");
-                args.add(filter.getPaymentMethods().get(i));
-            }
-            queryBuilder.append(placeholders.toString());
-            queryBuilder.append(")");
-        }
-
-        // Synced
-        if (filter.getIsSynced() != null) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" is_synced = ?");
-            args.add(filter.getIsSynced() ? 1 : 0);
-        }
-
-        // Starred
-        if (filter.getIsStarred() != null) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" is_starred = ?");
-            args.add(filter.getIsStarred() ? 1 : 0);
-        }
-
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
-        Timber.i("Getting for query - %s", query.getSql());
+        SimpleSQLiteQuery query = filter.toQuery();
         return getForQuery(query);
     }
 

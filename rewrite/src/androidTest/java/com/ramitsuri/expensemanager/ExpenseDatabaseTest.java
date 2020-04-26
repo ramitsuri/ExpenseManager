@@ -195,20 +195,21 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         Filter filter;
         for (int i = 0; i < 12; i++) {
             filter = new Filter();
-            filter.setMonthIndex(i);
+            filter.setIsIncome(false);
+            filter.addMonthIndex(i);
             Assert.assertEquals(Expenses.getForFilter(filter).size(),
                     mExpenseDao.getForFilter(filter).size());
         }
         filter = new Filter();
         for (int i = 0; i < 12; i++) {
-            filter.setMonthIndex(i);
+            filter.addMonthIndex(i);
             filter.setIsIncome(true);
             Assert.assertEquals(Expenses.getForFilter(filter).size(),
                     mExpenseDao.getForFilter(filter).size());
         }
         filter = new Filter();
         for (int i = 0; i < 12; i++) {
-            filter.setMonthIndex(i);
+            filter.addMonthIndex(i);
             filter.setIsIncome(false);
             Assert.assertEquals(Expenses.getForFilter(filter).size(),
                     mExpenseDao.getForFilter(filter).size());
@@ -225,31 +226,29 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
                 mExpenseDao.getForFilter(filter).size());
 
         filter = new Filter();
-        filter.setMonthIndex(7);
+        filter.addMonthIndex(7);
+        filter.addMonthIndex(4);
         filter.setIsIncome(false);
-        filter.setStarred(false);
-        List<String> categories = new ArrayList<>();
-        categories.add("Food");
-        categories.add("Travel");
-        categories.add("Groceries");
-        filter.setCategories(categories);
-        List<String> payments = new ArrayList<>();
-        payments.add("Chase");
-        payments.add("amazon");
-        filter.setPaymentMethods(payments);
+        filter.setIsStarred(false);
+
+        filter.addCategory("Food")
+                .addCategory("Travel")
+                .addCategory("Groceries");
+
+        filter.addPaymentMethod("Chase")
+                .addPaymentMethod("amazon");
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
 
         filter = new Filter();
-        filter.setMonthIndex(5);
+        filter.addMonthIndex(5);
+        filter.addMonthIndex(4);
         filter.setIsIncome(false);
-        filter.setStarred(false);
-        categories = new ArrayList<>();
-        categories.add("Utilities");
-        filter.setCategories(categories);
-        payments = new ArrayList<>();
-        payments.add("Card4");
-        filter.setPaymentMethods(payments);
+        filter.setIsStarred(false);
+
+        filter.addCategory("Utilities");
+
+        filter.addPaymentMethod("Card4");
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
     }

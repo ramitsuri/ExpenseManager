@@ -259,6 +259,9 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     private void showFilterOptions() {
         Timber.i("Showing filter options in bottom sheet");
         FilterOptionsFragment fragment = FilterOptionsFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.BundleKeys.FILTER, mViewModel.getFilter());
+        fragment.setArguments(bundle);
         fragment.setCallback(new FilterOptionsFragment.FilterOptionsFragmentCallback() {
             @Override
             public void onFilterRequested(@NonNull Filter filter) {

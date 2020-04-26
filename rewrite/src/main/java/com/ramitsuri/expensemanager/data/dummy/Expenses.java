@@ -1,8 +1,9 @@
 package com.ramitsuri.expensemanager.data.dummy;
 
+import android.util.Pair;
+
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
-import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.math.BigDecimal;
@@ -322,16 +323,12 @@ public class Expenses {
     }
 
     public static List<Expense> getAllForBackup(List<Integer> monthIndices) {
-        List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : all()) {
-            if (!expense.isSynced() ||
-                    monthIndices
-                            .contains(DateHelper.getMonthIndexFromDate(expense.getDateTime()))) {
-                // Expense is not synced or expense's month is contained in supplied month indices
-                expenses.add(expense);
-            }
+        Filter filter = new Filter()
+                .setSynced(false);
+        for (Integer index : monthIndices) {
+            filter.addMonthIndex(index);
         }
-        return expenses;
+        return getForFilter(filter);
     }
 
     public static List<Expense> getAllForDateRange(long fromDateTime, long toDateTime) {
@@ -371,10 +368,16 @@ public class Expenses {
         // Date range
         List<Expense> afterDateFilter = new ArrayList<>();
         for (Expense expense : afterIncomeFilter) {
-            if (filter.getFromDateTime() != null && filter.getToDateTime() != null) {
-                if (expense.getDateTime() <= filter.getToDateTime() &&
-                        expense.getDateTime() >= filter.getFromDateTime()) {
-                    afterDateFilter.add(expense);
+            if (filter.getDateTimes() != null && filter.getDateTimes().size() != 0) {
+                for (int i = 0; i < filter.getDateTimes().size(); i++) {
+                    Pair<Long, Long> dateTime = filter.getDateTimes().valueAt(i);
+                    if (dateTime == null) {
+                        continue;
+                    }
+                    if (expense.getDateTime() >= dateTime.first &&
+                            expense.getDateTime() <= dateTime.second) {
+                        afterDateFilter.add(expense);
+                    }
                 }
             } else {
                 afterDateFilter.add(expense);

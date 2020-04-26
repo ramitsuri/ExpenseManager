@@ -186,5 +186,6 @@
     <string name="filter_options_income_header">Income</string>
     <string name="filter_options_income_incomes">Incomes</string>
     <string name="filter_options_income_expenses">Expenses</string>
+    <string name="filter_options_clear_filter">Clear filter</string>
 
 </resources>

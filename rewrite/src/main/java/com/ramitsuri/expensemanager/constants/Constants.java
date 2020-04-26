@@ -21,6 +21,7 @@ public class Constants {
         public static final String SHEET_INFOS = "sheet_infos";
         public static final String SELECTED_SHEET_ID = "selected_sheet_id";
         public static final String ANALYSIS_EXPENSES = "analysis_expenses";
+        public static final String FILTER = "filter";
     }
 
     public class RequestCode {

@@ -76,6 +76,11 @@ public class AllExpensesViewModel extends ViewModel {
         return calculator.getExpenseTotalValue();
     }
 
+    @Nonnull
+    public Filter getFilter() {
+        return mFilter;
+    }
+
     public void onExpenseFilterApplied(@Nullable Filter filter) {
         if (filter == null) {
             filter = getDefaultFilter();
@@ -112,6 +117,6 @@ public class AllExpensesViewModel extends ViewModel {
     @Nonnull
     private Filter getDefaultFilter() {
         return new Filter()
-                .setCurrentMonth();
+                .getDefault();
     }
 }

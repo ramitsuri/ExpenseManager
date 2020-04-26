@@ -30,7 +30,7 @@ public class FilterWrapper {
     @Nonnull
     @Override
     public String toString() {
-        return "\nFilterWrapper{" +
+        return "FilterWrapper{" +
                 "mValue='" + mValue + '\'' +
                 ", mIsSelected=" + mIsSelected +
                 "}";
