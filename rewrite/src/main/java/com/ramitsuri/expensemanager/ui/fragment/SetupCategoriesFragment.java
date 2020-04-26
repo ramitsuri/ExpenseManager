@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.R;
@@ -67,7 +66,7 @@ public class SetupCategoriesFragment extends BaseFragment {
 
     private void setupViews(@Nonnull View view) {
         // Close
-        ImageView btnClose = view.findViewById(R.id.btn_close);
+        Button btnClose = view.findViewById(R.id.btn_close);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

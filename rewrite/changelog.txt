@@ -1,3 +1,26 @@
+UI Changes
+AddExpense
+    - Change ImageView up button to Button
+    - Add corner radius to buttons
+Metadata
+    - Change ImageView up button to Button
+Misc
+    - Change ImageView up button to Button
+BudgetSetup
+    - Change ImageView up button to Button
+    - Add corner radius to buttons
+CategorySetup
+    - Change ImageView up button to Button
+    - Add corner radius to buttons
+PaymentSetup
+    - Change ImageView up button to Button
+    - Add corner radius to buttons
+AllExpenses
+    - Add corner radius to buttons
+    - Shift card info UI
+ExpenseDetails
+    - Add corner radius to buttons
+
 Hide backup now
 PrefKeys
     - Add new pref key for backup now enabled

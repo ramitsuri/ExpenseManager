@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.ui.adapter.MetadataAdapter;
@@ -89,7 +88,7 @@ public class MetadataFragment extends BaseFragment {
 
         // Close
         // Views
-        ImageView btnClose = view.findViewById(R.id.btn_close);
+        Button btnClose = view.findViewById(R.id.btn_close);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

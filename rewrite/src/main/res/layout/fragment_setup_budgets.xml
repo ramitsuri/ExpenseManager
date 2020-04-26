@@ -11,18 +11,12 @@
         android:layout_height="match_parent"
         android:padding="@dimen/padding_small">
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_close"
-            android:layout_width="@dimen/button_size_small"
-            android:layout_height="@dimen/button_size_small"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/content_description_close_fragment"
-            android:padding="@dimen/padding_extra_extra_small"
-            android:tint="?attr/colorControlNormal"
+            style="@style/ButtonClose"
             app:layout_constraintBottom_toBottomOf="@id/btn_done"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_done"
-            app:srcCompat="@drawable/ic_close" />
+            app:layout_constraintTop_toTopOf="@id/btn_done" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_done"
@@ -33,6 +27,7 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/color_teal"
+            app:cornerRadius="@dimen/corner_radius_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

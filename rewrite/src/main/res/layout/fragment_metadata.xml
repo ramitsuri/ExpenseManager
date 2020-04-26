@@ -10,17 +10,11 @@
     android:paddingEnd="@dimen/padding_small"
     tools:context=".ui.fragment.MetadataFragment">
 
-    <ImageView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_close"
-        android:layout_width="@dimen/button_size_small"
-        android:layout_height="@dimen/button_size_small"
-        android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/content_description_close_fragment"
-        android:padding="@dimen/padding_extra_extra_small"
-        android:tint="?attr/colorControlNormal"
+        style="@style/ButtonClose"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_logs"

@@ -10,6 +10,9 @@
     <dimen name="padding_extra_large">48dp</dimen>
     <dimen name="padding_extra_extra_large">64dp</dimen>
     <dimen name="padding_extra_extra_extra_large">96dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+    <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_small">4dp</dimen>
 
     <!-- Margin -->
     <dimen name="margin_extra_extra_small">@dimen/padding_extra_extra_small</dimen>
@@ -30,7 +33,8 @@
     <dimen name="bg_circle_size">32dp</dimen>
     <dimen name="button_size_extra_small">24dp</dimen>
     <dimen name="button_size_small">32dp</dimen>
-    <dimen name="button_size_medium">56dp</dimen>
+    <dimen name="button_size_medium">40dp</dimen>
+    <dimen name="button_size_fab">56dp</dimen>
     <dimen name="button_size_large">80dp</dimen>
     <dimen name="layout_pickers_height">56dp</dimen>
     <dimen name="divider_width">2dp</dimen>

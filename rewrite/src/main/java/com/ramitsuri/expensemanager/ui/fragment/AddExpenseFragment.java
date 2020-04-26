@@ -13,7 +13,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.google.android.material.button.MaterialButton;
 import com.ramitsuri.expensemanager.R;
@@ -52,7 +51,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private ListPickerAdapter mPaymentsAdapter;
 
     // Views
-    private ImageView mBtnClose;
+    private Button mBtnClose;
     private EditText mEditAmount, mEditDescription;
     private AutoCompleteTextView mEditStore;
     private Button mBtnDone, mBtnDate;
