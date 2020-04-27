@@ -47,6 +47,7 @@
     <string name="common_all_tab">History</string>
     <string name="common_extra_tab">Setup</string>
     <string name="common_income">Income</string>
+    <string name="common_clear">(Clear)</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>
@@ -60,7 +61,6 @@
     <string name="expenses_empty_help_message">tap the ADD EXPENSE button to add a new expense</string>
     <string name="expenses_duplicate_success">Expense duplicated</string>
     <string name="expenses_not_synced">Not synced</string>
-    <string name="expenses_filter_date_range_format">%1s - %2s</string>
     <string name="expenses_filter_incomes">Incomes</string>
 
     <!-- Settings -->

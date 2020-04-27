@@ -10,6 +10,17 @@
     android:paddingEnd="@dimen/padding_small"
     android:paddingBottom="@dimen/padding_medium">
 
+    <ImageView
+        android:id="@+id/img_maximize"
+        android:layout_width="@dimen/button_size_small"
+        android:layout_height="@dimen/button_size_small"
+        android:contentDescription="@string/content_description_close_fragment"
+        android:padding="@dimen/padding_extra_extra_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_maximise" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_clear"
         style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -31,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_clear" />
+        app:layout_constraintTop_toBottomOf="@id/img_maximize" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_months"

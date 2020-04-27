@@ -2,14 +2,12 @@ package com.ramitsuri.expensemanager.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseArray;
 
-import com.ramitsuri.expensemanager.MainApplication;
-import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -195,24 +193,16 @@ public class Filter implements Parcelable {
 
     @Nullable
     public String toFriendlyString() {
-        StringBuilder sb = new StringBuilder();
-        if (mIsIncome != null && mIsIncome) {
-            sb.append(MainApplication.getInstance().getResources()
-                    .getString(R.string.expenses_filter_incomes));
+        String friendlyString = null;
+        if (mDateTimes != null && mDateTimes.size() == 1) {
+            friendlyString = DateHelper.getMonth(mDateTimes.valueAt(0).first);
         }
-
-        if (!TextUtils.isEmpty(sb.toString())) {
-            sb.append(" ");
+        if (mIsSynced != null || mIsStarred != null ||
+                (mCategories != null && mCategories.size() > 0) ||
+                (mPaymentMethods != null && mPaymentMethods.size() > 0)) {
+            return null;
         }
-
-        if (mDateTimes != null) {
-            // TODO
-          /*  sb.append(MainApplication.getInstance().getResources()
-                    .getString(R.string.expenses_filter_date_range_format,
-                            DateHelper.getFriendlyDate(mFromDateTime),
-                            DateHelper.getFriendlyDate(mToDateTime)));*/
-        }
-        return sb.toString();
+        return friendlyString;
     }
 
     private void onMonthAddRequested(int monthIndex, TimeZone timeZone) {

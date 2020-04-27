@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 public class DateHelper {
     private static final String FORMAT_FRIENDLY = "MMM dd"; // Sep 21
     private static final String FORMAT_EXPANDED = "EEEE, MMMM"; // Thursday, September 21
+    private static final String FORMAT_MONTH = "MMMM"; // September
     private static final String FORMAT_DAY = "dd"; // 21
     private static final String FORMAT_FULL = "EE MMM dd HH:mm:ss zzz yyyy";
     private static String[] DAY_SUFFIXES =
@@ -41,6 +42,19 @@ public class DateHelper {
 
     public static String getFullDate(long date, TimeZone timeZone) {
         SimpleDateFormat format = new SimpleDateFormat(FORMAT_FULL, Locale.getDefault());
+        format.setTimeZone(timeZone);
+        return format.format(date);
+    }
+
+    public static String getMonth(long date) {
+        return getMonth(date, null);
+    }
+
+    public static String getMonth(long date, TimeZone timeZone) {
+        if (timeZone == null) {
+            timeZone = AppHelper.getTimeZone();
+        }
+        SimpleDateFormat format = new SimpleDateFormat(FORMAT_MONTH, Locale.getDefault());
         format.setTimeZone(timeZone);
         return format.format(date);
     }

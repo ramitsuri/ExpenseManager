@@ -1,4 +1,20 @@
 Filter changes
+Filter
+    - Add back a version of friendly string
+AllExpenses
+    - Show clear filter button
+    - Add a way to clear filter
+    - Adjust card info ui
+FilterOptions
+    - Hide clear button
+DateHelper
+    - Add helper to get month
+AddExpense
+    - Add auto complete suggestion implementation to landscape view as well (facepalm)
+Made most EditText views inputtype = textNoSuggestions because of random suggestions showing up (reported by Pawan)
+
+
+Filter changes
 ExpenseDao
     - Remove getAllForBackup() and just use getForQuery method instead
     - Move query generation to Filter

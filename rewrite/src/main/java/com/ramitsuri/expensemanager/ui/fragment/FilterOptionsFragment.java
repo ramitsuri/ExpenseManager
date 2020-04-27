@@ -83,6 +83,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         setupViews(view);
 
         Button btnClear = view.findViewById(R.id.btn_clear);
+        btnClear.setVisibility(View.GONE);
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

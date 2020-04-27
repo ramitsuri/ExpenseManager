@@ -119,4 +119,13 @@ public class AllExpensesViewModel extends ViewModel {
         return new Filter()
                 .getDefault();
     }
+
+    public void clearFilter() {
+        Timber.i("Clearing filter");
+        mFilter
+                .clear()
+                .getDefault();
+        mRepository.getForFilter(mFilter);
+        updateFilterInfo();
+    }
 }

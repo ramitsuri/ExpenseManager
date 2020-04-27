@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_extra_extra_small"
-            android:inputType="textCapSentences" />
+            android:inputType="textCapSentences|textNoSuggestions" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

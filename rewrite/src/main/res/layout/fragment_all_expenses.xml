@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:background="@android:color/white"
     tools:context=".ui.fragment.AllExpensesFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,14 +39,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small"
+                    android:gravity="center_horizontal"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_body1"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/divider"
+                    app:layout_constraintEnd_toStartOf="@id/btn_clear_filter"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Jan"
+                    tools:text="January"
                     tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_clear_filter"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/common_clear"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_caption"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:cornerRadius="@dimen/corner_radius_large"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_expense_info_1"
+                    app:layout_constraintEnd_toEndOf="@id/divider"
+                    app:layout_constraintStart_toEndOf="@id/txt_expense_info_1"
+                    app:layout_constraintTop_toTopOf="@id/txt_expense_info_1" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txt_expense_info_2"
@@ -54,7 +76,8 @@
                     android:layout_marginTop="@dimen/margin_extra_extra_small"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_caption"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/divider"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="31 expenses"
                     tools:visibility="visible" />
@@ -66,7 +89,9 @@
                     android:layout_marginStart="@dimen/margin_small"
                     android:background="@android:color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/txt_expense_info_2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.7"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -215,7 +240,6 @@
             android:id="@+id/btn_add"
             style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
             android:layout_width="wrap_content"
-            app:cornerRadius="@dimen/corner_radius_large"
             android:layout_height="@dimen/button_size_fab"
             android:layout_marginBottom="@dimen/margin_small"
             android:contentDescription="@string/add_expense"
@@ -223,6 +247,7 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/color_teal"
+            app:cornerRadius="@dimen/corner_radius_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

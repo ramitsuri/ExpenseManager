@@ -54,7 +54,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     private LinearLayout mGroupButtons;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
     private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnFilter, mBtnSetup,
-            mBtnAnalysis;
+            mBtnAnalysis, mBtnClearFilter;
 
     public AllExpensesFragment() {
     }
@@ -93,6 +93,9 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         mBtnAnalysis = view.findViewById(R.id.btn_analysis);
         mBtnAnalysis.setOnClickListener(this);
 
+        mBtnClearFilter = view.findViewById(R.id.btn_clear_filter);
+        mBtnClearFilter.setOnClickListener(this);
+
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
 
@@ -108,6 +111,9 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             public void onChanged(String filterInfo) {
                 if (TextUtils.isEmpty(filterInfo)) {
                     filterInfo = getString(R.string.common_filter);
+                    mBtnClearFilter.setVisibility(View.VISIBLE);
+                } else {
+                    mBtnClearFilter.setVisibility(View.GONE);
                 }
                 mTextInfoEmpty.setText(String.format(getString(R.string.all_expenses_empty_message),
                         filterInfo));
@@ -347,6 +353,8 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
                     .navigate(R.id.nav_action_add_expense, null);
         } else if (v.getId() == mBtnAnalysis.getId()) { // Analysis
             showAnalysis();
+        } else if (v.getId() == mBtnClearFilter.getId()) {
+            mViewModel.clearFilter();
         }
     }
 }
