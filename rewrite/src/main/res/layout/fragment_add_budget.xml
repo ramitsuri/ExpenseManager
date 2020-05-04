@@ -94,13 +94,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_done"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ButtonTextSimple"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
         android:text="@string/common_done"
-        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/list_categories"

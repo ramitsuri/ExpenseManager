@@ -1,3 +1,8 @@
+UI fixes
+    - Migrate button styles to styles.xml
+    - Fix button corner radius when no expenses
+    - No jumping around in card view when filter added
+
 Filter changes
 Filter
     - Add back a version of friendly string

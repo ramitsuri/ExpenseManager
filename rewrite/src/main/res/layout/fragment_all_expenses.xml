@@ -32,7 +32,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/padding_small">
+                android:padding="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_small">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txt_expense_info_1"
@@ -52,13 +53,11 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_clear_filter"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/ButtonTextSimple"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
+                    android:padding="@dimen/padding_extra_extra_small"
                     android:text="@string/common_clear"
-                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_caption"
                     android:textStyle="bold"
@@ -76,9 +75,11 @@
                     android:layout_marginTop="@dimen/margin_extra_extra_small"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_caption"
+                    app:layout_constraintBottom_toTopOf="@id/txt_expense_info_3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/divider"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
                     tools:text="31 expenses"
                     tools:visibility="visible" />
 
@@ -90,7 +91,7 @@
                     android:background="@android:color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.7"
+                    app:layout_constraintHorizontal_bias="0.6"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,6 +103,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_caption"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/txt_expense_info_2"
                     app:layout_constraintStart_toStartOf="@id/txt_expense_info_2"
                     app:layout_constraintTop_toBottomOf="@id/txt_expense_info_2"
@@ -124,27 +126,20 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_filter"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/ButtonTextSimple"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:text="@string/all_expenses_filter"
-                android:textAllCaps="false"
                 android:textSize="@dimen/text_caption"
                 android:visibility="visible"
-                app:cornerRadius="@dimen/corner_radius_large"
                 tools:visibility="visible" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_analysis"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/ButtonTextSimple"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:text="@string/all_expenses_analysis"
-                android:textAllCaps="false"
                 android:textSize="@dimen/text_caption"
                 android:visibility="visible"
                 app:cornerRadius="@dimen/corner_radius_large"
@@ -152,13 +147,10 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_setup"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/ButtonTextSimple"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:text="@string/common_setup"
-                android:textAllCaps="false"
                 android:textSize="@dimen/text_caption"
                 android:visibility="visible"
                 app:cornerRadius="@dimen/corner_radius_large"
@@ -168,13 +160,9 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_filter_second"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/ButtonOutline"
             android:layout_marginTop="@dimen/margin_small"
             android:text="@string/all_expenses_modify_filter"
-            android:textAllCaps="false"
-            android:textSize="@dimen/text_caption"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/txt_expense_empty"
             app:layout_constraintStart_toStartOf="@id/txt_expense_empty"
@@ -182,12 +170,8 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_setup_second"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/ButtonOutline"
             android:text="@string/all_expenses_go_to_setup"
-            android:textAllCaps="false"
-            android:textSize="@dimen/text_caption"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/btn_filter_second"
             app:layout_constraintStart_toStartOf="@id/btn_filter_second"
@@ -195,12 +179,8 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add_expense_second"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/ButtonOutline"
             android:text="@string/add_expense"
-            android:textAllCaps="false"
-            android:textSize="@dimen/text_caption"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/btn_filter_second"
             app:layout_constraintStart_toStartOf="@id/btn_filter_second"
@@ -210,7 +190,6 @@
             android:id="@+id/list_expenses"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/margin_medium"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
