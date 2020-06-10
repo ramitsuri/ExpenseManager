@@ -4,6 +4,7 @@ import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,7 @@ public class SetupPaymentMethodsViewModel extends ViewModel {
                 repository().setPaymentMethods(values);
                 // Entities have been edited
                 AppHelper.setEntitiesEdited(true);
+                WorkHelper.enqueueOneTimeEntitiesBackup(true);
             }
         }
     }

@@ -141,7 +141,12 @@ public class AnalysisViewModel extends ViewModel {
         if (allValue.compareTo(BigDecimal.ZERO) == 0) {
             progress = 0;
         } else {
-            progress = CurrencyHelper.divide(value.multiply(HUNDRED), allValue).intValue();
+            BigDecimal progressValue = CurrencyHelper.divide(value.multiply(HUNDRED), allValue);
+            if (progressValue.compareTo(HUNDRED) > 0) {
+                progress = 101;
+            } else {
+                progress = progressValue.intValue();
+            }
         }
         return new BarWrapper(
                 name,
@@ -174,7 +179,12 @@ public class AnalysisViewModel extends ViewModel {
         if (budgetValue.compareTo(BigDecimal.ZERO) == 0) {
             progress = 0;
         } else {
-            progress = CurrencyHelper.divide(usedValue.multiply(HUNDRED), budgetValue).intValue();
+            BigDecimal value = CurrencyHelper.divide(usedValue.multiply(HUNDRED), budgetValue);
+            if (value.compareTo(HUNDRED) > 0) {
+                progress = 101;
+            } else {
+                progress = value.intValue();
+            }
         }
         return new BarWrapper(
                 name,

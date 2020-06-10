@@ -76,7 +76,7 @@ public class SecretMessageHelper {
             case SecretMessages.ENQUEUE_ONE_TIME:
                 Timber.i("Enqueue all one time work");
                 WorkHelper.enqueueOneTimeBackup();
-                WorkHelper.enqueueOneTimeEntitiesBackup();
+                WorkHelper.enqueueOneTimeEntitiesBackup(false);
                 break;
 
             case SecretMessages.ENQUEUE_PERIODIC:

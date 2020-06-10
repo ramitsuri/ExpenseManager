@@ -96,11 +96,11 @@ public class WorkHelper {
     /**
      * One Time Entities Backup
      */
-    public static void enqueueOneTimeEntitiesBackup() {
+    public static void enqueueOneTimeEntitiesBackup(boolean scheduled) {
         Timber.i("Enqueue one-time entities backup invoked");
 
         String tag = getOneTimeEntitiesBackupTag();
-        enqueueOneTimeWork(tag, EntitiesBackupWorker.class);
+        enqueueOneTimeWork(tag, EntitiesBackupWorker.class, scheduled);
     }
 
     public static void cancelOneTimeEntitiesBackup() {
@@ -185,16 +185,26 @@ public class WorkHelper {
 
     private static void enqueueOneTimeWork(String tag,
             @NonNull Class<? extends ListenableWorker> workerClass) {
+        enqueueOneTimeWork(tag, workerClass, false);
+    }
+
+    private static void enqueueOneTimeWork(String tag,
+            @NonNull Class<? extends ListenableWorker> workerClass, boolean scheduled) {
         Data input = new Data.Builder()
                 .putString(Constants.Work.TYPE, tag)
                 .build();
 
-        // Request
-        OneTimeWorkRequest request = new OneTimeWorkRequest
+        // Request Builder
+        OneTimeWorkRequest.Builder builder = new OneTimeWorkRequest
                 .Builder(workerClass)
                 .setInputData(input)
-                .addTag(tag)
-                .build();
+                .addTag(tag);
+
+        if (scheduled) {
+            builder
+                    .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 1));
+        }
+        OneTimeWorkRequest request = builder.build();
 
         // Enqueue
         getInstance().enqueueUniqueWork(tag, ExistingWorkPolicy.REPLACE, request);
@@ -212,7 +222,7 @@ public class WorkHelper {
                 .Builder(workerClass, 1, TimeUnit.DAYS)
                 .setInputData(input)
                 .addTag(tag)
-                .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 2))
+                .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 3))
                 .setConstraints(constraints)
                 .build();
 

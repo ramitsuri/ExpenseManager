@@ -58,11 +58,8 @@ public class MainApplication extends Application {
 
         // Enqueue periodic backups
         if (!BuildConfig.DEBUG) {
-            WorkHelper.cancelPeriodicBackup();
             WorkHelper.cancelPeriodicEntitiesBackup();
-
             WorkHelper.enqueuePeriodicBackup();
-            WorkHelper.enqueuePeriodicEntitiesBackup();
         }
 
         if (AppHelper.isFirstRunComplete()) {

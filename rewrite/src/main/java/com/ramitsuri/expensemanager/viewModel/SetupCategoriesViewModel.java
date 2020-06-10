@@ -7,6 +7,7 @@ import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
+import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +97,7 @@ public class SetupCategoriesViewModel extends ViewModel {
                 repository().setCategories(values);
                 // Entities have been edited
                 AppHelper.setEntitiesEdited(true);
+                WorkHelper.enqueueOneTimeEntitiesBackup(true);
             }
         }
         if (budgetRepository() != null) {

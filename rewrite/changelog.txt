@@ -1,3 +1,16 @@
+Work fixes
+WorkHelper
+    - Add an option to schedule one time works to run at 1AM
+    - Change periodic works to run at 3 in the night based on this answer - https://stackoverflow.com/a/51154271
+SecretMessageHelper, MiscViewModel
+    - Modify statement to still run unscheduled one time entities backup
+Budget, Category, PaymentMethod edit
+    - Enqueue one time scheduled entities backup if entities edited
+MainApp
+    - Remove statements to always cancel periodic expense backup and enqueue entities periodic backup
+AnalysisViewModel
+    - Show progress as over 100 (red) if value 100.32 something (>100 but <101)
+
 UI fixes
     - Migrate button styles to styles.xml
     - Fix button corner radius when no expenses
