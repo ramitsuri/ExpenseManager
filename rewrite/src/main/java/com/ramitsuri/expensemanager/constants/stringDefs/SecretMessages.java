@@ -21,7 +21,8 @@ import androidx.annotation.StringDef;
         SecretMessages.ENQUEUE_ONE_TIME,
         SecretMessages.ENQUEUE_PERIODIC,
         SecretMessages.ENABLE_BACKUP_NOW,
-        SecretMessages.DISABLE_BACKUP_NOW
+        SecretMessages.DISABLE_BACKUP_NOW,
+        SecretMessages.SET_SPREADSHEET_ID
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface SecretMessages {
@@ -41,4 +42,5 @@ public @interface SecretMessages {
     String ENQUEUE_PERIODIC = "ENQUEUE_PERIODIC";
     String ENABLE_BACKUP_NOW = "ENABLE_BACKUP_NOW";
     String DISABLE_BACKUP_NOW = "DISABLE_BACKUP_NOW";
+    String SET_SPREADSHEET_ID = "SET_SPREADSHEET_ID";
 }

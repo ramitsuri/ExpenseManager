@@ -320,6 +320,14 @@ public class DateHelperTest {
         }
     }
 
+    @Test
+    public void testGetLogDate() {
+        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
+        long millis = 1592145283609L;
+        String dateTime = DateHelper.getLogDate(millis, timeZone);
+        assertEquals("Jun/14/2020 10:34", dateTime);
+    }
+
     private long getMinutes(int hourOfDay, int minutes) {
         long value = 0;
         if (hourOfDay < 2) {

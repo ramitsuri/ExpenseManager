@@ -18,6 +18,7 @@ public class DateHelper {
     private static final String FORMAT_MONTH = "MMMM"; // September
     private static final String FORMAT_DAY = "dd"; // 21
     private static final String FORMAT_FULL = "EE MMM dd HH:mm:ss zzz yyyy";
+    private static final String FORMAT_LOGS = "MMM/dd/yyyy HH:mm";
     private static String[] DAY_SUFFIXES =
             {"0th", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th",
                     "10th", "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th",
@@ -42,6 +43,12 @@ public class DateHelper {
 
     public static String getFullDate(long date, TimeZone timeZone) {
         SimpleDateFormat format = new SimpleDateFormat(FORMAT_FULL, Locale.getDefault());
+        format.setTimeZone(timeZone);
+        return format.format(date);
+    }
+
+    public static String getLogDate(long date, TimeZone timeZone) {
+        SimpleDateFormat format = new SimpleDateFormat(FORMAT_LOGS, Locale.getDefault());
         format.setTimeZone(timeZone);
         return format.format(date);
     }

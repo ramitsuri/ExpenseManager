@@ -1,6 +1,9 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
 import android.accounts.Account;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -266,15 +269,33 @@ public class MiscellaneousFragment extends BaseFragment {
             boolean show) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
         if (container != null) {
+            final String spreadsheetId = mViewModel.getSpreadsheetId();
+            if (TextUtils.isEmpty(spreadsheetId)) {
+                return;
+            }
             // Summary
             final TextView summary = container.findViewById(R.id.summary);
             if (summary != null) {
-                String spreadsheetId = mViewModel.getSpreadsheetId();
-                if (!TextUtils.isEmpty(spreadsheetId)) {
-                    summary.setText(spreadsheetId);
-                    summary.setVisibility(View.VISIBLE);
-                }
+                summary.setText(spreadsheetId);
+                summary.setVisibility(View.VISIBLE);
             }
+            container.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Activity activity = getActivity();
+                    if (activity == null) {
+                        return false;
+                    }
+                    ClipboardManager clipboard =
+                            (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    if (clipboard == null) {
+                        return false;
+                    }
+                    ClipData clip = ClipData.newPlainText(spreadsheetId, spreadsheetId);
+                    clipboard.setPrimaryClip(clip);
+                    return false;
+                }
+            });
         }
     }
 

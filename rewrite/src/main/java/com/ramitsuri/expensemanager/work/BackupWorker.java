@@ -34,14 +34,14 @@ public class BackupWorker extends BaseWorker {
 
         if (MainApplication.getInstance().getSheetRepository() == null) {
             onFailure(workType, "Sheet repo null");
-            return Result.failure();
+            return Result.success();
         }
 
         // Spreadsheet Id
         String spreadsheetId = AppHelper.getSpreadsheetId();
         if (TextUtils.isEmpty(spreadsheetId)) {
             onFailure(workType, "Spreadsheet id is empty or null");
-            return Result.failure();
+            return Result.success();
         }
 
         List<Integer> editedMonths = ExpenseManagerDatabase.getInstance().editedSheetDao().getAll();
@@ -59,21 +59,21 @@ public class BackupWorker extends BaseWorker {
 
         if (expensesToBackup == null) {
             onFailure(workType, "Expenses to backup is null");
-            return Result.failure();
+            return Result.success();
         }
 
         // Do not continue if no synced expenses were edited (resulting in a possibility of a
         // sheet now having 0 expenses, in which case expense size can be zero)
         if (expensesToBackup.size() == 0 && (editedMonths == null || editedMonths.size() == 0)) {
             onFailure(workType, "No synced were expenses were edited but expenses size is zero");
-            return Result.failure();
+            return Result.success();
         }
 
         List<SheetInfo> sheetInfos = TransformationHelper
                 .filterSheetInfos(ExpenseManagerDatabase.getInstance().sheetDao().getAll());
         if (!isSheetInfosValid(sheetInfos)) {
             onFailure(workType, "No info about sheet ids to attach to expenses");
-            return Result.failure();
+            return Result.success();
         }
 
         InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
@@ -87,11 +87,11 @@ public class BackupWorker extends BaseWorker {
             return Result.success();
         } else if (response.getException() != null) {
             onFailure(workType, response.getException().getMessage());
-            return Result.failure();
+            return Result.success();
         }
 
         onFailure(workType, "Unknown reason");
-        return Result.failure();
+        return Result.success();
     }
 
     private boolean isSheetInfosValid(@Nonnull List<SheetInfo> sheetInfos) {

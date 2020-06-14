@@ -5,11 +5,13 @@ import android.text.TextUtils;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.entities.Log;
+import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
@@ -24,6 +26,7 @@ public class MetadataViewModel extends ViewModel {
 
     public MetadataViewModel() {
         mLogRepository = MainApplication.getInstance().getLogRepo();
+        final TimeZone timeZone = AppHelper.getTimeZone();
 
         mLogs = Transformations.map(mLogRepository.getLogs(),
                 new Function<List<Log>, List<String>>() {
@@ -32,7 +35,7 @@ public class MetadataViewModel extends ViewModel {
                         List<String> logs = new ArrayList<>();
                         for (Log log : input) {
                             if (log != null) {
-                                String sb = new Date(log.getTime()) +
+                                String sb = DateHelper.getLogDate(log.getTime(), timeZone) +
                                         " | " +
                                         log.getType() +
                                         " | " +

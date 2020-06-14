@@ -82,8 +82,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:17.0.0"
 
     // Work
-    implementation "androidx.work:work-runtime:2.3.4"
-    implementation "androidx.work:work-testing:2.3.4"
+    implementation "androidx.work:work-runtime:2.4.0-beta01"
+    implementation "androidx.work:work-testing:2.4.0-beta01"
 
     // Google Sheets and Drive
     implementation("com.google.api-client:google-api-client-android:1.22.0") {

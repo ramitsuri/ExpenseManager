@@ -1,3 +1,16 @@
+Work Fixes
+SecretMessages
+    - Add a way to set spreadsheet id
+MiscellaneousFragment
+    - Add a way to copy spreadsheet id by long pressing on it
+MetadataFragment
+    - Change how log date is printed
+WorkHelper
+    - Change periodic works to keep previous work
+BackupWorker
+    - Make work return success all the time to potentially fix the worker not failing all the time
+Use WorkManager 2.4.0-beta01
+
 Work fixes
 WorkHelper
     - Add an option to schedule one time works to run at 1AM
