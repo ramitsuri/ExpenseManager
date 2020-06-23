@@ -20,9 +20,9 @@ import javax.annotation.Nonnull;
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
 
-public class BackupWorker extends BaseWorker {
+public class ExpensesBackupWorker extends BaseWorker {
 
-    public BackupWorker(@NonNull Context context,
+    public ExpensesBackupWorker(@NonNull Context context,
             @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -30,7 +30,9 @@ public class BackupWorker extends BaseWorker {
     @NonNull
     @Override
     public Result doWork() {
+        insertLog("Unknown", Constants.LogResult.SUCCESS, "Starting");
         String workType = getInputData().getString(Constants.Work.TYPE);
+        insertLog(workType, Constants.LogResult.SUCCESS, "Progressing");
 
         if (MainApplication.getInstance().getSheetRepository() == null) {
             onFailure(workType, "Sheet repo null");

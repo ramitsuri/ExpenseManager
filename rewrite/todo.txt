@@ -1,5 +1,6 @@
 High
-- Filters
+- Synchronized access to repo, apphelper
+- Backup to file
 
 Medium
 - Tap on budget/payment/category to view filtered expenses

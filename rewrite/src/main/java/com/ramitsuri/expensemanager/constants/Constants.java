@@ -38,10 +38,12 @@ public class Constants {
     }
 
     public class Tag {
-        public static final String ONE_TIME_BACKUP = "one_time_backup";
+        public static final String ONE_TIME_BACKUP_LEGACY = "one_time_backup";
+        public static final String ONE_TIME_BACKUP = "one_time_expenses_backup";
         public static final String ONE_TIME_ENTITIES_BACKUP = "one_time_entities_backup";
         public static final String SCHEDULED_BACKUP_LEGACY = "scheduled_backup";
-        public static final String PERIODIC_BACKUP = "periodic_backup";
+        public static final String PERIODIC_BACKUP_LEGACY = "periodic_backup";
+        public static final String PERIODIC_EXPENSES_BACKUP = "periodic_expenses_backup";
         public static final String PERIODIC_ENTITIES_BACKUP = "periodic_entities_backup";
         public static final String ONE_TIME_SYNC = "one_time_sync";
         public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";

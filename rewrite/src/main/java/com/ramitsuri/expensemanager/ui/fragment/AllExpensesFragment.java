@@ -125,7 +125,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
 
         onFilterApplied(null);
 
-        logWorkStatus(WorkHelper.getPeriodicWorkTag());
+        logWorkStatus(WorkHelper.getPeriodicExpensesBackupTag());
         logWorkStatus(WorkHelper.getOneTimeWorkTag());
     }
 

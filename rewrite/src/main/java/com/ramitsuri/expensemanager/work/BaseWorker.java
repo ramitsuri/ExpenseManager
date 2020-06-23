@@ -18,7 +18,7 @@ abstract class BaseWorker extends Worker {
         super(context, workerParams);
     }
 
-    private void insertLog(String type, String result, String message) {
+    void insertLog(String type, String result, String message) {
         MainApplication.getInstance().getLogRepo().insertLog(new Log(
                 System.currentTimeMillis(),
                 type,

@@ -21,7 +21,8 @@ import androidx.annotation.StringDef;
         PrefKeys.BACKUP_INFO_STATUS,
         PrefKeys.ENABLE_INCOME,
         PrefKeys.ENABLE_WORK_LOG,
-        PrefKeys.ENABLE_BACKUP_NOW
+        PrefKeys.ENABLE_BACKUP_NOW,
+        PrefKeys.IS_PRUNE_COMPLETE
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -45,4 +46,5 @@ public @interface PrefKeys {
     String VERSION_INFO = "version_info";
     String ENABLE_DEBUG_OPTIONS = "enable_debug_options";
     String MIGRATION_STEP = "migration_step";
+    String IS_PRUNE_COMPLETE = "is_prune_complete";
 }

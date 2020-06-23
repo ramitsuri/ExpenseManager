@@ -110,4 +110,12 @@ public class AppHelper {
     public static void setBackupInfoStatus(String backupInfoStatus) {
         PrefHelper.set(PrefKeys.BACKUP_INFO_STATUS, backupInfoStatus);
     }
+
+    public static boolean isPruneComplete() {
+        return PrefHelper.get(PrefKeys.IS_PRUNE_COMPLETE, false);
+    }
+
+    public static void setPruneComplete(boolean complete) {
+        PrefHelper.set(PrefKeys.IS_PRUNE_COMPLETE, complete);
+    }
 }

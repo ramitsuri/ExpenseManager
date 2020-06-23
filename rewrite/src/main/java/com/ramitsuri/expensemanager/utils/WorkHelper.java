@@ -2,7 +2,7 @@ package com.ramitsuri.expensemanager.utils;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.work.BackupWorker;
+import com.ramitsuri.expensemanager.work.ExpensesBackupWorker;
 import com.ramitsuri.expensemanager.work.CreateSpreadsheetWorker;
 import com.ramitsuri.expensemanager.work.EntitiesBackupWorker;
 import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
@@ -35,7 +35,7 @@ public class WorkHelper {
         Timber.i("Enqueue one-time backup invoked");
 
         String tag = getOneTimeWorkTag();
-        enqueueOneTimeWork(tag, BackupWorker.class);
+        enqueueOneTimeWork(tag, ExpensesBackupWorker.class);
     }
 
     public static void cancelOneTimeBackup() {
@@ -46,17 +46,6 @@ public class WorkHelper {
                 .cancelAllWorkByTag(tag);
     }
 
-    /**
-     * Periodic Backup
-     * Runs once a day around 2AM
-     */
-    public static void enqueuePeriodicBackup() {
-        Timber.i("Enqueue scheduled backup invoked");
-
-        String tag = getPeriodicWorkTag();
-        enqueuePeriodicWork(tag, BackupWorker.class);
-    }
-
     public static void cancelPeriodicLegacyBackup() {
         Timber.i("Cancel scheduled backup invoked");
 
@@ -65,10 +54,21 @@ public class WorkHelper {
                 .cancelAllWorkByTag(tag);
     }
 
+    /**
+     * Periodic Backup
+     * Runs once a day around 3AM
+     */
+    public static void enqueuePeriodicBackup() {
+        Timber.i("Enqueue scheduled backup invoked");
+
+        String tag = getPeriodicExpensesBackupTag();
+        enqueuePeriodicWork(tag, ExpensesBackupWorker.class);
+    }
+
     public static void cancelPeriodicBackup() {
         Timber.i("Cancel scheduled backup invoked");
 
-        String tag = getPeriodicWorkTag();
+        String tag = getPeriodicExpensesBackupTag();
         getInstance()
                 .cancelAllWorkByTag(tag);
     }
@@ -145,11 +145,11 @@ public class WorkHelper {
     }
 
     public static String getPeriodicWorkLegacyTag() {
-        return Constants.Tag.SCHEDULED_BACKUP_LEGACY;
+        return Constants.Tag.PERIODIC_BACKUP_LEGACY;
     }
 
-    public static String getPeriodicWorkTag() {
-        return Constants.Tag.PERIODIC_BACKUP;
+    public static String getPeriodicExpensesBackupTag() {
+        return Constants.Tag.PERIODIC_EXPENSES_BACKUP;
     }
 
     private static String getPeriodicEntitiesBackupTag() {
@@ -174,6 +174,10 @@ public class WorkHelper {
 
     public static String getOneTimeCreateSpreadsheetTag() {
         return Constants.Tag.ONE_TIME_CREATE_SPREADSHEET;
+    }
+
+    public static void pruneWork() {
+        getInstance().pruneWork();
     }
 
     private static Constraints getConstraints() {

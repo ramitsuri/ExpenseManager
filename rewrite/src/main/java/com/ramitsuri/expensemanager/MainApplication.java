@@ -2,7 +2,6 @@ package com.ramitsuri.expensemanager;
 
 import android.accounts.Account;
 import android.app.Application;
-import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
@@ -58,7 +57,11 @@ public class MainApplication extends Application {
 
         // Enqueue periodic backups
         if (!BuildConfig.DEBUG) {
-            WorkHelper.cancelPeriodicEntitiesBackup();
+            WorkHelper.cancelPeriodicLegacyBackup();
+            if (!AppHelper.isPruneComplete()) {
+                WorkHelper.pruneWork();
+                AppHelper.setPruneComplete(true);
+            }
             WorkHelper.enqueuePeriodicBackup();
         }
 
@@ -67,25 +70,6 @@ public class MainApplication extends Application {
         } else {
             addDefaultData();
             AppHelper.setFirstRunComplete(true);
-        }
-    }
-
-    private void transitionExistingUsers() {
-        if (BuildConfig.DEBUG) {
-            return;
-        }
-        if (!TextUtils.isEmpty(AppHelper.getSpreadsheetId())) { // Already existing users
-            // Cancel existing works
-            WorkHelper.cancelPeriodicLegacyBackup();
-            WorkHelper.cancelPeriodicBackup();
-            WorkHelper.cancelPeriodicEntitiesBackup();
-
-            // Update existing expenses to unsynced state so that expense backup will pick them up
-            getExpenseRepo().updateSetAllUnsynced();
-
-            // Set first run complete so that default data doesn't overwrite real data
-            AppHelper.setFirstRunComplete(true);
-            AppHelper.setSpreadsheetId(null);
         }
     }
 
@@ -165,37 +149,37 @@ public class MainApplication extends Application {
     }
 
     @Nonnull
-    public CategoryRepository getCategoryRepo() {
+    public synchronized CategoryRepository getCategoryRepo() {
         return mCategoryRepo;
     }
 
     @Nonnull
-    public PaymentMethodRepository getPaymentMethodRepo() {
+    public synchronized PaymentMethodRepository getPaymentMethodRepo() {
         return mPaymentMethodRepo;
     }
 
     @Nonnull
-    public ExpenseRepository getExpenseRepo() {
+    public synchronized ExpenseRepository getExpenseRepo() {
         return mExpenseRepo;
     }
 
     @Nonnull
-    public LogRepository getLogRepo() {
+    public synchronized LogRepository getLogRepo() {
         return mLogRepo;
     }
 
     @Nullable
-    public SheetRepository getSheetRepository() {
+    public synchronized SheetRepository getSheetRepository() {
         return mSheetRepository;
     }
 
     @Nonnull
-    public BudgetRepository getBudgetRepository() {
+    public synchronized BudgetRepository getBudgetRepository() {
         return mBudgetRepository;
     }
 
     @Nonnull
-    public EditedSheetRepository getEditedSheetRepo() {
+    public synchronized EditedSheetRepository getEditedSheetRepo() {
         return mEditedSheetRepo;
     }
 

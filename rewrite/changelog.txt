@@ -1,3 +1,25 @@
+Work Fixes attempt 2
+Constants
+    - Make one time and periodic expense backup tags legacy
+    - Add new expense backup tag for one time and periodic
+AllExpensesFragment
+    - Replace legacy expense backup logging with new tag
+WorkHelper
+    - Use new expense backup worker class for one time and periodic backup
+    - Remove code to enqueue old periodic work (periodic_backup)
+    - Add code to enqueue and cancel new periodic work (periodic_expenses_backup)
+    - Add a way to prune work
+BackupWorker
+    - Rename class to ExpensesBackupWorker
+    - Insert log when worker starts
+MainApp
+    - Cancel now legacy periodic backup
+    - Remove code to cancel periodic entities backup
+    - Prune work once
+    - Enqueue new periodic backup
+    - Remove legacy code to transition users
+    - Synchronize repo getters
+
 Work Fixes
 SecretMessages
     - Add a way to set spreadsheet id
