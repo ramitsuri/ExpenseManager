@@ -231,7 +231,7 @@ public class WorkHelper {
                 .build();
 
         // Enqueue
-        getInstance().enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.KEEP, request);
+        getInstance().enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.REPLACE, request);
     }
 
     private static Data getInputData(String appName, String accountName, String accountType,

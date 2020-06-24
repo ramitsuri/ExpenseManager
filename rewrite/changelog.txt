@@ -1,3 +1,13 @@
+Work Fixes attempt 3
+WorkHelper
+    - Use replace policy for periodic work as changes were made to Expense Backup worker
+BaseWorker
+    - Add new method to selectively log excess messages
+ExpensesBackup
+    - Add a surrounding try catch to figure out where it's failing
+    - Add additional logging at every step
+    - Change exits to be failure instead of success as that doesn't look like the issue
+
 Work Fixes attempt 2
 Constants
     - Make one time and periodic expense backup tags legacy
