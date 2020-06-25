@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.utils;
 
+import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.stringDefs.PrefKeys;
 import com.ramitsuri.expensemanager.constants.stringDefs.SecretMessages;
 
@@ -113,8 +114,11 @@ public class SecretMessageHelper {
                 handled = true;
                 break;
 
-            default:
-                Timber.i("Secret message means nothing");
+            case SecretMessages.DELETE_EDITED_MONTHS:
+                Timber.i("Deleting edited months");
+                MainApplication.getInstance().getEditedSheetRepo().deleteAll();
+                handled = true;
+                break;
         }
 
         if (!handled) {
@@ -127,7 +131,25 @@ public class SecretMessageHelper {
                 } else {
                     AppHelper.setSpreadsheetId("");
                 }
+                handled = true;
+            } else if (message.startsWith(SecretMessages.FORCE_MONTH_SYNC)) {
+                String[] parts = message.split(" ");
+                if (parts.length == 2) {
+                    try {
+                        int monthIndex = Integer.parseInt(parts[1]);
+                        if (monthIndex >= 0 && monthIndex < 12) {
+                            MainApplication.getInstance().getExpenseRepo()
+                                    .updateSetUnsynced(monthIndex);
+                            handled = true;
+                        }
+                    } catch (NumberFormatException e) {
+                        Timber.e("Invalid month");
+                    }
+                }
             }
+        }
+        if (!handled) {
+            Timber.i("Secret message still means nothing");
         }
     }
 

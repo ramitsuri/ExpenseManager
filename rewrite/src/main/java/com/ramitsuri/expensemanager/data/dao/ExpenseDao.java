@@ -105,6 +105,9 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET is_starred = 0 WHERE mId = :id")
     public abstract void setUnstarred(int id);
 
+    @RawQuery
+    public abstract boolean updateSetUnsyncedForQuery(SupportSQLiteQuery query);
+
     /*
      * DELETE
      */
@@ -156,5 +159,12 @@ public abstract class ExpenseDao {
         updateIsStarred(expense.getId(), expense.isStarred());
         updateIsSynced(expense.getId(), expense.isSynced());
         updateIsIncome(expense.getId(), expense.isIncome());
+    }
+
+    @Transaction
+    public void updateSetUnsynced(int monthIndex) {
+        Filter filter = new Filter();
+        filter.addMonthIndex(monthIndex);
+        updateSetUnsyncedForQuery(filter.toUpdateSyncedQuery());
     }
 }

@@ -1,3 +1,17 @@
+Work Fixes attempt 4
+Filter
+    - Add method to generate query for updating sync status to false
+SecretMessage
+    - Add message to delete edited sheets/months (issue was a remnant edited sheet id that was assumed to be a sheet month index)
+    - Add a message to set month's expenses to be unsynced so they get backed up
+ExpenseDao, ExpenseRepo
+    - Add method to set expenses for a month index to be unsynced
+BaseWorker
+    - Remove additional method to permanent log success messages
+ExpensesBackupWorker
+    - Remove additional log messages
+    - Improve logging when exception occurs
+
 Work Fixes attempt 3
 WorkHelper
     - Use replace policy for periodic work as changes were made to Expense Backup worker

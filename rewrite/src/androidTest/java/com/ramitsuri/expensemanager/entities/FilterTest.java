@@ -172,4 +172,14 @@ public class FilterTest {
         assertEquals(filter.toQuery().getSql(), fromParcel.toQuery().getSql());
         assertEquals(filter.toQuery().getArgCount(), fromParcel.toQuery().getArgCount());
     }
+
+    @Test
+    public void testToUpdateSyncedQuery() {
+        Filter filter = new Filter();
+        filter.addMonthIndex(3, TimeZone.getDefault());
+
+        assertEquals("UPDATE expense SET is_synced = 0 WHERE ( (date_time BETWEEN ? AND ?) )",
+                filter.toUpdateSyncedQuery().getSql());
+        assertEquals(2, filter.toUpdateSyncedQuery().getArgCount());
+    }
 }

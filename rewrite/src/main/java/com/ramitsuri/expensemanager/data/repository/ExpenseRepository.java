@@ -148,6 +148,15 @@ public class ExpenseRepository {
         });
     }
 
+    public void updateSetUnsynced(final int monthIndex) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.expenseDao().updateSetUnsynced(monthIndex);
+            }
+        });
+    }
+
     public LiveData<Expense> insertAndGet(@Nonnull final Expense expense,
             @Nonnull Filter filter) {
         final MutableLiveData<Expense> duplicate = new MutableLiveData<>();

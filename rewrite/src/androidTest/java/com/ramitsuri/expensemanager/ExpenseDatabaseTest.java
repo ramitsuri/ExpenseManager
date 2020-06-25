@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
@@ -304,5 +305,21 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
 
         Assert.assertNull(Expenses.getForStore(store));
         Assert.assertNull(mExpenseDao.getForStore(store));
+    }
+
+    @Test
+    public void testUpdateSyncedForQuery() {
+        TimeZone timeZone = TimeZone.getDefault();
+
+        for (int i = 0; i < 12; i++) {
+            Filter filter = new Filter();
+            filter.setSynced(true);
+            filter.addMonthIndex(i, timeZone);
+
+            mExpenseDao.updateSetUnsynced(i);
+            Assert.assertEquals(
+                    0,
+                    mExpenseDao.getForFilter(filter).size());
+        }
     }
 }

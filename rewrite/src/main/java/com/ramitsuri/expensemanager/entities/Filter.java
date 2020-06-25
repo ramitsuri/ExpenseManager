@@ -356,6 +356,39 @@ public class Filter implements Parcelable {
         return query;
     }
 
+    public SimpleSQLiteQuery toUpdateSyncedQuery() {
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("UPDATE expense SET is_synced = 0");
+        List<Object> args = new ArrayList<>();
+        // Date ranges
+        if (getDateTimes() != null && getDateTimes().size() > 0) {
+            if (queryBuilder.indexOf("WHERE") == -1) {
+                queryBuilder.append(" WHERE");
+            } else {
+                queryBuilder.append(" AND");
+            }
+            queryBuilder.append(" (");
+            boolean dateTimeAdded = false;
+            for (int i = 0; i < getDateTimes().size(); i++) {
+                Pair<Long, Long> dateTime = getDateTimes().valueAt(i);
+                if (dateTime == null) {
+                    continue;
+                }
+                if (dateTimeAdded) {
+                    queryBuilder.append(" OR");
+                }
+                queryBuilder.append(" (date_time BETWEEN ? AND ?)");
+                args.add(dateTime.first);
+                args.add(dateTime.second);
+                dateTimeAdded = true;
+            }
+            queryBuilder.append(" )");
+        }
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
+        Timber.i("Generated query is: [%s]", query.getSql());
+        return query;
+    }
+
     @Override
     public int describeContents() {
         return 0;
