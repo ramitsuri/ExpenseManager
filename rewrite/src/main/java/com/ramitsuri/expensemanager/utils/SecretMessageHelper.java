@@ -1,5 +1,7 @@
 package com.ramitsuri.expensemanager.utils;
 
+import android.text.TextUtils;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.stringDefs.PrefKeys;
 import com.ramitsuri.expensemanager.constants.stringDefs.SecretMessages;
@@ -146,10 +148,20 @@ public class SecretMessageHelper {
                         Timber.e("Invalid month");
                     }
                 }
+            } else if (message.toUpperCase().startsWith(SecretMessages.SURPRISE_MESSAGE)) {
+                message = message.toUpperCase().replace(SecretMessages.SURPRISE_MESSAGE, "").trim();
+                if (TextUtils.isEmpty(message)) {
+                    Timber.i("Disabling surprise");
+                    setSurpriseMessage(null);
+                } else {
+                    Timber.i("Enabling surprise");
+                    setSurpriseMessage(message);
+                }
+                handled = true;
             }
         }
         if (!handled) {
-            Timber.i("Secret message still means nothing");
+            Timber.i("Secret message means nothing");
         }
     }
 
@@ -199,5 +211,13 @@ public class SecretMessageHelper {
 
     private static void setBackupNowEnabled(boolean enable) {
         PrefHelper.set(PrefKeys.ENABLE_BACKUP_NOW, enable);
+    }
+
+    private static void setSurpriseMessage(String message) {
+        PrefHelper.set(PrefKeys.SURPRISE_MESSAGE, message);
+    }
+
+    public static String getSurpriseMessage() {
+        return PrefHelper.get(PrefKeys.SURPRISE_MESSAGE, null);
     }
 }

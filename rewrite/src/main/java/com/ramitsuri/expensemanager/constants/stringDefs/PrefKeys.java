@@ -22,7 +22,8 @@ import androidx.annotation.StringDef;
         PrefKeys.ENABLE_INCOME,
         PrefKeys.ENABLE_WORK_LOG,
         PrefKeys.ENABLE_BACKUP_NOW,
-        PrefKeys.IS_PRUNE_COMPLETE
+        PrefKeys.IS_PRUNE_COMPLETE,
+        PrefKeys.SURPRISE_MESSAGE
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -47,4 +48,5 @@ public @interface PrefKeys {
     String ENABLE_DEBUG_OPTIONS = "enable_debug_options";
     String MIGRATION_STEP = "migration_step";
     String IS_PRUNE_COMPLETE = "is_prune_complete";
+    String SURPRISE_MESSAGE = "surprise_message";
 }

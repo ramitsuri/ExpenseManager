@@ -1,3 +1,6 @@
+Surprise Message
+Add a way to replace expense description with any message
+
 Work Fixes attempt 4
 Filter
     - Add method to generate query for updating sync status to false

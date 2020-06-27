@@ -24,7 +24,8 @@ import androidx.annotation.StringDef;
         SecretMessages.DISABLE_BACKUP_NOW,
         SecretMessages.SET_SPREADSHEET_ID,
         SecretMessages.DELETE_EDITED_MONTHS,
-        SecretMessages.FORCE_MONTH_SYNC
+        SecretMessages.FORCE_MONTH_SYNC,
+        SecretMessages.SURPRISE_MESSAGE
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface SecretMessages {
@@ -47,4 +48,5 @@ public @interface SecretMessages {
     String SET_SPREADSHEET_ID = "SET_SPREADSHEET_ID";
     String DELETE_EDITED_MONTHS = "DELETE_EDITED_MONTHS";
     String FORCE_MONTH_SYNC = "FORCE_MONTH_SYNC";
+    String SURPRISE_MESSAGE = "SURPRISE_MESSAGE";
 }

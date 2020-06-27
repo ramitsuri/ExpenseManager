@@ -7,12 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.BuildConfig;
-import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
+import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 
 import java.util.List;
 
@@ -142,7 +143,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 txtDetail3.setText(expense.getStore());
             }
             txtDetail2.setText(expense.getPaymentMethod());
-            txtDescription.setText(expense.getDescription());
+            if (TextUtils.isEmpty(SecretMessageHelper.getSurpriseMessage())) {
+                txtDescription.setText(expense.getDescription());
+            } else {
+                txtDescription.setText(SecretMessageHelper.getSurpriseMessage());
+            }
             txtAmount.setText(CurrencyHelper.formatForDisplay(true, expense.getAmount()));
             txtDate.setText(DateHelper.getFriendlyDate(expense.getDateTime()));
             txtDetail1.setText(expense.getCategory());
