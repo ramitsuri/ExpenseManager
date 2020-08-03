@@ -23,7 +23,10 @@ import androidx.annotation.StringDef;
         PrefKeys.ENABLE_WORK_LOG,
         PrefKeys.ENABLE_BACKUP_NOW,
         PrefKeys.IS_PRUNE_COMPLETE,
-        PrefKeys.SURPRISE_MESSAGE
+        PrefKeys.SURPRISE_MESSAGE,
+        PrefKeys.SHARED_COLLECTION_NAME,
+        PrefKeys.SHARED_THIS_SOURCE,
+        PrefKeys.SHARED_OTHER_SOURCE
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -49,4 +52,7 @@ public @interface PrefKeys {
     String MIGRATION_STEP = "migration_step";
     String IS_PRUNE_COMPLETE = "is_prune_complete";
     String SURPRISE_MESSAGE = "surprise_message";
+    String SHARED_COLLECTION_NAME = "shared_collection_name";
+    String SHARED_THIS_SOURCE = "shared_this_source";
+    String SHARED_OTHER_SOURCE = "shared_other_source";
 }

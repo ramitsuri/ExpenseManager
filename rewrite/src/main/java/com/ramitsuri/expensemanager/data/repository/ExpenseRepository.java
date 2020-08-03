@@ -157,6 +157,18 @@ public class ExpenseRepository {
         });
     }
 
+    public void insert(@Nonnull final List<Expense> expenses, Filter filter) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.expenseDao().insert(expenses);
+            }
+        });
+
+        // Refresh expenses as they don't refresh automatically
+        getForFilter(filter);
+    }
+
     public LiveData<Expense> insertAndGet(@Nonnull final Expense expense,
             @Nonnull Filter filter) {
         final MutableLiveData<Expense> duplicate = new MutableLiveData<>();

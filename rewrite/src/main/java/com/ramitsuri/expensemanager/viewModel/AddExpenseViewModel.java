@@ -12,6 +12,8 @@ import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
+import com.ramitsuri.expensemanager.utils.SharedExpenseHelper;
+import com.ramitsuri.expensemanager.utils.SharedExpenseManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import timber.log.Timber;
 public class AddExpenseViewModel extends ViewModel {
 
     private ExpenseRepository mExpenseRepo;
+    private SharedExpenseManager mSharedExpenseManager;
 
     private Expense mExpense;
     private Integer mOldMonthIndex;
@@ -111,7 +114,42 @@ public class AddExpenseViewModel extends ViewModel {
             expense.setCategory(Constants.Basic.INCOME);
         }
         mExpenseRepo.insert(expense);
+        pushToRemoteShared(expense);
         reset(null);
+    }
+
+    private SharedExpenseManager getSharedExpenseManager() {
+        if (mSharedExpenseManager == null) {
+            mSharedExpenseManager = SharedExpenseHelper.getSharedExpenseManager(mCallbacks);
+        }
+        return mSharedExpenseManager;
+    }
+
+    private SharedExpenseManager.Callbacks mCallbacks = new SharedExpenseManager.Callbacks() {
+        @Override
+        public void addSuccess() {
+            Timber.i("Expense added");
+        }
+
+        @Override
+        public void deleteForOtherSuccess(@Nonnull String source) {
+
+        }
+
+        @Override
+        public void getForOtherSuccess(@Nonnull String source,
+                @Nonnull List<Expense> expenses) {
+
+        }
+
+        @Override
+        public void failure(@Nonnull String message, @Nonnull Exception e) {
+            Timber.i("Expense add failed");
+        }
+    };
+
+    private void pushToRemoteShared(Expense expense) {
+        getSharedExpenseManager().add(expense);
     }
 
     public void edit() {

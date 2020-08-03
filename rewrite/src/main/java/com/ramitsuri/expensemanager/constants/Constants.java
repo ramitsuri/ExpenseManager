@@ -15,6 +15,7 @@ public class Constants {
         public static final String DATE_PICKER_MONTH = "date_picker_month";
         public static final String DATE_PICKER_DAY = "date_picker_day";
         public static final String SELECTED_EXPENSE = "selected_expense";
+        public static final String ENABLE_SHARED = "ENABLE_SHARED";
         public static final String SELECTED_BUDGET = "selected_budget";
         public static final String SELECTED_ENTITY = "selected_entity";
         public static final String ALL_CATEGORIES = "all_categories";

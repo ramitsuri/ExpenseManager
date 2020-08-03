@@ -1,3 +1,23 @@
+Shared expenses
+build.gradle
+    - Use google services 4.3.3 for Firebase
+PrefKeys
+    - Add new keys for shared expense collection and sources
+SecretMessages
+    - Add keys for collection and source name setting
+ExpenseRepo
+    - Add method to insert multiple expenses
+AllExpenses
+    - Add button to fetch shared expenses
+    - Add a way to push an expense to Firebase from detail view
+    - Push to remote and fetch remote expenses functionality (ViewModel)
+ExpensesDetail
+    - Add a way to push to Firebase
+SharedExpenseManager, Helper
+    - New class to manage shared expenses
+AddExpense
+    - Push to remote a new expense when added
+
 Surprise Message
 Add a way to replace expense description with any message
 

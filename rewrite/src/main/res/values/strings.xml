@@ -188,4 +188,7 @@
     <string name="filter_options_income_expenses">Expenses</string>
     <string name="filter_options_clear_filter">Clear filter</string>
 
+    <!-- Shared -->
+    <string name="shared_expense_temp">S</string>
+
 </resources>

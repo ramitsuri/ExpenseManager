@@ -124,7 +124,7 @@ public class SecretMessageHelper {
         }
 
         if (!handled) {
-            if (message.startsWith(SecretMessages.SET_SPREADSHEET_ID)) {
+            if (message.startsWith(SecretMessages.SET_SPREADSHEET_ID)) { // Spreadsheet ID
                 String[] parts = message.split(" ");
                 if (parts.length >= 2) {
                     String spreadsheetId = parts[1];
@@ -134,7 +134,7 @@ public class SecretMessageHelper {
                     AppHelper.setSpreadsheetId("");
                 }
                 handled = true;
-            } else if (message.startsWith(SecretMessages.FORCE_MONTH_SYNC)) {
+            } else if (message.startsWith(SecretMessages.FORCE_MONTH_SYNC)) { // Force month sync
                 String[] parts = message.split(" ");
                 if (parts.length == 2) {
                     try {
@@ -148,8 +148,8 @@ public class SecretMessageHelper {
                         Timber.e("Invalid month");
                     }
                 }
-            } else if (message.toUpperCase().startsWith(SecretMessages.SURPRISE_MESSAGE)) {
-                message = message.toUpperCase().replace(SecretMessages.SURPRISE_MESSAGE, "").trim();
+            } else if (message.startsWith(SecretMessages.SURPRISE_MESSAGE)) { // Surprise message
+                message = message.replace(SecretMessages.SURPRISE_MESSAGE, "").trim();
                 if (TextUtils.isEmpty(message)) {
                     Timber.i("Disabling surprise");
                     setSurpriseMessage(null);
@@ -157,6 +157,31 @@ public class SecretMessageHelper {
                     Timber.i("Enabling surprise");
                     setSurpriseMessage(message);
                 }
+                handled = true;
+            } else if (message.startsWith(SecretMessages.SHARED_COLLECTION_NAME)) { // Shared
+                String[] parts = message.split(" ");
+                String collectionName;
+                if (parts.length == 2) {
+                    collectionName = parts[1];
+                } else {
+                    collectionName = null;
+                }
+                setSharedCollectionName(collectionName);
+                Timber.i("Set shared collection name to %s", collectionName);
+                handled = true;
+            } else if (message.startsWith(SecretMessages.SHARED_COLLECTION_SOURCE)) { // Shared
+                String[] parts = message.split(" ");
+                String source, dest;
+                if (parts.length == 3) {
+                    source = parts[1];
+                    dest = parts[2];
+                } else {
+                    source = null;
+                    dest = null;
+                }
+                setSharedThisSource(source);
+                setSharedOtherSource(dest);
+                Timber.i("Set shared source, destination to %1s, %2s", source, dest);
                 handled = true;
             }
         }
@@ -219,5 +244,29 @@ public class SecretMessageHelper {
 
     public static String getSurpriseMessage() {
         return PrefHelper.get(PrefKeys.SURPRISE_MESSAGE, null);
+    }
+
+    private static void setSharedCollectionName(String collectionName) {
+        PrefHelper.set(PrefKeys.SHARED_COLLECTION_NAME, collectionName);
+    }
+
+    public static String getSharedCollectionName() {
+        return PrefHelper.get(PrefKeys.SHARED_COLLECTION_NAME, null);
+    }
+
+    private static void setSharedThisSource(String source) {
+        PrefHelper.set(PrefKeys.SHARED_THIS_SOURCE, source);
+    }
+
+    public static String getSharedThisSource() {
+        return PrefHelper.get(PrefKeys.SHARED_THIS_SOURCE, null);
+    }
+
+    private static void setSharedOtherSource(String otherSource) {
+        PrefHelper.set(PrefKeys.SHARED_OTHER_SOURCE, otherSource);
+    }
+
+    public static String getSharedOtherSource() {
+        return PrefHelper.get(PrefKeys.SHARED_OTHER_SOURCE, null);
     }
 }

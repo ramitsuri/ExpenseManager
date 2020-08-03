@@ -25,7 +25,9 @@ import androidx.annotation.StringDef;
         SecretMessages.SET_SPREADSHEET_ID,
         SecretMessages.DELETE_EDITED_MONTHS,
         SecretMessages.FORCE_MONTH_SYNC,
-        SecretMessages.SURPRISE_MESSAGE
+        SecretMessages.SURPRISE_MESSAGE,
+        SecretMessages.SHARED_COLLECTION_NAME,
+        SecretMessages.SHARED_COLLECTION_SOURCE
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface SecretMessages {
@@ -49,4 +51,6 @@ public @interface SecretMessages {
     String DELETE_EDITED_MONTHS = "DELETE_EDITED_MONTHS";
     String FORCE_MONTH_SYNC = "FORCE_MONTH_SYNC";
     String SURPRISE_MESSAGE = "SURPRISE_MESSAGE";
+    String SHARED_COLLECTION_NAME = "SHARED_COLLECTION_NAME";
+    String SHARED_COLLECTION_SOURCE = "SHARED_COLLECTION_SOURCE";
 }

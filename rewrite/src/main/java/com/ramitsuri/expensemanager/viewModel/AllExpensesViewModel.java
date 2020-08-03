@@ -8,6 +8,8 @@ import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.utils.Calculator;
 import com.ramitsuri.expensemanager.utils.DateHelper;
+import com.ramitsuri.expensemanager.utils.SharedExpenseHelper;
+import com.ramitsuri.expensemanager.utils.SharedExpenseManager;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
@@ -30,6 +32,7 @@ public class AllExpensesViewModel extends ViewModel {
     private List<Expense> mExpenses;
     private Filter mFilter;
     private MutableLiveData<String> mFilterInfo;
+    private SharedExpenseManager mSharedExpenseManager;
 
     public AllExpensesViewModel() {
         super();
@@ -128,4 +131,48 @@ public class AllExpensesViewModel extends ViewModel {
         mRepository.getForFilter(mFilter);
         updateFilterInfo();
     }
+
+    public boolean isEnableSharedExpenses() {
+        return getSharedExpenseManager().isEnabled();
+    }
+
+    public void getAndSaveAndDeleteFromRemoteShared() {
+        final String otherSource = SharedExpenseHelper.getOtherSource();
+        getSharedExpenseManager().getForOtherSource(otherSource);
+    }
+
+    public void pushToRemoteShared(@Nonnull Expense expense) {
+        getSharedExpenseManager().add(expense);
+    }
+
+    private SharedExpenseManager getSharedExpenseManager() {
+        if (mSharedExpenseManager == null) {
+            mSharedExpenseManager = SharedExpenseHelper.getSharedExpenseManager(mCallbacks);
+        }
+        return mSharedExpenseManager;
+    }
+
+    private SharedExpenseManager.Callbacks mCallbacks = new SharedExpenseManager.Callbacks() {
+        @Override
+        public void addSuccess() {
+            Timber.i("Expense added");
+        }
+
+        @Override
+        public void deleteForOtherSuccess(@Nonnull String source) {
+            Timber.i("Deleted for %s", source);
+        }
+
+        @Override
+        public void getForOtherSuccess(@Nonnull String source, @Nonnull List<Expense> expenses) {
+            Timber.i("Expenses %s", expenses.toString());
+            getSharedExpenseManager().deleteForOtherSource(source);
+            mRepository.insert(expenses, mFilter);
+        }
+
+        @Override
+        public void failure(@Nonnull String message, @Nonnull Exception e) {
+            Timber.i(e, message);
+        }
+    };
 }

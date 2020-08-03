@@ -37,6 +37,8 @@ public class ExpenseDetailsFragment extends BaseBottomSheetFragment {
         void onDeleteRequested(@NonNull Expense expense);
 
         void onDuplicateRequested(@Nonnull Expense expense);
+
+        void onPushToRemoteSharedRequested(@Nonnull Expense expense);
     }
 
     public void setCallback(@NonNull DetailFragmentCallback callback) {
@@ -63,13 +65,15 @@ public class ExpenseDetailsFragment extends BaseBottomSheetFragment {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments() != null) {
             Expense expense = getArguments().getParcelable(Constants.BundleKeys.SELECTED_EXPENSE);
+            boolean enableShared = getArguments().getBoolean(Constants.BundleKeys.ENABLE_SHARED);
             if (expense != null) {
-                setupViews(view, expense);
+                setupViews(view, expense, enableShared);
             }
         }
     }
 
-    private void setupViews(@NonNull View view, @NonNull final Expense expense) {
+    private void setupViews(@NonNull View view, @NonNull final Expense expense,
+            boolean enableShared) {
         // Description
         TextView txtDescription = view.findViewById(R.id.txt_expense_description);
         txtDescription.setText(expense.getDescription());
@@ -139,5 +143,20 @@ public class ExpenseDetailsFragment extends BaseBottomSheetFragment {
                 }
             }
         });
+
+        // Shared push to remote button
+        Button pushToRemoteButton = view.findViewById(R.id.btn_add_shared);
+        if (enableShared) {
+            pushToRemoteButton.setVisibility(View.VISIBLE);
+            pushToRemoteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                    if (mCallback != null) {
+                        mCallback.onPushToRemoteSharedRequested(expense);
+                    }
+                }
+            });
+        }
     }
 }
