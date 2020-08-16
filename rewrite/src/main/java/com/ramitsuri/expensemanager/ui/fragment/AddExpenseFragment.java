@@ -55,7 +55,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private EditText mEditAmount, mEditDescription;
     private AutoCompleteTextView mEditStore;
     private Button mBtnDone, mBtnDate;
-    private MaterialButton mBtnFlag, mBtnSplit;
+    private MaterialButton mBtnFlag;
 
     public AddExpenseFragment() {
         // Required empty public constructor
@@ -124,15 +124,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mBtnFlag = view.findViewById(R.id.btn_flag);
         mBtnFlag.setOnClickListener(this);
         updateExpenseFlag();
-
-        // Split
-        mBtnSplit = view.findViewById(R.id.btn_split);
-        mBtnSplit.setOnClickListener(this);
-        if (mViewModel.isSplitAvailable()) {
-            mBtnSplit.setVisibility(View.VISIBLE);
-        } else {
-            mBtnSplit.setVisibility(View.GONE);
-        }
 
         // Income
         SwitchCompat btnIncome = view.findViewById(R.id.toggle_income);
@@ -324,8 +315,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             handleDoneClicked();
         } else if (view == mBtnFlag) {
             handleFlagClicked();
-        } else if (view == mBtnSplit) {
-            handleSplitClicked();
         }
     }
 
@@ -398,17 +387,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         } else {
             mBtnFlag.setIcon(
                     ContextCompat.getDrawable(mBtnFlag.getContext(), R.drawable.ic_flag_off));
-        }
-    }
-
-    private void handleSplitClicked() {
-        mViewModel.setSplit();
-        if (mViewModel.isSplit()) {
-            mBtnSplit.setIcon(
-                    ContextCompat.getDrawable(mBtnSplit.getContext(), R.drawable.ic_split_on));
-        } else {
-            mBtnSplit.setIcon(
-                    ContextCompat.getDrawable(mBtnSplit.getContext(), R.drawable.ic_split_off));
         }
     }
 

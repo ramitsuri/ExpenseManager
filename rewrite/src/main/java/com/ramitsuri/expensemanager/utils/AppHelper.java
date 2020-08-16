@@ -118,4 +118,12 @@ public class AppHelper {
     public static void setPruneComplete(boolean complete) {
         PrefHelper.set(PrefKeys.IS_PRUNE_COMPLETE, complete);
     }
+
+    public static boolean isBackupIssueFixed() {
+        return PrefHelper.get(PrefKeys.BACKUP_ISSUE_FIXED, false);
+    }
+
+    public static void setBackupIssueFixed(boolean fixed) {
+        PrefHelper.set(PrefKeys.BACKUP_ISSUE_FIXED, fixed);
+    }
 }

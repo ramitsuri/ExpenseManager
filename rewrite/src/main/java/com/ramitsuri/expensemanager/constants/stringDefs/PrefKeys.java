@@ -12,7 +12,6 @@ import androidx.annotation.StringDef;
         PrefKeys.SHEET_ID,
         PrefKeys.THEME,
         PrefKeys.DEFAULT_SHEET_ID,
-        PrefKeys.ENABLE_SPLITTING,
         PrefKeys.ENABLE_EXPENSE_SYNC,
         PrefKeys.ENABLE_ENTITIES_SYNC,
         PrefKeys.IS_ENTITIES_EDITED,
@@ -26,7 +25,8 @@ import androidx.annotation.StringDef;
         PrefKeys.SURPRISE_MESSAGE,
         PrefKeys.SHARED_COLLECTION_NAME,
         PrefKeys.SHARED_THIS_SOURCE,
-        PrefKeys.SHARED_OTHER_SOURCE
+        PrefKeys.SHARED_OTHER_SOURCE,
+        PrefKeys.BACKUP_ISSUE_FIXED
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -36,7 +36,6 @@ public @interface PrefKeys {
     String SHEET_ID = "settings_sheet_id";
     String THEME = "settings_theme";
     String DEFAULT_SHEET_ID = "default_sheet_id";
-    String ENABLE_SPLITTING = "enable_splitting";
     String ENABLE_EXPENSE_SYNC = "enable_expense_sync";
     String ENABLE_ENTITIES_SYNC = "enable_entities_sync";
     String IS_ENTITIES_EDITED = "is_entities_edited";
@@ -46,13 +45,10 @@ public @interface PrefKeys {
     String ENABLE_INCOME = "enable_income";
     String ENABLE_WORK_LOG = "enable_work_log";
     String ENABLE_BACKUP_NOW = "enable_backup_now";
-    String AUTO_BACKUP = "settings_auto_backup";
-    String VERSION_INFO = "version_info";
-    String ENABLE_DEBUG_OPTIONS = "enable_debug_options";
-    String MIGRATION_STEP = "migration_step";
     String IS_PRUNE_COMPLETE = "is_prune_complete";
     String SURPRISE_MESSAGE = "surprise_message";
     String SHARED_COLLECTION_NAME = "shared_collection_name";
     String SHARED_THIS_SOURCE = "shared_this_source";
     String SHARED_OTHER_SOURCE = "shared_other_source";
+    String BACKUP_ISSUE_FIXED = "backup_issue_fixed";
 }

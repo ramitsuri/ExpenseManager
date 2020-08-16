@@ -1,3 +1,19 @@
+Bug Fixes
+PrefKeys
+    - Add key for backup issue fixed
+    - Remove Splitting and other unused pref keys
+SecretMessages
+    - Remove splitting keys
+    - Add comments to helper
+ExpenseDao
+    - Remove setting synced false on the filter for all expenses for backup (When editing backed up expenses, the whole month's expenses should be picked up for backup but only the unsynced ones were picked)
+AddExpense
+    - Remove splitting button
+    - (VM) When setting category or payment method, the category should exist in categories otherwise it won't be set (could happen for auto setting values)
+MainApp
+    - Add sheets month Mar to Aug to edited sheets so that all those expenses get backed up
+    - Remove legacy prefs
+
 Shared expenses
 build.gradle
     - Use google services 4.3.3 for Firebase

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.stringDefs.PrefKeys;
 import com.ramitsuri.expensemanager.constants.stringDefs.SecretMessages;
+import com.ramitsuri.expensemanager.entities.EditedSheet;
 
 import javax.annotation.Nonnull;
 
@@ -16,18 +17,6 @@ public class SecretMessageHelper {
         message = message.trim().toUpperCase();
         boolean handled = false;
         switch (message) {
-            case SecretMessages.ENABLE_SPLITTING:
-                Timber.i("Enabling splitting");
-                setSplittingEnabled(true);
-                handled = true;
-                break;
-
-            case SecretMessages.DISABLE_SPLITTING:
-                Timber.i("Disabling splitting");
-                setSplittingEnabled(false);
-                handled = true;
-                break;
-
             case SecretMessages.ENABLE_EXPENSE_SYNC:
                 Timber.i("Enabling expense sync");
                 setExpenseSyncEnabled(true);
@@ -124,6 +113,7 @@ public class SecretMessageHelper {
         }
 
         if (!handled) {
+            // set_spreadsheet_id <id> or empty for remove spreadsheet id
             if (message.startsWith(SecretMessages.SET_SPREADSHEET_ID)) { // Spreadsheet ID
                 String[] parts = message.split(" ");
                 if (parts.length >= 2) {
@@ -134,21 +124,25 @@ public class SecretMessageHelper {
                     AppHelper.setSpreadsheetId("");
                 }
                 handled = true;
-            } else if (message.startsWith(SecretMessages.FORCE_MONTH_SYNC)) { // Force month sync
+            }
+            // force_month_sync <0-11>
+            else if (message.startsWith(SecretMessages.FORCE_MONTH_SYNC)) { // Force month sync
                 String[] parts = message.split(" ");
                 if (parts.length == 2) {
                     try {
                         int monthIndex = Integer.parseInt(parts[1]);
                         if (monthIndex >= 0 && monthIndex < 12) {
-                            MainApplication.getInstance().getExpenseRepo()
-                                    .updateSetUnsynced(monthIndex);
+                            MainApplication.getInstance().getEditedSheetRepo()
+                                    .insertEditedSheet(new EditedSheet(monthIndex));
                             handled = true;
                         }
                     } catch (NumberFormatException e) {
                         Timber.e("Invalid month");
                     }
                 }
-            } else if (message.startsWith(SecretMessages.SURPRISE_MESSAGE)) { // Surprise message
+            }
+            // surprise_message <message> or empty for disable
+            else if (message.startsWith(SecretMessages.SURPRISE_MESSAGE)) { // Surprise message
                 message = message.replace(SecretMessages.SURPRISE_MESSAGE, "").trim();
                 if (TextUtils.isEmpty(message)) {
                     Timber.i("Disabling surprise");
@@ -158,7 +152,9 @@ public class SecretMessageHelper {
                     setSurpriseMessage(message);
                 }
                 handled = true;
-            } else if (message.startsWith(SecretMessages.SHARED_COLLECTION_NAME)) { // Shared
+            }
+            // shared_collection_name <name>
+            else if (message.startsWith(SecretMessages.SHARED_COLLECTION_NAME)) { // Shared
                 String[] parts = message.split(" ");
                 String collectionName;
                 if (parts.length == 2) {
@@ -169,7 +165,9 @@ public class SecretMessageHelper {
                 setSharedCollectionName(collectionName);
                 Timber.i("Set shared collection name to %s", collectionName);
                 handled = true;
-            } else if (message.startsWith(SecretMessages.SHARED_COLLECTION_SOURCE)) { // Shared
+            }
+            // shared_collection_source <this source> <other source>
+            else if (message.startsWith(SecretMessages.SHARED_COLLECTION_SOURCE)) { // Shared
                 String[] parts = message.split(" ");
                 String source, dest;
                 if (parts.length == 3) {
@@ -188,14 +186,6 @@ public class SecretMessageHelper {
         if (!handled) {
             Timber.i("Secret message means nothing");
         }
-    }
-
-    public static boolean isSplittingEnabled() {
-        return PrefHelper.get(PrefKeys.ENABLE_SPLITTING, false);
-    }
-
-    private static void setSplittingEnabled(boolean enable) {
-        PrefHelper.set(PrefKeys.ENABLE_SPLITTING, enable);
     }
 
     public static boolean isExpenseSyncEnabled() {

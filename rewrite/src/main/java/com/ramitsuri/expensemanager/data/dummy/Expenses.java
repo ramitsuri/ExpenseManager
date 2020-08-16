@@ -323,8 +323,7 @@ public class Expenses {
     }
 
     public static List<Expense> getAllForBackup(List<Integer> monthIndices) {
-        Filter filter = new Filter()
-                .setSynced(false);
+        Filter filter = new Filter();
         for (Integer index : monthIndices) {
             filter.addMonthIndex(index);
         }

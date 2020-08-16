@@ -12,8 +12,10 @@ import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
+import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.PrefHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
 import com.ramitsuri.sheetscore.googleSignIn.SignInResponse;
@@ -71,6 +73,25 @@ public class MainApplication extends Application {
             addDefaultData();
             AppHelper.setFirstRunComplete(true);
         }
+        AppHelper.setBackupIssueFixed(false);
+
+        if (AppHelper.isBackupIssueFixed()) {
+            Timber.i("Backup issue was fixed");
+        } else {
+            for (int i = 2; i < 8; i++) {
+                getEditedSheetRepo().insertEditedSheet(new EditedSheet(i));
+            }
+            AppHelper.setBackupIssueFixed(true);
+        }
+        removeLegacyPrefs();
+    }
+
+    private void removeLegacyPrefs() {
+        PrefHelper.remove("enable_splitting");
+        PrefHelper.remove("settings_auto_backup");
+        PrefHelper.remove("version_info");
+        PrefHelper.remove("enable_debug_options");
+        PrefHelper.remove("migration_step");
     }
 
     private void initTimber() {

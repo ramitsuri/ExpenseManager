@@ -131,8 +131,7 @@ public abstract class ExpenseDao {
 
     @Transaction
     public List<Expense> getAllForBackup(@Nonnull List<Integer> monthIndices) {
-        Filter filter = new Filter()
-                .setSynced(false);
+        Filter filter = new Filter();
         for (Integer index : monthIndices) {
             filter.addMonthIndex(index);
         }

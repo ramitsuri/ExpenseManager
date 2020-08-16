@@ -9,8 +9,8 @@ import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
-import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
+import com.ramitsuri.expensemanager.utils.ObjectHelper;
 import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 import com.ramitsuri.expensemanager.utils.SharedExpenseHelper;
 import com.ramitsuri.expensemanager.utils.SharedExpenseManager;
@@ -42,7 +42,7 @@ public class AddExpenseViewModel extends ViewModel {
     private LiveData<List<String>> mStores;
     private int mAddMode;
 
-    private boolean mChangesMade, mIsSplit;
+    private boolean mChangesMade;
 
     public AddExpenseViewModel(Expense expense) {
         super();
@@ -107,9 +107,6 @@ public class AddExpenseViewModel extends ViewModel {
 
     public void add() {
         Expense expense = new Expense(mExpense);
-        if (mIsSplit) {
-            expense.setAmount(CurrencyHelper.divide(expense.getAmount(), new BigDecimal("2")));
-        }
         if (expense.isIncome()) { // Set category to "INCOME" always
             expense.setCategory(Constants.Basic.INCOME);
         }
@@ -156,9 +153,6 @@ public class AddExpenseViewModel extends ViewModel {
         Expense expense = new Expense(mExpense);
         expense.setId(mExpense.getId());
         expense.setIsSynced(false);
-        if (mIsSplit) {
-            expense.setAmount(CurrencyHelper.divide(expense.getAmount(), new BigDecimal("2")));
-        }
         if (expense.isIncome()) { // Set category to "INCOME" always
             expense.setCategory(Constants.Basic.INCOME);
         }
@@ -208,10 +202,13 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setCategory(@NonNull String category) {
-        boolean changesMade = !category.equals(mExpense.getCategory());
-        if (changesMade) {
-            //setChangesMade();
-            mExpense.setCategory(category);
+        if (mCategories.getValue() != null &&
+                ObjectHelper.contains(mCategories.getValue(), category)) {
+            boolean changesMade = !category.equals(mExpense.getCategory());
+            if (changesMade) {
+                //setChangesMade();
+                mExpense.setCategory(category);
+            }
         }
     }
 
@@ -221,10 +218,13 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setPaymentMethod(@NonNull String paymentMethod) {
-        boolean changesMade = !paymentMethod.equals(mExpense.getPaymentMethod());
-        if (changesMade) {
-            //setChangesMade();
-            mExpense.setPaymentMethod(paymentMethod);
+        if (mPaymentMethods.getValue() != null &&
+                ObjectHelper.contains(mPaymentMethods.getValue(), paymentMethod)) {
+            boolean changesMade = !paymentMethod.equals(mExpense.getPaymentMethod());
+            if (changesMade) {
+                //setChangesMade();
+                mExpense.setPaymentMethod(paymentMethod);
+            }
         }
     }
 
@@ -286,18 +286,6 @@ public class AddExpenseViewModel extends ViewModel {
         return mAddMode;
     }
 
-    public boolean isSplitAvailable() {
-        return SecretMessageHelper.isSplittingEnabled();
-    }
-
-    public boolean isSplit() {
-        return mIsSplit;
-    }
-
-    public void setSplit() {
-        mIsSplit = !mIsSplit;
-    }
-
     public boolean isIncomeAvailable() {
         return SecretMessageHelper.isIncomeEnabled();
     }
@@ -311,7 +299,6 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     private void reset(@Nullable Expense expense) {
-        mIsSplit = false;
         mOldMonthIndex = null;
         if (expense != null) {
             mExpense = expense;
