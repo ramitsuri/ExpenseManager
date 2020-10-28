@@ -1,7 +1,10 @@
 package com.ramitsuri.expensemanager.utils;
 
+import android.util.SparseArray;
+
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -35,6 +38,24 @@ public class ObjectHelper {
             }
         }
         return valid;
+    }
+
+    /**
+     * Method to convert a generic {@link SparseArray} to a {@link List}
+     *
+     * @param sparseArray SparseArray to convert
+     * @return List of items from sparseArray
+     */
+    public static <T> List<T> sparseArrayToList(SparseArray<T> sparseArray) {
+        int listSize = 0;
+        if (sparseArray != null) {
+            listSize = sparseArray.size();
+        }
+        List<T> arrayList = new ArrayList<>(listSize);
+        for (int i = 0; i < listSize; i++) {
+            arrayList.add(sparseArray.valueAt(i));
+        }
+        return arrayList;
     }
 }
 

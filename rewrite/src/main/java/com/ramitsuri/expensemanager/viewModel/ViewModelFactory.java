@@ -49,6 +49,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return modelClass.getConstructor(Filter.class).newInstance(mFilter);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException |
                 InvocationTargetException e) {
+            Timber.w("Need Filter. Cannot create instance of %1s %2s", modelClass, e);
             throw new RuntimeException("Need Filter. Cannot create instance of " + modelClass, e);
         }
     }

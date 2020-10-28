@@ -2,6 +2,8 @@ package com.ramitsuri.expensemanager.entities;
 
 import android.os.Parcel;
 
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,6 +21,7 @@ public class BudgetParcelableTest {
     public void testParcelable() {
         Budget budget = new Budget();
         budget.setId(0);
+        budget.setRecordType(RecordType.MONTHLY);
         budget.setName("Test");
         budget.setAmount(BigDecimal.TEN);
         budget.setCategories(Arrays.asList("Utilities", "Rent", "Home"));
@@ -35,5 +38,6 @@ public class BudgetParcelableTest {
         assertEquals(budget.getName(), createdFromParcel.getName());
         assertEquals(budget.getAmount(), createdFromParcel.getAmount());
         assertEquals(budget.getCategories().size(), createdFromParcel.getCategories().size());
+        assertEquals(budget.getRecordType(), createdFromParcel.getRecordType());
     }
 }

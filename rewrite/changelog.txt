@@ -1,3 +1,38 @@
+Add Annual Expenses Part 1
+Budget
+    - Add record type (annual or monthly) property
+    - Set default record type to monthly
+Category
+    - Add record type (annual or monthly) property
+    - Set default record type to monthly
+CategoryDao
+    - Add method to get categories for record type
+Expense
+    - Add identifier and record type properties
+    - Parse date time as long instead of BigDecimal (?? for whatever reason that was done)
+    - Construct amount from String instead of casting value as BigDecimal
+ExpensesBackupWorker
+    - Log exception as error so that crash reporting picks it up
+ExpenseSyncWorker
+    - Catch and log exception from parsing Expense from sheet
+Filter
+    - Add record type
+    - Move sql building to specialized class
+MiscellaneousViewModel
+    - Enable backup now in debug
+ObjectHelper
+    - Add method to convert sparse array to list
+SqlBuilder
+    - Specialized class to build SQL queries
+ViewModelFactory
+    - Log exception as warning so crash reporting picks it up
+Constants
+    - Modify category, payment method, entities, budget range to accommodate additional record type column
+    - Modify Expense range to accommodate record type
+Db
+    - Migrate to version 8
+    - Adds record type columns to budget, category and expense and identifier (GUID) to expense
+
 Gradle and artifact updates
     - Remove google json file from changelist
 Rewrite/build.gradle

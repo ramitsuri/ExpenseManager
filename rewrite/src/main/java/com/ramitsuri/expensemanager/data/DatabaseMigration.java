@@ -76,4 +76,22 @@ public class DatabaseMigration {
                     "'is_income' INTEGER NOT NULL DEFAULT 0");
         }
     };
+
+    public static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `Expense` " +
+                    "ADD COLUMN " +
+                    "`record_type` TEXT NOT NULL DEFAULT 'MONTHLY'");
+            database.execSQL("ALTER TABLE `Expense` " +
+                    "ADD COLUMN " +
+                    "`identifier` TEXT");
+            database.execSQL("ALTER TABLE `Budget` " +
+                    "ADD COLUMN " +
+                    "`record_type` TEXT NOT NULL DEFAULT 'MONTHLY'");
+            database.execSQL("ALTER TABLE `Category` " +
+                    "ADD COLUMN " +
+                    "`record_type` TEXT NOT NULL DEFAULT 'MONTHLY'");
+        }
+    };
 }

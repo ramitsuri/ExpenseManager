@@ -2,6 +2,9 @@ package com.ramitsuri.expensemanager.entities;
 
 import android.os.Parcel;
 
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.data.utils.SqlBuilder;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -131,6 +134,18 @@ public class FilterTest {
     }
 
     @Test
+    public void testJustRecordType() {
+        Filter filter = new Filter();
+        filter.addMonthIndex(3, TimeZone.getDefault())
+                .addMonthIndex(4, TimeZone.getDefault())
+                .setRecordType(RecordType.MONTHLY);
+        assertEquals(
+                "SELECT * FROM expense WHERE ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) ) AND record_type = ?",
+                filter.toQuery().getSql());
+        assertEquals(5, filter.toQuery().getArgCount());
+    }
+
+    @Test
     public void testAllFilters() {
         Filter filter = new Filter();
         filter.addMonthIndex(3, TimeZone.getDefault())
@@ -142,11 +157,12 @@ public class FilterTest {
                 .addCategory("Travel")
                 .addPaymentMethod("Citi")
                 .addPaymentMethod("Credit")
-                .addPaymentMethod("Cash");
+                .addPaymentMethod("Cash")
+                .setRecordType(RecordType.ANNUAL);
         assertEquals(
-                "SELECT * FROM expense WHERE is_income = ? AND ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) ) AND category IN (?,?) AND payment_method IN (?,?,?) AND is_synced = ? AND is_starred = ?",
-                filter.toQuery().getSql());
-        assertEquals(12, filter.toQuery().getArgCount());
+                "SELECT * FROM expense WHERE is_income = ? AND ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) ) AND category IN (?,?) AND payment_method IN (?,?,?) AND is_synced = ? AND is_starred = ? AND record_type = ?",
+                filter.toQuery().toString());
+        assertEquals(13, filter.toQuery().getArgCount());
     }
 
     @Test
@@ -161,7 +177,8 @@ public class FilterTest {
                 .addCategory("Travel")
                 .addPaymentMethod("Citi")
                 .addPaymentMethod("Credit")
-                .addPaymentMethod("Cash");
+                .addPaymentMethod("Cash")
+                .setRecordType(RecordType.MONTHLY);
 
         Parcel parcel = Parcel.obtain();
         filter.writeToParcel(parcel, 0);
@@ -176,10 +193,11 @@ public class FilterTest {
     @Test
     public void testToUpdateSyncedQuery() {
         Filter filter = new Filter();
-        filter.addMonthIndex(3, TimeZone.getDefault());
+        filter.addMonthIndex(3, TimeZone.getDefault())
+                .addMonthIndex(5, TimeZone.getDefault());
 
-        assertEquals("UPDATE expense SET is_synced = 0 WHERE ( (date_time BETWEEN ? AND ?) )",
+        assertEquals("UPDATE expense SET is_synced = 0 WHERE ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) )",
                 filter.toUpdateSyncedQuery().getSql());
-        assertEquals(2, filter.toUpdateSyncedQuery().getArgCount());
+        assertEquals(4, filter.toUpdateSyncedQuery().getArgCount());
     }
 }

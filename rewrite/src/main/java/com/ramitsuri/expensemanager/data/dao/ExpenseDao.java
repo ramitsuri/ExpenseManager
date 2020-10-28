@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.data.dao;
 
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 
@@ -54,6 +55,12 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE store LIKE :store ORDER BY date_time DESC LIMIT 1")
     public abstract Expense getForStore(String store);
 
+    @Query("SELECT * FROM expense WHERE identifier IS NULL OR identifier  = ''")
+    public abstract List<Expense> getForEmptyIdentifier();
+
+    @Query("SELECT * FROM expense WHERE record_type = :recordType")
+    public abstract List<Expense> getForRecordType(@RecordType String recordType);
+
     /*
      * INSERT
      */
@@ -92,6 +99,12 @@ public abstract class ExpenseDao {
 
     @Query("UPDATE expense SET is_income =:isIncome WHERE mId = :id")
     abstract void updateIsIncome(int id, boolean isIncome);
+
+    @Query("UPDATE expense SET record_type =:recordType WHERE mId = :id")
+    abstract void updateRecordType(int id, @RecordType String recordType);
+
+    @Query("UPDATE expense SET identifier = :identifier WHERE mId = :id")
+    abstract void updateIdentifier(int id, String identifier);
 
     @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
     public abstract void updateUnsynced();
@@ -147,6 +160,7 @@ public abstract class ExpenseDao {
         return getForQuery(query);
     }
 
+    // Updates expense
     @Transaction
     public void updateExpense(Expense expense) {
         updateDateTime(expense.getId(), expense.getDateTime());
@@ -158,12 +172,24 @@ public abstract class ExpenseDao {
         updateIsStarred(expense.getId(), expense.isStarred());
         updateIsSynced(expense.getId(), expense.isSynced());
         updateIsIncome(expense.getId(), expense.isIncome());
+        updateRecordType(expense.getId(), expense.getRecordType());
+        // Not updating ID and Identifier intentionally
     }
 
+    // Updates expenses and sets unsynced for month index
     @Transaction
     public void updateSetUnsynced(int monthIndex) {
         Filter filter = new Filter();
         filter.addMonthIndex(monthIndex);
         updateSetUnsyncedForQuery(filter.toUpdateSyncedQuery());
+    }
+
+    @Transaction
+    public void updateSetIdentifier() {
+        List<Expense> expenses = getForEmptyIdentifier();
+        for (Expense expense : expenses) {
+            expense.generateIdentifier();
+            updateIdentifier(expense.getId(), expense.getIdentifier());
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager;
 
 import android.util.Log;
 
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
 import com.ramitsuri.expensemanager.data.dummy.Expenses;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -321,5 +322,22 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
                     0,
                     mExpenseDao.getForFilter(filter).size());
         }
+    }
+
+    @Test
+    public void testGetForRecord() {
+        Assert.assertEquals(Expenses.getForRecordType(RecordType.ANNUAL).size(),
+                mExpenseDao.getForRecordType(RecordType.ANNUAL).size());
+        Assert.assertEquals(Expenses.getForRecordType(RecordType.MONTHLY).size(),
+                mExpenseDao.getForRecordType(RecordType.MONTHLY).size());
+    }
+
+    @Test
+    public void testUpdateSetIdentifier() {
+        Assert.assertEquals(Expenses.getForEmptyIdentifier().size(),
+                mExpenseDao.getForEmptyIdentifier().size());
+        Assert.assertNotEquals(0, mExpenseDao.getForEmptyIdentifier().size());
+        mExpenseDao.updateSetIdentifier();
+        Assert.assertEquals(0, mExpenseDao.getForEmptyIdentifier().size());
     }
 }
