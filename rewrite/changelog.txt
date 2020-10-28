@@ -1,3 +1,26 @@
+Gradle and artifact updates
+    - Remove google json file from changelist
+Rewrite/build.gradle
+    - Replace Fabric with Firebase Crashlytics
+    - Update compile and target SDK version to 30
+    - Update Test, WorkManager, Firebase, Material, Navigation, Fragment, ConstaintLayout, AppCompat artifacts
+Project/build.gradle
+    - Remove fabric repo and replace its classpath with Firebase Crashlytics
+    - Update gradle classpath
+    - Update gradle wrapper to 6.5
+CrashReportingHelper
+    - New class to manage crash reporting stuff
+ExpenseItem
+    - Fix a weird issue with one label not properly aligned
+MiscellaneousFragment
+    - Show toast and log message if login fails
+ReleaseTree (Timber)
+    - Log Warning and Error messages to CrashReporting
+Add animations from previous nav library as they were removed in new version
+
+EOF Changes
+    - From migration to Windows
+
 Bug Fixes
 PrefKeys
     - Add key for backup issue fixed

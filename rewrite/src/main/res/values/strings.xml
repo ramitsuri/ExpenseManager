@@ -160,6 +160,7 @@
     <string name="miscellaneous_backup_info_error">Error! Tap to resolve</string>
     <string name="miscellaneous_backup_info_good">Enabled! Everything\'s good</string>
     <string name="miscellaneous_backup_info_title">Auto backup</string>
+    <string name="miscellaneous_sign_in_fail_message">Something went wrong. Contact dev.</string>
 
     <!-- Theme -->
     <string name="theme_light">Light</string>
