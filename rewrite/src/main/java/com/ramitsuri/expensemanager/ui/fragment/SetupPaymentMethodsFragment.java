@@ -8,16 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
-import com.ramitsuri.expensemanager.viewModel.SetupPaymentMethodsViewModel;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +17,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
+import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemWrapper;
+import com.ramitsuri.expensemanager.viewModel.SetupPaymentMethodsViewModel;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import timber.log.Timber;
 
 public class SetupPaymentMethodsFragment extends BaseFragment {
@@ -112,9 +114,9 @@ public class SetupPaymentMethodsFragment extends BaseFragment {
         adapter.setCallback(
                 new ListOptionsItemAdapter.ListOptionsItemCallback() {
                     @Override
-                    public void onItemDeleteRequested(@Nonnull String value) {
+                    public void onItemDeleteRequested(@Nonnull ListOptionsItemWrapper value) {
                         Timber.i("Delete requested: %s", value);
-                        if (mViewModel.delete(value)) {
+                        if (mViewModel.delete(value.getValue())) {
                             Timber.i("Delete succeeded");
                             if (getView() != null) {
                                 Snackbar.make(getView(), R.string.setup_payment_method_deleted,
@@ -128,17 +130,17 @@ public class SetupPaymentMethodsFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onItemEditRequested(@Nonnull String value) {
+                    public void onItemEditRequested(@Nonnull ListOptionsItemWrapper value) {
                         Timber.i("Edit requested %s", value);
-                        showAddEntityDialog(value);
+                        showAddEntityDialog(value.getValue());
                     }
                 });
         listItems.setAdapter(adapter);
         mViewModel.getValuesLive()
-                .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+                .observe(getViewLifecycleOwner(), new Observer<List<ListOptionsItemWrapper>>() {
                     @Override
-                    public void onChanged(List<String> strings) {
-                        adapter.setValues(strings);
+                    public void onChanged(List<ListOptionsItemWrapper> wrappers) {
+                        adapter.setValues(wrappers);
                     }
                 });
     }

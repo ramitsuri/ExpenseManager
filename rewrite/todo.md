@@ -2,6 +2,7 @@
 - [ ] Annual expense UI
 - [ ] Fix calculation for monthly and annual
 - [ ] Thoroughly test annual features
+- [ ] Test syncing older expenses into the app (due to change to reading/writing all strings)
 - [x] Update all expenses to include identifier
 - [x] Make backup worker upload all expenses again
 - [x] Update Filter for monthly and annual expenses

@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -27,7 +28,7 @@ import timber.log.Timber;
 
 public class AllExpensesViewModel extends ViewModel {
 
-    private ExpenseRepository mRepository;
+    private final ExpenseRepository mRepository;
 
     private List<Expense> mExpenses;
     private Filter mFilter;
@@ -96,6 +97,7 @@ public class AllExpensesViewModel extends ViewModel {
 
     public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
         Expense duplicate = new Expense(expense);
+        duplicate.generateIdentifier();
         duplicate.setIsSynced(false);
         return mRepository.insertAndGet(duplicate, mFilter);
     }
@@ -120,7 +122,8 @@ public class AllExpensesViewModel extends ViewModel {
     @Nonnull
     private Filter getDefaultFilter() {
         return new Filter()
-                .getDefault();
+                .getDefault()
+                .setRecordType(RecordType.MONTHLY);
     }
 
     public void clearFilter() {

@@ -48,6 +48,8 @@
     <string name="common_extra_tab">Setup</string>
     <string name="common_income">Income</string>
     <string name="common_clear">(Clear)</string>
+    <string name="common_monthly">Monthly</string>
+    <string name="common_annual">Annual</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>
@@ -118,9 +120,11 @@
     <string name="setup_payment_method_added">Payment method added</string>
     <string name="setup_budget_select_one_category">Select at least one</string>
     <string name="setup_budget_selected_max_category">Max 5 per budget</string>
-    <string name="setup_category_add_new">Add new category</string>
+    <string name="setup_category_add_new_annual">Add Annual category</string>
+    <string name="setup_category_add_new_monthly">Add Monthly category</string>
     <string name="setup_payment_method_add_new">Add new payment method</string>
-    <string name="setup_budget_add_new">Add new budget</string>
+    <string name="setup_budget_add_new_annual">Add Annual budget</string>
+    <string name="setup_budget_add_new_monthly">Add Monthly budget</string>
     <string name="default_budget_format">Budget %1d</string>
 
     <!-- Menu -->

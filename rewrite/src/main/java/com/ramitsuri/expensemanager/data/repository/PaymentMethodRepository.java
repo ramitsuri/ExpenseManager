@@ -1,5 +1,8 @@
 package com.ramitsuri.expensemanager.data.repository;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
@@ -7,17 +10,10 @@ import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-public class PaymentMethodRepository {
-
-    private AppExecutors mExecutors;
-    private ExpenseManagerDatabase mDatabase;
+public class PaymentMethodRepository extends BaseRepository {
 
     public PaymentMethodRepository(AppExecutors executors, ExpenseManagerDatabase database) {
-        mExecutors = executors;
-        mDatabase = database;
+        super(executors, database);
     }
 
     public LiveData<List<PaymentMethod>> getPaymentMethods() {

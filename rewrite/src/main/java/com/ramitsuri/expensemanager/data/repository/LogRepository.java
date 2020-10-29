@@ -1,23 +1,20 @@
 package com.ramitsuri.expensemanager.data.repository;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Log;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+public class LogRepository extends BaseRepository {
 
-public class LogRepository {
-
-    private AppExecutors mExecutors;
-    private ExpenseManagerDatabase mDatabase;
-    private MutableLiveData<List<Log>> mLogs;
+    private final MutableLiveData<List<Log>> mLogs;
 
     public LogRepository(AppExecutors executors, ExpenseManagerDatabase database) {
-        mExecutors = executors;
-        mDatabase = database;
+        super(executors, database);
         mLogs = new MutableLiveData<>();
     }
 

@@ -56,14 +56,6 @@ public class CreateSpreadsheetWorker extends BaseWorker {
             onFailure(workType, "Categories, or payment methods are empty. This shouldn't happen");
             return Result.failure();
         }
-        List<String> categoryStrings = new ArrayList<>();
-        for (Category category : categories) {
-            categoryStrings.add(category.getName());
-        }
-        List<String> paymentMethodStrings = new ArrayList<>();
-        for (PaymentMethod paymentMethod : paymentMethods) {
-            paymentMethodStrings.add(paymentMethod.getName());
-        }
         List<String> months = AppHelper.getMonths();
 
         // Spreadsheet Name
@@ -77,7 +69,7 @@ public class CreateSpreadsheetWorker extends BaseWorker {
         // Create spreadsheet
         CreateSpreadsheetConsumerResponse response = repository
                 .getCreateSpreadsheetResponse(spreadsheetName, entitiesSheetName,
-                        paymentMethodStrings, categoryStrings, months, budgets);
+                        paymentMethods, categories, months, budgets);
         if (!TextUtils.isEmpty(response.getSpreadsheetId()) &&
                 response.getSheetMetadataList() != null) {
             AppHelper.setSpreadsheetId(response.getSpreadsheetId());

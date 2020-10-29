@@ -1,3 +1,42 @@
+Add Annual Expenses Part 2
+AllExpensesViewModel
+    - Make repository object final
+    - Set a different identifier (GUID) on duplicated expense
+    - DEfault to monthly expenses for filter
+AppHelper
+    - Add methods for if identifier has been set on older expenses
+BaseRepository
+    - New class to extract duplicate members
+CategoryRepository
+    - Filter categories for record type
+    - Set categories as objects and not just strings
+ExpenseRepository
+    - Add method to set identifiers on expenses that don't have it
+CreateSpreadsheetWorker
+    - No longer convert categories and payment methods to strings from their objects
+MainApplication
+    - Set identifiers on older expenses and make all sheets to force upload
+    - Modify default data code to have monthly categories and budgets
+SetupBudgetsFragment
+    - Add tabs to select monthly or annual
+SetupBudgetsViewModel
+    - Add record type filtering
+SetupCategoriesFragment
+    - Add tabs
+    - (VM) Add record type filtering
+SharedExpenses
+    - Add record type and identifier to to and from map conversion
+SheetRepository
+    - Create spreadsheet with category and payment method objects and not just strings
+SheetRequestHelper
+    - Create spreadsheet with category and payment method objects and not just strings
+    - When uploading expenses, use string value of all properties (goes hand in hand with creating expense from String properties in Expense constructor)
+    - Add record type and identifier columns
+    - For entities, save category and budget record type
+SyncWorker
+    - Adjust for another row for category record type
+    - Fix a bug where budgets weren't saved
+
 Add Annual Expenses Part 1
 Budget
     - Add record type (annual or monthly) property

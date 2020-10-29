@@ -109,8 +109,8 @@ public class SheetRequestHelper {
     public static Spreadsheet getCreateRequestBody(
             @Nonnull String spreadsheetTitle,
             @Nonnull String entitiesSheetTitle,
-            @Nonnull List<String> paymentMethods,
-            @Nonnull List<String> categories,
+            @Nonnull List<PaymentMethod> paymentMethods,
+            @Nonnull List<Category> categories,
             @Nonnull List<String> months,
             @Nonnull List<Budget> budgets) {
         Spreadsheet request = new Spreadsheet();
@@ -185,13 +185,13 @@ public class SheetRequestHelper {
         boolean stop = false;
         int rowIndex = 0;
         while (!stop) {
-            String category = null;
+            Category category = null;
             if (categories != null && rowIndex < categories.size()) {
-                category = categories.get(rowIndex).getName();
+                category = categories.get(rowIndex);
             }
-            String paymentMethod = null;
+            PaymentMethod paymentMethod = null;
             if (paymentMethods != null && rowIndex < paymentMethods.size()) {
-                paymentMethod = paymentMethods.get(rowIndex).getName();
+                paymentMethod = paymentMethods.get(rowIndex);
             }
             String month = null;
             if (rowIndex < months.size()) {
@@ -249,11 +249,11 @@ public class SheetRequestHelper {
     }
 
     private static Sheet getEntitiesSheet(@Nonnull String title,
-            int index,
-            @Nonnull List<String> paymentMethods,
-            @Nonnull List<String> categories,
-            @Nonnull List<Budget> budgets,
-            @Nonnull List<String> months) {
+                                          int index,
+                                          @Nonnull List<PaymentMethod> paymentMethods,
+                                          @Nonnull List<Category> categories,
+                                          @Nonnull List<Budget> budgets,
+                                          @Nonnull List<String> months) {
         int rows = 100;
         int columns = 50;
         Sheet sheet = new Sheet();
@@ -265,9 +265,9 @@ public class SheetRequestHelper {
         int rowIndex = 0;
         while (rowIndex < categories.size() || rowIndex < paymentMethods.size() ||
                 rowIndex < budgets.size() || rowIndex < months.size()) {
-            String category = rowIndex < categories.size() ? categories.get(rowIndex) : null;
-            String paymentMethod = rowIndex < paymentMethods.size() ? paymentMethods.get(rowIndex)
-                    : null;
+            Category category = rowIndex < categories.size() ? categories.get(rowIndex) : null;
+            PaymentMethod paymentMethod =
+                    rowIndex < paymentMethods.size() ? paymentMethods.get(rowIndex) : null;
             String month = rowIndex < months.size() ? months.get(rowIndex) : null;
             Budget budget = rowIndex < budgets.size() ? budgets.get(rowIndex) : null;
 
@@ -283,7 +283,7 @@ public class SheetRequestHelper {
     }
 
     private static SheetProperties getSheetProperties(@Nonnull String title, int index,
-            int rows, int columns) {
+                                                      int rows, int columns) {
         return new SheetProperties()
                 .setTitle(title)
                 .setIndex(index)
@@ -329,7 +329,7 @@ public class SheetRequestHelper {
 
     @Nonnull
     private static SparseArray<List<Expense>> getAppendMap(@Nonnull List<Expense> expenses,
-            @Nonnull List<SheetInfo> sheetInfos) {
+                                                           @Nonnull List<SheetInfo> sheetInfos) {
         SparseArray<List<Expense>> map = new SparseArray<>();
         for (Expense expense : expenses) {
             int monthIndex = DateHelper.getMonthIndexFromDate(expense.getDateTime());
@@ -358,8 +358,8 @@ public class SheetRequestHelper {
      */
     @Nonnull
     private static SparseArray<List<Expense>> getUpdateMap(@Nonnull List<Expense> expenses,
-            @Nonnull List<SheetInfo> sheetInfos,
-            @Nullable List<Integer> editedMonths) {
+                                                           @Nonnull List<SheetInfo> sheetInfos,
+                                                           @Nullable List<Integer> editedMonths) {
         SparseArray<List<Expense>> map = new SparseArray<>();
         if (editedMonths == null || editedMonths.size() == 0) {
             return map;
@@ -411,46 +411,59 @@ public class SheetRequestHelper {
         values = new CellData();
         values.setUserEnteredValue(
                 new ExtendedValue()
-                        .setNumberValue((double)expense.getDateTime()));
+                        .setStringValue(String.valueOf(expense.getDateTime())));
         valuesList.add(values);
 
         // Description
         values = new CellData();
         values.setUserEnteredValue(
                 new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getDescription())));
+                        .setStringValue(expense.getDescription()));
         valuesList.add(values);
 
         // Store
         values = new CellData();
         values.setUserEnteredValue(
                 new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getStore())));
+                        .setStringValue(expense.getStore()));
         valuesList.add(values);
 
         // Amount
         values = new CellData();
         values.setUserEnteredValue(
                 new ExtendedValue()
-                        .setNumberValue(expense.getAmount().doubleValue()));
+                        .setStringValue(String.valueOf(expense.getAmount())));
         valuesList.add(values);
 
         // Payment Method
         values = new CellData();
         values.setUserEnteredValue(
                 new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getPaymentMethod())));
+                        .setStringValue(expense.getPaymentMethod()));
         valuesList.add(values);
 
         // Category
         values = new CellData();
         values.setUserEnteredValue(
                 new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getCategory())));
+                        .setStringValue(expense.getCategory()));
+        valuesList.add(values);
+
+        // Record Type
+        values = new CellData();
+        values.setUserEnteredValue(
+                new ExtendedValue()
+                        .setStringValue(expense.getRecordType()));
+        valuesList.add(values);
+
+        // Identifier
+        values = new CellData();
+        values.setUserEnteredValue(
+                new ExtendedValue()
+                        .setStringValue(expense.getIdentifier()));
         valuesList.add(values);
 
         // Flag
-
         values = new CellData();
         if (expense.isStarred()) {
             values.setUserEnteredValue(
@@ -459,7 +472,7 @@ public class SheetRequestHelper {
         }
         valuesList.add(values);
 
-        // Flag
+        // Income
         values = new CellData();
         if (expense.isIncome()) {
             values.setUserEnteredValue(
@@ -472,17 +485,17 @@ public class SheetRequestHelper {
         return rowData;
     }
 
-    private static RowData getEntitiesRowData(@Nullable String category,
-            @Nullable String paymentMethod,
-            @Nullable String month,
-            @Nullable Budget budget) {
+    private static RowData getEntitiesRowData(@Nullable Category category,
+                                              @Nullable PaymentMethod paymentMethod,
+                                              @Nullable String month,
+                                              @Nullable Budget budget) {
         RowData rowData = new RowData();
         List<CellData> valuesList = new ArrayList<>();
         CellData value;
 
         // Payment Method
         if (paymentMethod != null) {
-            value = getValueCell(paymentMethod);
+            value = getValueCell(paymentMethod.getName());
         } else {
             value = getEmptyCell();
         }
@@ -494,11 +507,18 @@ public class SheetRequestHelper {
 
         // Category
         if (category != null) {
-            value = getValueCell(category);
+            value = getValueCell(category.getName());
+            valuesList.add(value);
+
+            value = getValueCell(category.getRecordType());
+            valuesList.add(value);
         } else {
             value = getEmptyCell();
+            valuesList.add(value);
+
+            value = getEmptyCell();
+            valuesList.add(value);
         }
-        valuesList.add(value);
 
         // Empty cell
         value = getEmptyCell();
@@ -519,6 +539,9 @@ public class SheetRequestHelper {
         // Budget
         if (budget != null) {
             value = getValueCell(budget.getName());
+            valuesList.add(value);
+
+            value = getValueCell(budget.getRecordType());
             valuesList.add(value);
 
             value = getValueCell(budget.getAmount());
@@ -545,7 +568,7 @@ public class SheetRequestHelper {
     }
 
     private static int getSheetIdFromMonthIndex(@Nonnull List<SheetInfo> sheetInfos,
-            int monthIndex) {
+                                                int monthIndex) {
         String month = AppHelper.getMonths().get(monthIndex);
         for (SheetInfo info : sheetInfos) {
             if (info.getSheetName().equalsIgnoreCase(month)) {

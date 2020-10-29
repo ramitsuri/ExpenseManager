@@ -142,6 +142,8 @@ public class SharedExpenseManager {
         expenseMap.put(Expense.COL_DESCRIPTION, expense.getDescription());
         expenseMap.put(Expense.COL_STORE, expense.getStore());
         expenseMap.put(Expense.COL_STARRED, booleanToString(expense.isStarred()));
+        expenseMap.put(Expense.COL_RECORD_TYPE, expense.getRecordType());
+        expenseMap.put(Expense.COL_IDENTIFIER, expense.getIdentifier());
         expenseMap.put(SOURCE, source);
         return expenseMap;
     }
@@ -155,6 +157,11 @@ public class SharedExpenseManager {
         expense.setDescription((String)map.get(Expense.COL_DESCRIPTION));
         expense.setStore((String)map.get(Expense.COL_STORE));
         expense.setIsStarred(booleanFromString((String)map.get(Expense.COL_STARRED)));
+        expense.setRecordType((String)map.get(Expense.COL_RECORD_TYPE));
+        Object identifier = map.get(Expense.COL_IDENTIFIER);
+        if (identifier != null) {
+            expense.setIdentifier((String)identifier);
+        }
         return expense;
     }
 

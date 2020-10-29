@@ -3,10 +3,15 @@ package com.ramitsuri.expensemanager.work;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.work.WorkerParameters;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Budget;
+import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
@@ -16,9 +21,6 @@ import com.ramitsuri.sheetscore.intdef.Dimension;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.work.WorkerParameters;
 
 public class SyncWorker extends BaseWorker {
 
@@ -46,15 +48,26 @@ public class SyncWorker extends BaseWorker {
         // Payment methods and Categories
         EntitiesConsumerResponse entities = MainApplication.getInstance().getSheetRepository()
                 .getEntityDataResponse(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
-        if (entities.getStringLists() == null || entities.getStringLists().size() != 2) {
+        if (entities.getStringLists() == null || entities.getStringLists().size() != 3) {
             onFailure(workType,
-                    "Attempting to save categories & payment methods, list size should be 2");
+                    "Attempting to save categories & payment methods, list size should be 3");
         } else {
-            onSuccess(workType, "Saving payment methods and categories");
+            onSuccess(workType, "Saving payment methods");
             MainApplication.getInstance().getPaymentMethodRepo()
                     .setPaymentMethods(entities.getStringLists().get(0));
+
+            onSuccess(workType, "Saving categories");
+            List<Category> categories = new ArrayList<>();
+            for (int i = 0; i < entities.getStringLists().get(1).size(); i++) {
+                String name = entities.getStringLists().get(1).get(i);
+                String recordType = entities.getStringLists().get(2).get(i);
+                if (TextUtils.isEmpty(recordType)) {
+                    recordType = RecordType.MONTHLY;
+                }
+                categories.add(new Category(name, recordType));
+            }
             MainApplication.getInstance().getCategoryRepo()
-                    .setCategories(entities.getStringLists().get(1));
+                    .setCategories(categories);
         }
 
         // Budgets
@@ -71,6 +84,7 @@ public class SyncWorker extends BaseWorker {
                 budgets.add(new Budget(strings));
             }
             onSuccess(workType, "Saving budgets");
+            ExpenseManagerDatabase.getInstance().budgetDao().setAll(budgets);
         }
 
         // Sheet meta data / info
