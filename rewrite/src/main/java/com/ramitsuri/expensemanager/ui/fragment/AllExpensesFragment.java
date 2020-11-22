@@ -54,8 +54,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     private LinearLayout mGroupButtons;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
     private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnSharedSecond, mBtnFilter,
-            mBtnSetup,
-            mBtnAnalysis, mBtnClearFilter, mBtnShared;
+            mBtnSetup, mBtnAnalysis, mBtnClearFilter, mBtnShared;
 
     public AllExpensesFragment() {
     }

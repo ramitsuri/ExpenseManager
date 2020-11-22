@@ -14,10 +14,26 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.tabs.TabLayout;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.ui.adapter.ListEqualizer;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
 import com.ramitsuri.expensemanager.utils.DateHelper;
@@ -30,16 +46,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import javax.annotation.Nonnull;
+
 import timber.log.Timber;
 
 public class AddExpenseFragment extends BaseFragment implements View.OnClickListener,
@@ -56,6 +64,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private AutoCompleteTextView mEditStore;
     private Button mBtnDone, mBtnDate;
     private MaterialButton mBtnFlag;
+    private TabLayout mTabLayout;
 
     public AddExpenseFragment() {
         // Required empty public constructor
@@ -63,7 +72,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_expense, container, false);
     }
@@ -170,6 +179,9 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         // Income
         btnIncome.setChecked(mViewModel.isIncome());
 
+        mTabLayout = view.findViewById(R.id.tabs_categories);
+        mTabLayout.addOnTabSelectedListener(mTabSelectedListener);
+
         setupStoreAutoComplete();
         setupEntitiesAutoComplete();
     }
@@ -185,16 +197,20 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mCategoriesAdapter = new ListPickerAdapter();
         mCategoriesAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
             @Override
-            public void onItemPicked(String value) {
+            public void onItemPicked(@Nonnull ListEqualizer value) {
                 onCategoryPicked(value, true);
             }
         });
         listCategories.setAdapter(mCategoriesAdapter);
-        mViewModel.getCategories().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        mViewModel.getCategories().observe(getViewLifecycleOwner(), new Observer<List<Category>>() {
             @Override
-            public void onChanged(List<String> categories) {
+            public void onChanged(List<Category> categories) {
                 Timber.i("Categories received %s", categories);
-                String selectedValue = mViewModel.getCategory();
+                Category selectedValue = mViewModel.getCategory();
+                // Not able to fix auto selection of tab. Might need to redo this fragment
+                // to listen for changes on Expense. That way, would request VM to set stuff on
+                // Expense, which will trigger a LiveData update and set the view state
+                // selectTab(selectedValue.getRecordType());
                 mCategoriesAdapter.setValues(categories, selectedValue);
                 if (categories.size() <= 5) {
                     categoryLayout.setSpanCount(getResources()
@@ -213,17 +229,17 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mPaymentsAdapter = new ListPickerAdapter();
         mPaymentsAdapter.setCallback(new ListPickerAdapter.ListPickerAdapterCallback() {
             @Override
-            public void onItemPicked(String value) {
+            public void onItemPicked(@Nonnull ListEqualizer value) {
                 onPaymentMethodPicked(value, true);
             }
         });
         listPaymentMethods.setAdapter(mPaymentsAdapter);
         mViewModel.getPaymentMethods()
-                .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+                .observe(getViewLifecycleOwner(), new Observer<List<PaymentMethod>>() {
                     @Override
-                    public void onChanged(List<String> paymentMethods) {
+                    public void onChanged(List<PaymentMethod> paymentMethods) {
                         Timber.i("Payment Methods received %s", paymentMethods);
-                        String selectedValue = mViewModel.getPaymentMethod();
+                        PaymentMethod selectedValue = mViewModel.getPaymentMethod();
                         mPaymentsAdapter.setValues(paymentMethods, selectedValue);
                         if (paymentMethods.size() <= 5) {
                             paymentLayout.setSpanCount(getResources()
@@ -289,13 +305,16 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                                 if (expense == null) {
                                     return;
                                 }
-                                String category = expense.getCategory();
-                                if (!TextUtils.isEmpty(category)) {
+
+                                if (!TextUtils.isEmpty(expense.getCategory())) {
+                                    Category category = new Category(expense.getCategory(),
+                                            expense.getRecordType());
                                     mCategoriesAdapter.setSelectedValue(category);
                                     onCategoryPicked(category, false);
                                 }
-                                String paymentMethod = expense.getPaymentMethod();
-                                if (!TextUtils.isEmpty(paymentMethod)) {
+                                if (!TextUtils.isEmpty(expense.getPaymentMethod())) {
+                                    PaymentMethod paymentMethod = new PaymentMethod();
+                                    paymentMethod.setName(expense.getPaymentMethod());
                                     mPaymentsAdapter.setSelectedValue(paymentMethod);
                                     onPaymentMethodPicked(paymentMethod, false);
                                 }
@@ -303,6 +322,14 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
                         });
             }
         });
+    }
+
+    private void onAnnualTabSelected() {
+        mViewModel.onAnnualTabSelected();
+    }
+
+    private void onMonthlyTabSelected() {
+        mViewModel.onMonthlyTabSelected();
     }
 
     @Override
@@ -390,17 +417,59 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    private void onCategoryPicked(String value, boolean hideKeyboard) {
+    private void onCategoryPicked(ListEqualizer value, boolean hideKeyboard) {
         Timber.i("Category picked: %s", value);
-        mViewModel.setCategory(value);
+        Category category = (Category) value;
+        mViewModel.setCategory(category);
         if (hideKeyboard) {
             removeFocusAndHideKeyboard();
         }
     }
 
-    private void onPaymentMethodPicked(String value, boolean hideKeyboard) {
+    private final TabLayout.OnTabSelectedListener mTabSelectedListener =
+            new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    AddExpenseFragment.this.onTabSelected(tab);
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            };
+
+    private void onTabSelected(@Nonnull TabLayout.Tab tab) {
+        if (tab.getPosition() == 0) { // Monthly
+            onMonthlyTabSelected();
+        } else if (tab.getPosition() == 1) { // Annual
+            onAnnualTabSelected();
+        }
+    }
+
+    private void selectTab(@RecordType @Nonnull String recordType) {
+        Timber.i("Select tab invoked");
+        int index = 0;
+        if (recordType.equals(RecordType.ANNUAL)) {
+            index = 1;
+        }
+        TabLayout.Tab tab = mTabLayout.getTabAt(index);
+        if (tab != null) {
+            mTabLayout.setScrollPosition(index, 0f, true);
+            if (mTabLayout.getSelectedTabPosition() != tab.getPosition()) {
+                onTabSelected(tab);
+            }
+        }
+    }
+
+    private void onPaymentMethodPicked(ListEqualizer value, boolean hideKeyboard) {
         Timber.i("Payment method picked: %s", value);
-        mViewModel.setPaymentMethod(value);
+        mViewModel.setPaymentMethod((PaymentMethod) value);
         if (hideKeyboard) {
             removeFocusAndHideKeyboard();
         }

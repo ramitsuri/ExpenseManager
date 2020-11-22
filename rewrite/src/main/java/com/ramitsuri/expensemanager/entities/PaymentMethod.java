@@ -7,8 +7,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.ramitsuri.expensemanager.ui.adapter.ListEqualizer;
+
+import javax.annotation.Nonnull;
+
 @Entity
-public class PaymentMethod implements Parcelable {
+public class PaymentMethod implements Parcelable, ListEqualizer {
 
     @PrimaryKey(autoGenerate = true)
     private int mId;
@@ -69,11 +73,17 @@ public class PaymentMethod implements Parcelable {
         mName = name;
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "PaymentMethod { " +
                 "mId = " + mId +
                 ", mName = '" + mName + '\'' +
                 " }";
+    }
+
+    @Override
+    public String getValue() {
+        return mName;
     }
 }

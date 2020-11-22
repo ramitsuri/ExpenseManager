@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
-import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.ListItemWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
@@ -29,14 +29,14 @@ public class SetupPaymentMethodsViewModel extends ViewModel {
         mValuesLive = repository().getPaymentMethodStrings();
     }
 
-    public LiveData<List<ListOptionsItemWrapper>> getValuesLive() {
+    public LiveData<List<ListItemWrapper>> getValuesLive() {
         return Transformations
-                .map(mValuesLive, new Function<List<String>, List<ListOptionsItemWrapper>>() {
+                .map(mValuesLive, new Function<List<String>, List<ListItemWrapper>>() {
                     @Override
-                    public List<ListOptionsItemWrapper> apply(List<String> input) {
-                        List<ListOptionsItemWrapper> wrappers = new ArrayList<>();
+                    public List<ListItemWrapper> apply(List<String> input) {
+                        List<ListItemWrapper> wrappers = new ArrayList<>();
                         for (String value : input) {
-                            wrappers.add(new ListOptionsItemWrapper(value));
+                            wrappers.add(new ListItemWrapper(value));
                         }
                         return wrappers;
                     }

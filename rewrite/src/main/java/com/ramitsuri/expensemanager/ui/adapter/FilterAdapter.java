@@ -4,14 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.chip.Chip;
 import com.ramitsuri.expensemanager.R;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.ViewHolder> {
@@ -19,9 +20,9 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.ViewHolder
     @Nullable
     private List<FilterWrapper> mValues;
     @Nullable
-    private MonthPickerAdapterCallback mCallback;
+    private Callback mCallback;
 
-    public interface MonthPickerAdapterCallback {
+    public interface Callback {
         void onSelected(FilterWrapper value);
 
         void onUnselected(FilterWrapper value);
@@ -37,7 +38,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.ViewHolder
         return mValues;
     }
 
-    public void setCallback(@NonNull MonthPickerAdapterCallback callback) {
+    public void setCallback(@NonNull Callback callback) {
         mCallback = callback;
     }
 
@@ -70,7 +71,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        private Chip txtValue;
+        private final Chip txtValue;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);

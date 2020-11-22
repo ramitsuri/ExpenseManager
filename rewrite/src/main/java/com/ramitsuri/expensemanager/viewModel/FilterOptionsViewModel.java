@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.ui.adapter.FilterWrapper;
@@ -56,6 +57,18 @@ public class FilterOptionsViewModel extends ViewModel {
             index = index + 1;
         }
         return wrappers;
+    }
+
+    public int getSelectedMonthPosition() {
+        List<FilterWrapper> wrappers = getMonths();
+        int index = 0;
+        for (FilterWrapper wrapper : wrappers) {
+            if (wrapper.isSelected()) {
+                break;
+            }
+            index++;
+        }
+        return index;
     }
 
     public void onAddMonth(@Nonnull FilterWrapper value) {
@@ -185,7 +198,7 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public void onRemoveIncome(@Nonnull List<FilterWrapper> oldValues,
-            @Nonnull FilterWrapper value) {
+                               @Nonnull FilterWrapper value) {
         List<FilterWrapper> newValues = onItemUnselected(oldValues, value);
         if (newValues == null) {
             return;
@@ -245,7 +258,7 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public void onRemoveFlag(@Nonnull List<FilterWrapper> oldValues,
-            @Nonnull FilterWrapper value) {
+                             @Nonnull FilterWrapper value) {
         List<FilterWrapper> newValues = onItemUnselected(oldValues, value);
         if (newValues == null) {
             return;
@@ -279,6 +292,69 @@ public class FilterOptionsViewModel extends ViewModel {
             mFilter.setIsStarred(true);
         } else { // Not flagged
             mFilter.setIsStarred(false);
+        }
+    }
+    //endregion
+
+    // region Record Type
+    public List<FilterWrapper> getRecordTypes() {
+        List<FilterWrapper> wrappers = new ArrayList<>();
+        String value = getString(R.string.filter_options_record_monthly);
+        boolean selected = mFilter.getRecordType() == null ||
+                mFilter.getRecordType().equals(RecordType.MONTHLY);
+        wrappers.add(new FilterWrapper(value, selected));
+
+        value = getString(R.string.filter_options_record_annual);
+        selected = mFilter.getRecordType() == null ||
+                mFilter.getRecordType().equals(RecordType.ANNUAL);
+        wrappers.add(new FilterWrapper(value, selected));
+        return wrappers;
+    }
+
+    public void onAddRecordType(@Nonnull List<FilterWrapper> oldValues,
+                                @Nonnull FilterWrapper value) {
+        List<FilterWrapper> newValues = onItemSelected(oldValues, value);
+        if (newValues == null) {
+            return;
+        }
+        onModifyRecordType(newValues);
+    }
+
+    public void onRemoveRecordType(@Nonnull List<FilterWrapper> oldValues,
+                             @Nonnull FilterWrapper value) {
+        List<FilterWrapper> newValues = onItemUnselected(oldValues, value);
+        if (newValues == null) {
+            return;
+        }
+        boolean noneSelected = true;
+        for (FilterWrapper wrapper : newValues) {
+            if (wrapper.isSelected()) {
+                noneSelected = false;
+                break;
+            }
+        }
+        if (noneSelected) {
+            return;
+        }
+        onModifyRecordType(newValues);
+    }
+
+    private void onModifyRecordType(@Nonnull List<FilterWrapper> newValues) {
+        boolean monthly = false, annual = false;
+        for (FilterWrapper wrapper : newValues) {
+            if (wrapper.getValue().equals(getString(R.string.filter_options_record_monthly))) {
+                monthly = wrapper.isSelected();
+            } else if (wrapper.getValue()
+                    .equals(getString(R.string.filter_options_record_annual))) {
+                annual = wrapper.isSelected();
+            }
+        }
+        if ((monthly && annual) || (!monthly && !annual)) { // Both
+            mFilter.setRecordType(null);
+        } else if (monthly) { // Monthly
+            mFilter.setRecordType(RecordType.MONTHLY);
+        } else { // Annual
+            mFilter.setRecordType(RecordType.ANNUAL);
         }
     }
     //endregion

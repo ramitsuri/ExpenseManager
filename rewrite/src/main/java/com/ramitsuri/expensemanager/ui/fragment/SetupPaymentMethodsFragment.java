@@ -22,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
-import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.ListItemWrapper;
 import com.ramitsuri.expensemanager.viewModel.SetupPaymentMethodsViewModel;
 
 import java.util.List;
@@ -114,7 +114,7 @@ public class SetupPaymentMethodsFragment extends BaseFragment {
         adapter.setCallback(
                 new ListOptionsItemAdapter.ListOptionsItemCallback() {
                     @Override
-                    public void onItemDeleteRequested(@Nonnull ListOptionsItemWrapper value) {
+                    public void onItemDeleteRequested(@Nonnull ListItemWrapper value) {
                         Timber.i("Delete requested: %s", value);
                         if (mViewModel.delete(value.getValue())) {
                             Timber.i("Delete succeeded");
@@ -130,16 +130,16 @@ public class SetupPaymentMethodsFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onItemEditRequested(@Nonnull ListOptionsItemWrapper value) {
+                    public void onItemEditRequested(@Nonnull ListItemWrapper value) {
                         Timber.i("Edit requested %s", value);
                         showAddEntityDialog(value.getValue());
                     }
                 });
         listItems.setAdapter(adapter);
         mViewModel.getValuesLive()
-                .observe(getViewLifecycleOwner(), new Observer<List<ListOptionsItemWrapper>>() {
+                .observe(getViewLifecycleOwner(), new Observer<List<ListItemWrapper>>() {
                     @Override
-                    public void onChanged(List<ListOptionsItemWrapper> wrappers) {
+                    public void onChanged(List<ListItemWrapper> wrappers) {
                         adapter.setValues(wrappers);
                     }
                 });

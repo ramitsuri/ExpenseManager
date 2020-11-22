@@ -4,19 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
-
-import javax.annotation.Nonnull;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.ui.adapter.ListEqualizer;
+
+import javax.annotation.Nonnull;
+
 @Entity
-public class Category implements Parcelable {
+public class Category implements Parcelable, ListEqualizer {
 
     @PrimaryKey(autoGenerate = true)
     private int mId;
@@ -83,7 +83,7 @@ public class Category implements Parcelable {
         return mRecordType;
     }
 
-    public void setRecordType(@RecordType @Nullable String recordType) {
+    public void setRecordType(@RecordType @Nonnull String recordType) {
         if (TextUtils.isEmpty(recordType)) {
             recordType = RecordType.MONTHLY;
         }
@@ -110,5 +110,10 @@ public class Category implements Parcelable {
                 ", mName = '" + mName + '\'' +
                 ", mRecordType = '" + mRecordType + '\'' +
                 " }";
+    }
+
+    @Override
+    public String getValue() {
+        return mName;
     }
 }

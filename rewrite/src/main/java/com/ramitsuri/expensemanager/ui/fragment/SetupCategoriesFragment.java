@@ -23,7 +23,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
-import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.ListItemWrapper;
 import com.ramitsuri.expensemanager.viewModel.SetupCategoriesViewModel;
 
 import javax.annotation.Nonnull;
@@ -116,7 +116,7 @@ public class SetupCategoriesFragment extends BaseFragment {
         mAdapter.setCallback(
                 new ListOptionsItemAdapter.ListOptionsItemCallback() {
                     @Override
-                    public void onItemDeleteRequested(@Nonnull ListOptionsItemWrapper value) {
+                    public void onItemDeleteRequested(@Nonnull ListItemWrapper value) {
                         Timber.i("Delete requested: %s", value);
                         if (mViewModel.delete(value.getValue())) {
                             Timber.i("Delete succeeded");
@@ -132,7 +132,7 @@ public class SetupCategoriesFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onItemEditRequested(@Nonnull ListOptionsItemWrapper value) {
+                    public void onItemEditRequested(@Nonnull ListItemWrapper value) {
                         Timber.i("Edit requested %s", value);
                         showAddEntityDialog(value.getValue());
                     }

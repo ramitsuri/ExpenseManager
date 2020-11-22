@@ -1,8 +1,37 @@
+Add Annual Expenses Part 3
+Upgrade Gradle 4.1.1
+RecordType
+    - Add record type None
+CategoryRepo
+    - Keep a mutable category list to which updates are made
+    - Add method to get list for record type
+Category, PaymentMethod, ListItemWrapper
+    - Make it implement ListEqualizer to enable generic adapters
+Filter
+    - Set record type to Monthly on clear
+    - Return null friendly string if record type is annual or null (to enable filter clear button)
+FilterAdapter
+    - Rename callback interface
+ListPickerAdapter
+    - Use list of ListEqualizer instead of String to make it reusable for multiple datatypes
+AddExpenseFragment
+    - Move categories below payment methods due to Categories header no longer being there
+    - Add Monthly/Annual tab for categories
+    - Adjust for ListEqualizer usage instead of Categories/PaymentMethods
+FilterOptionsFragment
+    - Add monthly/annual filtering
+ObjectHelper
+    - Add method to find index in ListEqualizer item list
+AddExpenseViewModel
+    - No longer transforming payment methods and categories to strings
+    - Move to Category object usage in place of String to better work with RecordType
+    - ^ same with PaymentMethod
+
 Add Annual Expenses Part 2
 AllExpensesViewModel
     - Make repository object final
     - Set a different identifier (GUID) on duplicated expense
-    - DEfault to monthly expenses for filter
+    - Default to monthly expenses for filter
 AppHelper
     - Add methods for if identifier has been set on older expenses
 BaseRepository

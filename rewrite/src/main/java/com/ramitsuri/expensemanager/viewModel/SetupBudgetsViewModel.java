@@ -188,6 +188,7 @@ public class SetupBudgetsViewModel extends ViewModel {
     }
 
     public LiveData<Boolean> areCategoriesLoaded() {
+        categoryRepository().getAll();
         return Transformations.map(categoryRepository().getCategories(),
                 new Function<List<Category>, Boolean>() {
                     @Override

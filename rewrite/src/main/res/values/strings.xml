@@ -186,8 +186,11 @@
     <string name="filter_options_show_income">Show income</string>
     <string name="filter_options_show_flagged">Show flagged</string>
     <string name="filter_options_flag_header">Flag status</string>
+    <string name="filter_options_record_type_header">Type</string>
     <string name="filter_options_flag_flagged">Flagged</string>
     <string name="filter_options_flag_not_flagged">Not flagged</string>
+    <string name="filter_options_record_monthly">Monthly</string>
+    <string name="filter_options_record_annual">Annual</string>
     <string name="filter_options_income_header">Income</string>
     <string name="filter_options_income_incomes">Incomes</string>
     <string name="filter_options_income_expenses">Expenses</string>

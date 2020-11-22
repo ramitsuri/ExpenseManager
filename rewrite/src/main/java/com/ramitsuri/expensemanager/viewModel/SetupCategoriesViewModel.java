@@ -13,8 +13,9 @@ import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.entities.Category;
-import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.ListItemWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.ObjectHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ import javax.annotation.Nonnull;
 public class SetupCategoriesViewModel extends ViewModel {
 
     @Nonnull
-    private MutableLiveData<List<Category>> mValuesLive;
+    private final MutableLiveData<List<Category>> mValuesLive;
     private boolean mChangesMade;
     @Nonnull
-    private List<Pair<String, String>> mEditedCategories;
+    private final List<Pair<String, String>> mEditedCategories;
     @Nonnull
     @RecordType
     private String mSelectedRecordType;
@@ -36,6 +37,7 @@ public class SetupCategoriesViewModel extends ViewModel {
     public SetupCategoriesViewModel() {
         super();
         mSelectedRecordType = RecordType.MONTHLY;
+        repository().getAll();
         mValuesLive = repository().getCategories();
         mEditedCategories = new ArrayList<>();
     }
@@ -48,13 +50,13 @@ public class SetupCategoriesViewModel extends ViewModel {
         mSelectedRecordType = RecordType.ANNUAL;
     }
 
-    public List<ListOptionsItemWrapper> getValues() {
+    public List<ListItemWrapper> getValues() {
         List<Category> categories = mValuesLive.getValue();
-        List<ListOptionsItemWrapper> wrappers = new ArrayList<>();
+        List<ListItemWrapper> wrappers = new ArrayList<>();
         if (categories != null) {
             for (Category category : categories) {
                 if (mSelectedRecordType.equals(category.getRecordType())) {
-                    wrappers.add(new ListOptionsItemWrapper(category.getName())
+                    wrappers.add(new ListItemWrapper(category.getName())
                             .setRecordType(mSelectedRecordType));
                 }
             }
@@ -77,7 +79,9 @@ public class SetupCategoriesViewModel extends ViewModel {
         if (values == null) {
             values = new ArrayList<>();
         }
-        if (contains(values, value) == -1) { // Not contains
+
+        // TODO consider if need to allow adding same categories with different record types
+        if (ObjectHelper.indexOf(values, value) == -1) { // Not contains
             values.add(new Category(value, mSelectedRecordType));
             mValuesLive.postValue(values);
             mChangesMade = true;
@@ -91,10 +95,12 @@ public class SetupCategoriesViewModel extends ViewModel {
         if (values == null) {
             return false;
         }
-        if (contains(values, newValue) != -1) { // Contains new value already
+
+        // TODO consider if need to allow adding same categories with different record types
+        if (ObjectHelper.indexOf(values, newValue) != -1) { // Contains new value already
             return false;
         }
-        int indexOldValue = contains(values, oldValue);
+        int indexOldValue = ObjectHelper.indexOf(values, oldValue);
         if (indexOldValue != -1) { // Contains old value
             values.remove(indexOldValue);
             values.add(indexOldValue, new Category(newValue, mSelectedRecordType));
@@ -114,7 +120,8 @@ public class SetupCategoriesViewModel extends ViewModel {
         if (values.size() == 1) {
             return false;
         }
-        int index = contains(values, value);
+
+        int index = ObjectHelper.indexOf(values, value);
         if (index != -1) { // Contains
             values.remove(index);
             mValuesLive.postValue(values);
@@ -151,18 +158,5 @@ public class SetupCategoriesViewModel extends ViewModel {
 
     private void updateEditedCategories(@Nonnull String oldValue, @Nonnull String newValue) {
         mEditedCategories.add(new Pair<>(oldValue, newValue));
-    }
-
-    // TODO consider if need to allow adding same categories with different record types
-    private int contains(@Nonnull List<Category> categories, @Nonnull String value) {
-        int index = -1;
-        for (int i = 0; i < categories.size(); i++) {
-            Category category = categories.get(i);
-            if (value.equalsIgnoreCase(category.getName())) {
-                index = i;
-                break;
-            }
-        }
-        return index;
     }
 }

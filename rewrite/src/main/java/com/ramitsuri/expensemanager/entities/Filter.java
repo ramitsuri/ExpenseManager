@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import androidx.sqlite.db.SimpleSQLiteQuery;
+
 import timber.log.Timber;
 
 public class Filter implements Parcelable {
@@ -87,7 +88,7 @@ public class Filter implements Parcelable {
         mPaymentMethods = null;
         mIsStarred = null;
         mIsSynced = null;
-        mRecordType = null;
+        mRecordType = RecordType.MONTHLY;
 
         return this;
     }
@@ -217,7 +218,8 @@ public class Filter implements Parcelable {
         }
         if (mIsSynced != null || mIsStarred != null ||
                 (mCategories != null && mCategories.size() > 0) ||
-                (mPaymentMethods != null && mPaymentMethods.size() > 0)) {
+                (mPaymentMethods != null && mPaymentMethods.size() > 0) ||
+                (mRecordType == null || mRecordType.equals(RecordType.ANNUAL))) {
             return null;
         }
         return friendlyString;

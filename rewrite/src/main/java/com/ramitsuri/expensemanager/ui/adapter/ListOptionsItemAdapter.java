@@ -21,27 +21,27 @@ public class ListOptionsItemAdapter
         extends RecyclerView.Adapter<ListOptionsItemAdapter.ViewHolder> {
 
     @Nullable
-    private List<ListOptionsItemWrapper> mValues;
+    private List<ListItemWrapper> mValues;
     @Nullable
     private ListOptionsItemCallback mCallback;
 
     public interface ListOptionsItemCallback {
-        void onItemDeleteRequested(@Nonnull ListOptionsItemWrapper value);
+        void onItemDeleteRequested(@Nonnull ListItemWrapper value);
 
-        void onItemEditRequested(@Nonnull ListOptionsItemWrapper value);
+        void onItemEditRequested(@Nonnull ListItemWrapper value);
     }
 
     public void setCallback(@NonNull ListOptionsItemCallback callback) {
         mCallback = callback;
     }
 
-    public void setValues(@NonNull List<ListOptionsItemWrapper> values) {
+    public void setValues(@NonNull List<ListItemWrapper> values) {
         mValues = values;
         notifyDataSetChanged();
     }
 
     @Nullable
-    public List<ListOptionsItemWrapper> getValues() {
+    public List<ListItemWrapper> getValues() {
         return mValues;
     }
 

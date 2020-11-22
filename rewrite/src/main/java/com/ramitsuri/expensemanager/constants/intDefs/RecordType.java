@@ -5,9 +5,10 @@ import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.StringDef;
 
-@StringDef({RecordType.MONTHLY, RecordType.ANNUAL})
+@StringDef({RecordType.NONE, RecordType.MONTHLY, RecordType.ANNUAL})
 @Retention(RetentionPolicy.SOURCE)
 public @interface RecordType {
+    String NONE = "NONE";
     String MONTHLY = "MONTHLY";
     String ANNUAL = "ANNUAL";
 }

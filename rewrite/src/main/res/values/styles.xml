@@ -36,6 +36,7 @@
     <style name="TabText" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_caption</item>
     </style>
 
     <style name="ButtonCircle" parent="">

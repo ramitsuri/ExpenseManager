@@ -101,6 +101,30 @@
         tools:listitem="@layout/list_picker_item" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_header_record_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:text="@string/filter_options_record_type_header"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_payment_methods" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_record_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_header_record_type"
+        tools:itemCount="1"
+        tools:listitem="@layout/list_picker_item" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_header_flag_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,7 +134,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_payment_methods" />
+        app:layout_constraintTop_toBottomOf="@id/list_record_type" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_flag_status"

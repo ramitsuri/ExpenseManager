@@ -1,7 +1,13 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
@@ -16,79 +22,46 @@ import com.ramitsuri.expensemanager.utils.SharedExpenseHelper;
 import com.ramitsuri.expensemanager.utils.SharedExpenseManager;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.arch.core.util.Function;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 import timber.log.Timber;
 
 public class AddExpenseViewModel extends ViewModel {
 
-    private ExpenseRepository mExpenseRepo;
     private SharedExpenseManager mSharedExpenseManager;
 
     private Expense mExpense;
     private Integer mOldMonthIndex;
-    private LiveData<List<String>> mCategories;
-    private LiveData<List<String>> mPaymentMethods;
-    private LiveData<List<String>> mStores;
     private int mAddMode;
-
     private boolean mChangesMade;
+
+    private final ExpenseRepository mExpenseRepo;
+    private final LiveData<List<Category>> mCategories;
+    private final LiveData<List<PaymentMethod>> mPaymentMethods;
+    private final LiveData<List<String>> mStores;
 
     public AddExpenseViewModel(Expense expense) {
         super();
 
         mExpenseRepo = MainApplication.getInstance().getExpenseRepo();
-        CategoryRepository categoryRepo = MainApplication.getInstance().getCategoryRepo();
-        PaymentMethodRepository paymentMethodRepo =
-                MainApplication.getInstance().getPaymentMethodRepo();
 
-        mCategories = Transformations.map(categoryRepo.getCategories(),
-                new Function<List<Category>, List<String>>() {
-                    @Override
-                    public List<String> apply(List<Category> categories) {
-                        List<String> categoryStrings = new ArrayList<>();
-                        if (categories != null) {
-                            for (Category category : categories) {
-                                categoryStrings.add(category.getName());
-                            }
-                        }
-                        return categoryStrings;
-                    }
-                });
-        mPaymentMethods = Transformations.map(paymentMethodRepo.getPaymentMethods(),
-                new Function<List<PaymentMethod>, List<String>>() {
-                    @Override
-                    public List<String> apply(List<PaymentMethod> paymentMethods) {
-                        List<String> paymentMethodStrings = new ArrayList<>();
-                        if (paymentMethods != null) {
-                            for (PaymentMethod paymentMethod : paymentMethods) {
-                                paymentMethodStrings.add(paymentMethod.getName());
-                            }
-                        }
-                        return paymentMethodStrings;
-                    }
-                });
+        categoryRepo().getForRecordType(RecordType.MONTHLY);
+        mCategories = categoryRepo().getCategories();
+        mPaymentMethods = paymentRepo().getPaymentMethods();
 
         mStores = mExpenseRepo.getStores();
 
         reset(expense);
     }
 
-    public LiveData<List<String>> getCategories() {
+    public LiveData<List<Category>> getCategories() {
         return mCategories;
     }
 
-    public LiveData<List<String>> getPaymentMethods() {
+    public LiveData<List<PaymentMethod>> getPaymentMethods() {
         return mPaymentMethods;
     }
 
@@ -122,7 +95,7 @@ public class AddExpenseViewModel extends ViewModel {
         return mSharedExpenseManager;
     }
 
-    private SharedExpenseManager.Callbacks mCallbacks = new SharedExpenseManager.Callbacks() {
+    private final SharedExpenseManager.Callbacks mCallbacks = new SharedExpenseManager.Callbacks() {
         @Override
         public void addSuccess() {
             Timber.i("Expense added");
@@ -135,7 +108,7 @@ public class AddExpenseViewModel extends ViewModel {
 
         @Override
         public void getForOtherSuccess(@Nonnull String source,
-                @Nonnull List<Expense> expenses) {
+                                       @Nonnull List<Expense> expenses) {
 
         }
 
@@ -197,33 +170,43 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     @Nullable
-    public String getCategory() {
-        return mExpense.getCategory();
+    public Category getCategory() {
+        Category category = new Category();
+        category.setName(mExpense.getCategory());
+        category.setRecordType(mExpense.getRecordType());
+        return category;
     }
 
-    public void setCategory(@NonNull String category) {
+    public void setCategory(@NonNull Category category) {
         if (mCategories.getValue() != null &&
-                ObjectHelper.contains(mCategories.getValue(), category)) {
-            boolean changesMade = !category.equals(mExpense.getCategory());
+                ObjectHelper.indexOf(mCategories.getValue(), category.getName()) != -1) {
+            boolean changesMade = !category.getName().equals(mExpense.getCategory());
             if (changesMade) {
                 //setChangesMade();
-                mExpense.setCategory(category);
+                mExpense.setCategory(category.getName());
+                setRecordType(category.getRecordType());
             }
         }
     }
 
-    @Nullable
-    public String getPaymentMethod() {
-        return mExpense.getPaymentMethod();
+    public void setRecordType(@Nonnull @RecordType String recordType) {
+        mExpense.setRecordType(recordType);
     }
 
-    public void setPaymentMethod(@NonNull String paymentMethod) {
+    @Nullable
+    public PaymentMethod getPaymentMethod() {
+        PaymentMethod paymentMethod = new PaymentMethod();
+        paymentMethod.setName(mExpense.getPaymentMethod());
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(@NonNull PaymentMethod paymentMethod) {
         if (mPaymentMethods.getValue() != null &&
-                ObjectHelper.contains(mPaymentMethods.getValue(), paymentMethod)) {
-            boolean changesMade = !paymentMethod.equals(mExpense.getPaymentMethod());
+                ObjectHelper.indexOf(mPaymentMethods.getValue(), paymentMethod.getName()) != -1) {
+            boolean changesMade = !paymentMethod.getName().equals(mExpense.getPaymentMethod());
             if (changesMade) {
                 //setChangesMade();
-                mExpense.setPaymentMethod(paymentMethod);
+                mExpense.setPaymentMethod(paymentMethod.getName());
             }
         }
     }
@@ -298,6 +281,14 @@ public class AddExpenseViewModel extends ViewModel {
         mExpense.setIsIncome(isIncome);
     }
 
+    public void onAnnualTabSelected() {
+        categoryRepo().getForRecordType(RecordType.ANNUAL);
+    }
+
+    public void onMonthlyTabSelected() {
+        categoryRepo().getForRecordType(RecordType.MONTHLY);
+    }
+
     private void reset(@Nullable Expense expense) {
         mOldMonthIndex = null;
         if (expense != null) {
@@ -319,5 +310,13 @@ public class AddExpenseViewModel extends ViewModel {
 
     public boolean enableEntitiesAutoComplete() {
         return mAddMode == Constants.AddExpenseMode.ADD;
+    }
+
+    private CategoryRepository categoryRepo() {
+        return MainApplication.getInstance().getCategoryRepo();
+    }
+
+    private PaymentMethodRepository paymentRepo() {
+        return MainApplication.getInstance().getPaymentMethodRepo();
     }
 }

@@ -16,20 +16,35 @@ import timber.log.Timber;
 
 public class CategoryRepository extends BaseRepository {
 
+    public MutableLiveData<List<Category>> mCategories;
+
     public CategoryRepository(AppExecutors executors, ExpenseManagerDatabase database) {
         super(executors, database);
+        mCategories = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<Category>> getCategories() {
-        final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
+        return mCategories;
+    }
+
+    public void getAll() {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 List<Category> values = mDatabase.categoryDao().getAll();
-                categories.postValue(values);
+                mCategories.postValue(values);
             }
         });
-        return categories;
+    }
+
+    public void getForRecordType(@Nonnull @RecordType final String recordType) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Category> values = mDatabase.categoryDao().getAll(recordType);
+                mCategories.postValue(values);
+            }
+        });
     }
 
     @Nonnull

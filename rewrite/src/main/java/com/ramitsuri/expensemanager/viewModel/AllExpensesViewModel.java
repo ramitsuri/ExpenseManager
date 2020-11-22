@@ -24,6 +24,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+
 import timber.log.Timber;
 
 public class AllExpensesViewModel extends ViewModel {
@@ -128,8 +129,7 @@ public class AllExpensesViewModel extends ViewModel {
 
     public void clearFilter() {
         Timber.i("Clearing filter");
-        mFilter
-                .clear()
+        mFilter.clear()
                 .getDefault();
         mRepository.getForFilter(mFilter);
         updateFilterInfo();
