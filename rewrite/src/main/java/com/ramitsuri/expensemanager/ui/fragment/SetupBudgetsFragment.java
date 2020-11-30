@@ -7,19 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.entities.Budget;
-import com.ramitsuri.expensemanager.ui.adapter.BudgetCategoryWrapper;
-import com.ramitsuri.expensemanager.ui.adapter.BudgetSetupAdapter;
-import com.ramitsuri.expensemanager.viewModel.SetupBudgetsViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,11 +16,27 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.entities.Budget;
+import com.ramitsuri.expensemanager.ui.adapter.BudgetCategoryWrapper;
+import com.ramitsuri.expensemanager.ui.adapter.BudgetSetupAdapter;
+import com.ramitsuri.expensemanager.viewModel.SetupBudgetsViewModel;
+
+import java.util.ArrayList;
+
+import javax.annotation.Nonnull;
+
 import timber.log.Timber;
 
 public class SetupBudgetsFragment extends BaseFragment {
 
     private SetupBudgetsViewModel mViewModel;
+    private Button mBtnAdd;
+    private BudgetSetupAdapter mAdapter;
 
     public SetupBudgetsFragment() {
     }
@@ -93,15 +96,15 @@ public class SetupBudgetsFragment extends BaseFragment {
         });
 
         // Add new
-        final Button btnAdd = view.findViewById(R.id.btn_add);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        mBtnAdd = view.findViewById(R.id.btn_add);
+        mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Timber.i("Add requested");
                 ArrayList<BudgetCategoryWrapper> categoryWrappers =
                         mViewModel.getCategoryWrappers(null);
                 if (categoryWrappers == null) {
-                    Snackbar.make(btnAdd, R.string.setup_budget_categories_utilized,
+                    Snackbar.make(mBtnAdd, R.string.setup_budget_categories_utilized,
                             Snackbar.LENGTH_SHORT).show();
                     return;
                 }
@@ -123,8 +126,8 @@ public class SetupBudgetsFragment extends BaseFragment {
         }
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         listItems.setLayoutManager(manager);
-        final BudgetSetupAdapter adapter = new BudgetSetupAdapter();
-        adapter.setCallback(
+        mAdapter = new BudgetSetupAdapter();
+        mAdapter.setCallback(
                 new BudgetSetupAdapter.BudgetSetupAdapterCallback() {
                     @Override
                     public void onItemDeleteRequested(@Nonnull Budget value) {
@@ -146,21 +149,60 @@ public class SetupBudgetsFragment extends BaseFragment {
                         ArrayList<BudgetCategoryWrapper> categoryWrappers =
                                 mViewModel.getCategoryWrappers(value);
                         if (categoryWrappers == null) {
-                            Snackbar.make(btnAdd, R.string.setup_budget_categories_utilized,
+                            Snackbar.make(mBtnAdd, R.string.setup_budget_categories_utilized,
                                     Snackbar.LENGTH_SHORT).show();
                             return;
                         }
                         showBudgetEdit(value, categoryWrappers);
                     }
                 });
-        listItems.setAdapter(adapter);
-        mViewModel.getValuesLive()
-                .observe(getViewLifecycleOwner(), new Observer<List<Budget>>() {
+        listItems.setAdapter(mAdapter);
+        mViewModel.areValuesLoaded()
+                .observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                     @Override
-                    public void onChanged(List<Budget> budgets) {
-                        adapter.setValues(budgets);
+                    public void onChanged(Boolean loaded) {
+                        Timber.i("Budgets %s", loaded);
+                        refreshAdapter();
                     }
                 });
+
+        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) { // Monthly
+                    onMonthlyTabSelected();
+                } else if (tab.getPosition() == 1) { // Annual
+                    onAnnualTabSelected();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void onAnnualTabSelected() {
+        mBtnAdd.setText(R.string.setup_budget_add_new_annual);
+        mViewModel.onAnnualTabSelected();
+        refreshAdapter();
+    }
+
+    private void onMonthlyTabSelected() {
+        mBtnAdd.setText(R.string.setup_budget_add_new_monthly);
+        mViewModel.onMonthlyTabSelected();
+        refreshAdapter();
+    }
+
+    private void refreshAdapter() {
+        mAdapter.setValues(mViewModel.getValues());
     }
 
     private void showBudgetEdit(@Nullable final Budget value,

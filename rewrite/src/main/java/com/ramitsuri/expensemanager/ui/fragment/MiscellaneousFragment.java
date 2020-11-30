@@ -16,15 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
-import com.ramitsuri.expensemanager.utils.DialogHelper;
-import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
-import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
-
-import javax.annotation.Nonnull;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
@@ -35,6 +26,17 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
+import com.ramitsuri.expensemanager.utils.DialogHelper;
+import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
+import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
+
+import javax.annotation.Nonnull;
+
 import timber.log.Timber;
 
 import static com.ramitsuri.expensemanager.constants.Constants.RequestCode.GOOGLE_SIGN_IN;
@@ -48,7 +50,7 @@ public class MiscellaneousFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_miscellaneous, container, false);
     }
@@ -192,18 +194,18 @@ public class MiscellaneousFragment extends BaseFragment {
 
     @Nullable
     private ViewGroup setupMenuItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes) {
+                                    @IdRes final int idRes,
+                                    @StringRes int titleRes,
+                                    @DrawableRes int drawableRes) {
         return setupMenuItem(view, idRes, titleRes, drawableRes, true);
     }
 
     @Nullable
     private ViewGroup setupMenuItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes,
-            boolean show) {
+                                    @IdRes final int idRes,
+                                    @StringRes int titleRes,
+                                    @DrawableRes int drawableRes,
+                                    boolean show) {
         if (!show) {
             return null;
         }
@@ -234,9 +236,9 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupHeader(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            boolean show) {
+                             @IdRes final int idRes,
+                             @StringRes int titleRes,
+                             boolean show) {
         if (!show) {
             return;
         }
@@ -248,9 +250,9 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupVersionItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes) {
+                                  @IdRes final int idRes,
+                                  @StringRes int titleRes,
+                                  @DrawableRes int drawableRes) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes);
         if (container != null) {
             // Summary
@@ -263,10 +265,10 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupSpreadsheetItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes,
-            boolean show) {
+                                      @IdRes final int idRes,
+                                      @StringRes int titleRes,
+                                      @DrawableRes int drawableRes,
+                                      boolean show) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
         if (container != null) {
             final String spreadsheetId = mViewModel.getSpreadsheetId();
@@ -287,7 +289,7 @@ public class MiscellaneousFragment extends BaseFragment {
                         return false;
                     }
                     ClipboardManager clipboard =
-                            (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                            (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
                     if (clipboard == null) {
                         return false;
                     }
@@ -300,10 +302,10 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupBackupInfoItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes,
-            boolean show) {
+                                     @IdRes final int idRes,
+                                     @StringRes int titleRes,
+                                     @DrawableRes int drawableRes,
+                                     boolean show) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
         if (container != null) {
             // Progress
@@ -364,9 +366,9 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupThemeItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes) {
+                                @IdRes final int idRes,
+                                @StringRes int titleRes,
+                                @DrawableRes int drawableRes) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes);
         if (container != null) {
             // Summary
@@ -508,6 +510,13 @@ public class MiscellaneousFragment extends BaseFragment {
                 handleBackupInfoClicked();
             } else {
                 Timber.i("Activity returned null account");
+                if (data != null && data.getExtras() != null && !data.getExtras().isEmpty()) {
+                    Timber.w("Information returned for error: %s", data.getExtras());
+                    if (getView() != null) {
+                        Snackbar.make(getView(), R.string.miscellaneous_sign_in_fail_message,
+                                Snackbar.LENGTH_LONG).show();
+                    }
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

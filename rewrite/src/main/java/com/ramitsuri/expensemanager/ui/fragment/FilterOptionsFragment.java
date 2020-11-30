@@ -26,6 +26,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import timber.log.Timber;
 
 public class FilterOptionsFragment extends BaseBottomSheetFragment {
@@ -40,7 +41,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     private FilterOptionsViewModel mViewModel;
 
     private FilterAdapter mMonthAdapter, mPaymentsAdapter, mCategoriesAdapter, mIncomeAdapter,
-            mFlagAdapter;
+            mFlagAdapter, mRecordTypeAdapter;
 
     @Nullable
     private FilterOptionsFragmentCallback mCallback;
@@ -62,7 +63,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter_options, container, false);
         setSystemUiVisibility(view);
         return view;
@@ -109,6 +110,9 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         if (mFlagAdapter != null) {
             mFlagAdapter.setValues(mViewModel.getFlagStatuses());
         }
+        if (mRecordTypeAdapter != null) {
+            mRecordTypeAdapter.setValues(mViewModel.getRecordTypes());
+        }
         apply(filter);
     }
 
@@ -118,6 +122,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         setupPaymentMethods(view);
         setupFlagStatus(view);
         setupIncomeStatus(view);
+        setupRecordType(view);
     }
 
     private void setupMonths(@NonNull View view) {
@@ -130,7 +135,8 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         mMonthAdapter = new FilterAdapter();
         mMonthAdapter.setValues(mViewModel.getMonths());
         list.setAdapter(mMonthAdapter);
-        mMonthAdapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
+        list.scrollToPosition(mViewModel.getSelectedMonthPosition());
+        mMonthAdapter.setCallback(new FilterAdapter.Callback() {
             @Override
             public void onSelected(FilterWrapper value) {
                 if (value == null) {
@@ -160,7 +166,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         list.setHasFixedSize(true);
         mCategoriesAdapter = new FilterAdapter();
-        mCategoriesAdapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
+        mCategoriesAdapter.setCallback(new FilterAdapter.Callback() {
             @Override
             public void onSelected(FilterWrapper value) {
                 if (value == null) {
@@ -205,7 +211,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         list.setHasFixedSize(true);
         mPaymentsAdapter = new FilterAdapter();
-        mPaymentsAdapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
+        mPaymentsAdapter.setCallback(new FilterAdapter.Callback() {
             @Override
             public void onSelected(FilterWrapper value) {
                 if (value == null) {
@@ -251,7 +257,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         // Income
         mIncomeAdapter = new FilterAdapter();
         mIncomeAdapter.setValues(mViewModel.getIncomes());
-        mIncomeAdapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
+        mIncomeAdapter.setCallback(new FilterAdapter.Callback() {
             @Override
             public void onSelected(FilterWrapper value) {
                 if (value == null || mIncomeAdapter.getValues() == null) {
@@ -286,7 +292,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         // Flag
         mFlagAdapter = new FilterAdapter();
         mFlagAdapter.setValues(mViewModel.getFlagStatuses());
-        mFlagAdapter.setCallback(new FilterAdapter.MonthPickerAdapterCallback() {
+        mFlagAdapter.setCallback(new FilterAdapter.Callback() {
             @Override
             public void onSelected(FilterWrapper value) {
                 if (value == null || mFlagAdapter.getValues() == null) {
@@ -313,6 +319,39 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         list.setHasFixedSize(true);
         list.setAdapter(mFlagAdapter);
+    }
+
+    private void setupRecordType(@NonNull View view) {
+        // Record Type
+        mRecordTypeAdapter = new FilterAdapter();
+        mRecordTypeAdapter.setValues(mViewModel.getRecordTypes());
+        mRecordTypeAdapter.setCallback(new FilterAdapter.Callback() {
+            @Override
+            public void onSelected(FilterWrapper value) {
+                if (value == null || mRecordTypeAdapter.getValues() == null) {
+                    return;
+                }
+                mViewModel.onAddRecordType(mRecordTypeAdapter.getValues(), value);
+                mRecordTypeAdapter.setValues(mViewModel.getRecordTypes());
+                apply(mViewModel.get());
+            }
+
+            @Override
+            public void onUnselected(FilterWrapper value) {
+                if (value == null || mRecordTypeAdapter.getValues() == null) {
+                    return;
+                }
+                mViewModel.onRemoveRecordType(mRecordTypeAdapter.getValues(), value);
+                mRecordTypeAdapter.setValues(mViewModel.getRecordTypes());
+                apply(mViewModel.get());
+            }
+        });
+
+        final RecyclerView list = view.findViewById(R.id.list_record_type);
+        list.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        list.setHasFixedSize(true);
+        list.setAdapter(mRecordTypeAdapter);
     }
 
     private void apply(@Nonnull Filter filter) {

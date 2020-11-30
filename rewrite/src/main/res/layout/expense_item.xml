@@ -48,7 +48,7 @@
         android:gravity="center_vertical"
         android:singleLine="true"
         android:textSize="@dimen/text_caption"
-        app:layout_constraintEnd_toStartOf="@id/text_expense_detail_1"
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@id/txt_expense_description"
         app:layout_constraintTop_toBottomOf="@id/txt_expense_description"

@@ -2,25 +2,23 @@ package com.ramitsuri.expensemanager.data.repository;
 
 import android.database.sqlite.SQLiteConstraintException;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import timber.log.Timber;
 
-public class EditedSheetRepository {
+public class EditedSheetRepository extends BaseRepository {
 
-    private AppExecutors mExecutors;
-    private ExpenseManagerDatabase mDatabase;
-    private MutableLiveData<List<Integer>> mEditedMonths;
+    private final MutableLiveData<List<Integer>> mEditedMonths;
 
     public EditedSheetRepository(AppExecutors executors, ExpenseManagerDatabase database) {
-        mExecutors = executors;
-        mDatabase = database;
+        super(executors, database);
         mEditedMonths = new MutableLiveData<>();
     }
 

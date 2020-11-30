@@ -4,6 +4,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.chip.Chip;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
@@ -12,45 +16,45 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
 public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.ViewHolder> {
 
     @Nullable
-    private List<String> mValues;
+    private List<? extends ListEqualizer> mValues;
     @Nullable
     private ListPickerAdapterCallback mCallback;
-    private String mSelectedValue;
+    @Nullable
+    private ListEqualizer mSelectedValue;
 
     public interface ListPickerAdapterCallback {
-        void onItemPicked(String value);
+        void onItemPicked(@Nonnull ListEqualizer value);
     }
 
     public ListPickerAdapter() {
     }
 
-    public void setValues(@NonNull List<String> values, @Nullable String selectedValue) {
+    public <T extends ListEqualizer> void setValues(@NonNull List<T> values,
+                                                    @Nullable T selectedValue) {
         mValues = values;
-        if (selectedValue == null &&
+        if ((selectedValue == null || selectedValue.getValue() == null) &&
                 values.size() > 0) { // Select first value in case selection is null
             mSelectedValue = values.get(0);
             // Send callback with selected value when selected value was sent as null (new expense)
             Timber.i("Selecting first value from list %s", mSelectedValue);
             onSelectionMade(mSelectedValue);
         } else {
+            Timber.i("Selecting supplied value %s", mSelectedValue);
             mSelectedValue = selectedValue;
             notifyDataSetChanged();
         }
     }
 
-    public void setSelectedValue(@Nonnull String selectedValue) {
+    public void setSelectedValue(@Nonnull ListEqualizer selectedValue) {
         if (mValues == null) {
             return;
         }
-        if (ObjectHelper.contains(mValues, selectedValue)) {
+        if (ObjectHelper.indexOf(mValues, selectedValue.getValue()) != -1) {
             mSelectedValue = selectedValue;
             notifyDataSetChanged();
         }
@@ -87,7 +91,7 @@ public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.Vi
         }
     }
 
-    private void onSelectionMade(String selectedValue) {
+    private void onSelectionMade(ListEqualizer selectedValue) {
         if (mCallback != null) {
             mSelectedValue = selectedValue;
             mCallback.onItemPicked(mSelectedValue);
@@ -99,7 +103,7 @@ public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        private Chip txtValue;
+        private final Chip txtValue;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -108,13 +112,10 @@ public class ListPickerAdapter extends RecyclerView.Adapter<ListPickerAdapter.Vi
             txtValue.setOnClickListener(this);
         }
 
-        private void bind(final String value) {
-            txtValue.setText(value);
-            if (value.equals(mSelectedValue)) {
-                txtValue.setChecked(true);
-            } else {
-                txtValue.setChecked(false);
-            }
+        private void bind(@Nonnull final ListEqualizer value) {
+            txtValue.setText(value.getValue());
+            txtValue.setChecked(mSelectedValue != null
+                    && value.getValue().equals(mSelectedValue.getValue()));
         }
 
         @Override

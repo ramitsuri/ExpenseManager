@@ -2,15 +2,17 @@ package com.ramitsuri.expensemanager.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -32,8 +34,14 @@ public class Budget implements Parcelable {
     @ColumnInfo(name = "categories")
     private List<String> mCategories;
 
+    @ColumnInfo(name = "record_type", defaultValue = "MONTHLY")
+    @RecordType
+    @NonNull
+    private String mRecordType;
+
     public Budget() {
         mCategories = new ArrayList<>();
+        mRecordType = RecordType.MONTHLY;
     }
 
     protected Budget(Parcel in) {
@@ -42,17 +50,23 @@ public class Budget implements Parcelable {
         mAmount = new BigDecimal(in.readString());
         mCategories = new ArrayList<>();
         in.readList(mCategories, String.class.getClassLoader());
+        String recordType = in.readString();
+        if (TextUtils.isEmpty(recordType)) {
+            recordType = RecordType.MONTHLY;
+        }
+        mRecordType = recordType;
     }
 
     public Budget(List<String> strings) {
         mName = strings.get(0);
-        mAmount = new BigDecimal(strings.get(1));
+        mRecordType = strings.get(1);
+        mAmount = new BigDecimal(strings.get(2));
         mCategories = new ArrayList<>();
         int categorySize = Constants.Basic.BUDGET_CATEGORY_COUNT;
         if (strings.size() < categorySize) {
             categorySize = strings.size();
         }
-        for (int index = 2; index < categorySize; index++) {
+        for (int index = 3; index < categorySize; index++) {
             String string = strings.get(index);
             if (string.equals(EMPTY_BUDGET)) {
                 continue;
@@ -105,6 +119,19 @@ public class Budget implements Parcelable {
         mCategories = categories;
     }
 
+    @RecordType
+    @NonNull
+    public String getRecordType() {
+        return mRecordType;
+    }
+
+    public void setRecordType(@RecordType @Nullable String recordType) {
+        if (TextUtils.isEmpty(recordType)) {
+            recordType = RecordType.MONTHLY;
+        }
+        mRecordType = recordType;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -116,9 +143,10 @@ public class Budget implements Parcelable {
         dest.writeString(mName);
         dest.writeString(String.valueOf(mAmount));
         dest.writeList(mCategories);
+        dest.writeString(mRecordType);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String toString() {
         return "Budget{" +
@@ -126,6 +154,7 @@ public class Budget implements Parcelable {
                 ", mName='" + mName + '\'' +
                 ", mAmount=" + mAmount +
                 ", mCategories=" + mCategories +
+                ", mRecordType=" + mRecordType +
                 "}";
     }
 }

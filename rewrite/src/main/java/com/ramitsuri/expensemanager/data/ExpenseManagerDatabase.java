@@ -25,7 +25,7 @@ import androidx.room.TypeConverters;
 
 @Database(entities = {Category.class, Expense.class, PaymentMethod.class,
         Log.class, SheetInfo.class, Budget.class, EditedSheet.class},
-        version = 7, exportSchema = true)
+        version = 8, exportSchema = true)
 @TypeConverters({BigDecimalConverter.class, ListConverter.class})
 public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
@@ -44,6 +44,7 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
                             .addMigrations(DatabaseMigration.MIGRATION_4_5)
                             .addMigrations(DatabaseMigration.MIGRATION_5_6)
                             .addMigrations(DatabaseMigration.MIGRATION_6_7)
+                            .addMigrations(DatabaseMigration.MIGRATION_7_8)
                             .build();
                 }
             }

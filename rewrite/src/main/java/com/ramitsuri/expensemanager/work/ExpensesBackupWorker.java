@@ -20,6 +20,8 @@ import javax.annotation.Nonnull;
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
 
+import timber.log.Timber;
+
 public class ExpensesBackupWorker extends BaseWorker {
 
     public ExpensesBackupWorker(@NonNull Context context,
@@ -96,6 +98,7 @@ public class ExpensesBackupWorker extends BaseWorker {
             onFailure(workType, "Unknown reason");
             return Result.failure();
         } catch (Exception e) {
+            Timber.e(e);
             onFailure(workType, "Unknown: " + e);
             return Result.failure();
         }

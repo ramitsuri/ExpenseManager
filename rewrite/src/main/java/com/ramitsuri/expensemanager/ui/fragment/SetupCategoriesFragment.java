@@ -8,16 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
-import com.ramitsuri.expensemanager.viewModel.SetupCategoriesViewModel;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,11 +17,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.ui.adapter.ListOptionsItemAdapter;
+import com.ramitsuri.expensemanager.ui.adapter.ListItemWrapper;
+import com.ramitsuri.expensemanager.viewModel.SetupCategoriesViewModel;
+
+import javax.annotation.Nonnull;
+
 import timber.log.Timber;
 
 public class SetupCategoriesFragment extends BaseFragment {
 
     private SetupCategoriesViewModel mViewModel;
+    private Button mBtnAdd;
+
+    private ListOptionsItemAdapter mAdapter;
 
     public SetupCategoriesFragment() {
     }
@@ -85,8 +89,8 @@ public class SetupCategoriesFragment extends BaseFragment {
         });
 
         // Add new
-        Button btnAdd = view.findViewById(R.id.btn_add);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        mBtnAdd = view.findViewById(R.id.btn_add);
+        mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Timber.i("Add requested");
@@ -108,13 +112,13 @@ public class SetupCategoriesFragment extends BaseFragment {
         }
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         listItems.setLayoutManager(manager);
-        final ListOptionsItemAdapter adapter = new ListOptionsItemAdapter();
-        adapter.setCallback(
+        mAdapter = new ListOptionsItemAdapter();
+        mAdapter.setCallback(
                 new ListOptionsItemAdapter.ListOptionsItemCallback() {
                     @Override
-                    public void onItemDeleteRequested(@Nonnull String value) {
+                    public void onItemDeleteRequested(@Nonnull ListItemWrapper value) {
                         Timber.i("Delete requested: %s", value);
-                        if (mViewModel.delete(value)) {
+                        if (mViewModel.delete(value.getValue())) {
                             Timber.i("Delete succeeded");
                             if (getView() != null) {
                                 Snackbar.make(getView(), R.string.setup_category_deleted,
@@ -128,19 +132,57 @@ public class SetupCategoriesFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onItemEditRequested(@Nonnull String value) {
+                    public void onItemEditRequested(@Nonnull ListItemWrapper value) {
                         Timber.i("Edit requested %s", value);
-                        showAddEntityDialog(value);
+                        showAddEntityDialog(value.getValue());
                     }
                 });
-        listItems.setAdapter(adapter);
-        mViewModel.getValuesLive()
-                .observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        listItems.setAdapter(mAdapter);
+        mViewModel.areValuesLoaded()
+                .observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                     @Override
-                    public void onChanged(List<String> strings) {
-                        adapter.setValues(strings);
+                    public void onChanged(Boolean loaded) {
+                        refreshAdapter();
                     }
                 });
+
+        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) { // Monthly
+                    onMonthlyTabSelected();
+                } else if (tab.getPosition() == 1) { // Annual
+                    onAnnualTabSelected();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void refreshAdapter() {
+        mAdapter.setValues(mViewModel.getValues());
+    }
+
+    private void onAnnualTabSelected() {
+        mBtnAdd.setText(R.string.setup_category_add_new_annual);
+        mViewModel.onAnnualTabSelected();
+        refreshAdapter();
+    }
+
+    private void onMonthlyTabSelected() {
+        mBtnAdd.setText(R.string.setup_category_add_new_monthly);
+        mViewModel.onMonthlyTabSelected();
+        refreshAdapter();
     }
 
     private void showAddEntityDialog(@Nullable final String value) {

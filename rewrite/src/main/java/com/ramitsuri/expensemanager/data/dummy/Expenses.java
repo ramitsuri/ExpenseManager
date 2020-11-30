@@ -1,7 +1,9 @@
 package com.ramitsuri.expensemanager.data.dummy;
 
+import android.text.TextUtils;
 import android.util.Pair;
 
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
@@ -69,6 +71,8 @@ public class Expenses {
         expense.setIsStarred(true);
         expense.setIsSynced(false);
         expense.setSheetId(1);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -81,6 +85,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(true);
         expense.setSheetId(2);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -93,6 +99,8 @@ public class Expenses {
         expense.setIsStarred(true);
         expense.setIsSynced(false);
         expense.setSheetId(3);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -105,6 +113,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(false);
         expense.setSheetId(1);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -117,6 +127,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(false);
         expense.setSheetId(2);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -129,6 +141,8 @@ public class Expenses {
         expense.setIsStarred(true);
         expense.setIsSynced(true);
         expense.setSheetId(3);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -141,6 +155,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(false);
         expense.setSheetId(1);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -153,6 +169,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(false);
         expense.setSheetId(1);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -165,6 +183,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(true);
         expense.setSheetId(2);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -177,6 +197,8 @@ public class Expenses {
         expense.setIsStarred(true);
         expense.setIsSynced(false);
         expense.setSheetId(3);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -189,6 +211,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(false);
         expense.setSheetId(2);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -201,6 +225,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(false);
         expense.setSheetId(2);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -213,6 +239,8 @@ public class Expenses {
         expense.setIsStarred(false);
         expense.setIsSynced(true);
         expense.setSheetId(1);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -225,6 +253,8 @@ public class Expenses {
         expense.setIsStarred(true);
         expense.setIsSynced(true);
         expense.setSheetId(-1);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.setIdentifier("");
         expenses.add(expense);
 
         expense = new Expense();
@@ -238,6 +268,8 @@ public class Expenses {
         expense.setIsSynced(true);
         expense.setSheetId(-1);
         expense.setIsIncome(true);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -251,6 +283,8 @@ public class Expenses {
         expense.setIsSynced(true);
         expense.setSheetId(-1);
         expense.setIsIncome(true);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -264,6 +298,8 @@ public class Expenses {
         expense.setIsSynced(true);
         expense.setSheetId(-1);
         expense.setIsIncome(true);
+        expense.setRecordType(RecordType.ANNUAL);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         expense = new Expense();
@@ -277,6 +313,8 @@ public class Expenses {
         expense.setIsSynced(true);
         expense.setSheetId(-1);
         expense.setIsIncome(true);
+        expense.setRecordType(RecordType.MONTHLY);
+        expense.generateIdentifier();
         expenses.add(expense);
 
         return expenses;
@@ -463,5 +501,25 @@ public class Expenses {
             }
         }
         return null;
+    }
+
+    public static List<Expense> getForRecordType(@RecordType String recordType) {
+        List<Expense> expenses = new ArrayList<>();
+        for (Expense expense : all()) {
+            if (recordType.equals(expense.getRecordType())) {
+                expenses.add(expense);
+            }
+        }
+        return expenses;
+    }
+
+    public static List<Expense> getForEmptyIdentifier() {
+        List<Expense> expenses = new ArrayList<>();
+        for (Expense expense : all()) {
+            if (TextUtils.isEmpty(expense.getIdentifier())) {
+                expenses.add(expense);
+            }
+        }
+        return expenses;
     }
 }

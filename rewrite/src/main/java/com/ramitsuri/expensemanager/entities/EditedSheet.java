@@ -17,7 +17,7 @@ public class EditedSheet implements Parcelable {
     private int mId;
 
     // This is actually the month index (0-11) the expense belongs to that was edited.
-    // This was done so I don't have to modufy the database
+    // This was done so I don't have to modify the database
     @ColumnInfo(name = "sheet_id")
     private int mSheetId;
 

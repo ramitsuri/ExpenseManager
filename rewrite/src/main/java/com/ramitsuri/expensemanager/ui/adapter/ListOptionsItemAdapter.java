@@ -21,27 +21,27 @@ public class ListOptionsItemAdapter
         extends RecyclerView.Adapter<ListOptionsItemAdapter.ViewHolder> {
 
     @Nullable
-    private List<String> mValues;
+    private List<ListItemWrapper> mValues;
     @Nullable
     private ListOptionsItemCallback mCallback;
 
     public interface ListOptionsItemCallback {
-        void onItemDeleteRequested(@Nonnull String value);
+        void onItemDeleteRequested(@Nonnull ListItemWrapper value);
 
-        void onItemEditRequested(@Nonnull String value);
+        void onItemEditRequested(@Nonnull ListItemWrapper value);
     }
 
     public void setCallback(@NonNull ListOptionsItemCallback callback) {
         mCallback = callback;
     }
 
-    public void setValues(@NonNull List<String> values) {
+    public void setValues(@NonNull List<ListItemWrapper> values) {
         mValues = values;
         notifyDataSetChanged();
     }
 
     @Nullable
-    public List<String> getValues() {
+    public List<ListItemWrapper> getValues() {
         return mValues;
     }
 
@@ -56,7 +56,7 @@ public class ListOptionsItemAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mValues != null) {
-            String value = mValues.get(position);
+            String value = mValues.get(position).getValue();
             if (value == null) {
                 return;
             }

@@ -52,12 +52,12 @@ public class Constants {
     }
 
     public class Range {
-        public static final String CATEGORIES = SheetNames.ENTITIES + "!C1:C20";
+        public static final String CATEGORIES = SheetNames.ENTITIES + "!C1:D40";
         public static final String USER_ENTERED_CATEGORIES = "=" + CATEGORIES;
-        public static final String PAYMENT_METHODS = SheetNames.ENTITIES + "!A1:A20";
+        public static final String PAYMENT_METHODS = SheetNames.ENTITIES + "!A1:A40";
         public static final String USER_ENTERED_PAYMENT_METHODS = "=" + PAYMENT_METHODS;
-        public static final String CATEGORIES_PAYMENT_METHODS = SheetNames.ENTITIES + "!A1:C20";
-        public static final String BUDGETS = SheetNames.ENTITIES + "!G1:M20";
+        public static final String CATEGORIES_PAYMENT_METHODS = SheetNames.ENTITIES + "!A1:D40";
+        public static final String BUDGETS = SheetNames.ENTITIES + "!H1:O20";
     }
 
     public class SheetNames {
@@ -81,6 +81,7 @@ public class Constants {
     public class LogResult {
         public static final String SUCCESS = "success";
         public static final String FAILURE = "failure";
+        public static final String ERROR = "error";
     }
 
     public class Sheets {
@@ -91,7 +92,7 @@ public class Constants {
         public static final String ONE_OF_RANGE = "ONE_OF_RANGE";
         public static final String FLAG = "FLAG";
         public static final String INCOME = "INCOME";
-        public static final String EXPENSE_RANGE = "!A:H";
+        public static final String EXPENSE_RANGE = "!A:J";
     }
 
     public class Basic {

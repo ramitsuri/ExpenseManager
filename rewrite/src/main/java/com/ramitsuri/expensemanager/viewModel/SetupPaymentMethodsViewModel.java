@@ -1,7 +1,14 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
+import com.ramitsuri.expensemanager.ui.adapter.ListItemWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
@@ -10,10 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 public class SetupPaymentMethodsViewModel extends ViewModel {
 
@@ -26,8 +29,18 @@ public class SetupPaymentMethodsViewModel extends ViewModel {
         mValuesLive = repository().getPaymentMethodStrings();
     }
 
-    public LiveData<List<String>> getValuesLive() {
-        return mValuesLive;
+    public LiveData<List<ListItemWrapper>> getValuesLive() {
+        return Transformations
+                .map(mValuesLive, new Function<List<String>, List<ListItemWrapper>>() {
+                    @Override
+                    public List<ListItemWrapper> apply(List<String> input) {
+                        List<ListItemWrapper> wrappers = new ArrayList<>();
+                        for (String value : input) {
+                            wrappers.add(new ListItemWrapper(value));
+                        }
+                        return wrappers;
+                    }
+                });
     }
 
     public boolean add(@Nonnull String value) {

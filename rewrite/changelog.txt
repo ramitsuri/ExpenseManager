@@ -1,3 +1,129 @@
+Add Annual Expenses Part 3
+Upgrade Gradle 4.1.1
+RecordType
+    - Add record type None
+CategoryRepo
+    - Keep a mutable category list to which updates are made
+    - Add method to get list for record type
+Category, PaymentMethod, ListItemWrapper
+    - Make it implement ListEqualizer to enable generic adapters
+Filter
+    - Set record type to Monthly on clear
+    - Return null friendly string if record type is annual or null (to enable filter clear button)
+FilterAdapter
+    - Rename callback interface
+ListPickerAdapter
+    - Use list of ListEqualizer instead of String to make it reusable for multiple datatypes
+AddExpenseFragment
+    - Move categories below payment methods due to Categories header no longer being there
+    - Add Monthly/Annual tab for categories
+    - Adjust for ListEqualizer usage instead of Categories/PaymentMethods
+FilterOptionsFragment
+    - Add monthly/annual filtering
+ObjectHelper
+    - Add method to find index in ListEqualizer item list
+AddExpenseViewModel
+    - No longer transforming payment methods and categories to strings
+    - Move to Category object usage in place of String to better work with RecordType
+    - ^ same with PaymentMethod
+
+Add Annual Expenses Part 2
+AllExpensesViewModel
+    - Make repository object final
+    - Set a different identifier (GUID) on duplicated expense
+    - Default to monthly expenses for filter
+AppHelper
+    - Add methods for if identifier has been set on older expenses
+BaseRepository
+    - New class to extract duplicate members
+CategoryRepository
+    - Filter categories for record type
+    - Set categories as objects and not just strings
+ExpenseRepository
+    - Add method to set identifiers on expenses that don't have it
+CreateSpreadsheetWorker
+    - No longer convert categories and payment methods to strings from their objects
+MainApplication
+    - Set identifiers on older expenses and make all sheets to force upload
+    - Modify default data code to have monthly categories and budgets
+SetupBudgetsFragment
+    - Add tabs to select monthly or annual
+SetupBudgetsViewModel
+    - Add record type filtering
+SetupCategoriesFragment
+    - Add tabs
+    - (VM) Add record type filtering
+SharedExpenses
+    - Add record type and identifier to to and from map conversion
+SheetRepository
+    - Create spreadsheet with category and payment method objects and not just strings
+SheetRequestHelper
+    - Create spreadsheet with category and payment method objects and not just strings
+    - When uploading expenses, use string value of all properties (goes hand in hand with creating expense from String properties in Expense constructor)
+    - Add record type and identifier columns
+    - For entities, save category and budget record type
+SyncWorker
+    - Adjust for another row for category record type
+    - Fix a bug where budgets weren't saved
+
+Add Annual Expenses Part 1
+Budget
+    - Add record type (annual or monthly) property
+    - Set default record type to monthly
+Category
+    - Add record type (annual or monthly) property
+    - Set default record type to monthly
+CategoryDao
+    - Add method to get categories for record type
+Expense
+    - Add identifier and record type properties
+    - Parse date time as long instead of BigDecimal (?? for whatever reason that was done)
+    - Construct amount from String instead of casting value as BigDecimal
+ExpensesBackupWorker
+    - Log exception as error so that crash reporting picks it up
+ExpenseSyncWorker
+    - Catch and log exception from parsing Expense from sheet
+Filter
+    - Add record type
+    - Move sql building to specialized class
+MiscellaneousViewModel
+    - Enable backup now in debug
+ObjectHelper
+    - Add method to convert sparse array to list
+SqlBuilder
+    - Specialized class to build SQL queries
+ViewModelFactory
+    - Log exception as warning so crash reporting picks it up
+Constants
+    - Modify category, payment method, entities, budget range to accommodate additional record type column
+    - Modify Expense range to accommodate record type
+Db
+    - Migrate to version 8
+    - Adds record type columns to budget, category and expense and identifier (GUID) to expense
+
+Gradle and artifact updates
+    - Remove google json file from changelist
+Rewrite/build.gradle
+    - Replace Fabric with Firebase Crashlytics
+    - Update compile and target SDK version to 30
+    - Update Test, WorkManager, Firebase, Material, Navigation, Fragment, ConstaintLayout, AppCompat artifacts
+Project/build.gradle
+    - Remove fabric repo and replace its classpath with Firebase Crashlytics
+    - Update gradle classpath
+    - Update gradle wrapper to 6.5
+CrashReportingHelper
+    - New class to manage crash reporting stuff
+ExpenseItem
+    - Fix a weird issue with one label not properly aligned
+MiscellaneousFragment
+    - Show toast and log message if login fails
+ReleaseTree (Timber)
+    - Log Warning and Error messages to CrashReporting
+Add animations from previous nav library as they were removed in new version
+
+EOF Changes
+    - From migration to Windows
+
 Bug Fixes
 PrefKeys
     - Add key for backup issue fixed

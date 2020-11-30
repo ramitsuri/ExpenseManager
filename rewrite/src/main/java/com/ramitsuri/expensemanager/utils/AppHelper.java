@@ -126,4 +126,15 @@ public class AppHelper {
     public static void setBackupIssueFixed(boolean fixed) {
         PrefHelper.set(PrefKeys.BACKUP_ISSUE_FIXED, fixed);
     }
+
+    /**
+     * @return True if identifier (GUID) has been set on older expenses
+     */
+    public static boolean isIdentifierAdded() {
+        return PrefHelper.get(PrefKeys.IDENTIFIER_ADDED, false);
+    }
+
+    public static void setIdentifierAdded(boolean added) {
+        PrefHelper.set(PrefKeys.IDENTIFIER_ADDED, added);
+    }
 }

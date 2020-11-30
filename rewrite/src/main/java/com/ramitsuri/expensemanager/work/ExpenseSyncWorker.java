@@ -83,8 +83,12 @@ public class ExpenseSyncWorker extends BaseWorker {
                                 sb.append("Objects in object lists null or size less than 5;");
                                 continue;
                             }
-                            Expense expense = new Expense(objects);
-                            expenses.add(expense);
+                            try {
+                                Expense expense = new Expense(objects);
+                                expenses.add(expense);
+                            } catch (Exception e) {
+                                insertLog(workType, Constants.LogResult.ERROR, e.getMessage());
+                            }
                         }
                     } else {
                         sb.append("Object lists in range null;");

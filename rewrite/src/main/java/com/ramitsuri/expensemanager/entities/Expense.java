@@ -2,15 +2,22 @@ package com.ramitsuri.expensemanager.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
-import org.jetbrains.annotations.NotNull;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import timber.log.Timber;
 
 import static com.ramitsuri.expensemanager.constants.Constants.Sheets.FLAG;
 import static com.ramitsuri.expensemanager.constants.Constants.Sheets.INCOME;
@@ -51,6 +58,15 @@ public class Expense implements Parcelable {
     @ColumnInfo(name = COL_INCOME)
     private boolean mIsIncome;
 
+    @ColumnInfo(name = COL_RECORD_TYPE, defaultValue = "MONTHLY")
+    @RecordType
+    @NonNull
+    private String mRecordType;
+
+    @ColumnInfo(name = COL_IDENTIFIER)
+    @Nonnull
+    private String mIdentifier;
+
     public static final Creator<Expense> CREATOR = new Creator<Expense>() {
         @Override
         public Expense createFromParcel(Parcel in) {
@@ -64,6 +80,8 @@ public class Expense implements Parcelable {
     };
 
     public Expense() {
+        mRecordType = RecordType.MONTHLY;
+        generateIdentifier();
     }
 
     protected Expense(Parcel in) {
@@ -78,21 +96,39 @@ public class Expense implements Parcelable {
         mIsStarred = in.readByte() != 0;
         mSheetId = in.readInt();
         mIsIncome = in.readByte() != 0;
+        String recordType = in.readString();
+        if (TextUtils.isEmpty(recordType)) {
+            recordType = RecordType.MONTHLY;
+        }
+        mRecordType = recordType;
+        String identifier = in.readString();
+        if (TextUtils.isEmpty(identifier)) {
+            generateIdentifier();
+        } else {
+            setIdentifier(identifier);
+        }
     }
 
-    public Expense(List<Object> objects) {
-        mDateTime = ((BigDecimal)objects.get(0)).longValue();
-        mDescription = (String)objects.get(1);
-        mStore = (String)objects.get(2);
-        mAmount = (BigDecimal)objects.get(3);
-        mPaymentMethod = (String)objects.get(4);
-        mCategory = (String)objects.get(5);
-        if (objects.size() >= 7) {
-            mIsStarred = objects.get(6).equals(FLAG);
-        }
-        mIsSynced = true;
-        if (objects.size() >= 8) {
-            mIsIncome = objects.get(7).equals(INCOME);
+    public Expense(List<Object> objects) throws Exception {
+        try {
+            mDateTime = Long.parseLong((String)objects.get(0));
+            mDescription = (String)objects.get(1);
+            mStore = (String)objects.get(2);
+            mAmount = new BigDecimal((String)objects.get(3));
+            mPaymentMethod = (String)objects.get(4);
+            mCategory = (String)objects.get(5);
+            mRecordType = (String)objects.get(6);
+            mIdentifier = (String)objects.get(7);
+            if (objects.size() >= 9) {
+                mIsStarred = objects.get(8).equals(FLAG);
+            }
+            mIsSynced = true;
+            if (objects.size() >= 10) {
+                mIsIncome = objects.get(9).equals(INCOME);
+            }
+        } catch (Exception e) {
+            Timber.w("Unable to convert downloaded expense");
+            throw e;
         }
     }
 
@@ -106,6 +142,8 @@ public class Expense implements Parcelable {
         mIsStarred = expense.isStarred();
         mIsSynced = expense.isSynced();
         mIsIncome = expense.isIncome();
+        mRecordType = expense.getRecordType();
+        mIdentifier = expense.getIdentifier();
     }
 
     @Override
@@ -126,6 +164,8 @@ public class Expense implements Parcelable {
         parcel.writeByte((byte)(mIsStarred ? 1 : 0));
         parcel.writeInt(mSheetId);
         parcel.writeByte((byte)(mIsIncome ? 1 : 0));
+        parcel.writeString(mRecordType);
+        parcel.writeString(mIdentifier);
     }
 
     public int getId() {
@@ -216,7 +256,33 @@ public class Expense implements Parcelable {
         mIsIncome = income;
     }
 
-    @NotNull
+    @RecordType
+    @NonNull
+    public String getRecordType() {
+        return mRecordType;
+    }
+
+    public void setRecordType(@RecordType @Nullable String recordType) {
+        if (TextUtils.isEmpty(recordType)) {
+            recordType = RecordType.MONTHLY;
+        }
+        mRecordType = recordType;
+    }
+
+    @Nonnull
+    public String getIdentifier() {
+        return mIdentifier;
+    }
+
+    public void setIdentifier(@Nonnull String identifier) {
+        mIdentifier = identifier;
+    }
+
+    public void generateIdentifier() {
+        mIdentifier = UUID.randomUUID().toString();
+    }
+
+    @NonNull
     @Override
     public String toString() {
         return "Expense { " +
@@ -231,6 +297,8 @@ public class Expense implements Parcelable {
                 ", mIsStarred = " + mIsStarred +
                 ", mSheetId = " + mSheetId +
                 ", mIsIncome = " + mIsIncome +
+                ", mRecordType = " + mRecordType +
+                ", mIdentifier = " + mIdentifier +
                 " }\n";
     }
 
@@ -245,4 +313,6 @@ public class Expense implements Parcelable {
     public static final String COL_STARRED = "is_starred";
     public static final String COL_SHEET_ID = "sheet_id";
     public static final String COL_INCOME = "is_income";
+    public static final String COL_RECORD_TYPE = "record_type";
+    public static final String COL_IDENTIFIER = "identifier";
 }

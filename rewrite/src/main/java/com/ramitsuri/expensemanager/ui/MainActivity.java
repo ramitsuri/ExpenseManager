@@ -5,17 +5,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {

@@ -6,8 +6,11 @@ import android.util.Pair;
 import android.util.SparseArray;
 
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.data.utils.SqlBuilder;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
+import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import androidx.sqlite.db.SimpleSQLiteQuery;
+
 import timber.log.Timber;
 
 public class Filter implements Parcelable {
@@ -27,6 +31,8 @@ public class Filter implements Parcelable {
     private List<String> mPaymentMethods;
     private Boolean mIsSynced;
     private Boolean mIsStarred;
+    @RecordType
+    private String mRecordType;
 
     public Filter() {
     }
@@ -55,6 +61,7 @@ public class Filter implements Parcelable {
         if (isStarred != null) {
             mIsStarred = isStarred.equals(TRUE);
         }
+        mRecordType = in.readString();
     }
 
     public static final Creator<Filter> CREATOR = new Creator<Filter>() {
@@ -81,6 +88,7 @@ public class Filter implements Parcelable {
         mPaymentMethods = null;
         mIsStarred = null;
         mIsSynced = null;
+        mRecordType = RecordType.MONTHLY;
 
         return this;
     }
@@ -178,6 +186,16 @@ public class Filter implements Parcelable {
         return this;
     }
 
+    @RecordType
+    public String getRecordType() {
+        return mRecordType;
+    }
+
+    public Filter setRecordType(@RecordType String recordType) {
+        mRecordType = recordType;
+        return this;
+    }
+
     @Nonnull
     @Override
     public String toString() {
@@ -188,6 +206,7 @@ public class Filter implements Parcelable {
                 ", mPaymentMethods=" + mPaymentMethods +
                 ", mIsSynced=" + mIsSynced +
                 ", mIsStarred=" + mIsStarred +
+                ", mRecordType=" + mRecordType +
                 '}';
     }
 
@@ -199,7 +218,8 @@ public class Filter implements Parcelable {
         }
         if (mIsSynced != null || mIsStarred != null ||
                 (mCategories != null && mCategories.size() > 0) ||
-                (mPaymentMethods != null && mPaymentMethods.size() > 0)) {
+                (mPaymentMethods != null && mPaymentMethods.size() > 0) ||
+                (mRecordType == null || mRecordType.equals(RecordType.ANNUAL))) {
             return null;
         }
         return friendlyString;
@@ -255,136 +275,73 @@ public class Filter implements Parcelable {
     }
 
     public SimpleSQLiteQuery toQuery() {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT * FROM expense");
-        List<Object> args = new ArrayList<>();
+        SqlBuilder builder = new SqlBuilder();
+        builder.select("*")
+                .from(Expense.TABLE);
         // Is income
         if (getIsIncome() != null) {
-            queryBuilder.append(" WHERE is_income = ?");
-            args.add(getIsIncome() ? 1 : 0);
+            builder.where()
+                    .column(Expense.COL_INCOME)
+                    .equal(getIsIncome() ? 1 : 0);
         }
-
         // Date ranges
         if (getDateTimes() != null && getDateTimes().size() > 0) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" (");
-            boolean dateTimeAdded = false;
-            for (int i = 0; i < getDateTimes().size(); i++) {
-                Pair<Long, Long> dateTime = getDateTimes().valueAt(i);
-                if (dateTime == null) {
-                    continue;
-                }
-                if (dateTimeAdded) {
-                    queryBuilder.append(" OR");
-                }
-                queryBuilder.append(" (date_time BETWEEN ? AND ?)");
-                args.add(dateTime.first);
-                args.add(dateTime.second);
-                dateTimeAdded = true;
-            }
-            queryBuilder.append(" )");
+            builder.whereOrAnd()
+                    .between(Expense.COL_DATE_TIME,
+                            ObjectHelper.sparseArrayToList(getDateTimes()));
         }
-
         // Categories
         if (getCategories() != null && getCategories().size() > 0) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" category IN (");
-            StringBuilder placeholders = new StringBuilder();
-            for (int i = 0; i < getCategories().size(); i++) {
-                if (i != 0) {
-                    placeholders.append(",");
-                }
-                placeholders.append("?");
-                args.add(getCategories().get(i));
-            }
-            queryBuilder.append(placeholders.toString());
-            queryBuilder.append(")");
+            builder.whereOrAnd()
+                    .column(Expense.COL_CATEGORY)
+                    .in(getCategories());
         }
 
         // Payment Methods
         if (getPaymentMethods() != null && getPaymentMethods().size() > 0) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" payment_method IN (");
-            StringBuilder placeholders = new StringBuilder();
-            for (int i = 0; i < getPaymentMethods().size(); i++) {
-                if (i != 0) {
-                    placeholders.append(",");
-                }
-                placeholders.append("?");
-                args.add(getPaymentMethods().get(i));
-            }
-            queryBuilder.append(placeholders.toString());
-            queryBuilder.append(")");
+            builder.whereOrAnd()
+                    .column(Expense.COL_PAYMENT)
+                    .in(getPaymentMethods());
         }
 
         // Synced
         if (getIsSynced() != null) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" is_synced = ?");
-            args.add(getIsSynced() ? 1 : 0);
+            builder.whereOrAnd()
+                    .column(Expense.COL_SYNCED)
+                    .equal(getIsSynced() ? 1 : 0);
         }
 
         // Starred
         if (getIsStarred() != null) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" is_starred = ?");
-            args.add(getIsStarred() ? 1 : 0);
+            builder.whereOrAnd()
+                    .column(Expense.COL_STARRED)
+                    .equal(getIsStarred() ? 1 : 0);
         }
 
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
+        // Record Type
+        if (getRecordType() != null) {
+            builder.whereOrAnd()
+                    .column(Expense.COL_RECORD_TYPE)
+                    .equal(getRecordType());
+        }
+        SimpleSQLiteQuery query =
+                new SimpleSQLiteQuery(builder.toString(), builder.getArgs().toArray());
         Timber.i("Generated query is: [%s]", query.getSql());
         return query;
     }
 
     public SimpleSQLiteQuery toUpdateSyncedQuery() {
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("UPDATE expense SET is_synced = 0");
-        List<Object> args = new ArrayList<>();
+        SqlBuilder builder = new SqlBuilder();
+        builder.update(Expense.TABLE)
+                .setEqualTo(Expense.COL_SYNCED, 0);
+
         // Date ranges
         if (getDateTimes() != null && getDateTimes().size() > 0) {
-            if (queryBuilder.indexOf("WHERE") == -1) {
-                queryBuilder.append(" WHERE");
-            } else {
-                queryBuilder.append(" AND");
-            }
-            queryBuilder.append(" (");
-            boolean dateTimeAdded = false;
-            for (int i = 0; i < getDateTimes().size(); i++) {
-                Pair<Long, Long> dateTime = getDateTimes().valueAt(i);
-                if (dateTime == null) {
-                    continue;
-                }
-                if (dateTimeAdded) {
-                    queryBuilder.append(" OR");
-                }
-                queryBuilder.append(" (date_time BETWEEN ? AND ?)");
-                args.add(dateTime.first);
-                args.add(dateTime.second);
-                dateTimeAdded = true;
-            }
-            queryBuilder.append(" )");
+            builder.whereOrAnd()
+                    .between(Expense.COL_DATE_TIME, ObjectHelper.sparseArrayToList(getDateTimes()));
         }
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryBuilder.toString(), args.toArray());
+        SimpleSQLiteQuery query =
+                new SimpleSQLiteQuery(builder.toString(), builder.getArgs().toArray());
         Timber.i("Generated query is: [%s]", query.getSql());
         return query;
     }
@@ -443,6 +400,11 @@ public class Filter implements Parcelable {
             } else {
                 dest.writeString(FALSE);
             }
+        } else {
+            dest.writeString(null);
+        }
+        if (mRecordType != null) {
+            dest.writeString(mRecordType);
         } else {
             dest.writeString(null);
         }

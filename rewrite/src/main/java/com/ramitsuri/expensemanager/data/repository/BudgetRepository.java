@@ -2,22 +2,19 @@ package com.ramitsuri.expensemanager.data.repository;
 
 import android.util.Pair;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.ramitsuri.expensemanager.AppExecutors;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Budget;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-public class BudgetRepository {
-    private AppExecutors mExecutors;
-    private ExpenseManagerDatabase mDatabase;
+public class BudgetRepository extends BaseRepository{
 
     public BudgetRepository(AppExecutors executors, ExpenseManagerDatabase database) {
-        mExecutors = executors;
-        mDatabase = database;
+        super(executors, database);
     }
 
     public LiveData<List<Budget>> getBudgets() {

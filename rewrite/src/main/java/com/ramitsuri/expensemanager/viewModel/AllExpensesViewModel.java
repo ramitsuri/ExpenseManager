@@ -1,6 +1,7 @@
 package com.ramitsuri.expensemanager.viewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -23,11 +24,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+
 import timber.log.Timber;
 
 public class AllExpensesViewModel extends ViewModel {
 
-    private ExpenseRepository mRepository;
+    private final ExpenseRepository mRepository;
 
     private List<Expense> mExpenses;
     private Filter mFilter;
@@ -96,6 +98,7 @@ public class AllExpensesViewModel extends ViewModel {
 
     public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
         Expense duplicate = new Expense(expense);
+        duplicate.generateIdentifier();
         duplicate.setIsSynced(false);
         return mRepository.insertAndGet(duplicate, mFilter);
     }
@@ -120,13 +123,13 @@ public class AllExpensesViewModel extends ViewModel {
     @Nonnull
     private Filter getDefaultFilter() {
         return new Filter()
-                .getDefault();
+                .getDefault()
+                .setRecordType(RecordType.MONTHLY);
     }
 
     public void clearFilter() {
         Timber.i("Clearing filter");
-        mFilter
-                .clear()
+        mFilter.clear()
                 .getDefault();
         mRepository.getForFilter(mFilter);
         updateFilterInfo();

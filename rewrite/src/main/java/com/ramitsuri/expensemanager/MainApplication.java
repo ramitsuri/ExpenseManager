@@ -3,6 +3,7 @@ package com.ramitsuri.expensemanager;
 import android.accounts.Account;
 import android.app.Application;
 
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
@@ -12,6 +13,7 @@ import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
+import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
@@ -83,6 +85,18 @@ public class MainApplication extends Application {
             }
             AppHelper.setBackupIssueFixed(true);
         }
+
+        // Set identifier for expenses that don't have it (Can happen for expenses that were created
+        // prior to this property was added)
+        if (AppHelper.isIdentifierAdded()) {
+            Timber.i("Identifier was added");
+        } else {
+            getExpenseRepo().updateSetIdentifier();
+            for (int i = 0; i < 12; i++) {
+                getEditedSheetRepo().insertEditedSheet(new EditedSheet(i));
+            }
+            AppHelper.setIdentifierAdded(true);
+        }
         removeLegacyPrefs();
     }
 
@@ -141,7 +155,15 @@ public class MainApplication extends Application {
     }
 
     private void addDefaultData() {
-        List<String> categories = Arrays.asList(getResources().getStringArray(R.array.categories));
+        List<String> categoryStrings =
+                Arrays.asList(getResources().getStringArray(R.array.categories));
+        List<Category> categories = new ArrayList<>();
+        for (String categoryString : categoryStrings) {
+            Category category = new Category();
+            category.setName(categoryString);
+            category.setRecordType(RecordType.MONTHLY);
+            categories.add(category);
+        }
         getCategoryRepo().setCategories(categories);
 
         List<String> paymentMethods =
@@ -151,15 +173,17 @@ public class MainApplication extends Application {
         // Add categories to budgets such that each budget has max 3 categories
         int maxSize = 3;
         List<Budget> budgets = new ArrayList<>();
-        int budgetSize = categories.size() / maxSize + (categories.size() % maxSize == 0 ? 0 : 1);
+        int budgetSize =
+                categoryStrings.size() / maxSize + (categoryStrings.size() % maxSize == 0 ? 0 : 1);
         for (int i = 0; i < budgetSize; i++) {
             Budget budget = new Budget();
             budget.setName(getResources().getString(R.string.default_budget_format, i + 1));
             budget.setAmount(new BigDecimal("100"));
             int categoryIndex = i * maxSize;
-            while (categories.size() > categoryIndex && budget.getCategories().size() < maxSize) {
+            while (categoryStrings.size() > categoryIndex &&
+                    budget.getCategories().size() < maxSize) {
                 List<String> budgetCategories = budget.getCategories();
-                budgetCategories.add(categories.get(categoryIndex));
+                budgetCategories.add(categoryStrings.get(categoryIndex));
                 budget.setCategories(budgetCategories);
                 categoryIndex = categoryIndex + 1;
             }

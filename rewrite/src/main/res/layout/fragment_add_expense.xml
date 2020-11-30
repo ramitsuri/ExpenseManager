@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:paddingStart="@dimen/padding_small"
     android:paddingTop="@dimen/padding_small"
-    android:paddingEnd="@dimen/padding_small">
+    android:paddingEnd="@dimen/padding_small"
+    tools:background="@android:color/white">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_close"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_header_category"
+        app:layout_constraintTop_toBottomOf="@id/tabs_categories"
         tools:itemCount="2"
         tools:listitem="@layout/list_picker_item" />
 
@@ -138,17 +139,32 @@
         app:layout_constraintTop_toTopOf="@id/layout_amount"
         app:layout_constraintWidth_percent="0.17" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_header_category"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs_categories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:text="@string/common_category"
-        android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_description" />
+        app:layout_constraintTop_toBottomOf="@id/list_payment_methods"
+        app:tabIndicatorColor="@color/color_teal"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/color_teal"
+        app:tabTextAppearance="@style/TabText">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_monthly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/common_monthly" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_annual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/common_annual" />
+
+    </com.google.android.material.tabs.TabLayout>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/toggle_income"
@@ -158,9 +174,9 @@
         android:text="@string/common_income"
         android:textColor="?attr/colorControlNormal"
         android:textSize="@dimen/text_caption"
-        app:layout_constraintBottom_toBottomOf="@id/text_header_category"
+        app:layout_constraintBottom_toBottomOf="@id/tabs_categories"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/text_header_category" />
+        app:layout_constraintTop_toTopOf="@id/tabs_categories" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_header_payment_methods"
@@ -172,6 +188,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_categories" />
+        app:layout_constraintTop_toBottomOf="@id/layout_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

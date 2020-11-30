@@ -86,7 +86,7 @@ public class MiscellaneousViewModel extends ViewModel {
     }
 
     public boolean enableBackupNow() {
-        return enableHidden() && SecretMessageHelper.isBackupNowEnabled();
+        return (enableHidden() && SecretMessageHelper.isBackupNowEnabled()) || BuildConfig.DEBUG;
     }
 
     public boolean enableDeleteAll() {
