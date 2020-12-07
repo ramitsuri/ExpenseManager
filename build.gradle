@@ -1,6 +1,40 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+
+    // Dependencies
+    ext.analytics_version = '18.0.0'
+    ext.app_compat_version = '1.2.0'
+    ext.constraint_layout_version = '2.0.3'
+    ext.coordinator_layout_version = '1.1.0'
+    ext.core_ktx_version = '1.3.2'
+    ext.coroutine_version = '1.3.9'
+    ext.crashlytics_version = '17.2.2'
+    ext.firebase_core_version = '18.0.0'
+    ext.firestore_version = '22.0.0'
+    ext.fragment_version = '1.3.0-beta01'
+    ext.gson_version = '2.8.6'
+    ext.google_drive_version = 'v3-rev110-1.23.0'
+    ext.google_sheets_version = 'v4-rev40-1.22.0'
+    ext.google_client_version = '1.22.0'
+    ext.kotlin_version = '1.4.20'
+    ext.legacy_support_version = '1.0.0'
+    ext.lifecycle_version = '2.2.0'
+    ext.material_version = '1.2.0-alpha05'
+    ext.navigation_version = '2.3.1'
+    ext.play_service_auth_version = '17.0.0'
+    ext.preference_version = '1.1.1'
+    ext.room_version = '2.2.5'
+    ext.sheets_core_version = '3.1.1'
+    ext.timber_version = '4.7.1'
+    ext.work_version = '2.5.0-alpha03'
+
+    // Test dependencies
+    ext.test_junit_version = '4.13.1'
+    ext.test_core_version = '1.3.0'
+    ext.test_mockito_core_version = '3.3.3'
+    ext.test_arch_core_version = '1.1.1'
+
     repositories {
         google()
         jcenter()
@@ -22,6 +56,7 @@ buildscript {
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
 
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

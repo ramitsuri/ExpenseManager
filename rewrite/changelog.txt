@@ -1,3 +1,19 @@
+Bug fixes
+Gradle
+    - Move dependency versions to base gradle file
+    - Add kotlin support
+    - Remove legacy app module
+Recurring
+    - Add repeat type IntDef
+Periodic work
+    - Replace existing work due to enqueued issues
+    - Increase invoke period to 48 hours
+    - Remove setting constraints
+MainApplication
+    - Fix a bug that would cause edited months to always reset on app restart
+Bottom Sheet Dialog
+    - Fix background color that was broken in Material 1.3.0-alpha03 by going back to 1.2.0-alpha05
+
 Add Annual Expenses Part 3
 Upgrade Gradle 4.1.1
 RecordType

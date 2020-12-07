@@ -27,7 +27,8 @@ import androidx.annotation.StringDef;
         PrefKeys.SHARED_THIS_SOURCE,
         PrefKeys.SHARED_OTHER_SOURCE,
         PrefKeys.BACKUP_ISSUE_FIXED,
-        PrefKeys.IDENTIFIER_ADDED
+        PrefKeys.IDENTIFIER_ADDED,
+        PrefKeys.REPLACE_WORK
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface PrefKeys {
@@ -53,4 +54,5 @@ public @interface PrefKeys {
     String SHARED_OTHER_SOURCE = "shared_other_source";
     String BACKUP_ISSUE_FIXED = "backup_issue_fixed";
     String IDENTIFIER_ADDED = "identifier_added";
+    String REPLACE_WORK = "replace_work";
 }

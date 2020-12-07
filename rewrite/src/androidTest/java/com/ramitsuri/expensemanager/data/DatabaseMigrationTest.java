@@ -1,16 +1,16 @@
 package com.ramitsuri.expensemanager.data;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.io.IOException;
-
 import androidx.room.testing.MigrationTestHelper;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 @RunWith(AndroidJUnit4.class)
 public class DatabaseMigrationTest {
@@ -153,7 +153,7 @@ public class DatabaseMigrationTest {
     public void migrate7To8() throws IOException {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 7);
 
-        // db has schema version 6. insert some data using SQL queries.
+        // db has schema version 7. insert some data using SQL queries.
         // You cannot use DAO classes because they expect the latest schema.
         db.execSQL("SELECT * FROM Expense");
 
