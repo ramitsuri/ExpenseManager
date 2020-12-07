@@ -88,7 +88,7 @@ public class SecretMessageHelper {
 
             case SecretMessages.ENQUEUE_PERIODIC:
                 Timber.i("Enqueue all periodic work");
-                WorkHelper.enqueuePeriodicBackup();
+                WorkHelper.enqueuePeriodicBackup(true);
                 WorkHelper.enqueuePeriodicEntitiesBackup();
                 handled = true;
                 break;

@@ -2,6 +2,7 @@
 - [ ] Support for new year
 - [ ] Scheduled recurring expense
 - [ ] Backup on app startup if auto backup hasn't happened in a while
+- [ ] Fix LiveData access for most VM/Repos (Look at Recurring implementation for correct way)
 - [x] Annual expense UI
 - [x] Fix calculation for monthly and annual
 - [x] Thoroughly test annual features

@@ -66,7 +66,8 @@ public class MainApplication extends Application {
                 WorkHelper.pruneWork();
                 AppHelper.setPruneComplete(true);
             }
-            WorkHelper.enqueuePeriodicBackup();
+            WorkHelper.enqueuePeriodicBackup(AppHelper.shouldReplaceWork());
+            AppHelper.setShouldReplaceWork(false);
         }
 
         if (AppHelper.isFirstRunComplete()) {
@@ -75,7 +76,6 @@ public class MainApplication extends Application {
             addDefaultData();
             AppHelper.setFirstRunComplete(true);
         }
-        AppHelper.setBackupIssueFixed(false);
 
         if (AppHelper.isBackupIssueFixed()) {
             Timber.i("Backup issue was fixed");

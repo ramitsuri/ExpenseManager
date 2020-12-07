@@ -24,6 +24,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
+
 import timber.log.Timber;
 
 public class WorkHelper {
@@ -56,13 +57,13 @@ public class WorkHelper {
 
     /**
      * Periodic Backup
-     * Runs once a day around 3AM
+     * Runs once every 2 days around 3AM
      */
-    public static void enqueuePeriodicBackup() {
+    public static void enqueuePeriodicBackup(boolean replace) {
         Timber.i("Enqueue scheduled backup invoked");
 
         String tag = getPeriodicExpensesBackupTag();
-        enqueuePeriodicWork(tag, ExpensesBackupWorker.class);
+        enqueuePeriodicWork(tag, ExpensesBackupWorker.class, false, replace);
     }
 
     public static void cancelPeriodicBackup() {
@@ -118,7 +119,7 @@ public class WorkHelper {
         Timber.i("Enqueue periodic entities backup invoked");
         // Prepare
         String tag = getPeriodicEntitiesBackupTag();
-        enqueuePeriodicWork(tag, EntitiesBackupWorker.class);
+        enqueuePeriodicWork(tag, EntitiesBackupWorker.class, true, false);
     }
 
     public static void cancelPeriodicEntitiesBackup() {
@@ -215,23 +216,29 @@ public class WorkHelper {
     }
 
     private static void enqueuePeriodicWork(String tag,
-            @NonNull Class<? extends ListenableWorker> workerClass) {
+            @NonNull Class<? extends ListenableWorker> workerClass,
+            boolean setConstraints,
+            boolean replace) {
         Constraints constraints = getConstraints();
         Data input = new Data.Builder()
                 .putString(Constants.Work.TYPE, tag)
                 .build();
 
         // Request
-        PeriodicWorkRequest request = new PeriodicWorkRequest
-                .Builder(workerClass, 1, TimeUnit.DAYS)
+        PeriodicWorkRequest.Builder builder = new PeriodicWorkRequest
+                .Builder(workerClass, 48, TimeUnit.HOURS)
                 .setInputData(input)
                 .addTag(tag)
-                .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 3))
-                .setConstraints(constraints)
-                .build();
-
+                .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 3));
+        if (setConstraints) {
+            builder.setConstraints(constraints);
+        }
+        ExistingPeriodicWorkPolicy policy = ExistingPeriodicWorkPolicy.KEEP;
+        if (replace) {
+            policy = ExistingPeriodicWorkPolicy.REPLACE;
+        }
         // Enqueue
-        getInstance().enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.REPLACE, request);
+        getInstance().enqueueUniquePeriodicWork(tag, policy, builder.build());
     }
 
     private static Data getInputData(String appName, String accountName, String accountType,

@@ -137,4 +137,16 @@ public class AppHelper {
     public static void setIdentifierAdded(boolean added) {
         PrefHelper.set(PrefKeys.IDENTIFIER_ADDED, added);
     }
+
+    /**
+     * @return True if Periodic Expense backup worker needs to be replaced. Returns true by default
+     * when the pref isn't found
+     */
+    public static boolean shouldReplaceWork() {
+        return PrefHelper.get(PrefKeys.REPLACE_WORK, true);
+    }
+
+    public static void setShouldReplaceWork(boolean replace) {
+        PrefHelper.set(PrefKeys.REPLACE_WORK, replace);
+    }
 }
