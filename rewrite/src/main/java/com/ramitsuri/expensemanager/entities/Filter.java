@@ -277,51 +277,51 @@ public class Filter implements Parcelable {
     public SimpleSQLiteQuery toQuery() {
         SqlBuilder builder = new SqlBuilder();
         builder.select("*")
-                .from(Expense.TABLE);
+                .from(Expense.DB.TABLE);
         // Is income
         if (getIsIncome() != null) {
             builder.where()
-                    .column(Expense.COL_INCOME)
+                    .column(Expense.DB.COL_INCOME)
                     .equal(getIsIncome() ? 1 : 0);
         }
         // Date ranges
         if (getDateTimes() != null && getDateTimes().size() > 0) {
             builder.whereOrAnd()
-                    .between(Expense.COL_DATE_TIME,
+                    .between(Expense.DB.COL_DATE_TIME,
                             ObjectHelper.sparseArrayToList(getDateTimes()));
         }
         // Categories
         if (getCategories() != null && getCategories().size() > 0) {
             builder.whereOrAnd()
-                    .column(Expense.COL_CATEGORY)
+                    .column(Expense.DB.COL_CATEGORY)
                     .in(getCategories());
         }
 
         // Payment Methods
         if (getPaymentMethods() != null && getPaymentMethods().size() > 0) {
             builder.whereOrAnd()
-                    .column(Expense.COL_PAYMENT)
+                    .column(Expense.DB.COL_PAYMENT)
                     .in(getPaymentMethods());
         }
 
         // Synced
         if (getIsSynced() != null) {
             builder.whereOrAnd()
-                    .column(Expense.COL_SYNCED)
+                    .column(Expense.DB.COL_SYNCED)
                     .equal(getIsSynced() ? 1 : 0);
         }
 
         // Starred
         if (getIsStarred() != null) {
             builder.whereOrAnd()
-                    .column(Expense.COL_STARRED)
+                    .column(Expense.DB.COL_STARRED)
                     .equal(getIsStarred() ? 1 : 0);
         }
 
         // Record Type
         if (getRecordType() != null) {
             builder.whereOrAnd()
-                    .column(Expense.COL_RECORD_TYPE)
+                    .column(Expense.DB.COL_RECORD_TYPE)
                     .equal(getRecordType());
         }
         SimpleSQLiteQuery query =
@@ -332,13 +332,14 @@ public class Filter implements Parcelable {
 
     public SimpleSQLiteQuery toUpdateSyncedQuery() {
         SqlBuilder builder = new SqlBuilder();
-        builder.update(Expense.TABLE)
-                .setEqualTo(Expense.COL_SYNCED, 0);
+        builder.update(Expense.DB.TABLE)
+                .setEqualTo(Expense.DB.COL_SYNCED, 0);
 
         // Date ranges
         if (getDateTimes() != null && getDateTimes().size() > 0) {
             builder.whereOrAnd()
-                    .between(Expense.COL_DATE_TIME, ObjectHelper.sparseArrayToList(getDateTimes()));
+                    .between(Expense.DB.COL_DATE_TIME,
+                            ObjectHelper.sparseArrayToList(getDateTimes()));
         }
         SimpleSQLiteQuery query =
                 new SimpleSQLiteQuery(builder.toString(), builder.getArgs().toArray());

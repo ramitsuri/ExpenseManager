@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DatabaseMigration {
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -92,6 +94,61 @@ public class DatabaseMigration {
             database.execSQL("ALTER TABLE `Category` " +
                     "ADD COLUMN " +
                     "`record_type` TEXT NOT NULL DEFAULT 'MONTHLY'");
+        }
+    };
+
+    public static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(@NotNull SupportSQLiteDatabase database) {
+            String createTemp = "CREATE TABLE IF NOT EXISTS `ExpenseTmp` " +
+                    "(`mId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`date_time` INTEGER NOT NULL, " +
+                    "`amount` TEXT NOT NULL, " +
+                    "`payment_method` TEXT NOT NULL, " +
+                    "`category` TEXT NOT NULL, " +
+                    "`description` TEXT NOT NULL, " +
+                    "`store` TEXT NOT NULL, " +
+                    "`is_synced` INTEGER NOT NULL, " +
+                    "`is_starred` INTEGER NOT NULL, " +
+                    "`sheet_id` INTEGER NOT NULL, " +
+                    "`is_income` INTEGER NOT NULL, " +
+                    "`record_type` TEXT NOT NULL DEFAULT 'MONTHLY', " +
+                    "`identifier` TEXT NOT NULL)";
+            database.execSQL(createTemp);
+
+            String copyData = "INSERT INTO 'ExpenseTmp' " +
+                    "(`date_time`, " +
+                    "`amount`, " +
+                    "`payment_method`, " +
+                    "`category`, " +
+                    "`description`, " +
+                    "`store`, " +
+                    "`is_synced`, " +
+                    "`is_starred`, " +
+                    "`sheet_id`, " +
+                    "`is_income`, " +
+                    "`record_type`, " +
+                    "`identifier`) " +
+                    "SELECT " +
+                    "`date_time`, " +
+                    "`amount`, " +
+                    "`payment_method`, " +
+                    "`category`, " +
+                    "`description`, " +
+                    "`store`, " +
+                    "`is_synced`, " +
+                    "`is_starred`, " +
+                    "`sheet_id`, " +
+                    "`is_income`, " +
+                    "`record_type`, " +
+                    "`identifier` FROM 'Expense'";
+            database.execSQL(copyData);
+
+            String dropExpense = "DROP TABLE 'Expense'";
+            database.execSQL(dropExpense);
+
+            String renameExpense = "ALTER TABLE 'ExpenseTmp' RENAME TO 'Expense'";
+            database.execSQL(renameExpense);
         }
     };
 }

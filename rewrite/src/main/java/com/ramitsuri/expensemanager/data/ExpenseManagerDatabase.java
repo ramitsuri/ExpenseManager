@@ -25,7 +25,7 @@ import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 @Database(entities = {Category.class, Expense.class, PaymentMethod.class,
         Log.class, SheetInfo.class, Budget.class, EditedSheet.class},
-        version = 8, exportSchema = true)
+        version = 9, exportSchema = true)
 @TypeConverters({BigDecimalConverter.class, ListConverter.class})
 public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
@@ -45,6 +45,7 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
                             .addMigrations(DatabaseMigration.MIGRATION_5_6)
                             .addMigrations(DatabaseMigration.MIGRATION_6_7)
                             .addMigrations(DatabaseMigration.MIGRATION_7_8)
+                            .addMigrations(DatabaseMigration.MIGRATION_8_9)
                             .build();
                 }
             }

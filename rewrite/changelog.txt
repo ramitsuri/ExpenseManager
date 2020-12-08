@@ -1,3 +1,14 @@
+Prep for Recurring Expense
+Database
+    - Add migration to v9 to add non column to Expense table
+Expense
+    - Add tests
+    - Migrate methods (to from list, to from map) used for various backup mechanisms to class
+    - Affects SharedExpenseManager, SheetRequestHelper
+    - Move class to Kotlin class
+SheetRequestHelper (for backup)
+    - Use list from Expense to generate cell data
+
 Bug fixes
 Gradle
     - Move dependency versions to base gradle file

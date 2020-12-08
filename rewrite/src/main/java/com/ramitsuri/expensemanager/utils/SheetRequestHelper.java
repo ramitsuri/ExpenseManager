@@ -249,11 +249,11 @@ public class SheetRequestHelper {
     }
 
     private static Sheet getEntitiesSheet(@Nonnull String title,
-                                          int index,
-                                          @Nonnull List<PaymentMethod> paymentMethods,
-                                          @Nonnull List<Category> categories,
-                                          @Nonnull List<Budget> budgets,
-                                          @Nonnull List<String> months) {
+            int index,
+            @Nonnull List<PaymentMethod> paymentMethods,
+            @Nonnull List<Category> categories,
+            @Nonnull List<Budget> budgets,
+            @Nonnull List<String> months) {
         int rows = 100;
         int columns = 50;
         Sheet sheet = new Sheet();
@@ -283,7 +283,7 @@ public class SheetRequestHelper {
     }
 
     private static SheetProperties getSheetProperties(@Nonnull String title, int index,
-                                                      int rows, int columns) {
+            int rows, int columns) {
         return new SheetProperties()
                 .setTitle(title)
                 .setIndex(index)
@@ -329,7 +329,7 @@ public class SheetRequestHelper {
 
     @Nonnull
     private static SparseArray<List<Expense>> getAppendMap(@Nonnull List<Expense> expenses,
-                                                           @Nonnull List<SheetInfo> sheetInfos) {
+            @Nonnull List<SheetInfo> sheetInfos) {
         SparseArray<List<Expense>> map = new SparseArray<>();
         for (Expense expense : expenses) {
             int monthIndex = DateHelper.getMonthIndexFromDate(expense.getDateTime());
@@ -358,8 +358,8 @@ public class SheetRequestHelper {
      */
     @Nonnull
     private static SparseArray<List<Expense>> getUpdateMap(@Nonnull List<Expense> expenses,
-                                                           @Nonnull List<SheetInfo> sheetInfos,
-                                                           @Nullable List<Integer> editedMonths) {
+            @Nonnull List<SheetInfo> sheetInfos,
+            @Nullable List<Integer> editedMonths) {
         SparseArray<List<Expense>> map = new SparseArray<>();
         if (editedMonths == null || editedMonths.size() == 0) {
             return map;
@@ -407,88 +407,24 @@ public class SheetRequestHelper {
         List<CellData> valuesList = new ArrayList<>();
         CellData values;
 
-        // Date
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getDateTime())));
-        valuesList.add(values);
+        List<String> list = expense.toStringList();
 
-        // Description
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(expense.getDescription()));
-        valuesList.add(values);
-
-        // Store
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(expense.getStore()));
-        valuesList.add(values);
-
-        // Amount
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(String.valueOf(expense.getAmount())));
-        valuesList.add(values);
-
-        // Payment Method
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(expense.getPaymentMethod()));
-        valuesList.add(values);
-
-        // Category
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(expense.getCategory()));
-        valuesList.add(values);
-
-        // Record Type
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(expense.getRecordType()));
-        valuesList.add(values);
-
-        // Identifier
-        values = new CellData();
-        values.setUserEnteredValue(
-                new ExtendedValue()
-                        .setStringValue(expense.getIdentifier()));
-        valuesList.add(values);
-
-        // Flag
-        values = new CellData();
-        if (expense.isStarred()) {
+        for (String value : list) {
+            values = new CellData();
             values.setUserEnteredValue(
                     new ExtendedValue()
-                            .setStringValue(FLAG));
+                            .setStringValue(value));
+            valuesList.add(values);
         }
-        valuesList.add(values);
-
-        // Income
-        values = new CellData();
-        if (expense.isIncome()) {
-            values.setUserEnteredValue(
-                    new ExtendedValue()
-                            .setStringValue(INCOME));
-        }
-        valuesList.add(values);
 
         rowData.setValues(valuesList);
         return rowData;
     }
 
     private static RowData getEntitiesRowData(@Nullable Category category,
-                                              @Nullable PaymentMethod paymentMethod,
-                                              @Nullable String month,
-                                              @Nullable Budget budget) {
+            @Nullable PaymentMethod paymentMethod,
+            @Nullable String month,
+            @Nullable Budget budget) {
         RowData rowData = new RowData();
         List<CellData> valuesList = new ArrayList<>();
         CellData value;
@@ -568,7 +504,7 @@ public class SheetRequestHelper {
     }
 
     private static int getSheetIdFromMonthIndex(@Nonnull List<SheetInfo> sheetInfos,
-                                                int monthIndex) {
+            int monthIndex) {
         String month = AppHelper.getMonths().get(monthIndex);
         for (SheetInfo info : sheetInfos) {
             if (info.getSheetName().equalsIgnoreCase(month)) {

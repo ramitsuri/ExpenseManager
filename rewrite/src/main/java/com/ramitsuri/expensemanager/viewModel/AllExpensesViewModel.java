@@ -99,7 +99,7 @@ public class AllExpensesViewModel extends ViewModel {
     public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
         Expense duplicate = new Expense(expense);
         duplicate.generateIdentifier();
-        duplicate.setIsSynced(false);
+        duplicate.setSynced(false);
         return mRepository.insertAndGet(duplicate, mFilter);
     }
 

@@ -1,11 +1,14 @@
 package com.ramitsuri.expensemanager.data;
 
+import android.database.sqlite.SQLiteException;
+
 import androidx.room.testing.MigrationTestHelper;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -168,5 +171,45 @@ public class DatabaseMigrationTest {
         // but you need to validate that the data was migrated properly.
         db.execSQL(
                 "INSERT INTO Expense(amount,payment_method,category,description,store,sheet_id,date_time,is_synced,is_starred,is_income,record_type) VALUES('20.00','chase','fun','movie','sunray',1544454,7843,1,1,1,'MONTHLY')");
+    }
+
+    @Test
+    public void migrate8To9() throws IOException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 8);
+
+        // db has schema version 8. insert some data using SQL queries.
+        // You cannot use DAO classes because they expect the latest schema.
+        db.execSQL("SELECT * FROM Expense");
+
+        // Prepare for the next version.
+        db.close();
+
+        // Re-open the database with version 9 and provide
+        // MIGRATION_8_9 as the migration process.
+        db = helper.runMigrationsAndValidate(TEST_DB, 9, true, DatabaseMigration.MIGRATION_8_9);
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+
+        // Will pass
+        db.execSQL(
+                "INSERT INTO " +
+                        "Expense(amount,payment_method,category,description,store,sheet_id," +
+                        "date_time,is_synced,is_starred,is_income,record_type, identifier) " +
+                        "VALUES('20.00','chase','fun','movie','sunray'," +
+                        "1544454,7843,1,1,1,'MONTHLY', '1')");
+
+        // Will fail because identifier is NonNull but is not being inserted
+        try {
+            db.execSQL(
+                    "INSERT INTO " +
+                            "Expense(amount,payment_method,category,description,store,sheet_id," +
+                            "date_time,is_synced,is_starred,is_income,record_type) " +
+                            "VALUES('20.00','chase','fun','movie','sunray'," +
+                            "1544454,7843,1,1,1,'MONTHLY')");
+            Assert.fail("Expected exception did not occur");
+        } catch (SQLiteException e) {
+            Assert.assertTrue(e.getMessage().contains("NOT NULL constraint failed"));
+        }
     }
 }
