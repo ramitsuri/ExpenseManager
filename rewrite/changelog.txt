@@ -1,3 +1,5 @@
+Disable Crashlytics in Debug
+
 Prep for Recurring Expense (II)
 Test
     - Add new test runner dependency

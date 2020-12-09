@@ -18,6 +18,7 @@ import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.CrashReportingHelper;
 import com.ramitsuri.expensemanager.utils.PrefHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
@@ -54,6 +55,8 @@ public class MainApplication extends Application {
         super.onCreate();
 
         sInstance = this;
+
+        initCrashReportingHelper();
 
         initTimber();
 
@@ -100,6 +103,12 @@ public class MainApplication extends Application {
             AppHelper.setIdentifierAdded(true);
         }
         removeLegacyPrefs();
+    }
+
+    private void initCrashReportingHelper() {
+        if (BuildConfig.DEBUG) {
+            CrashReportingHelper.getInstance().disable();
+        }
     }
 
     private void removeLegacyPrefs() {
