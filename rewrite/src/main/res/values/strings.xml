@@ -198,5 +198,6 @@
 
     <!-- Shared -->
     <string name="shared_expense_temp">S</string>
+    <string name="title_recurring">Recurring</string>
 
 </resources>

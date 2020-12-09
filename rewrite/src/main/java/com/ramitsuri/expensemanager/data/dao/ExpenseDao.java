@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.data.dao;
 
+import com.ramitsuri.expensemanager.constants.intDefs.AddType;
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
@@ -106,6 +107,9 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET identifier = :identifier WHERE mId = :id")
     abstract void updateIdentifier(int id, String identifier);
 
+    @Query("UPDATE expense SET add_type =:addType WHERE mId = :id")
+    abstract void updateAddType(int id, @AddType String addType);
+
     @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
     public abstract void updateUnsynced();
 
@@ -173,6 +177,7 @@ public abstract class ExpenseDao {
         updateIsSynced(expense.getId(), expense.isSynced());
         updateIsIncome(expense.getId(), expense.isIncome());
         updateRecordType(expense.getId(), expense.getRecordType());
+        updateAddType(expense.getId(), expense.getAddType());
         // Not updating ID and Identifier intentionally
     }
 

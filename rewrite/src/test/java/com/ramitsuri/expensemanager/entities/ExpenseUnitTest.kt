@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.entities
 
+import com.ramitsuri.expensemanager.constants.intDefs.AddType
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType
 import org.junit.Assert.*
 import org.junit.Test
@@ -16,6 +17,7 @@ class ExpenseUnitTest {
     private val isIncome = "INCOME"
     private val recordType = RecordType.MONTHLY
     private val identifier = "1"
+    private val addType = AddType.MANUAL
 
     @Test
     fun testObjectListConstructor_shouldInstantiateWithAllValues() {
@@ -28,6 +30,7 @@ class ExpenseUnitTest {
         list.add(category)
         list.add(recordType)
         list.add(identifier)
+        list.add(addType)
         list.add(isStarred)
         list.add(isIncome)
         val expense = Expense(list)
@@ -44,6 +47,7 @@ class ExpenseUnitTest {
         assertTrue(expense.isIncome)
         assertEquals(recordType, expense.recordType)
         assertEquals(identifier, expense.identifier)
+        assertEquals(addType, expense.addType)
     }
 
     @Test
@@ -57,6 +61,7 @@ class ExpenseUnitTest {
         list.add(category)
         list.add(recordType)
         list.add(identifier)
+        list.add(addType)
         val expense = Expense(list)
 
         assertEquals(dateTime, expense.dateTime)
@@ -71,6 +76,7 @@ class ExpenseUnitTest {
         assertFalse(expense.isIncome)
         assertEquals(recordType, expense.recordType)
         assertEquals(identifier, expense.identifier)
+        assertEquals(addType, expense.addType)
     }
 
     @Test
@@ -87,10 +93,11 @@ class ExpenseUnitTest {
                 0,
                 true,
                 recordType,
-                identifier)
+                identifier,
+                addType)
 
         val list = expense.toStringList()
-        assertEquals(10, list.size)
+        assertEquals(11, list.size)
         assertEquals(dateTime.toString(), list[0])
         assertEquals(description, list[1])
         assertEquals(store, list[2])
@@ -99,8 +106,9 @@ class ExpenseUnitTest {
         assertEquals(category, list[5])
         assertEquals(recordType, list[6])
         assertEquals(identifier, list[7])
-        assertEquals(isStarred, list[8])
-        assertEquals(isIncome, list[9])
+        assertEquals(addType, list[8])
+        assertEquals(isStarred, list[9])
+        assertEquals(isIncome, list[10])
     }
 
     @Test
@@ -117,10 +125,11 @@ class ExpenseUnitTest {
                 0,
                 false,
                 recordType,
-                identifier)
+                identifier,
+                addType)
 
         val list = expense.toStringList()
-        assertEquals(10, list.size)
+        assertEquals(11, list.size)
         assertEquals(dateTime.toString(), list[0])
         assertEquals(description, list[1])
         assertEquals(store, list[2])
@@ -129,8 +138,9 @@ class ExpenseUnitTest {
         assertEquals(category, list[5])
         assertEquals(recordType, list[6])
         assertEquals(identifier, list[7])
-        assertEquals(isStarred, list[8])
-        assertEquals("", list[9])
+        assertEquals(addType, list[8])
+        assertEquals(isStarred, list[9])
+        assertEquals("", list[10])
     }
 
     @Test
@@ -147,10 +157,11 @@ class ExpenseUnitTest {
                 0,
                 true,
                 recordType,
-                identifier)
+                identifier,
+                addType)
 
         val list = expense.toStringList()
-        assertEquals(10, list.size)
+        assertEquals(11, list.size)
         assertEquals(dateTime.toString(), list[0])
         assertEquals(description, list[1])
         assertEquals(store, list[2])
@@ -159,8 +170,9 @@ class ExpenseUnitTest {
         assertEquals(category, list[5])
         assertEquals(recordType, list[6])
         assertEquals(identifier, list[7])
-        assertEquals("", list[8])
-        assertEquals(isIncome, list[9])
+        assertEquals(addType, list[8])
+        assertEquals("", list[9])
+        assertEquals(isIncome, list[10])
     }
 
     @Test
@@ -177,10 +189,11 @@ class ExpenseUnitTest {
                 0,
                 false,
                 recordType,
-                identifier)
+                identifier,
+                addType)
 
         val list = expense.toStringList()
-        assertEquals(10, list.size)
+        assertEquals(11, list.size)
         assertEquals(dateTime.toString(), list[0])
         assertEquals(description, list[1])
         assertEquals(store, list[2])
@@ -189,7 +202,8 @@ class ExpenseUnitTest {
         assertEquals(category, list[5])
         assertEquals(recordType, list[6])
         assertEquals(identifier, list[7])
-        assertEquals("", list[8])
+        assertEquals(addType, list[8])
         assertEquals("", list[9])
+        assertEquals("", list[10])
     }
 }

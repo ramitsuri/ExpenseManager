@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ramitsuri.expensemanager.constants.Constants
+import com.ramitsuri.expensemanager.constants.intDefs.AddType
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType
 import timber.log.Timber
 import java.math.BigDecimal
@@ -37,7 +38,10 @@ class Expense(
         @RecordType
         var recordType: String,
         @ColumnInfo(name = DB.COL_IDENTIFIER)
-        var identifier: String) : Parcelable {
+        var identifier: String,
+        @AddType
+        @ColumnInfo(name = DB.COL_ADD_TYPE, defaultValue = "MANUAL")
+        var addType: String) : Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = DB.COL_ID)
@@ -55,7 +59,8 @@ class Expense(
             sheetId = 0,
             isIncome = false,
             recordType = RecordType.MONTHLY,
-            identifier = UUID.randomUUID().toString())
+            identifier = UUID.randomUUID().toString(),
+            addType = AddType.MANUAL)
 
     /**
      * Creates an expense from list of Any. The list usually comes as a result of getting the
@@ -71,11 +76,12 @@ class Expense(
             category = objects[5] as String
             recordType = objects[6] as String
             identifier = objects[7] as String
-            if (objects.size >= 9) {
-                isStarred = objects[8] as String == Constants.Sheets.FLAG
-            }
+            addType = objects[8] as String
             if (objects.size >= 10) {
-                isIncome = objects[9] as String == Constants.Sheets.INCOME
+                isStarred = objects[9] as String == Constants.Sheets.FLAG
+            }
+            if (objects.size >= 11) {
+                isIncome = objects[10] as String == Constants.Sheets.INCOME
             }
         } catch (e: Exception) {
             Timber.w("Unable to convert downloaded expense")
@@ -86,6 +92,9 @@ class Expense(
     /**
      * Creates an expense from map of String, Any. The map usually comes as a result of getting the
      * expense from Firebase database.
+     *
+     * Doesn't contain add type because previous expenses would be difficult and the functionality
+     * is going to be reworked anyway
      */
     constructor(map: Map<String, Any>) : this() {
         dateTime = map[DB.COL_DATE_TIME] as Long
@@ -111,7 +120,8 @@ class Expense(
             sheetId = expense.sheetId,
             isIncome = expense.isIncome,
             recordType = expense.recordType,
-            identifier = expense.identifier)
+            identifier = expense.identifier,
+            addType = expense.addType)
 
     constructor(parcel: Parcel) : this(
             dateTime = parcel.readLong(),
@@ -125,7 +135,8 @@ class Expense(
             sheetId = parcel.readInt(),
             isIncome = parcel.readInt() != 0,
             recordType = parcel.readString() ?: RecordType.MONTHLY,
-            identifier = parcel.readString() ?: UUID.randomUUID().toString()) {
+            identifier = parcel.readString() ?: UUID.randomUUID().toString(),
+            addType = parcel.readString() ?: AddType.MANUAL) {
         id = parcel.readInt()
     }
 
@@ -142,6 +153,7 @@ class Expense(
         parcel.writeInt(if (isIncome) 1 else 0)
         parcel.writeString(recordType)
         parcel.writeString(identifier)
+        parcel.writeString(addType)
         parcel.writeInt(id)
     }
 
@@ -177,6 +189,7 @@ class Expense(
         list.add(category)
         list.add(recordType)
         list.add(identifier)
+        list.add(addType)
         if (isStarred) {
             list.add(Constants.Sheets.FLAG)
         } else {
@@ -193,6 +206,9 @@ class Expense(
 
     /**
      * Creates a map of properties which is used to backup expense data in firebase database
+     *
+     * Doesn't contain add type because previous expenses would be difficult and the functionality
+     * is going to be reworked anyway
      */
     fun toMap(): Map<String, Any> {
         val map = mutableMapOf<String, Any>()
@@ -223,5 +239,6 @@ class Expense(
         const val COL_INCOME = "is_income"
         const val COL_RECORD_TYPE = "record_type"
         const val COL_IDENTIFIER = "identifier"
+        const val COL_ADD_TYPE = "add_type"
     }
 }

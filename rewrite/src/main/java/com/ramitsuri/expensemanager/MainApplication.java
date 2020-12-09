@@ -11,6 +11,7 @@ import com.ramitsuri.expensemanager.data.repository.EditedSheetRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
+import com.ramitsuri.expensemanager.data.repository.RecurringExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
@@ -40,6 +41,7 @@ public class MainApplication extends Application {
     private LogRepository mLogRepo;
     private BudgetRepository mBudgetRepository;
     private EditedSheetRepository mEditedSheetRepo;
+    private RecurringExpenseRepository mRecurringRepo;
 
     private SheetRepository mSheetRepository;
 
@@ -130,6 +132,7 @@ public class MainApplication extends Application {
         mLogRepo = new LogRepository(appExecutors, database);
         mBudgetRepository = new BudgetRepository(appExecutors, database);
         mEditedSheetRepo = new EditedSheetRepository(appExecutors, database);
+        mRecurringRepo = new RecurringExpenseRepository(database);
     }
 
     private void initSheetRepo() {
@@ -226,6 +229,11 @@ public class MainApplication extends Application {
     @Nonnull
     public synchronized EditedSheetRepository getEditedSheetRepo() {
         return mEditedSheetRepo;
+    }
+
+    @Nonnull
+    public synchronized RecurringExpenseRepository getRecurringRepo() {
+        return mRecurringRepo;
     }
 
     @Nullable

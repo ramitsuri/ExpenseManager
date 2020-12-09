@@ -151,4 +151,23 @@ public class DatabaseMigration {
             database.execSQL(renameExpense);
         }
     };
+
+    public static final Migration MIGRATION_9_10 = new Migration(9, 10) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Add RecurringExpenseInfo table
+            database.execSQL("CREATE TABLE IF NOT EXISTS `RecurringExpenseInfo` " +
+                    "(" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`identifier` TEXT NOT NULL, " +
+                    "`last_occur` INTEGER NOT NULL, " +
+                    "`recur_type` TEXT NOT NULL " +
+                    ")");
+
+            // Add AddType column to Expense
+            database.execSQL("ALTER TABLE `Expense` " +
+                    "ADD COLUMN " +
+                    "`add_type` TEXT NOT NULL DEFAULT 'MANUAL'");
+        }
+    };
 }

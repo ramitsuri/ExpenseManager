@@ -34,6 +34,14 @@
             app:popEnterAnim="@anim/fragment_open_enter"
             app:popExitAnim="@anim/fragment_open_exit" />
 
+        <action
+            android:id="@+id/nav_action_recurring"
+            app:destination="@id/fragment_recurring"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit" />
+
     </fragment>
 
     <fragment
@@ -107,5 +115,10 @@
         android:id="@+id/fragment_setup_budgets"
         android:name="com.ramitsuri.expensemanager.ui.fragment.SetupBudgetsFragment"
         tools:layout="@layout/fragment_setup_budgets" />
+
+    <fragment
+        android:id="@+id/fragment_recurring"
+        android:name="com.ramitsuri.expensemanager.ui.fragment.RecurringExpenseFragment"
+        tools:layout="@layout/fragment_recurring_expense" />
 
 </navigation>

@@ -2,6 +2,7 @@ package com.ramitsuri.expensemanager.entities
 
 import android.os.Parcel
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.ramitsuri.expensemanager.constants.intDefs.AddType
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -25,7 +26,8 @@ class ExpenseTest {
                 sheetId = 1,
                 isIncome = true,
                 recordType = RecordType.MONTHLY,
-                identifier = "1"
+                identifier = "1",
+                addType = AddType.MANUAL
         )
 
         val parcel = Parcel.obtain()
@@ -45,5 +47,6 @@ class ExpenseTest {
         assertEquals(expense.isIncome, fromParcel.isIncome)
         assertEquals(expense.recordType, fromParcel.recordType)
         assertEquals(expense.identifier, fromParcel.identifier)
+        assertEquals(expense.addType, fromParcel.addType)
     }
 }

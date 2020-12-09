@@ -1,3 +1,18 @@
+Prep for Recurring Expense (II)
+Test
+    - Add new test runner dependency
+Database
+    - Bump version to 10
+    - Add new AddType column to Expense
+    - Add new RecurringExpenseInfo table
+RecurType
+    - Renamed from RepeatType for consistency
+RecurringExpenseInfo
+    - New class for recurring expenses
+    - Add dao, repo, manager class (business logic), dummy fragment and view model
+Expense
+    - Add new property for add type - manual and recur for now
+
 Prep for Recurring Expense
 Database
     - Add migration to v9 to add non column to Expense table
