@@ -14,12 +14,12 @@ class RecurringExpenseRepository(private val database: ExpenseManagerDatabase) {
     }
 
     fun refresh(): LiveData<List<RecurringExpenseInfo>> {
-        return database.recurringExpenseDao().read()
+        return database.recurringExpenseDao().readReactive()
 
     }
 
     fun refresh(before: Long): LiveData<List<RecurringExpenseInfo>> {
-        return database.recurringExpenseDao().read(before)
+        return database.recurringExpenseDao().readReactive(before)
     }
 
     suspend fun update(id: Int, recurOn: Long) {

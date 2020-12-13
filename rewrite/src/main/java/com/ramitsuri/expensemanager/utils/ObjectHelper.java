@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ObjectHelper {
     public static boolean contains(@Nonnull List<String> values, @Nonnull String value) {
@@ -25,7 +26,7 @@ public class ObjectHelper {
      * Returns the index of matching item, -1 otherwise.
      */
     public static <T extends ListEqualizer> int indexOf(@Nonnull List<T> items,
-                                                        @Nonnull String value) {
+            @Nonnull String value) {
         int index = -1;
         for (int i = 0; i < items.size(); i++) {
             ListEqualizer item = items.get(i);
@@ -38,7 +39,7 @@ public class ObjectHelper {
     }
 
     public static boolean isSheetInfosValid(@Nonnull List<SheetInfo> sheetInfos,
-                                            @Nonnull List<String> months) {
+            @Nonnull List<String> months) {
         if (sheetInfos.size() == 0 || sheetInfos.size() < months.size()) {
             return false;
         }
@@ -56,6 +57,21 @@ public class ObjectHelper {
             }
         }
         return valid;
+    }
+
+    @Nullable
+    public static SheetInfo getSheetInfo(@Nonnull List<SheetInfo> sheetInfos,
+            @Nonnull String sheetName) {
+        if (sheetInfos.size() == 0) {
+            return null;
+        }
+
+        for (SheetInfo sheetInfo : sheetInfos) {
+            if (sheetInfo.getSheetName().equalsIgnoreCase(sheetName)) {
+                return sheetInfo;
+            }
+        }
+        return null;
     }
 
     /**

@@ -4,14 +4,24 @@ import android.accounts.Account;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import androidx.annotation.ArrayRes;
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
+import androidx.work.WorkInfo;
+
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
+import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
+import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
 import com.ramitsuri.sheetscore.googleSignIn.SignInResponse;
 
@@ -20,13 +30,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import androidx.annotation.ArrayRes;
-import androidx.arch.core.util.Function;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
-import androidx.work.WorkInfo;
 import timber.log.Timber;
 
 public class MiscellaneousViewModel extends ViewModel {
@@ -184,6 +187,20 @@ public class MiscellaneousViewModel extends ViewModel {
                                     return null;
                                 }
                             });
+        } else if (BackupInfoStatus.ERROR.equals(mBackupInfoStatus.getValue())) {
+            MutableLiveData<Boolean> value = new MutableLiveData<>();
+            value.postValue(true);
+            return value;
+        }
+        return null;
+    }
+
+    @Nullable
+    public LiveData<EntitiesConsumerResponse> restoreAccess() {
+        String spreadsheetId = AppHelper.getSpreadsheetId();
+        SheetRepository repository = MainApplication.getInstance().getSheetRepository();
+        if (repository != null && !TextUtils.isEmpty(spreadsheetId)) {
+            return repository.getEntity(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
         }
         return null;
     }

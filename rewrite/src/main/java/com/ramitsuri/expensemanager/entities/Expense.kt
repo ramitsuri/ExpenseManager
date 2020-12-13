@@ -68,7 +68,7 @@ class Expense(
      */
     constructor(objects: List<Any>) : this() {
         try {
-            dateTime = objects[0] as Long
+            dateTime = (objects[0] as String).toLong()
             description = objects[1] as String
             store = objects[2] as String
             amount = BigDecimal(objects[3] as String)
@@ -83,6 +83,7 @@ class Expense(
             if (objects.size >= 11) {
                 isIncome = objects[10] as String == Constants.Sheets.INCOME
             }
+            isSynced = true
         } catch (e: Exception) {
             Timber.w("Unable to convert downloaded expense")
             throw e

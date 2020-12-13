@@ -6,13 +6,17 @@ import android.text.TextUtils;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
+import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
+import com.ramitsuri.sheetscore.consumerResponse.AddSheetConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -34,7 +38,8 @@ public class ExpensesBackupWorker extends BaseWorker {
     public Result doWork() {
         String workType = getInputData().getString(Constants.Work.TYPE);
         try {
-            if (MainApplication.getInstance().getSheetRepository() == null) {
+            SheetRepository repository = MainApplication.getInstance().getSheetRepository();
+            if (repository == null) {
                 onFailure(workType, "Sheet repo null");
                 return Result.failure();
             }
@@ -81,9 +86,25 @@ public class ExpensesBackupWorker extends BaseWorker {
                 return Result.failure();
             }
 
-            InsertConsumerResponse response = MainApplication.getInstance().getSheetRepository()
+            // Add Recurring sheet if necessary
+            String recurringSheetName = Constants.SheetNames.RECURRING;
+            SheetInfo recurringSheetInfo = getSheetInfo(sheetInfos, recurringSheetName);
+            if (recurringSheetInfo == null) { // Add the Recurring sheet
+                AddSheetConsumerResponse response = repository
+                        .getAddSheetResponse(spreadsheetId, recurringSheetName, 14);
+                if (response.getSheetMetadata() != null) {
+                    List<SheetInfo> infoList = new ArrayList<>();
+                    recurringSheetInfo = new SheetInfo(response.getSheetMetadata());
+                    infoList.add(recurringSheetInfo);
+                    ExpenseManagerDatabase.getInstance().sheetDao().insertAll(infoList);
+                }
+            }
+            List<RecurringExpenseInfo> recurringExpenses =
+                    ExpenseManagerDatabase.getInstance().recurringExpenseDao().read();
+
+            InsertConsumerResponse response = repository
                     .getInsertRangeResponse(spreadsheetId, expensesToBackup, editedMonths,
-                            sheetInfos);
+                            sheetInfos, recurringExpenses, recurringSheetInfo);
             if (response.isSuccessful()) {
                 ExpenseManagerDatabase.getInstance().expenseDao().updateUnsynced();
                 // Delete all records of edited sheets as all expenses in them are backed up now
@@ -107,5 +128,10 @@ public class ExpensesBackupWorker extends BaseWorker {
     private boolean isSheetInfosValid(@Nonnull List<SheetInfo> sheetInfos) {
         List<String> months = AppHelper.getMonths();
         return ObjectHelper.isSheetInfosValid(sheetInfos, months);
+    }
+
+    private SheetInfo getSheetInfo(@Nonnull List<SheetInfo> sheetInfos,
+            @Nonnull String recurringSheetName) {
+        return ObjectHelper.getSheetInfo(sheetInfos, recurringSheetName);
     }
 }

@@ -6,11 +6,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ramitsuri.expensemanager.constants.intDefs.RecurType
+import timber.log.Timber
+import java.lang.Exception
 
 @Entity
 data class RecurringExpenseInfo(
         @ColumnInfo(name = DB.COL_IDENTIFIER)
-        val identifier: String,
+        var identifier: String,
 
         @ColumnInfo(name = DB.COL_LAST_OCCUR)
         var lastOccur: Long,
@@ -36,6 +38,20 @@ data class RecurringExpenseInfo(
             recurType
     )
 
+    constructor() : this("",
+            0L,
+            RecurType.MONTHLY)
+
+    constructor(objects: List<Any>) : this() {
+        try {
+            identifier = objects[0] as String
+            lastOccur = (objects[1] as String).toLong()
+            recurType = objects[2] as String
+        } catch (e: Exception) {
+            Timber.w("Unable to convert downloaded recurring info - $e")
+        }
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(identifier)
         parcel.writeLong(lastOccur)
@@ -45,6 +61,14 @@ data class RecurringExpenseInfo(
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    fun toStringList(): List<String> {
+        val list = mutableListOf<String>()
+        list.add(identifier)
+        list.add(lastOccur.toString())
+        list.add(recurType)
+        return list
     }
 
     companion object CREATOR : Parcelable.Creator<RecurringExpenseInfo> {

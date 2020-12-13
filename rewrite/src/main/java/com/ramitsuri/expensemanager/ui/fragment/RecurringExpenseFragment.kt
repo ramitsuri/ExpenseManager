@@ -12,6 +12,7 @@ import com.ramitsuri.expensemanager.R
 import com.ramitsuri.expensemanager.constants.intDefs.RecurType
 import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo
 import com.ramitsuri.expensemanager.viewModel.RecurringExpenseViewModel
+import java.time.Instant
 
 class RecurringExpenseFragment : BaseFragment(), View.OnClickListener {
 
@@ -70,7 +71,7 @@ class RecurringExpenseFragment : BaseFragment(), View.OnClickListener {
             mBtnAdd -> {
                 val info = RecurringExpenseInfo(
                         identifier.toString(),
-                        0L,
+                        Instant.now().toEpochMilli(),
                         RecurType.MONTHLY)
                 mViewModel.add(info)
                 identifier++

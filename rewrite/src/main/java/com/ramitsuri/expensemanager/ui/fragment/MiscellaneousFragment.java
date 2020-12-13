@@ -28,11 +28,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
+import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
 
 import javax.annotation.Nonnull;
@@ -50,7 +52,7 @@ public class MiscellaneousFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_miscellaneous, container, false);
     }
@@ -194,18 +196,18 @@ public class MiscellaneousFragment extends BaseFragment {
 
     @Nullable
     private ViewGroup setupMenuItem(@Nonnull View view,
-                                    @IdRes final int idRes,
-                                    @StringRes int titleRes,
-                                    @DrawableRes int drawableRes) {
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            @DrawableRes int drawableRes) {
         return setupMenuItem(view, idRes, titleRes, drawableRes, true);
     }
 
     @Nullable
     private ViewGroup setupMenuItem(@Nonnull View view,
-                                    @IdRes final int idRes,
-                                    @StringRes int titleRes,
-                                    @DrawableRes int drawableRes,
-                                    boolean show) {
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            @DrawableRes int drawableRes,
+            boolean show) {
         if (!show) {
             return null;
         }
@@ -236,9 +238,9 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupHeader(@Nonnull View view,
-                             @IdRes final int idRes,
-                             @StringRes int titleRes,
-                             boolean show) {
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            boolean show) {
         if (!show) {
             return;
         }
@@ -250,9 +252,9 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupVersionItem(@Nonnull View view,
-                                  @IdRes final int idRes,
-                                  @StringRes int titleRes,
-                                  @DrawableRes int drawableRes) {
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            @DrawableRes int drawableRes) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes);
         if (container != null) {
             // Summary
@@ -265,10 +267,10 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupSpreadsheetItem(@Nonnull View view,
-                                      @IdRes final int idRes,
-                                      @StringRes int titleRes,
-                                      @DrawableRes int drawableRes,
-                                      boolean show) {
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            @DrawableRes int drawableRes,
+            boolean show) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
         if (container != null) {
             final String spreadsheetId = mViewModel.getSpreadsheetId();
@@ -289,7 +291,7 @@ public class MiscellaneousFragment extends BaseFragment {
                         return false;
                     }
                     ClipboardManager clipboard =
-                            (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                            (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
                     if (clipboard == null) {
                         return false;
                     }
@@ -302,10 +304,10 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupBackupInfoItem(@Nonnull View view,
-                                     @IdRes final int idRes,
-                                     @StringRes int titleRes,
-                                     @DrawableRes int drawableRes,
-                                     boolean show) {
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            @DrawableRes int drawableRes,
+            boolean show) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
         if (container != null) {
             // Progress
@@ -366,9 +368,9 @@ public class MiscellaneousFragment extends BaseFragment {
     }
 
     private void setupThemeItem(@Nonnull View view,
-                                @IdRes final int idRes,
-                                @StringRes int titleRes,
-                                @DrawableRes int drawableRes) {
+            @IdRes final int idRes,
+            @StringRes int titleRes,
+            @DrawableRes int drawableRes) {
         ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes);
         if (container != null) {
             // Summary
@@ -485,10 +487,36 @@ public class MiscellaneousFragment extends BaseFragment {
                 @Override
                 public void onChanged(Boolean aBoolean) {
                     if (aBoolean != null) {
+                        if (aBoolean) {
+                            restoreAccess();
+                        }
                         Timber.i("Something happened as a result of onBackupInfoClicked");
                     }
                 }
             });
+        }
+    }
+
+    private void restoreAccess() {
+        LiveData<EntitiesConsumerResponse> responseLiveData = mViewModel.restoreAccess();
+        if (responseLiveData != null) {
+            responseLiveData
+                    .observe(getViewLifecycleOwner(), new Observer<EntitiesConsumerResponse>() {
+                        @Override
+                        public void onChanged(EntitiesConsumerResponse response) {
+                            if (response != null) {
+                                if (response.getException() != null) {
+                                    Exception e = response.getException();
+                                    if (e instanceof UserRecoverableAuthIOException) {
+                                        Intent intent =
+                                                ((UserRecoverableAuthIOException)e).getIntent();
+
+                                        startActivityForResult(intent, 101);
+                                    }
+                                }
+                            }
+                        }
+                    });
         }
     }
 
@@ -518,6 +546,12 @@ public class MiscellaneousFragment extends BaseFragment {
                     }
                 }
             }
+        } else if (requestCode == 101) {
+            if (resultCode == Activity.RESULT_OK) {
+                Timber.i("Access possibly restored");
+
+            }
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

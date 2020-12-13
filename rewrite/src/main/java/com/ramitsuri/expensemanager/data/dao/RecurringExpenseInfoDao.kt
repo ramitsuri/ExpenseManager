@@ -18,10 +18,16 @@ interface RecurringExpenseInfoDao {
      * READ
      */
     @Query("SELECT * FROM recurringexpenseinfo ORDER BY last_occur ASC")
-    fun read(): LiveData<List<RecurringExpenseInfo>>
+    fun readReactive(): LiveData<List<RecurringExpenseInfo>>
+
+    @Query("SELECT * FROM recurringexpenseinfo ORDER BY last_occur ASC")
+    fun read(): List<RecurringExpenseInfo>
 
     @Query("SELECT * FROM recurringexpenseinfo WHERE last_occur <= :before ORDER BY last_occur ASC")
-    fun read(before: Long): LiveData<List<RecurringExpenseInfo>>
+    fun readReactive(before: Long): LiveData<List<RecurringExpenseInfo>>
+
+    @Query("SELECT * FROM recurringexpenseinfo WHERE last_occur <= :before ORDER BY last_occur ASC")
+    fun read(before: Long): List<RecurringExpenseInfo>
 
     /*
      * UPDATE

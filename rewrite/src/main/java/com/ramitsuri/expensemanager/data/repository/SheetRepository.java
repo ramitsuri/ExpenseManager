@@ -9,8 +9,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.services.sheets.v4.model.AddSheetResponse;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.ramitsuri.expensemanager.AppExecutors;
@@ -19,10 +21,12 @@ import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.SheetRequestHelper;
 import com.ramitsuri.sheetscore.SheetsProcessor;
+import com.ramitsuri.sheetscore.consumerResponse.AddSheetConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.CreateSpreadsheetConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
 import com.ramitsuri.sheetscore.consumerResponse.InsertConsumerResponse;
@@ -34,6 +38,7 @@ import com.ramitsuri.sheetscore.intdef.Dimension;
 import com.ramitsuri.sheetscore.spreadsheetResponse.BaseResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.CreateSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.SpreadsheetSpreadsheetResponse;
+import com.ramitsuri.sheetscore.spreadsheetResponse.UpdateSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.ValueRangeSpreadsheetResponse;
 import com.ramitsuri.sheetscore.spreadsheetResponse.ValueRangesSpreadsheetResponse;
 
@@ -51,8 +56,8 @@ public class SheetRepository {
     private final AppExecutors mExecutors;
 
     public SheetRepository(@NonNull Context context, @NonNull String appName,
-                           @NonNull Account account, @NonNull List<String> scopes,
-                           @NonNull AppExecutors executors) {
+            @NonNull Account account, @NonNull List<String> scopes,
+            @NonNull AppExecutors executors) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
         mExecutors = executors;
     }
@@ -89,7 +94,7 @@ public class SheetRepository {
 
             List<SheetMetadata> sheetMetadataList = new ArrayList<>();
             SpreadsheetSpreadsheetResponse spreadsheetResponse =
-                    (SpreadsheetSpreadsheetResponse) response;
+                    (SpreadsheetSpreadsheetResponse)response;
             if (spreadsheetResponse != null) {
                 for (Sheet sheet : spreadsheetResponse.getSpreadsheet().getSheets()) {
                     int sheetId = sheet.getProperties().getSheetId();
@@ -108,20 +113,35 @@ public class SheetRepository {
         return consumerResponse;
     }
 
+    public LiveData<EntitiesConsumerResponse> getEntity(@Nonnull final String spreadsheetId,
+            @Nonnull final String range) {
+        final MutableLiveData<EntitiesConsumerResponse> responseLiveData =
+                new MutableLiveData<>();
+        mExecutors.networkIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                EntitiesConsumerResponse response = getEntityDataResponse(spreadsheetId,
+                        range);
+                responseLiveData.postValue(response);
+            }
+        });
+        return responseLiveData;
+    }
+
     public EntitiesConsumerResponse getEntityDataResponse(@Nonnull String spreadsheetId,
-                                                          @Nonnull String range) {
+            @Nonnull String range) {
         return getEntityDataResponse(spreadsheetId, range, Dimension.COLUMNS);
     }
 
     public EntitiesConsumerResponse getEntityDataResponse(@Nonnull String spreadsheetId,
-                                                          @Nonnull String range, @Dimension String dimension) {
+            @Nonnull String range, @Dimension String dimension) {
         EntitiesConsumerResponse consumerResponse = new EntitiesConsumerResponse();
         try {
             BaseResponse response =
                     mSheetsProcessor.getSheetData(spreadsheetId, range, dimension);
 
             List<List<Object>> objectLists =
-                    ((ValueRangeSpreadsheetResponse) response).getValueRange()
+                    ((ValueRangeSpreadsheetResponse)response).getValueRange()
                             .getValues();
             List<List<String>> entityLists = new ArrayList<>();
             if (objectLists != null) {
@@ -149,7 +169,7 @@ public class SheetRepository {
     }
 
     public RangesConsumerResponse getRangesDataResponse(@Nonnull String spreadsheetId,
-                                                        @Nonnull List<String> range) {
+            @Nonnull List<String> range) {
         RangesConsumerResponse consumerResponse = new RangesConsumerResponse();
         try {
             BaseResponse response =
@@ -158,7 +178,7 @@ public class SheetRepository {
             List<RangeConsumerResponse> values = new ArrayList<>();
             if (response != null) {
                 List<ValueRange> valueRangeList =
-                        ((ValueRangesSpreadsheetResponse) response).getValueRanges();
+                        ((ValueRangesSpreadsheetResponse)response).getValueRanges();
                 if (valueRangeList != null) {
                     for (ValueRange valueRange : valueRangeList) {
                         RangeConsumerResponse value = new RangeConsumerResponse();
@@ -196,20 +216,19 @@ public class SheetRepository {
     }
 
     public InsertConsumerResponse getInsertRangeResponse(@Nonnull String spreadsheetId,
-                                                         @NonNull List<Expense> expenses,
-                                                         @Nullable List<Integer> editedMonths,
-                                                         @Nonnull List<SheetInfo> sheetInfos) {
+            @NonNull List<Expense> expenses,
+            @Nullable List<Integer> editedMonths,
+            @Nonnull List<SheetInfo> sheetInfos,
+            @Nullable List<RecurringExpenseInfo> recurringExpenses,
+            @Nullable SheetInfo recurringSheetInfo) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
             BatchUpdateSpreadsheetRequest requestBody = SheetRequestHelper
-                    .getUpdateRequestBody(expenses, editedMonths, sheetInfos);
-            if (requestBody != null) {
-                mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
-                consumerResponse.setSuccessful(true);
-                onOperationSuccess();
-            } else {
-                consumerResponse.setSuccessful(false);
-            }
+                    .getUpdateRequestBody(expenses, editedMonths, sheetInfos, recurringExpenses,
+                            recurringSheetInfo);
+            mSheetsProcessor.updateSheet(spreadsheetId, requestBody);
+            consumerResponse.setSuccessful(true);
+            onOperationSuccess();
         } catch (IOException e) {
             Timber.e(e);
             consumerResponse.setSuccessful(false);
@@ -220,11 +239,11 @@ public class SheetRepository {
     }
 
     public InsertConsumerResponse getInsertEntitiesResponse(@Nonnull String spreadsheetId,
-                                                            @Nullable List<Category> categories,
-                                                            @Nullable List<PaymentMethod> paymentMethods,
-                                                            @Nullable List<Budget> budgets,
-                                                            @Nonnull List<String> months,
-                                                            int entitiesSheetId) {
+            @Nullable List<Category> categories,
+            @Nullable List<PaymentMethod> paymentMethods,
+            @Nullable List<Budget> budgets,
+            @Nonnull List<String> months,
+            int entitiesSheetId) {
         InsertConsumerResponse consumerResponse = new InsertConsumerResponse();
         try {
             BatchUpdateSpreadsheetRequest requestBody = SheetRequestHelper
@@ -260,7 +279,7 @@ public class SheetRepository {
                     .getCreateRequestBody(spreadsheetTitle, entitiesSheetTitle,
                             paymentMethods, categories, months, budgets);
             CreateSpreadsheetResponse response =
-                    (CreateSpreadsheetResponse) mSheetsProcessor.createSheet(requestBody);
+                    (CreateSpreadsheetResponse)mSheetsProcessor.createSheet(requestBody);
             String spreadsheetId = response.getResponse().getSpreadsheetId();
             List<SheetMetadata> sheets = new ArrayList<>();
             for (Sheet sheet : response.getResponse().getSheets()) {
@@ -280,8 +299,39 @@ public class SheetRepository {
         return consumerResponse;
     }
 
+    @NonNull
+    public AddSheetConsumerResponse getAddSheetResponse(@Nonnull String spreadsheetId,
+            @Nonnull String sheetName,
+            int sheetIndex) {
+        AddSheetConsumerResponse consumerResponse = new AddSheetConsumerResponse();
+        try {
+            BatchUpdateSpreadsheetRequest request = SheetRequestHelper
+                    .getAddSheetRequest(sheetName, sheetIndex);
+            UpdateSpreadsheetResponse response = (UpdateSpreadsheetResponse)mSheetsProcessor
+                    .updateSheet(spreadsheetId, request);
+            if (response.getBatchUpdateSpreadsheetResponse() != null &&
+                    response.getBatchUpdateSpreadsheetResponse().getReplies() != null &&
+                    !response.getBatchUpdateSpreadsheetResponse().getReplies().isEmpty() &&
+                    response.getBatchUpdateSpreadsheetResponse().getReplies().get(0) != null) {
+                AddSheetResponse addSheetResponse =
+                        response.getBatchUpdateSpreadsheetResponse().getReplies().get(0)
+                                .getAddSheet();
+                if (addSheetResponse != null && addSheetResponse.getProperties() != null) {
+                    SheetProperties properties = addSheetResponse.getProperties();
+                    consumerResponse.setSheetMetadata(
+                            new SheetMetadata(properties.getSheetId(), properties.getTitle()));
+                }
+            }
+        } catch (IOException e) {
+            Timber.e(e);
+            consumerResponse.setException(e);
+            onOperationException(e);
+        }
+        return consumerResponse;
+    }
+
     public void refreshProcessors(@NonNull Context context, @NonNull String appName,
-                                  @NonNull Account account, @NonNull List<String> scopes) {
+            @NonNull Account account, @NonNull List<String> scopes) {
         mSheetsProcessor = new SheetsProcessor(context, appName, account, scopes);
         //mDriveProcessor = new DriveProcessor(context, appName, account, scopes);
     }

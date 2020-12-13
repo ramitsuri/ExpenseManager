@@ -2,7 +2,10 @@ package com.ramitsuri.expensemanager.utils;
 
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
+
 import com.google.api.services.drive.model.File;
+import com.google.api.services.sheets.v4.model.AddSheetRequest;
 import com.google.api.services.sheets.v4.model.AppendCellsRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.CellData;
@@ -27,6 +30,7 @@ import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo;
 import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 import java.math.BigDecimal;
@@ -46,7 +50,9 @@ public class SheetRequestHelper {
     public static BatchUpdateSpreadsheetRequest getUpdateRequestBody(
             @Nonnull List<Expense> expensesToBackup,
             @Nullable List<Integer> editedMonths,
-            @Nonnull List<SheetInfo> sheetInfos) {
+            @Nonnull List<SheetInfo> sheetInfos,
+            @Nullable List<RecurringExpenseInfo> recurringExpenses,
+            @Nullable SheetInfo recurringSheetInfo) {
         BatchUpdateSpreadsheetRequest requestBody = new BatchUpdateSpreadsheetRequest();
         List<Request> requests = new ArrayList<>();
 
@@ -99,6 +105,35 @@ public class SheetRequestHelper {
             }
             appendCellsRequest.setRows(rowDataList);
             request.setAppendCells(appendCellsRequest);
+            requests.add(request);
+        }
+
+        // Recurring expenses
+        if (recurringExpenses != null && recurringSheetInfo != null) {
+            Request request = new Request();
+            UpdateCellsRequest updateCellsRequest = new UpdateCellsRequest();
+            updateCellsRequest.setFields("*");
+            updateCellsRequest.setRange(new GridRange()
+                    .setSheetId(recurringSheetInfo.getSheetId())
+                    .setStartColumnIndex(0)
+                    .setStartColumnIndex(0));
+
+            List<RowData> rowDataList = new ArrayList<>();
+            if (recurringExpenses.isEmpty()) {
+                RowData rowData = new RowData();
+                List<CellData> valuesList = new ArrayList<>();
+                CellData values = getEmptyCell();
+                valuesList.add(values);
+                rowData.setValues(valuesList);
+                rowDataList.add(rowData);
+            } else {
+                for (RecurringExpenseInfo recurringExpense : recurringExpenses) {
+                    RowData rowData = getRecurringRowData(recurringExpense);
+                    rowDataList.add(rowData);
+                }
+            }
+            updateCellsRequest.setRows(rowDataList);
+            request.setUpdateCells(updateCellsRequest);
             requests.add(request);
         }
 
@@ -236,6 +271,24 @@ public class SheetRequestHelper {
             requestList.add(request);
             startIndex++;
         }
+        requestBody.setRequests(requestList);
+        return requestBody;
+    }
+
+    @NonNull
+    public static BatchUpdateSpreadsheetRequest getAddSheetRequest(
+            @Nonnull String sheetName,
+            int sheetIndex) {
+        int rows = 300;
+        int columns = 10;
+
+        BatchUpdateSpreadsheetRequest requestBody = new BatchUpdateSpreadsheetRequest();
+        List<Request> requestList = new ArrayList<>();
+        Request request = new Request();
+        AddSheetRequest addSheetRequest = new AddSheetRequest()
+                .setProperties(getSheetProperties(sheetName, sheetIndex, rows, columns));
+        request.setAddSheet(addSheetRequest);
+        requestList.add(request);
         requestBody.setRequests(requestList);
         return requestBody;
     }
@@ -408,6 +461,25 @@ public class SheetRequestHelper {
         CellData values;
 
         List<String> list = expense.toStringList();
+
+        for (String value : list) {
+            values = new CellData();
+            values.setUserEnteredValue(
+                    new ExtendedValue()
+                            .setStringValue(value));
+            valuesList.add(values);
+        }
+
+        rowData.setValues(valuesList);
+        return rowData;
+    }
+
+    private static RowData getRecurringRowData(RecurringExpenseInfo info) {
+        RowData rowData = new RowData();
+        List<CellData> valuesList = new ArrayList<>();
+        CellData values;
+
+        List<String> list = info.toStringList();
 
         for (String value : list) {
             values = new CellData();
