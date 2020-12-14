@@ -1,3 +1,8 @@
+Recurring Expense (IV)
+Add additional logic and documentation for recurring expenses
+Support scenario where recurring expenses might not have been added for some time, in which case a
+list of new expenses is returned
+
 Recurring Expense (III)
 SheetsCore
     - Use 3.2.0 that adds AddSheet response
