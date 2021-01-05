@@ -1,11 +1,11 @@
 package com.ramitsuri.expensemanager.data.dummy;
 
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
+import com.ramitsuri.expensemanager.entities.Period;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 
 import java.math.BigDecimal;
@@ -15,8 +15,10 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 public class Expenses {
+    private static TimeZone TIME_ZONE = TimeZone.getDefault();
     public static long BASE_DATE_TIME = 1565818852014L; // Wed Aug 14 2019 17:40:52
     public static long ONE_DAY = 86400000;
 
@@ -361,9 +363,10 @@ public class Expenses {
     }
 
     public static List<Expense> getAllForBackup(List<Integer> monthIndices) {
-        Filter filter = new Filter();
+        Filter filter = new Filter(TIME_ZONE);
+        filter.addYear(2020);
         for (Integer index : monthIndices) {
-            filter.addMonthIndex(index);
+            filter.addMonth(index);
         }
         return getForFilter(filter);
     }
@@ -392,10 +395,10 @@ public class Expenses {
         // Income
         List<Expense> afterIncomeFilter = new ArrayList<>();
         for (Expense expense : all()) {
-            if (filter.getIsIncome() != null) {
-                if (filter.getIsIncome() && expense.isIncome()) {
+            if (filter.isIncome() != null) {
+                if (filter.isIncome() && expense.isIncome()) {
                     afterIncomeFilter.add(expense);
-                } else if (!filter.getIsIncome() && !expense.isIncome()) {
+                } else if (!filter.isIncome() && !expense.isIncome()) {
                     afterIncomeFilter.add(expense);
                 }
             } else {
@@ -405,14 +408,14 @@ public class Expenses {
         // Date range
         List<Expense> afterDateFilter = new ArrayList<>();
         for (Expense expense : afterIncomeFilter) {
-            if (filter.getDateTimes() != null && filter.getDateTimes().size() != 0) {
-                for (int i = 0; i < filter.getDateTimes().size(); i++) {
-                    Pair<Long, Long> dateTime = filter.getDateTimes().valueAt(i);
+            List<Period> periods = filter.getPeriods();
+            if (periods != null && periods.size() != 0) {
+                for (Period dateTime : periods) {
                     if (dateTime == null) {
                         continue;
                     }
-                    if (expense.getDateTime() >= dateTime.first &&
-                            expense.getDateTime() <= dateTime.second) {
+                    if (expense.getDateTime() >= dateTime.getStart() &&
+                            expense.getDateTime() <= dateTime.getEnd()) {
                         afterDateFilter.add(expense);
                     }
                 }
@@ -445,10 +448,10 @@ public class Expenses {
         // Synced
         List<Expense> afterSyncedFilter = new ArrayList<>();
         for (Expense expense : afterPaymentsFilter) {
-            if (filter.getIsSynced() != null) {
-                if (filter.getIsSynced() && expense.isSynced()) {
+            if (filter.isSynced() != null) {
+                if (filter.isSynced() && expense.isSynced()) {
                     afterSyncedFilter.add(expense);
-                } else if (!filter.getIsSynced() && !expense.isSynced()) {
+                } else if (!filter.isSynced() && !expense.isSynced()) {
                     afterSyncedFilter.add(expense);
                 }
             } else {
@@ -458,10 +461,10 @@ public class Expenses {
         // Starred
         List<Expense> afterStarredFilter = new ArrayList<>();
         for (Expense expense : afterSyncedFilter) {
-            if (filter.getIsStarred() != null) {
-                if (filter.getIsStarred() && expense.isStarred()) {
+            if (filter.isStarred() != null) {
+                if (filter.isStarred() && expense.isStarred()) {
                     afterStarredFilter.add(expense);
-                } else if (!filter.getIsStarred() && !expense.isStarred()) {
+                } else if (!filter.isStarred() && !expense.isStarred()) {
                     afterStarredFilter.add(expense);
                 }
             } else {

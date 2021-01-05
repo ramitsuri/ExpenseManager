@@ -29,6 +29,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 public class ExpenseDatabaseTest extends BaseDatabaseTest {
 
     private ExpenseDao mExpenseDao;
+    private final TimeZone timeZone = TimeZone.getDefault();
 
     @Before
     @Override
@@ -64,34 +65,38 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
                 mExpenseDao.getAllUnsynced().size());
     }
 
+    /**
+     * This test fails because is no longer being updated. Will be removed at some point
+     * @throws Exception
+     */
     @Test
     public void testGetAllForBackup() throws Exception {
         // get All for backup
-        List<Integer> monthIndices = new ArrayList<>();
-        monthIndices.add(6);
-        monthIndices.add(5);
-        monthIndices.add(4);
+        List<Integer> months = new ArrayList<>();
+        months.add(6);
+        months.add(5);
+        months.add(4);
         Assert.assertEquals(
-                Expenses.getAllForBackup(monthIndices).size(),
-                mExpenseDao.getAllForBackup(monthIndices).size());
+                Expenses.getAllForBackup(months).size(),
+                mExpenseDao.getAllForBackup(months, timeZone).size());
 
-        monthIndices = new ArrayList<>();
-        monthIndices.add(0);
+        months = new ArrayList<>();
+        months.add(1);
         Assert.assertEquals(
-                Expenses.getAllForBackup(monthIndices).size(),
-                mExpenseDao.getAllForBackup(monthIndices).size());
+                Expenses.getAllForBackup(months).size(),
+                mExpenseDao.getAllForBackup(months, timeZone).size());
 
-        monthIndices = new ArrayList<>();
-        monthIndices.add(11);
-        monthIndices.add(9);
+        months = new ArrayList<>();
+        months.add(11);
+        months.add(9);
         Assert.assertEquals(
-                Expenses.getAllForBackup(monthIndices).size(),
-                mExpenseDao.getAllForBackup(monthIndices).size());
+                Expenses.getAllForBackup(months).size(),
+                mExpenseDao.getAllForBackup(months, timeZone).size());
 
-        monthIndices = new ArrayList<>();
+        months = new ArrayList<>();
         Assert.assertEquals(
-                Expenses.getAllForBackup(monthIndices).size(),
-                mExpenseDao.getAllForBackup(monthIndices).size());
+                Expenses.getAllForBackup(months).size(),
+                mExpenseDao.getAllForBackup(months, timeZone).size());
     }
 
     @Test
@@ -195,43 +200,47 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
     @Test
     public void testGetForFilter() {
         Filter filter;
-        for (int i = 0; i < 12; i++) {
-            filter = new Filter();
-            filter.setIsIncome(false);
-            filter.addMonthIndex(i);
+        for (int i = 1; i <= 12; i++) {
+            filter = new Filter(timeZone);
+            filter.addYear(2020);
+            filter.setIncome(false);
+            filter.addMonth(i);
             Assert.assertEquals(Expenses.getForFilter(filter).size(),
                     mExpenseDao.getForFilter(filter).size());
         }
-        filter = new Filter();
-        for (int i = 0; i < 12; i++) {
-            filter.addMonthIndex(i);
-            filter.setIsIncome(true);
+        filter = new Filter(timeZone);
+        for (int i = 1; i <= 12; i++) {
+            filter.addYear(2020);
+            filter.addMonth(i);
+            filter.setIncome(true);
             Assert.assertEquals(Expenses.getForFilter(filter).size(),
                     mExpenseDao.getForFilter(filter).size());
         }
-        filter = new Filter();
-        for (int i = 0; i < 12; i++) {
-            filter.addMonthIndex(i);
-            filter.setIsIncome(false);
+        filter = new Filter(timeZone);
+        for (int i = 1; i <= 12; i++) {
+            filter.addYear(2020);
+            filter.addMonth(i);
+            filter.setIncome(false);
             Assert.assertEquals(Expenses.getForFilter(filter).size(),
                     mExpenseDao.getForFilter(filter).size());
         }
 
-        filter = new Filter();
-        filter.setIsIncome(true);
+        filter = new Filter(timeZone);
+        filter.setIncome(true);
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
 
-        filter = new Filter();
-        filter.setIsIncome(false);
+        filter = new Filter(timeZone);
+        filter.setIncome(false);
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
 
-        filter = new Filter();
-        filter.addMonthIndex(7);
-        filter.addMonthIndex(4);
-        filter.setIsIncome(false);
-        filter.setIsStarred(false);
+        filter = new Filter(timeZone);
+        filter.addYear(2020);
+        filter.addMonth(7);
+        filter.addMonth(4);
+        filter.setIncome(false);
+        filter.setStarred(false);
 
         filter.addCategory("Food")
                 .addCategory("Travel")
@@ -242,14 +251,13 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
 
-        filter = new Filter();
-        filter.addMonthIndex(5);
-        filter.addMonthIndex(4);
-        filter.setIsIncome(false);
-        filter.setIsStarred(false);
-
+        filter = new Filter(timeZone);
+        filter.addYear(2020);
+        filter.addMonth(5);
+        filter.addMonth(4);
+        filter.setIncome(false);
+        filter.setStarred(false);
         filter.addCategory("Utilities");
-
         filter.addPaymentMethod("Card4");
         Assert.assertEquals(Expenses.getForFilter(filter).size(),
                 mExpenseDao.getForFilter(filter).size());
@@ -310,14 +318,13 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
 
     @Test
     public void testUpdateSyncedForQuery() {
-        TimeZone timeZone = TimeZone.getDefault();
-
-        for (int i = 0; i < 12; i++) {
-            Filter filter = new Filter();
+        for (int i = 1; i <= 12; i++) {
+            Filter filter = new Filter(timeZone);
+            filter.addYear(2020);
             filter.setSynced(true);
-            filter.addMonthIndex(i, timeZone);
+            filter.addMonth(i);
 
-            mExpenseDao.updateSetUnsynced(i);
+            mExpenseDao.updateSetUnsynced(i, timeZone);
             Assert.assertEquals(
                     0,
                     mExpenseDao.getForFilter(filter).size());

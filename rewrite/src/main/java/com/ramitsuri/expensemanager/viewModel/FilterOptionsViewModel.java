@@ -1,19 +1,6 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import com.ramitsuri.expensemanager.MainApplication;
-import com.ramitsuri.expensemanager.R;
-import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
-import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
-import com.ramitsuri.expensemanager.entities.Filter;
-import com.ramitsuri.expensemanager.ui.adapter.FilterWrapper;
-import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.arch.core.util.Function;
@@ -21,12 +8,32 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
+import com.ramitsuri.expensemanager.entities.Filter;
+import com.ramitsuri.expensemanager.ui.adapter.FilterWrapper;
+import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.DateHelper;
+import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
+
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+
+import javax.annotation.Nonnull;
+
 public class FilterOptionsViewModel extends ViewModel {
 
-    private Filter mFilter;
-    private ExpenseRepository mExpenseRepo;
+    private final Filter mFilter;
+    private final ExpenseRepository mExpenseRepo;
 
     private List<String> mCategories, mPayments;
+    private List<Integer> mYears;
+    private final TimeZone mTimeZone = AppHelper.getTimeZone();
 
     public FilterOptionsViewModel(@Nonnull Filter filter) {
         super();
@@ -36,8 +43,7 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public Filter clear() {
-        mFilter
-                .clear()
+        mFilter.clear()
                 .getDefault();
         return mFilter;
     }
@@ -46,13 +52,57 @@ public class FilterOptionsViewModel extends ViewModel {
         return mFilter;
     }
 
-    // region Months
+    // region DateTime
+    public LiveData<Boolean> areYearsAvailable() {
+        return Transformations.map(mExpenseRepo.getDateTimes(),
+                new Function<List<Long>, Boolean>() {
+                    @Override
+                    public Boolean apply(List<Long> input) {
+                        mYears = new ArrayList<>();
+                        for (Long value : input) {
+                            ZonedDateTime zonedDateTime =
+                                    DateHelper.getZonedDateTime(value, mTimeZone.toZoneId());
+                            mYears.add(zonedDateTime.getYear());
+                        }
+                        return input != null && input.size() > 0;
+                    }
+                });
+    }
+
+    @Nullable
+    public List<FilterWrapper> getYears() {
+        if (mYears == null || mYears.size() == 0) {
+            return null;
+        }
+        List<FilterWrapper> wrappers = new ArrayList<>();
+        Set<Integer> filterYears = mFilter.getYears();
+        for (Integer value : mYears) {
+            boolean selected = filterYears != null && filterYears.contains(value);
+            wrappers.add(new FilterWrapper(String.valueOf(value), selected));
+        }
+        return wrappers;
+    }
+
+    public void onAddYear(@Nonnull FilterWrapper value) {
+        mFilter.addYear(Integer.parseInt(value.getValue()));
+    }
+
+    public void onRemoveYear(@Nonnull FilterWrapper value) {
+        Set<Integer> years = mFilter.getYears();
+        if (years != null && years.size() == 1) {
+            return;
+        }
+        mFilter.removeYear(Integer.parseInt(value.getValue()));
+    }
+
+    @NonNull
     public List<FilterWrapper> getMonths() {
         List<FilterWrapper> wrappers = new ArrayList<>();
-        int index = 0;
+        Set<Integer> filterMonths = mFilter.getMonths();
+        int index = 1;
         for (String month : AppHelper.getMonths()) {
-            boolean selected = mFilter.getDateTimes() != null &&
-                    mFilter.getDateTimes().get(index) != null;
+            boolean selected = filterMonths != null &&
+                    filterMonths.contains(index);
             wrappers.add(new FilterWrapper(month, selected));
             index = index + 1;
         }
@@ -72,24 +122,24 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public void onAddMonth(@Nonnull FilterWrapper value) {
-        int index = getMonthPicked(value.getValue());
-        mFilter
-                .addMonthIndex(index);
+        int month = getMonthPicked(value.getValue());
+        mFilter.addMonth(month);
     }
 
     public void onRemoveMonth(@Nonnull FilterWrapper value) {
-        if (mFilter.getDateTimes() != null && mFilter.getDateTimes().size() > 1) {
-            int index = getMonthPicked(value.getValue());
-            mFilter
-                    .removeMonthIndex(index);
+        Set<Integer> months = mFilter.getMonths();
+        if (months != null && months.size() == 1) {
+            return;
         }
+        int month = getMonthPicked(value.getValue());
+        mFilter.removeMonth(month);
     }
 
     /**
      * Converts picked month into its corresponding index in the range 0 - 11
      */
     private int getMonthPicked(String pickedMonth) {
-        int index = 0;
+        int index = 1;
         for (String month : AppHelper.getMonths()) {
             if (pickedMonth.equalsIgnoreCase(month)) {
                 break;
@@ -178,13 +228,14 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public List<FilterWrapper> getIncomes() {
+        Boolean filterIncome = mFilter.isIncome();
         List<FilterWrapper> wrappers = new ArrayList<>();
         String value = getString(R.string.filter_options_income_incomes);
-        boolean selected = mFilter.getIsIncome() == null || mFilter.getIsIncome();
+        boolean selected = filterIncome == null || filterIncome;
         wrappers.add(new FilterWrapper(value, selected));
 
         value = getString(R.string.filter_options_income_expenses);
-        selected = mFilter.getIsIncome() == null || !mFilter.getIsIncome();
+        selected = filterIncome == null || !filterIncome;
         wrappers.add(new FilterWrapper(value, selected));
         return wrappers;
     }
@@ -198,7 +249,7 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public void onRemoveIncome(@Nonnull List<FilterWrapper> oldValues,
-                               @Nonnull FilterWrapper value) {
+            @Nonnull FilterWrapper value) {
         List<FilterWrapper> newValues = onItemUnselected(oldValues, value);
         if (newValues == null) {
             return;
@@ -227,24 +278,25 @@ public class FilterOptionsViewModel extends ViewModel {
             }
         }
         if ((incomes && expenses) || (!incomes && !expenses)) { // Both
-            mFilter.setIsIncome(null);
+            mFilter.setIncome(null);
         } else if (incomes) { // Incomes
-            mFilter.setIsIncome(true);
+            mFilter.setIncome(true);
         } else { // Expenses
-            mFilter.setIsIncome(false);
+            mFilter.setIncome(false);
         }
     }
     //endregion
 
     // region Flag
     public List<FilterWrapper> getFlagStatuses() {
+        Boolean filterStarred = mFilter.isStarred();
         List<FilterWrapper> wrappers = new ArrayList<>();
         String value = getString(R.string.filter_options_flag_flagged);
-        boolean selected = mFilter.getIsStarred() == null || mFilter.getIsStarred();
+        boolean selected = filterStarred == null || filterStarred;
         wrappers.add(new FilterWrapper(value, selected));
 
         value = getString(R.string.filter_options_flag_not_flagged);
-        selected = mFilter.getIsStarred() == null || !mFilter.getIsStarred();
+        selected = filterStarred == null || !filterStarred;
         wrappers.add(new FilterWrapper(value, selected));
         return wrappers;
     }
@@ -258,7 +310,7 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public void onRemoveFlag(@Nonnull List<FilterWrapper> oldValues,
-                             @Nonnull FilterWrapper value) {
+            @Nonnull FilterWrapper value) {
         List<FilterWrapper> newValues = onItemUnselected(oldValues, value);
         if (newValues == null) {
             return;
@@ -287,11 +339,11 @@ public class FilterOptionsViewModel extends ViewModel {
             }
         }
         if ((flagged && notFlagged) || (!flagged && !notFlagged)) { // Both
-            mFilter.setIsStarred(null);
+            mFilter.setStarred(null);
         } else if (flagged) { // Flagged
-            mFilter.setIsStarred(true);
+            mFilter.setStarred(true);
         } else { // Not flagged
-            mFilter.setIsStarred(false);
+            mFilter.setStarred(false);
         }
     }
     //endregion
@@ -312,7 +364,7 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public void onAddRecordType(@Nonnull List<FilterWrapper> oldValues,
-                                @Nonnull FilterWrapper value) {
+            @Nonnull FilterWrapper value) {
         List<FilterWrapper> newValues = onItemSelected(oldValues, value);
         if (newValues == null) {
             return;
@@ -321,7 +373,7 @@ public class FilterOptionsViewModel extends ViewModel {
     }
 
     public void onRemoveRecordType(@Nonnull List<FilterWrapper> oldValues,
-                             @Nonnull FilterWrapper value) {
+            @Nonnull FilterWrapper value) {
         List<FilterWrapper> newValues = onItemUnselected(oldValues, value);
         if (newValues == null) {
             return;

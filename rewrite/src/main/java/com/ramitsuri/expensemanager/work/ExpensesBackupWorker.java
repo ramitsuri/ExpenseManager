@@ -63,7 +63,7 @@ public class ExpensesBackupWorker extends BaseWorker {
             } else {
                 // Expenses might be appended (new) and sheets might be rewritten (update request)
                 expensesToBackup = ExpenseManagerDatabase.getInstance().expenseDao()
-                        .getAllForBackup(editedMonths);
+                        .getAllForBackup(editedMonths, AppHelper.getTimeZone());
             }
 
             if (expensesToBackup == null) {

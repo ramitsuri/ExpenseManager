@@ -7,6 +7,7 @@ import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.Calculator;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.SharedExpenseHelper;
@@ -15,6 +16,7 @@ import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +37,7 @@ public class AllExpensesViewModel extends ViewModel {
     private Filter mFilter;
     private MutableLiveData<String> mFilterInfo;
     private SharedExpenseManager mSharedExpenseManager;
+    private final TimeZone mTimeZone = AppHelper.getTimeZone();
 
     public AllExpensesViewModel() {
         super();
@@ -122,9 +125,9 @@ public class AllExpensesViewModel extends ViewModel {
 
     @Nonnull
     private Filter getDefaultFilter() {
-        return new Filter()
-                .getDefault()
-                .setRecordType(RecordType.MONTHLY);
+        Filter filter = new Filter(mTimeZone).getDefault();
+        filter.setRecordType(RecordType.MONTHLY);
+        return filter;
     }
 
     public void clearFilter() {

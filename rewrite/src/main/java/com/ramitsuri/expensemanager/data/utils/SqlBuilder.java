@@ -3,7 +3,9 @@ package com.ramitsuri.expensemanager.data.utils;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.ramitsuri.expensemanager.utils.ObjectHelper;
+import androidx.annotation.NonNull;
+
+import com.ramitsuri.expensemanager.entities.Period;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,16 +13,16 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import androidx.annotation.NonNull;
-
 public class SqlBuilder {
     @NonNull
     private final StringBuilder mSql;
 
+    @Nonnull
     private List<String> mArgs;
 
     public SqlBuilder() {
         mSql = new StringBuilder();
+        mArgs = new ArrayList<>();
     }
 
     @Nonnull
@@ -120,13 +122,13 @@ public class SqlBuilder {
         return addArgs(args);
     }
 
-    public <T> SqlBuilder between(@NonNull Pair<T, T> pair) {
+    public <T> SqlBuilder betweenPair(@NonNull Pair<T, T> pair) {
         return append("BETWEEN ? AND ? ")
                 .addArg(pair.first)
                 .addArg(pair.second);
     }
 
-    public <T> SqlBuilder between(String column, @NonNull List<Pair<T, T>> pairs) {
+    public <T> SqlBuilder betweenPairs(String column, @NonNull List<Pair<T, T>> pairs) {
         append(" ( ")
                 .append(TextUtils.join(" OR ",
                         Collections.nCopies(pairs.size(), " (" + column + " BETWEEN ? AND ?) ")))
@@ -134,6 +136,18 @@ public class SqlBuilder {
         for (Pair<T, T> pair : pairs) {
             addArg(pair.first)
                     .addArg(pair.second);
+        }
+        return this;
+    }
+
+    public SqlBuilder betweenPeriods(String column, @NonNull List<Period> periods) {
+        append(" ( ")
+                .append(TextUtils.join(" OR ",
+                        Collections.nCopies(periods.size(), " (" + column + " BETWEEN ? AND ?) ")))
+                .append(" ) ");
+        for (Period period : periods) {
+            addArg(period.getStart())
+                    .addArg(period.getEnd());
         }
         return this;
     }
@@ -148,9 +162,6 @@ public class SqlBuilder {
     }
 
     public SqlBuilder addArg(Object arg) {
-        if (mArgs == null) {
-            mArgs = new ArrayList<>();
-        }
         mArgs.add(String.valueOf(arg));
         return this;
     }

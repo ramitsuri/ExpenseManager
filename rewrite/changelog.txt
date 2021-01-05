@@ -1,3 +1,38 @@
+Add support for New Year
+AllExpensesFragment
+    - Change card view and linear layout vars type to ViewGroup
+AllExpenseViewModel
+    - Modify to create Filter instance using TimeZone
+DateHelper
+    - Add method to format month and year
+    - Move method from RecurringExpenseManager to get ZonedDateTime from Instant
+    - Modify methods to get max and min date for date picker to be in 4 years future and 4 past
+ExpenseDao
+    - Add method to get just date times of expenses
+    - Deprecate methods that are used for backing up to Sheets
+ExpenseDatabaseTest, Expenses, FilterTest
+    - Changes from migrating Filter to Kotlin
+    - Changes from Filter needing a TimeZone
+    - Changes from Filter needing month as 1-12 instead of older 0-11 implementation
+    - Changes from Filter needing a year along with month
+ExpenseRepo
+    - Add method to get date times
+ExpensesBackupWorker
+    - Filter time zone changes
+Filter
+    - Migrate to Kotlin
+    - Add a time zone property
+    - Change period implementation to have months and years and then create start and end time in millis periods as needed
+FilterOptionsFragment
+    - Add year selection
+FilterOptionsViewModel
+    - Changes from Filter class
+    - Add year selection support
+AllExpensesFragment
+    - Adjust UI slightly
+Period
+    - New class to represent start and end time in millis for Filter
+
 Recurring Expense (IV)
 Add additional logic and documentation for recurring expenses
 Support scenario where recurring expenses might not have been added for some time, in which case a

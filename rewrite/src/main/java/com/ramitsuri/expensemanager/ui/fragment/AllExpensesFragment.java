@@ -8,10 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.card.MaterialCardView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.R;
@@ -33,14 +40,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
 public class AllExpensesFragment extends BaseFragment implements View.OnClickListener {
@@ -50,8 +49,8 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     // Views
     private ExtendedFloatingActionButton mBtnAdd;
     private RecyclerView mListExpenses;
-    private MaterialCardView mCardInfo;
-    private LinearLayout mGroupButtons;
+    private ViewGroup mCardInfo;
+    private ViewGroup mGroupButtons;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
     private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnSharedSecond, mBtnFilter,
             mBtnSetup, mBtnAnalysis, mBtnClearFilter, mBtnShared;

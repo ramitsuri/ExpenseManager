@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.data.repository;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -9,6 +10,7 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.annotation.Nonnull;
 
@@ -96,6 +98,19 @@ public class ExpenseRepository extends BaseRepository {
         return expense;
     }
 
+    @NonNull
+    public LiveData<List<Long>> getDateTimes() {
+        final MutableLiveData<List<Long>> dateTimes = new MutableLiveData<>();
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Long> values = mDatabase.expenseDao().getDateTimes();
+                dateTimes.postValue(values);
+            }
+        });
+        return dateTimes;
+    }
+
     public void insert(final Expense expense) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
@@ -115,7 +130,7 @@ public class ExpenseRepository extends BaseRepository {
     }
 
     public void delete(final Expense expense,
-                       @Nonnull Filter filter) {
+            @Nonnull Filter filter) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -145,11 +160,11 @@ public class ExpenseRepository extends BaseRepository {
         });
     }
 
-    public void updateSetUnsynced(final int monthIndex) {
+    public void updateSetUnsynced(final int monthIndex, @Nonnull final TimeZone timeZone) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                mDatabase.expenseDao().updateSetUnsynced(monthIndex);
+                mDatabase.expenseDao().updateSetUnsynced(monthIndex, timeZone);
             }
         });
     }
@@ -176,7 +191,7 @@ public class ExpenseRepository extends BaseRepository {
     }
 
     public LiveData<Expense> insertAndGet(@Nonnull final Expense expense,
-                                          @Nonnull Filter filter) {
+            @Nonnull Filter filter) {
         final MutableLiveData<Expense> duplicate = new MutableLiveData<>();
         mExecutors.diskIO().execute(new Runnable() {
             @Override

@@ -107,7 +107,6 @@ class RecurringExpenseManager {
 
     private fun getZonedDateTime(timeInMillis: Long,
             zoneId: ZoneId): ZonedDateTime {
-        val instant = Instant.ofEpochMilli(timeInMillis)
-        return ZonedDateTime.ofInstant(instant, zoneId)
+        return DateHelper.getZonedDateTime(timeInMillis, zoneId)
     }
 }

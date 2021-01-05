@@ -42,6 +42,7 @@
     <string name="common_next">Next</string>
     <string name="common_done">Done</string>
     <string name="common_previous">Previous</string>
+    <string name="common_year">Year</string>
     <string name="common_month">Month</string>
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">History</string>

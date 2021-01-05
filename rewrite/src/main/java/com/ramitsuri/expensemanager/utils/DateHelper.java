@@ -2,20 +2,26 @@ package com.ramitsuri.expensemanager.utils;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import javax.annotation.Nonnull;
 
 public class DateHelper {
     private static final String FORMAT_FRIENDLY = "MMM dd"; // Sep 21
     private static final String FORMAT_EXPANDED = "EEEE, MMMM"; // Thursday, September 21
     private static final String FORMAT_MONTH = "MMMM"; // September
+    private static final String FORMAT_MONTH_YEAR = "MMMM\nyyyy"; // September\n2021
     private static final String FORMAT_DAY = "dd"; // 21
     private static final String FORMAT_FULL = "EE MMM dd HH:mm:ss zzz yyyy";
     private static final String FORMAT_LOGS = "MMM/dd/yyyy HH:mm";
@@ -62,6 +68,12 @@ public class DateHelper {
             timeZone = AppHelper.getTimeZone();
         }
         SimpleDateFormat format = new SimpleDateFormat(FORMAT_MONTH, Locale.getDefault());
+        format.setTimeZone(timeZone);
+        return format.format(date);
+    }
+
+    public static String getMonthAndYear(long date, @Nonnull TimeZone timeZone) {
+        SimpleDateFormat format = new SimpleDateFormat(FORMAT_MONTH_YEAR, Locale.getDefault());
         format.setTimeZone(timeZone);
         return format.format(date);
     }
@@ -169,8 +181,9 @@ public class DateHelper {
         return Duration.ofMillis(timeDesired - timeNow);
     }
 
-    public static long getFirstDayOfCurrentYear() {
+    public static long getMinDate() {
         Calendar calendar = Calendar.getInstance(AppHelper.getTimeZone());
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 4);
         calendar.set(Calendar.MONTH, 0);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -180,8 +193,9 @@ public class DateHelper {
         return calendar.getTimeInMillis();
     }
 
-    public static long getLastDayOfCurrentYear() {
+    public static long getMaxDate() {
         Calendar calendar = Calendar.getInstance(AppHelper.getTimeZone());
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 4);
         calendar.set(Calendar.MONTH, 11);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -189,5 +203,12 @@ public class DateHelper {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         return calendar.getTimeInMillis();
+    }
+
+    @NonNull
+    public static ZonedDateTime getZonedDateTime(@NonNull Long timeInMillis,
+            @NonNull ZoneId zoneId){
+        Instant instant = Instant.ofEpochMilli(timeInMillis);
+        return ZonedDateTime.ofInstant(instant, zoneId);
     }
 }
