@@ -22,7 +22,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TimeZone;
+import java.util.TreeSet;
 
 import javax.annotation.Nonnull;
 
@@ -32,7 +34,7 @@ public class FilterOptionsViewModel extends ViewModel {
     private final ExpenseRepository mExpenseRepo;
 
     private List<String> mCategories, mPayments;
-    private List<Integer> mYears;
+    private SortedSet<Integer> mYears;
     private final TimeZone mTimeZone = AppHelper.getTimeZone();
 
     public FilterOptionsViewModel(@Nonnull Filter filter) {
@@ -58,25 +60,26 @@ public class FilterOptionsViewModel extends ViewModel {
                 new Function<List<Long>, Boolean>() {
                     @Override
                     public Boolean apply(List<Long> input) {
-                        mYears = new ArrayList<>();
+                        mYears = new TreeSet<>();
                         for (Long value : input) {
                             ZonedDateTime zonedDateTime =
                                     DateHelper.getZonedDateTime(value, mTimeZone.toZoneId());
                             mYears.add(zonedDateTime.getYear());
                         }
-                        return input != null && input.size() > 0;
+                        return input.size() > 0;
                     }
                 });
     }
 
     @Nullable
     public List<FilterWrapper> getYears() {
-        if (mYears == null || mYears.size() == 0) {
+        SortedSet<Integer> years = mYears;
+        if (years == null || years.size() == 0) {
             return null;
         }
         List<FilterWrapper> wrappers = new ArrayList<>();
         Set<Integer> filterYears = mFilter.getYears();
-        for (Integer value : mYears) {
+        for (Integer value : years) {
             boolean selected = filterYears != null && filterYears.contains(value);
             wrappers.add(new FilterWrapper(String.valueOf(value), selected));
         }

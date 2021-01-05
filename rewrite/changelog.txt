@@ -1,3 +1,7 @@
+Fix bug with year filter
+    - Fix bug where years in the filter view aren't distinct, instead are as many as expenses
+    - Fix sorting of years
+
 Add support for New Year
 AllExpensesFragment
     - Change card view and linear layout vars type to ViewGroup
