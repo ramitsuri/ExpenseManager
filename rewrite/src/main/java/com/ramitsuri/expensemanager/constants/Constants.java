@@ -64,6 +64,7 @@ public class Constants {
         public static final String ENTITIES = "Entities";
         public static final String TEMPLATE = "Template";
         public static final String CALCULATOR = "Calculator";
+        public static final String RECURRING = "Recurring";
     }
 
     public class SystemTheme {
@@ -92,7 +93,7 @@ public class Constants {
         public static final String ONE_OF_RANGE = "ONE_OF_RANGE";
         public static final String FLAG = "FLAG";
         public static final String INCOME = "INCOME";
-        public static final String EXPENSE_RANGE = "!A:J";
+        public static final String EXPENSE_RANGE = "!A:K";
     }
 
     public class Basic {

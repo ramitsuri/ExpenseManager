@@ -40,8 +40,8 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     @Nonnull
     private FilterOptionsViewModel mViewModel;
 
-    private FilterAdapter mMonthAdapter, mPaymentsAdapter, mCategoriesAdapter, mIncomeAdapter,
-            mFlagAdapter, mRecordTypeAdapter;
+    private FilterAdapter mYearAdapter, mMonthAdapter, mPaymentsAdapter, mCategoriesAdapter,
+            mIncomeAdapter, mFlagAdapter, mRecordTypeAdapter;
 
     @Nullable
     private FilterOptionsFragmentCallback mCallback;
@@ -63,7 +63,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter_options, container, false);
         setSystemUiVisibility(view);
         return view;
@@ -95,6 +95,9 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
 
     private void onClearFilter() {
         Filter filter = mViewModel.clear();
+        if (mYearAdapter != null && mViewModel.getYears() != null) {
+            mYearAdapter.setValues(mViewModel.getYears());
+        }
         if (mMonthAdapter != null) {
             mMonthAdapter.setValues(mViewModel.getMonths());
         }
@@ -117,12 +120,64 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     }
 
     private void setupViews(@Nonnull View view) {
+        setupYears(view);
         setupMonths(view);
         setupCategories(view);
         setupPaymentMethods(view);
         setupFlagStatus(view);
         setupIncomeStatus(view);
         setupRecordType(view);
+    }
+
+    private void setupYears(@NonNull final View view) {
+        // Years
+        final RecyclerView list = view.findViewById(R.id.list_years);
+        list.setLayoutManager(
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        list.setHasFixedSize(true);
+        mYearAdapter = new FilterAdapter();
+        mYearAdapter.setCallback(new FilterAdapter.Callback() {
+            @Override
+            public void onSelected(FilterWrapper value) {
+                if (value == null) {
+                    return;
+                }
+                mViewModel.onAddYear(value);
+                List<FilterWrapper> years = mViewModel.getYears();
+                if (years != null) {
+                    mYearAdapter.setValues(years);
+                }
+                apply(mViewModel.get());
+            }
+
+            @Override
+            public void onUnselected(FilterWrapper value) {
+                if (value == null) {
+                    return;
+                }
+                mViewModel.onRemoveYear(value);
+                List<FilterWrapper> years = mViewModel.getYears();
+                if (years != null) {
+                    mYearAdapter.setValues(years);
+                }
+                apply(mViewModel.get());
+            }
+        });
+        list.setAdapter(mYearAdapter);
+        mViewModel.areYearsAvailable().observe(getViewLifecycleOwner(),
+                new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean available) {
+                        Timber.i("Years available %s", available);
+                        List<FilterWrapper> values = mViewModel.getYears();
+                        if (values != null) {
+                            mYearAdapter.setValues(values);
+                        } else {
+                            list.setVisibility(View.GONE);
+                            view.findViewById(R.id.text_header_year).setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     private void setupMonths(@NonNull View view) {

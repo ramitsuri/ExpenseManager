@@ -15,6 +15,10 @@ public class CrashReportingHelper {
         return new CrashReportingHelper();
     }
 
+    public void disable() {
+        mCrashReporter.setCrashlyticsCollectionEnabled(false);
+    }
+
     public void log(String message) {
         mCrashReporter.log(message);
     }

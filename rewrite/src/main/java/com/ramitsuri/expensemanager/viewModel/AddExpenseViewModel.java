@@ -125,7 +125,7 @@ public class AddExpenseViewModel extends ViewModel {
     public void edit() {
         Expense expense = new Expense(mExpense);
         expense.setId(mExpense.getId());
-        expense.setIsSynced(false);
+        expense.setSynced(false);
         if (expense.isIncome()) { // Set category to "INCOME" always
             expense.setCategory(Constants.Basic.INCOME);
         }
@@ -253,7 +253,7 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setFlag(boolean flagged) {
-        mExpense.setIsStarred(flagged);
+        mExpense.setStarred(flagged);
         setChangesMade();
     }
 
@@ -278,7 +278,7 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setIncome(boolean isIncome) {
-        mExpense.setIsIncome(isIncome);
+        mExpense.setIncome(isIncome);
     }
 
     public void onAnnualTabSelected() {

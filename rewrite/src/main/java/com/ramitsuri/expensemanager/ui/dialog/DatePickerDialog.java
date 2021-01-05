@@ -49,8 +49,8 @@ public class DatePickerDialog extends DialogFragment {
             int day = getArguments().getInt(Constants.BundleKeys.DATE_PICKER_DAY);
 
             DatePicker datePicker = view.findViewById(R.id.date_picker);
-            datePicker.setMinDate(DateHelper.getFirstDayOfCurrentYear()); // Jan 1 00:00:00
-            datePicker.setMaxDate(DateHelper.getLastDayOfCurrentYear()); // Dec 31 23:59:59
+            datePicker.setMinDate(DateHelper.getMinDate()); // Jan 1 00:00:00
+            datePicker.setMaxDate(DateHelper.getMaxDate()); // Dec 31 23:59:59
             datePicker.init(year, month, day, mListener);
         }
     }

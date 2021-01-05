@@ -1,3 +1,94 @@
+Add support for New Year
+AllExpensesFragment
+    - Change card view and linear layout vars type to ViewGroup
+AllExpenseViewModel
+    - Modify to create Filter instance using TimeZone
+DateHelper
+    - Add method to format month and year
+    - Move method from RecurringExpenseManager to get ZonedDateTime from Instant
+    - Modify methods to get max and min date for date picker to be in 4 years future and 4 past
+ExpenseDao
+    - Add method to get just date times of expenses
+    - Deprecate methods that are used for backing up to Sheets
+ExpenseDatabaseTest, Expenses, FilterTest
+    - Changes from migrating Filter to Kotlin
+    - Changes from Filter needing a TimeZone
+    - Changes from Filter needing month as 1-12 instead of older 0-11 implementation
+    - Changes from Filter needing a year along with month
+ExpenseRepo
+    - Add method to get date times
+ExpensesBackupWorker
+    - Filter time zone changes
+Filter
+    - Migrate to Kotlin
+    - Add a time zone property
+    - Change period implementation to have months and years and then create start and end time in millis periods as needed
+FilterOptionsFragment
+    - Add year selection
+FilterOptionsViewModel
+    - Changes from Filter class
+    - Add year selection support
+AllExpensesFragment
+    - Adjust UI slightly
+Period
+    - New class to represent start and end time in millis for Filter
+
+Recurring Expense (IV)
+Add additional logic and documentation for recurring expenses
+Support scenario where recurring expenses might not have been added for some time, in which case a
+list of new expenses is returned
+
+Recurring Expense (III)
+SheetsCore
+    - Use 3.2.0 that adds AddSheet response
+Spreadsheet Constants
+    - Add Recurring sheet's name as constant
+    - Update Expense sheet range to add another column (AddType)
+SheetRepository
+    - Add a method to get entities live data from Spreadsheet (used to resolve account access issues)
+    - Update insert expenses method to insert recurring expenses info as well to spreadsheet
+    - Add a method to add new sheet (used for Recurring sheet)
+Expense 
+    - Fix a bug with getting expenses (via sync) from Spreadsheet where date would not get converted due to Long String type mismatch 
+    - Set default isSynced value for downloaded via sync expenses as true
+RecurringExpenseInfo
+    - Add methods to get String list (for backup) and get object from object list (from sync)
+MiscellaneousFragment
+    - Add a way to restore access possibly if the error is due to UserRecoverableAuthIOException (by requesting sheet info and triggering the exception)
+SheetRequestHelper
+    - Add Recurring Expense info details to Insert request
+    - Add AddSheet request
+ExpensesBackupWorker
+    - Backup RecurringExpenseInfo as well and possibly Add Recurring sheet if not exists
+
+Disable Crashlytics in Debug
+
+Prep for Recurring Expense (II)
+Test
+    - Add new test runner dependency
+Database
+    - Bump version to 10
+    - Add new AddType column to Expense
+    - Add new RecurringExpenseInfo table
+RecurType
+    - Renamed from RepeatType for consistency
+RecurringExpenseInfo
+    - New class for recurring expenses
+    - Add dao, repo, manager class (business logic), dummy fragment and view model
+Expense
+    - Add new property for add type - manual and recur for now
+
+Prep for Recurring Expense
+Database
+    - Add migration to v9 to add non column to Expense table
+Expense
+    - Add tests
+    - Migrate methods (to from list, to from map) used for various backup mechanisms to class
+    - Affects SharedExpenseManager, SheetRequestHelper
+    - Move class to Kotlin class
+SheetRequestHelper (for backup)
+    - Use list from Expense to generate cell data
+
 Bug fixes
 Gradle
     - Move dependency versions to base gradle file

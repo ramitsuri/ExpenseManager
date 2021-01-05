@@ -11,12 +11,14 @@ import com.ramitsuri.expensemanager.data.repository.EditedSheetRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
+import com.ramitsuri.expensemanager.data.repository.RecurringExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.CrashReportingHelper;
 import com.ramitsuri.expensemanager.utils.PrefHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
@@ -40,6 +42,7 @@ public class MainApplication extends Application {
     private LogRepository mLogRepo;
     private BudgetRepository mBudgetRepository;
     private EditedSheetRepository mEditedSheetRepo;
+    private RecurringExpenseRepository mRecurringRepo;
 
     private SheetRepository mSheetRepository;
 
@@ -52,6 +55,8 @@ public class MainApplication extends Application {
         super.onCreate();
 
         sInstance = this;
+
+        initCrashReportingHelper();
 
         initTimber();
 
@@ -100,6 +105,12 @@ public class MainApplication extends Application {
         removeLegacyPrefs();
     }
 
+    private void initCrashReportingHelper() {
+        if (BuildConfig.DEBUG) {
+            CrashReportingHelper.getInstance().disable();
+        }
+    }
+
     private void removeLegacyPrefs() {
         PrefHelper.remove("enable_splitting");
         PrefHelper.remove("settings_auto_backup");
@@ -130,6 +141,7 @@ public class MainApplication extends Application {
         mLogRepo = new LogRepository(appExecutors, database);
         mBudgetRepository = new BudgetRepository(appExecutors, database);
         mEditedSheetRepo = new EditedSheetRepository(appExecutors, database);
+        mRecurringRepo = new RecurringExpenseRepository(database);
     }
 
     private void initSheetRepo() {
@@ -226,6 +238,11 @@ public class MainApplication extends Application {
     @Nonnull
     public synchronized EditedSheetRepository getEditedSheetRepo() {
         return mEditedSheetRepo;
+    }
+
+    @Nonnull
+    public synchronized RecurringExpenseRepository getRecurringRepo() {
+        return mRecurringRepo;
     }
 
     @Nullable

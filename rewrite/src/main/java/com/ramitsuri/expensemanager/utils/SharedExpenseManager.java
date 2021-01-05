@@ -2,6 +2,8 @@ package com.ramitsuri.expensemanager.utils;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -14,15 +16,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.ramitsuri.expensemanager.entities.Expense;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import androidx.annotation.NonNull;
 import timber.log.Timber;
 
 public class SharedExpenseManager {
@@ -134,35 +133,13 @@ public class SharedExpenseManager {
     }
 
     private Map<String, Object> toMap(@Nonnull Expense expense, @Nonnull String source) {
-        Map<String, Object> expenseMap = new HashMap<>();
-        expenseMap.put(Expense.COL_DATE_TIME, expense.getDateTime());
-        expenseMap.put(Expense.COL_AMOUNT, String.valueOf(expense.getAmount()));
-        expenseMap.put(Expense.COL_PAYMENT, expense.getPaymentMethod());
-        expenseMap.put(Expense.COL_CATEGORY, expense.getCategory());
-        expenseMap.put(Expense.COL_DESCRIPTION, expense.getDescription());
-        expenseMap.put(Expense.COL_STORE, expense.getStore());
-        expenseMap.put(Expense.COL_STARRED, booleanToString(expense.isStarred()));
-        expenseMap.put(Expense.COL_RECORD_TYPE, expense.getRecordType());
-        expenseMap.put(Expense.COL_IDENTIFIER, expense.getIdentifier());
+        Map<String, Object> expenseMap = expense.toMap();
         expenseMap.put(SOURCE, source);
         return expenseMap;
     }
 
     private Expense fromMap(@Nonnull Map<String, Object> map) {
-        Expense expense = new Expense();
-        expense.setDateTime((long)map.get(Expense.COL_DATE_TIME));
-        expense.setAmount(new BigDecimal((String)map.get(Expense.COL_AMOUNT)));
-        expense.setPaymentMethod((String)map.get(Expense.COL_PAYMENT));
-        expense.setCategory((String)map.get(Expense.COL_CATEGORY));
-        expense.setDescription((String)map.get(Expense.COL_DESCRIPTION));
-        expense.setStore((String)map.get(Expense.COL_STORE));
-        expense.setIsStarred(booleanFromString((String)map.get(Expense.COL_STARRED)));
-        expense.setRecordType((String)map.get(Expense.COL_RECORD_TYPE));
-        Object identifier = map.get(Expense.COL_IDENTIFIER);
-        if (identifier != null) {
-            expense.setIdentifier((String)identifier);
-        }
-        return expense;
+        return new Expense(map);
     }
 
     private boolean isValid(Attributes attributes) {

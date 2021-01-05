@@ -1,14 +1,17 @@
 package com.ramitsuri.expensemanager.data.dao;
 
+import com.ramitsuri.expensemanager.constants.intDefs.AddType;
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.annotation.Nonnull;
 
+import androidx.annotation.NonNull;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -61,6 +64,9 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE record_type = :recordType")
     public abstract List<Expense> getForRecordType(@RecordType String recordType);
 
+    @Query("SELECT DISTINCT date_time FROM expense")
+    public abstract List<Long> getDateTimes();
+
     /*
      * INSERT
      */
@@ -106,6 +112,9 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET identifier = :identifier WHERE mId = :id")
     abstract void updateIdentifier(int id, String identifier);
 
+    @Query("UPDATE expense SET add_type =:addType WHERE mId = :id")
+    abstract void updateAddType(int id, @AddType String addType);
+
     @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
     public abstract void updateUnsynced();
 
@@ -142,11 +151,16 @@ public abstract class ExpenseDao {
         return getExpense(id);
     }
 
+    /**
+     * @deprecated This method will be removed once backup service is migrated to a non Google Sheet
+     * service.
+     */
+    @Deprecated
     @Transaction
-    public List<Expense> getAllForBackup(@Nonnull List<Integer> monthIndices) {
-        Filter filter = new Filter();
-        for (Integer index : monthIndices) {
-            filter.addMonthIndex(index);
+    public List<Expense> getAllForBackup(@Nonnull List<Integer> months, TimeZone timeZone) {
+        Filter filter = new Filter(timeZone);
+        for (Integer index : months) {
+            filter.addMonth(index);
         }
         // SELECT * FROM expense WHERE is_synced = 0 OR (date_time BETWEEN ? AND ?) OR
         // (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?)
@@ -173,14 +187,19 @@ public abstract class ExpenseDao {
         updateIsSynced(expense.getId(), expense.isSynced());
         updateIsIncome(expense.getId(), expense.isIncome());
         updateRecordType(expense.getId(), expense.getRecordType());
+        updateAddType(expense.getId(), expense.getAddType());
         // Not updating ID and Identifier intentionally
     }
 
-    // Updates expenses and sets unsynced for month index
+    /** Updates expenses and sets unsynced for month index
+     * @deprecated This method will be removed once backup service is migrated to a non Google Sheet
+     * service.
+     */
+    @Deprecated
     @Transaction
-    public void updateSetUnsynced(int monthIndex) {
-        Filter filter = new Filter();
-        filter.addMonthIndex(monthIndex);
+    public void updateSetUnsynced(int monthIndex, @NonNull TimeZone timeZone) {
+        Filter filter = new Filter(timeZone);
+        filter.addMonth(monthIndex);
         updateSetUnsyncedForQuery(filter.toUpdateSyncedQuery());
     }
 
