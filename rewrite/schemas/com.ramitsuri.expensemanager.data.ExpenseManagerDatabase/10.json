@@ -39,7 +39,7 @@
       },
       {
         "tableName": "Expense",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date_time` INTEGER NOT NULL, `amount` TEXT NOT NULL, `payment_method` TEXT NOT NULL, `category` TEXT NOT NULL, `description` TEXT NOT NULL, `store` TEXT NOT NULL, `is_synced` INTEGER NOT NULL, `is_starred` INTEGER NOT NULL, `sheet_id` INTEGER NOT NULL, `is_income` INTEGER NOT NULL, `record_type` TEXT NOT NULL DEFAULT 'MONTHLY', `identifier` TEXT NOT NULL, `add_type` TEXT NOT NULL DEFAULT 'MONTHLY')",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date_time` INTEGER NOT NULL, `amount` TEXT NOT NULL, `payment_method` TEXT NOT NULL, `category` TEXT NOT NULL, `description` TEXT NOT NULL, `store` TEXT NOT NULL, `is_synced` INTEGER NOT NULL, `is_starred` INTEGER NOT NULL, `sheet_id` INTEGER NOT NULL, `is_income` INTEGER NOT NULL, `record_type` TEXT NOT NULL DEFAULT 'MONTHLY', `identifier` TEXT NOT NULL, `add_type` TEXT NOT NULL DEFAULT 'MANUAL')",
         "fields": [
           {
             "fieldPath": "id",
