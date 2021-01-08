@@ -15,6 +15,7 @@ import java.util.TimeZone;
 
 import javax.annotation.Nullable;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 
 public class AppHelper {
@@ -69,6 +70,7 @@ public class AppHelper {
         PrefHelper.set(PrefKeys.IS_ENTITIES_EDITED, edited);
     }
 
+    @NonNull
     public static TimeZone getTimeZone() {
         String tzId = PrefHelper.get(PrefKeys.TIME_ZONE_ID, null);
         if (!TextUtils.isEmpty(tzId)) {

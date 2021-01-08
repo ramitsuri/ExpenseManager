@@ -18,7 +18,7 @@ class RecurringExpenseViewModel : ViewModel() {
 
     fun add(info: RecurringExpenseInfo) {
         viewModelScope.launch {
-            mRepository.insert(info)
+            mRepository.suspendInsert(info)
         }
     }
 

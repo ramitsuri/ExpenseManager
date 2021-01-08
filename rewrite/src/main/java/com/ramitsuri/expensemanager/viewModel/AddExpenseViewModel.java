@@ -3,18 +3,23 @@ package com.ramitsuri.expensemanager.viewModel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.constants.intDefs.RecurType;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
+import com.ramitsuri.expensemanager.data.repository.RecurringExpenseRepository;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
+import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
 import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
@@ -37,8 +42,12 @@ public class AddExpenseViewModel extends ViewModel {
     private Integer mOldMonthIndex;
     private int mAddMode;
     private boolean mChangesMade;
+    @NonNull
+    @RecurType
+    private String mRecurType;
 
     private final ExpenseRepository mExpenseRepo;
+    private final RecurringExpenseRepository mRecurringRepo;
     private final LiveData<List<Category>> mCategories;
     private final LiveData<List<PaymentMethod>> mPaymentMethods;
     private final LiveData<List<String>> mStores;
@@ -47,12 +56,14 @@ public class AddExpenseViewModel extends ViewModel {
         super();
 
         mExpenseRepo = MainApplication.getInstance().getExpenseRepo();
+        mRecurringRepo = MainApplication.getInstance().getRecurringRepo();
 
         categoryRepo().getForRecordType(RecordType.MONTHLY);
         mCategories = categoryRepo().getCategories();
         mPaymentMethods = paymentRepo().getPaymentMethods();
 
         mStores = mExpenseRepo.getStores();
+        mRecurType = RecurType.NONE;
 
         reset(expense);
     }
@@ -70,6 +81,23 @@ public class AddExpenseViewModel extends ViewModel {
         return mStores;
     }
 
+    @Nonnull
+    public LiveData<String> getRecurType() {
+        if (mExpense != null) {
+            return Transformations.map(mRecurringRepo.get(mExpense.getIdentifier()), input -> {
+                if (input == null) {
+                    mRecurType = RecurType.NONE;
+                } else {
+                    mRecurType = input.getRecurType();
+                }
+                return mRecurType;
+            });
+        }
+        MutableLiveData<String> recurType = new MutableLiveData<>();
+        recurType.postValue(RecurType.NONE);
+        return recurType;
+    }
+
     public void onStoreValueChanged(@Nonnull String startsWith) {
         mExpenseRepo.refreshStores(startsWith);
     }
@@ -84,6 +112,7 @@ public class AddExpenseViewModel extends ViewModel {
             expense.setCategory(Constants.Basic.INCOME);
         }
         mExpenseRepo.insert(expense);
+        saveRecurringExpenseInfo(expense);
         pushToRemoteShared(expense);
         reset(null);
     }
@@ -108,7 +137,7 @@ public class AddExpenseViewModel extends ViewModel {
 
         @Override
         public void getForOtherSuccess(@Nonnull String source,
-                                       @Nonnull List<Expense> expenses) {
+                @Nonnull List<Expense> expenses) {
 
         }
 
@@ -146,6 +175,7 @@ public class AddExpenseViewModel extends ViewModel {
             MainApplication.getInstance().getEditedSheetRepo()
                     .insertEditedSheet(new EditedSheet(editedMonthIndex));
         }
+        saveRecurringExpenseInfo(expense);
         reset(null);
     }
 
@@ -281,6 +311,10 @@ public class AddExpenseViewModel extends ViewModel {
         mExpense.setIncome(isIncome);
     }
 
+    public void setRecurType(@NonNull @RecurType String recurType) {
+        mRecurType = recurType;
+    }
+
     public void onAnnualTabSelected() {
         categoryRepo().getForRecordType(RecordType.ANNUAL);
     }
@@ -300,6 +334,14 @@ public class AddExpenseViewModel extends ViewModel {
             mExpense.setAmount(BigDecimal.ZERO);
             mAddMode = Constants.AddExpenseMode.ADD;
         }
+    }
+
+    private void saveRecurringExpenseInfo(@Nonnull Expense expense) {
+        RecurringExpenseInfo info = new RecurringExpenseInfo();
+        info.setIdentifier(expense.getIdentifier());
+        info.setLastOccur(expense.getDateTime());
+        info.setRecurType(mRecurType);
+        mRecurringRepo.insertUpdateOrDelete(info);
     }
 
     @Override

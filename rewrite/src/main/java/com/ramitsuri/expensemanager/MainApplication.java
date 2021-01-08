@@ -141,7 +141,7 @@ public class MainApplication extends Application {
         mLogRepo = new LogRepository(appExecutors, database);
         mBudgetRepository = new BudgetRepository(appExecutors, database);
         mEditedSheetRepo = new EditedSheetRepository(appExecutors, database);
-        mRecurringRepo = new RecurringExpenseRepository(database);
+        mRecurringRepo = new RecurringExpenseRepository(appExecutors, database);
     }
 
     private void initSheetRepo() {

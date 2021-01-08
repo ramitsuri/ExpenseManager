@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toStartOf="@id/guide_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Potato, tomato, cucumber, lemon, onion, oranges" />
+        tools:text="Potato, tomato, oranges" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_expense_date"
@@ -104,6 +104,17 @@
         android:src="@drawable/ic_flag_on_medium"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_expense_detail_2"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/add_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/common_add_status_automatic"
+        android:src="@drawable/ic_add_status_auto"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/flag_status"
         app:layout_constraintTop_toBottomOf="@id/text_expense_detail_2"
         tools:visibility="visible" />
 

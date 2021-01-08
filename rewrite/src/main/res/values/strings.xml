@@ -51,6 +51,8 @@
     <string name="common_clear">(Clear)</string>
     <string name="common_monthly">Monthly</string>
     <string name="common_annual">Annual</string>
+    <string name="common_text_divider">•</string>
+    <string name="common_add_status_automatic">Automatically added</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>

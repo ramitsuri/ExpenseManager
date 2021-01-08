@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.constants.intDefs.AddType;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
@@ -21,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import timber.log.Timber;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
@@ -117,9 +119,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ViewGroup container;
-        private TextView txtDate, txtDescription, txtAmount, txtDetail1, txtDetail2, txtDetail3;
-        private View flagStatus;
+        private final ViewGroup container;
+        private final TextView txtDate, txtDescription, txtAmount, txtDetail1, txtDetail2,
+                txtDetail3;
+        private final View flagStatus, addStatus;
 
         ItemViewHolder(View itemView) {
             super(itemView);
@@ -134,6 +137,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtDetail2 = itemView.findViewById(R.id.text_expense_detail_2);
             txtDetail3 = itemView.findViewById(R.id.text_expense_detail_3);
             flagStatus = itemView.findViewById(R.id.flag_status);
+            addStatus = itemView.findViewById(R.id.add_status);
         }
 
         private void bind(final Expense expense) {
@@ -155,6 +159,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 flagStatus.setVisibility(View.VISIBLE);
             } else {
                 flagStatus.setVisibility(View.GONE);
+            }
+            if (expense.getAddType().equals(AddType.RECUR)) {
+                addStatus.setVisibility(View.VISIBLE);
+            } else {
+                addStatus.setVisibility(View.GONE);
             }
             if (BuildConfig.DEBUG) {
                 if (expense.isSynced()) {

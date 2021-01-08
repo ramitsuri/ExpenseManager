@@ -1,10 +1,12 @@
 package com.ramitsuri.expensemanager.utils
 
+import androidx.annotation.WorkerThread
 import com.ramitsuri.expensemanager.constants.intDefs.AddType
 import com.ramitsuri.expensemanager.constants.intDefs.RecurType
+import com.ramitsuri.expensemanager.data.dao.ExpenseDao
+import com.ramitsuri.expensemanager.data.dao.RecurringExpenseInfoDao
 import com.ramitsuri.expensemanager.entities.Expense
 import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo
-import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -17,11 +19,12 @@ import java.time.ZonedDateTime
  * 3. If yes, get the new copy of Expense via getExpenses()
  * (The above method returns a list because there could be a scenario when the recurring expenses
  * weren't added. The method would return a list of valid expenses that should be added)
- * 4. Save the new copy
- * 5. Update RecurringExpenseInfo for that Expense via getRecurringExpenseInfo
+ * 4. Save the new copy of expenses
+ * 5. Update RecurringExpenseInfo for that Expense via updateRecurringExpenseInfo()
  * 6. Save RecurringExpenseInfo
  */
-class RecurringExpenseManager {
+class RecurringExpenseManager(private val expenseDao: ExpenseDao,
+        private val recurringDao: RecurringExpenseInfoDao) {
 
     fun canRecur(info: RecurringExpenseInfo,
             currentTimeInMillis: Long,
@@ -42,10 +45,13 @@ class RecurringExpenseManager {
         return canRecur
     }
 
-    fun getExpenses(expense: Expense,
+    fun getExpenses(expense: Expense?,
             info: RecurringExpenseInfo,
             currentTimeInMillis: Long,
             zoneId: ZoneId): List<Expense> {
+        if (expense == null) {
+            return mutableListOf()
+        }
         val list = mutableListOf<Expense>()
         var recurringInfo = info.copy()
         while (canRecur(recurringInfo, currentTimeInMillis, zoneId)) {
@@ -56,8 +62,10 @@ class RecurringExpenseManager {
 
             // DateTime held in the Expense that's being used to recreate the recurring expense
             // might be old as that expense is the first one that was requested to be recurring.
-            // There might have been other copies of it added. Do DateTime needs to be read from
-            // RecurringExpenseInfo as that represents the last occurrence.
+            // There might have been other copies of it, automatically added via the
+            // recurring feature.
+            // So DateTime needs to be read from RecurringExpenseInfo as that represents
+            // the last occurrence.
             val lastOccurrenceTime = getZonedDateTime(info.lastOccur, zoneId)
             val requestedRecurTime = getRequestedRecurTime(lastOccurrenceTime, info.recurType)
             newExpense.dateTime =
@@ -71,7 +79,7 @@ class RecurringExpenseManager {
 
     fun updateRecurringExpenseInfo(newExpenses: List<Expense>,
             info: RecurringExpenseInfo): RecurringExpenseInfo {
-        var latestOccurrence = 0L
+        var latestOccurrence = info.lastOccur
         for (newExpense in newExpenses) {
             if (newExpense.dateTime >= latestOccurrence) {
                 latestOccurrence = newExpense.dateTime
@@ -79,6 +87,35 @@ class RecurringExpenseManager {
         }
         info.lastOccur = latestOccurrence
         return info
+    }
+
+    /**
+     * Since it does some database operations, this method should be run in a background thread so
+     * as to not block the main thread.
+     * Returns number of new expenses that were added automatically as a result of the job.
+     */
+    @WorkerThread
+    fun process(timeZoneId: ZoneId, currentTimeInMillis: Long): Int {
+        val recurringExpenses = recurringDao.read()
+        val newExpenses = mutableListOf<Expense>()
+        val updatedRecurringExpenses = mutableListOf<RecurringExpenseInfo>()
+        for (recurringExpense in recurringExpenses) {
+            if (canRecur(recurringExpense, currentTimeInMillis, timeZoneId)) {
+                val expense: Expense? = expenseDao.getExpense(recurringExpense.identifier)
+                val expenses =
+                        getExpenses(expense, recurringExpense, currentTimeInMillis, timeZoneId)
+                newExpenses.addAll(expenses)
+                updatedRecurringExpenses.add(updateRecurringExpenseInfo(expenses, recurringExpense))
+            }
+        }
+
+        if (newExpenses.size > 0) {
+            // Save expenses
+            expenseDao.insert(newExpenses)
+            // Update recurring expenses
+            recurringDao.update(updatedRecurringExpenses)
+        }
+        return newExpenses.size
     }
 
     private fun updateRecurringExpenseInfo(newExpense: Expense,

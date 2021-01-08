@@ -11,7 +11,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import timber.log.Timber;
 
-abstract class BaseWorker extends Worker {
+abstract public class BaseWorker extends Worker {
 
     BaseWorker(@NonNull Context context,
             @NonNull WorkerParameters workerParams) {

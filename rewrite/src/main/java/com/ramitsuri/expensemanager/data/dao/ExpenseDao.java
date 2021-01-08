@@ -43,6 +43,10 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE mId = :id")
     public abstract Expense getExpense(long id);
 
+
+    @Query("SELECT * FROM expense WHERE identifier = :identifier")
+    public abstract Expense getExpense(String identifier);
+
     @Query("SELECT * FROM expense WHERE is_income = 1 ORDER BY date_time DESC")
     public abstract List<Expense> getIncomes();
 
@@ -71,7 +75,7 @@ public abstract class ExpenseDao {
      * INSERT
      */
     @Insert
-    public abstract long insert(Expense expense);
+    public abstract long insert(@Nonnull Expense expense);
 
     @Insert
     public abstract void insert(List<Expense> expenses);

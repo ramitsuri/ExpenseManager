@@ -1,3 +1,35 @@
+Recurring Expense (V)
+AddExpenseViewModel 
+    - Maintain current RecurType for the expense being added/edited
+    - Save recurring expense info if necessary on adding/editing expense
+BaseWorker
+    - Make extendable
+Database    
+    - Add migration to make identifier column in RecurringExpenseInfo unique
+Expense
+    - Make it a data class
+ExpenseAdapter
+    - Add an indicator to show expense was automatically added
+ExpenseDao
+    - Add methods to insert and get expense via identifier
+RecurringExpenseRepo
+    - Take in AppExecutors param to run async code from Java
+RecurringExpenseInfo
+    - Add unique index on identifier
+RecurringExpenseDao 
+    - Add method to insert or update or delete based on recur type and current existence
+    - Add other methods that were needed
+RecurringExpenseManager
+    - Add dependency on RecurringExpenseDao and ExpenseDao
+    - Add method to process adding new expenses and updating recurring expenses so that worker can just call this method
+    - Make getExpenses method take in a nullable Expense because the expense could've been deleted when the job runs, in which case we can't add new copies of it
+    - Add new tests
+RecurringExpenseWorker
+    - Add worker to process recurring expenses
+    - Add Base Worker test class
+Add RecurringExpenseDatabase test
+Add Mock RecurringExpenseDao and ExpenseDao    
+
 Fix bug with year filter
     - Fix bug where years in the filter view aren't distinct, instead are as many as expenses
     - Fix sorting of years
