@@ -1,3 +1,15 @@
+Recurring Expense (VI)
+AddExpenseFragment
+    - Add button to set RecurType
+    - Remove a dedicated RecurType var from ViewModel and just use the value from Mediator live data
+ExpenseDetailsFragment
+    - Change date format to also show year
+    - Show if expense was automatically added
+RecurringExpenseInfoDao
+    - Fix queries where identifier was being matched by <= instead of =
+Add bottom sheet fragment to select recur type
+Enqueue periodic recurring expenses runner     
+
 Recurring Expense (V)
 AddExpenseViewModel 
     - Maintain current RecurType for the expense being added/edited

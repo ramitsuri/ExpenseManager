@@ -23,6 +23,7 @@ public class Constants {
         public static final String SELECTED_SHEET_ID = "selected_sheet_id";
         public static final String ANALYSIS_EXPENSES = "analysis_expenses";
         public static final String FILTER = "filter";
+        public static final String RECUR_TYPE = "recur_type";
     }
 
     public class RequestCode {
@@ -46,6 +47,7 @@ public class Constants {
         public static final String PERIODIC_BACKUP_LEGACY = "periodic_backup";
         public static final String PERIODIC_EXPENSES_BACKUP = "periodic_expenses_backup";
         public static final String PERIODIC_ENTITIES_BACKUP = "periodic_entities_backup";
+        public static final String RECURRING_EXPENSES_RUNNER = "recurring_expenses_runner";
         public static final String ONE_TIME_SYNC = "one_time_sync";
         public static final String ONE_TIME_EXPENSE_SYNC = "one_time_expense_sync";
         public static final String ONE_TIME_CREATE_SPREADSHEET = "one_time_create_spreadsheet";

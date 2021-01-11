@@ -6,6 +6,7 @@ import com.ramitsuri.expensemanager.work.ExpensesBackupWorker;
 import com.ramitsuri.expensemanager.work.CreateSpreadsheetWorker;
 import com.ramitsuri.expensemanager.work.EntitiesBackupWorker;
 import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
+import com.ramitsuri.expensemanager.work.RecurringExpensesWorker;
 import com.ramitsuri.expensemanager.work.SyncWorker;
 
 import java.util.Calendar;
@@ -131,6 +132,24 @@ public class WorkHelper {
     }
 
     /**
+     * Periodic Recurring Expenses runner
+     */
+    public static void enqueueRecurringExpensesRunner() {
+        Timber.i("Enqueue recurring expenses runner invoked");
+        // Prepare
+        String tag = getRecurringExpensesRunnerTag();
+        enqueuePeriodicWork(tag, RecurringExpensesWorker.class, false, false, 24);
+    }
+
+    public static void cancelRecurringExpensesRunner() {
+        Timber.i("Cancel recurring expenses runner invoked");
+
+        String tag = getRecurringExpensesRunnerTag();
+        getInstance()
+                .cancelAllWorkByTag(tag);
+    }
+
+    /**
      * One time create spreadsheet
      */
     public static void enqueueOneTimeCreateSpreadsheet() {
@@ -155,6 +174,10 @@ public class WorkHelper {
 
     private static String getPeriodicEntitiesBackupTag() {
         return Constants.Tag.PERIODIC_ENTITIES_BACKUP;
+    }
+
+    public static String getRecurringExpensesRunnerTag() {
+        return Constants.Tag.RECURRING_EXPENSES_RUNNER;
     }
 
     public static String getOneTimeWorkTag() {
@@ -219,6 +242,14 @@ public class WorkHelper {
             @NonNull Class<? extends ListenableWorker> workerClass,
             boolean setConstraints,
             boolean replace) {
+        enqueuePeriodicWork(tag, workerClass, setConstraints, replace, 48);
+    }
+
+    private static void enqueuePeriodicWork(String tag,
+            @NonNull Class<? extends ListenableWorker> workerClass,
+            boolean setConstraints,
+            boolean replace,
+            long repeatHours) {
         Constraints constraints = getConstraints();
         Data input = new Data.Builder()
                 .putString(Constants.Work.TYPE, tag)
@@ -226,7 +257,7 @@ public class WorkHelper {
 
         // Request
         PeriodicWorkRequest.Builder builder = new PeriodicWorkRequest
-                .Builder(workerClass, 48, TimeUnit.HOURS)
+                .Builder(workerClass, repeatHours, TimeUnit.HOURS)
                 .setInputData(input)
                 .addTag(tag)
                 .setInitialDelay(DateHelper.getDelayForPeriodicWork(Calendar.getInstance(), 3));

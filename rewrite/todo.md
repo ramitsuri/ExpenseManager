@@ -1,11 +1,6 @@
 ## High
-- [ ] Scheduled recurring expense
-    - [x] Auto added expense UI
-    - [ ] Recurring trigger UI
-    - [ ] Schedule recurring
-    - [ ] Auto added in details UI
-    - [ ] Manage Recurring UI
-    - [x] Fix database migration. For some reason Expense.AddType default value is messed up in DB v10
+- [ ] Manage Recurring Expense UI
+- [ ] Disallow saving without category/payment method
 - [ ] Find an alternate backup system
 - [ ] Full migration to Kotlin
 - [ ] Fix LiveData access for most VM/Repos (Look at Recurring implementation for correct way)
@@ -26,6 +21,7 @@
 - [ ] Upgrade Firebase/Crashlytics
 
 ## Completed
+- [x] Scheduled recurring expense
 - [x] Support for new year
 - [x] Test backup with value for income column but not flag column to see if empty cell is transmitted
 - [x] Write recurring expenses to Sheet

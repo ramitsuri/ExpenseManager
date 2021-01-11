@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
+import com.ramitsuri.expensemanager.constants.intDefs.AddType;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
@@ -106,6 +107,12 @@ public class ExpenseDetailsFragment extends BaseBottomSheetFragment {
         TextView txtFlagStatus = view.findViewById(R.id.text_flag_status);
         if (expense.isStarred()) {
             txtFlagStatus.setVisibility(View.VISIBLE);
+        }
+
+        // Add Status
+        TextView txtAddStatus = view.findViewById(R.id.text_add_status);
+        if (AddType.RECUR.equals(expense.getAddType())) {
+            txtAddStatus.setVisibility(View.VISIBLE);
         }
 
         // Edit button

@@ -32,10 +32,10 @@ abstract class RecurringExpenseInfoDao {
     @Query("SELECT * FROM recurringexpenseinfo WHERE last_occur <= :before ORDER BY last_occur ASC")
     abstract fun read(before: Long): List<RecurringExpenseInfo>
 
-    @Query("SELECT * FROM recurringexpenseinfo WHERE identifier <= :identifier LIMIT 1")
+    @Query("SELECT * FROM recurringexpenseinfo WHERE identifier = :identifier LIMIT 1")
     abstract fun read(identifier: String): RecurringExpenseInfo?
 
-    @Query("SELECT * FROM recurringexpenseinfo WHERE identifier <= :identifier LIMIT 1")
+    @Query("SELECT * FROM recurringexpenseinfo WHERE identifier = :identifier LIMIT 1")
     abstract fun readReactive(identifier: String): LiveData<RecurringExpenseInfo?>
 
     /*

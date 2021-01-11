@@ -190,4 +190,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_description" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_recur_type"
+        style="@style/ButtonTextSimple"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:text="@string/add_expense_recur_status_none"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_categories" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

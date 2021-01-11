@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/padding_small">
+    android:padding="@dimen/padding_small"
+    tools:background="@android:color/white">
 
     <View
         android:id="@+id/divider1"
@@ -35,7 +36,7 @@
         android:background="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_flag_status" />
+        app:layout_constraintTop_toBottomOf="@id/text_add_status" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_duplicate"
@@ -194,6 +195,27 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@id/txt_expense_description"
         app:layout_constraintTop_toBottomOf="@id/text_expense_detail_1"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_add_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:drawableStart="@drawable/ic_add_status_auto"
+        android:drawablePadding="@dimen/padding_extra_extra_small"
+        android:drawableTint="@color/colorPrimary"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="@string/expense_detail_add_status_automatic"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_body1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/txt_expense_description"
+        app:layout_constraintTop_toBottomOf="@id/text_flag_status"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

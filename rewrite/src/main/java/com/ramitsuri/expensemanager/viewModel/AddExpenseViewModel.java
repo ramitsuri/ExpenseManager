@@ -1,10 +1,11 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
@@ -42,15 +43,13 @@ public class AddExpenseViewModel extends ViewModel {
     private Integer mOldMonthIndex;
     private int mAddMode;
     private boolean mChangesMade;
-    @NonNull
-    @RecurType
-    private String mRecurType;
 
     private final ExpenseRepository mExpenseRepo;
     private final RecurringExpenseRepository mRecurringRepo;
     private final LiveData<List<Category>> mCategories;
     private final LiveData<List<PaymentMethod>> mPaymentMethods;
     private final LiveData<List<String>> mStores;
+    private MediatorLiveData<String> mRecurTypeLive;
 
     public AddExpenseViewModel(Expense expense) {
         super();
@@ -63,7 +62,6 @@ public class AddExpenseViewModel extends ViewModel {
         mPaymentMethods = paymentRepo().getPaymentMethods();
 
         mStores = mExpenseRepo.getStores();
-        mRecurType = RecurType.NONE;
 
         reset(expense);
     }
@@ -79,23 +77,6 @@ public class AddExpenseViewModel extends ViewModel {
     @Nullable
     public LiveData<List<String>> getStores() {
         return mStores;
-    }
-
-    @Nonnull
-    public LiveData<String> getRecurType() {
-        if (mExpense != null) {
-            return Transformations.map(mRecurringRepo.get(mExpense.getIdentifier()), input -> {
-                if (input == null) {
-                    mRecurType = RecurType.NONE;
-                } else {
-                    mRecurType = input.getRecurType();
-                }
-                return mRecurType;
-            });
-        }
-        MutableLiveData<String> recurType = new MutableLiveData<>();
-        recurType.postValue(RecurType.NONE);
-        return recurType;
     }
 
     public void onStoreValueChanged(@Nonnull String startsWith) {
@@ -312,7 +293,33 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setRecurType(@NonNull @RecurType String recurType) {
-        mRecurType = recurType;
+        if (mRecurTypeLive != null) {
+            mRecurTypeLive.postValue(recurType);
+        }
+    }
+
+    @Nonnull
+    public LiveData<String> getRecurType() {
+        if (mRecurTypeLive == null) {
+            mRecurTypeLive = new MediatorLiveData<>();
+            mRecurTypeLive.addSource(mRecurringRepo.get(mExpense.getIdentifier()),
+                    recurringExpenseInfo -> {
+                        String recurType;
+                        if (recurringExpenseInfo == null) {
+                            recurType = RecurType.NONE;
+                        } else {
+                            recurType = recurringExpenseInfo.getRecurType();
+                        }
+                        mRecurTypeLive.setValue(recurType);
+                    });
+        }
+        return mRecurTypeLive;
+    }
+
+    public Bundle getRecurTypeArgs() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.BundleKeys.RECUR_TYPE, mRecurTypeLive.getValue());
+        return bundle;
     }
 
     public void onAnnualTabSelected() {
@@ -340,7 +347,7 @@ public class AddExpenseViewModel extends ViewModel {
         RecurringExpenseInfo info = new RecurringExpenseInfo();
         info.setIdentifier(expense.getIdentifier());
         info.setLastOccur(expense.getDateTime());
-        info.setRecurType(mRecurType);
+        info.setRecurType(mRecurTypeLive.getValue());
         mRecurringRepo.insertUpdateOrDelete(info);
     }
 
@@ -348,6 +355,7 @@ public class AddExpenseViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         Timber.i("View model cleared");
+        mRecurTypeLive = null;
     }
 
     public boolean enableEntitiesAutoComplete() {

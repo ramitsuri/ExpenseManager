@@ -64,7 +64,7 @@ public class MainApplication extends Application {
 
         initSheetRepo();
 
-        // Enqueue periodic backups
+        // Enqueue periodic works
         if (!BuildConfig.DEBUG) {
             WorkHelper.cancelPeriodicLegacyBackup();
             if (!AppHelper.isPruneComplete()) {
@@ -73,6 +73,7 @@ public class MainApplication extends Application {
             }
             WorkHelper.enqueuePeriodicBackup(AppHelper.shouldReplaceWork());
             AppHelper.setShouldReplaceWork(false);
+            WorkHelper.enqueueRecurringExpensesRunner();
         }
 
         if (AppHelper.isFirstRunComplete()) {
