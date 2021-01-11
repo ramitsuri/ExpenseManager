@@ -11,8 +11,8 @@ android {
         applicationId "com.ramitsuri.expensemanager.re"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 52
-        versionName "6.1.1"
+        versionCode 53
+        versionName "6.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
