@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,6 +31,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.constants.intDefs.RecurType;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
@@ -48,6 +50,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import kotlin.Unit;
 import timber.log.Timber;
 
 public class AddExpenseFragment extends BaseFragment implements View.OnClickListener,
@@ -59,7 +62,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
     private ListPickerAdapter mPaymentsAdapter;
 
     // Views
-    private Button mBtnClose;
+    private Button mBtnClose, mBtnRecurType;
     private EditText mEditAmount, mEditDescription;
     private AutoCompleteTextView mEditStore;
     private Button mBtnDone, mBtnDate;
@@ -72,7 +75,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_expense, container, false);
     }
@@ -179,11 +182,47 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         // Income
         btnIncome.setChecked(mViewModel.isIncome());
 
+        // Recur Type
+        mBtnRecurType = view.findViewById(R.id.btn_recur_type);
+        mBtnRecurType.setOnClickListener(button -> {
+            showRecurTypeSelection();
+        });
+        mViewModel.getRecurType().observe(getViewLifecycleOwner(), recurType -> {
+            switch (recurType) {
+                case RecurType.DAILY:
+                    mBtnRecurType.setText(R.string.add_expense_recur_status_daily);
+                    break;
+                case RecurType.WEEKLY:
+                    mBtnRecurType.setText(R.string.add_expense_recur_status_weekly);
+                    break;
+                case RecurType.MONTHLY:
+                    mBtnRecurType.setText(R.string.add_expense_recur_status_monthly);
+                    break;
+                default:
+                    mBtnRecurType.setText(R.string.add_expense_recur_status_none);
+            }
+        });
+
         mTabLayout = view.findViewById(R.id.tabs_categories);
         mTabLayout.addOnTabSelectedListener(mTabSelectedListener);
 
         setupStoreAutoComplete();
         setupEntitiesAutoComplete();
+    }
+
+    private void showRecurTypeSelection() {
+        RecurTypeSelectionFragment fragment = RecurTypeSelectionFragment.Companion.newInstance();
+        fragment.setArguments(mViewModel.getRecurTypeArgs());
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            fragment.show(activity.getSupportFragmentManager(), RecurTypeSelectionFragment.TAG);
+        } else {
+            Timber.e("getActivity() returned null when showing recur type selection");
+        }
+        fragment.setOnSelected(recurType -> {
+            mViewModel.setRecurType(recurType);
+            return Unit.INSTANCE;
+        });
     }
 
     private void setupRecyclerViews(View view) {
@@ -419,7 +458,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private void onCategoryPicked(ListEqualizer value, boolean hideKeyboard) {
         Timber.i("Category picked: %s", value);
-        Category category = (Category) value;
+        Category category = (Category)value;
         mViewModel.setCategory(category);
         if (hideKeyboard) {
             removeFocusAndHideKeyboard();
@@ -469,7 +508,7 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private void onPaymentMethodPicked(ListEqualizer value, boolean hideKeyboard) {
         Timber.i("Payment method picked: %s", value);
-        mViewModel.setPaymentMethod((PaymentMethod) value);
+        mViewModel.setPaymentMethod((PaymentMethod)value);
         if (hideKeyboard) {
             removeFocusAndHideKeyboard();
         }

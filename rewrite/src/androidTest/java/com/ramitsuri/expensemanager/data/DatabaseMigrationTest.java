@@ -246,4 +246,40 @@ public class DatabaseMigrationTest {
                         "VALUES('20.00','payment','category','description','store'," +
                         "100,200,1,1,1,'MONTHLY','1')");
     }
+
+    @Test
+    public void migrate10To11() throws IOException {
+        int versionFrom = 10;
+        int versionTo = 11;
+        Migration migration = DatabaseMigration.MIGRATION_10_11;
+
+        // Open database with version "From"
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, versionFrom);
+
+        // Perform queries using SQL queries.
+        // DAO classes cannot be used because they expect the latest schema.
+        db.execSQL("INSERT INTO RecurringExpenseInfo(last_occur, identifier, recur_type) " +
+                "VALUES(4545,'DSKDSKL','MONTHLY')");
+        db.execSQL("INSERT INTO RecurringExpenseInfo(last_occur, identifier, recur_type) " +
+                "VALUES(4545,'DSKDSKL','MONTHLY')");
+        db.execSQL("DELETE FROM RecurringExpenseInfo");
+
+        // Prepare for the next version.
+        db.close();
+
+        // Re-open the database with version "To" and provide
+        // MIGRATION_<From>_<To> as the migration process.
+        db = helper.runMigrationsAndValidate(TEST_DB, versionTo, true, migration);
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+        try {
+            db.execSQL("INSERT INTO RecurringExpenseInfo(last_occur, identifier, recur_type) " +
+                    "VALUES(4545,'DSKDSKL','MONTHLY')");
+            db.execSQL("INSERT INTO RecurringExpenseInfo(last_occur, identifier, recur_type) " +
+                    "VALUES(4545,'DSKDSKL','MONTHLY')");
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+        }
+    }
 }

@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 
 public class DateHelper {
     private static final String FORMAT_FRIENDLY = "MMM dd"; // Sep 21
-    private static final String FORMAT_EXPANDED = "EEEE, MMMM"; // Thursday, September 21
+    private static final String FORMAT_EXPANDED = "EEEE, MMMM dd, yyyy"; // Thursday, September 21
     private static final String FORMAT_MONTH = "MMMM"; // September
     private static final String FORMAT_MONTH_YEAR = "MMMM\nyyyy"; // September\n2021
     private static final String FORMAT_DAY = "dd"; // 21
@@ -40,11 +40,7 @@ public class DateHelper {
 
     public static String getExpandedDate(long date) {
         SimpleDateFormat format = new SimpleDateFormat(FORMAT_EXPANDED, Locale.getDefault());
-
-        SimpleDateFormat formatDayOfMonth = new SimpleDateFormat(FORMAT_DAY, Locale.getDefault());
-        int day = Integer.parseInt(formatDayOfMonth.format(date));
-
-        return format.format(date) + " " + DAY_SUFFIXES[day];
+        return format.format(date);
     }
 
     public static String getFullDate(long date, TimeZone timeZone) {
@@ -207,7 +203,7 @@ public class DateHelper {
 
     @NonNull
     public static ZonedDateTime getZonedDateTime(@NonNull Long timeInMillis,
-            @NonNull ZoneId zoneId){
+            @NonNull ZoneId zoneId) {
         Instant instant = Instant.ofEpochMilli(timeInMillis);
         return ZonedDateTime.ofInstant(instant, zoneId);
     }

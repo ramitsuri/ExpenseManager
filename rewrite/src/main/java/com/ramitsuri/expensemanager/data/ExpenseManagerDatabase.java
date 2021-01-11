@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.data;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -27,28 +28,31 @@ import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 @Database(entities = {Category.class, Expense.class, PaymentMethod.class,
         Log.class, SheetInfo.class, Budget.class, EditedSheet.class, RecurringExpenseInfo.class},
-        version = 10, exportSchema = true)
+        version = 11, exportSchema = true)
 @TypeConverters({BigDecimalConverter.class, ListConverter.class})
 public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
     private static volatile ExpenseManagerDatabase INSTANCE;
     private static final String DB_NAME = "expense_manager_db";
 
+    @NonNull
     public static ExpenseManagerDatabase getInstance() {
         if (INSTANCE == null) {
             synchronized (ExpenseManagerDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(MainApplication.getInstance(),
                             ExpenseManagerDatabase.class, DB_NAME)
-                            .addMigrations(DatabaseMigration.MIGRATION_1_2)
-                            .addMigrations(DatabaseMigration.MIGRATION_2_3)
-                            .addMigrations(DatabaseMigration.MIGRATION_3_4)
-                            .addMigrations(DatabaseMigration.MIGRATION_4_5)
-                            .addMigrations(DatabaseMigration.MIGRATION_5_6)
-                            .addMigrations(DatabaseMigration.MIGRATION_6_7)
-                            .addMigrations(DatabaseMigration.MIGRATION_7_8)
-                            .addMigrations(DatabaseMigration.MIGRATION_8_9)
-                            .addMigrations(DatabaseMigration.MIGRATION_9_10)
+                            .addMigrations(
+                                    DatabaseMigration.MIGRATION_1_2,
+                                    DatabaseMigration.MIGRATION_2_3,
+                                    DatabaseMigration.MIGRATION_3_4,
+                                    DatabaseMigration.MIGRATION_4_5,
+                                    DatabaseMigration.MIGRATION_5_6,
+                                    DatabaseMigration.MIGRATION_6_7,
+                                    DatabaseMigration.MIGRATION_7_8,
+                                    DatabaseMigration.MIGRATION_8_9,
+                                    DatabaseMigration.MIGRATION_9_10,
+                                    DatabaseMigration.MIGRATION_10_11)
                             .build();
                 }
             }

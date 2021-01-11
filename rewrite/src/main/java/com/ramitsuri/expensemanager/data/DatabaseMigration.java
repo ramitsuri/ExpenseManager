@@ -170,4 +170,12 @@ public class DatabaseMigration {
                     "`add_type` TEXT NOT NULL DEFAULT 'MANUAL'");
         }
     };
+
+    public static final Migration MIGRATION_10_11 = new Migration(10, 11) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE UNIQUE INDEX `index_RecurringExpenseInfo_identifier` " +
+                    "ON `RecurringExpenseInfo` (`identifier`)");
+        }
+    };
 }

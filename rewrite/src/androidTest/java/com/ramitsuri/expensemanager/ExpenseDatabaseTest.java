@@ -70,6 +70,12 @@ public class ExpenseDatabaseTest extends BaseDatabaseTest {
      * @throws Exception
      */
     @Test
+    public void testGetExpenseWithIdentifier() {
+        Expense expense = mExpenseDao.getExpense("79483hfijdsnfosjd");
+        Assert.assertNull(expense);
+    }
+
+    @Test
     public void testGetAllForBackup() throws Exception {
         // get All for backup
         List<Integer> months = new ArrayList<>();

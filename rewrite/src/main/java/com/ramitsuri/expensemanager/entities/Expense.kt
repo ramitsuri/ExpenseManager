@@ -13,7 +13,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @Entity
-class Expense(
+data class Expense(
         @ColumnInfo(name = DB.COL_DATE_TIME)
         var dateTime: Long,
         @ColumnInfo(name = DB.COL_AMOUNT)

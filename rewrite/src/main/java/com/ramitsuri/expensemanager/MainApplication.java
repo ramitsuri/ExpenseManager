@@ -64,7 +64,7 @@ public class MainApplication extends Application {
 
         initSheetRepo();
 
-        // Enqueue periodic backups
+        // Enqueue periodic works
         if (!BuildConfig.DEBUG) {
             WorkHelper.cancelPeriodicLegacyBackup();
             if (!AppHelper.isPruneComplete()) {
@@ -73,6 +73,7 @@ public class MainApplication extends Application {
             }
             WorkHelper.enqueuePeriodicBackup(AppHelper.shouldReplaceWork());
             AppHelper.setShouldReplaceWork(false);
+            WorkHelper.enqueueRecurringExpensesRunner();
         }
 
         if (AppHelper.isFirstRunComplete()) {
@@ -141,7 +142,7 @@ public class MainApplication extends Application {
         mLogRepo = new LogRepository(appExecutors, database);
         mBudgetRepository = new BudgetRepository(appExecutors, database);
         mEditedSheetRepo = new EditedSheetRepository(appExecutors, database);
-        mRecurringRepo = new RecurringExpenseRepository(database);
+        mRecurringRepo = new RecurringExpenseRepository(appExecutors, database);
     }
 
     private void initSheetRepo() {

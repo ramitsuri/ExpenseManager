@@ -51,6 +51,8 @@
     <string name="common_clear">(Clear)</string>
     <string name="common_monthly">Monthly</string>
     <string name="common_annual">Annual</string>
+    <string name="common_text_divider">•</string>
+    <string name="common_add_status_automatic">Automatically added</string>
 
     <!-- Expenses -->
     <string name="common_no">No</string>
@@ -95,6 +97,16 @@
     <string name="add_expense_save_expense">Save expense</string>
     <string name="add_expense_sheet_id_help">Will be saved to %1s</string>
     <string name="add_expense_divide_by_2">Divide by 2</string>
+    <string name="add_expense_select_recur_type">Select repeat type</string>
+    <string name="add_expense_recur_status_none">Does not repeat</string>
+    <string name="add_expense_recur_status_daily">Repeats every day</string>
+    <string name="add_expense_recur_status_weekly">Repeats every week</string>
+    <string name="add_expense_recur_status_monthly">Repeats every month</string>
+    <string name="add_expense_recur_type_none">Do not repeat</string>
+    <string name="add_expense_recur_type_daily">Repeat every day</string>
+    <string name="add_expense_recur_type_weekly">Repeat every week</string>
+    <string name="add_expense_recur_type_monthly">Repeat every month</string>
+
 
     <!-- Setup -->
     <string name="setup_spreadsheet_id_empty">Spreadsheet ID cannot be empty</string>
@@ -147,6 +159,7 @@
     <!-- Details -->
     <string name="expense_detail_backed_up_disability_message">Edit and delete not available for
         backed up expenses</string>
+    <string name="expense_detail_add_status_automatic">Added automatically</string>
 
     <!-- Miscellaneous -->
     <string name="header_title_backup_sync">Backup</string>

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 10,
-    "identityHash": "5c8b060f327f65f3302c193784c737d3",
+    "version": 11,
+    "identityHash": "17b40b0909baa466193c2f7adbb2a742",
     "entities": [
       {
         "tableName": "Category",
@@ -360,14 +360,23 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_RecurringExpenseInfo_identifier",
+            "unique": true,
+            "columnNames": [
+              "identifier"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_RecurringExpenseInfo_identifier` ON `${TABLE_NAME}` (`identifier`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5c8b060f327f65f3302c193784c737d3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '17b40b0909baa466193c2f7adbb2a742')"
     ]
   }
 }

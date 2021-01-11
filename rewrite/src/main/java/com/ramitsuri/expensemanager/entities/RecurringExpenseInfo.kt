@@ -4,12 +4,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.ramitsuri.expensemanager.constants.intDefs.RecurType
 import timber.log.Timber
 import java.lang.Exception
 
-@Entity
+@Entity(indices = [Index(value = ["identifier"], unique = true)])
 data class RecurringExpenseInfo(
         @ColumnInfo(name = DB.COL_IDENTIFIER)
         var identifier: String,
@@ -19,12 +20,12 @@ data class RecurringExpenseInfo(
 
         @ColumnInfo(name = DB.COL_RECUR_TYPE)
         @RecurType
-        var recurType: String) : Parcelable {
+        var recurType: String): Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
-    constructor(parcel: Parcel) : this(
+    constructor(parcel: Parcel): this(
             parcel.readString() ?: "",
             parcel.readLong(),
             parcel.readString() ?: RecurType.NONE) {
@@ -32,17 +33,17 @@ data class RecurringExpenseInfo(
     }
 
     constructor(expense: Expense, @RecurType
-    recurType: String) : this(
+    recurType: String): this(
             expense.identifier,
             expense.dateTime,
             recurType
     )
 
-    constructor() : this("",
+    constructor(): this("",
             0L,
             RecurType.MONTHLY)
 
-    constructor(objects: List<Any>) : this() {
+    constructor(objects: List<Any>): this() {
         try {
             identifier = objects[0] as String
             lastOccur = (objects[1] as String).toLong()
@@ -71,7 +72,7 @@ data class RecurringExpenseInfo(
         return list
     }
 
-    companion object CREATOR : Parcelable.Creator<RecurringExpenseInfo> {
+    companion object CREATOR: Parcelable.Creator<RecurringExpenseInfo> {
         override fun createFromParcel(parcel: Parcel): RecurringExpenseInfo {
             return RecurringExpenseInfo(parcel)
         }
