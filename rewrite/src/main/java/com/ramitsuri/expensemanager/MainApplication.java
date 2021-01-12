@@ -13,6 +13,7 @@ import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.RecurringExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.SheetRepository;
+import com.ramitsuri.expensemanager.dependency.Injector;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
@@ -36,6 +37,7 @@ import timber.log.Timber;
 
 public class MainApplication extends Application {
 
+    private Injector mInjector;
     private CategoryRepository mCategoryRepo;
     private PaymentMethodRepository mPaymentMethodRepo;
     private ExpenseRepository mExpenseRepo;
@@ -59,6 +61,8 @@ public class MainApplication extends Application {
         initCrashReportingHelper();
 
         initTimber();
+
+        initInjector();
 
         initDataRepos();
 
@@ -126,6 +130,10 @@ public class MainApplication extends Application {
         } else {
             Timber.plant(new ReleaseTree());
         }
+    }
+
+    private void initInjector() {
+        mInjector = new Injector();
     }
 
     public static MainApplication getInstance() {
@@ -255,5 +263,10 @@ public class MainApplication extends Application {
             return response.getGoogleSignInAccount().getAccount();
         }
         return null;
+    }
+
+    @Nonnull
+    public Injector getInjector() {
+        return mInjector;
     }
 }

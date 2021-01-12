@@ -1,3 +1,8 @@
+Abstract backup service
+Add an interface for Expense Backup Service
+Add new worker class in Kotlin for Expenses backup that implements the above interface
+Add an Injector class that only provides ExpensesBackupService for now
+
 Recurring Expense (VI)
 AddExpenseFragment
     - Add button to set RecurType
