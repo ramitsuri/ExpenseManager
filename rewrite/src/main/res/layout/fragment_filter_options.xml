@@ -172,32 +172,4 @@
         tools:itemCount="1"
         tools:listitem="@layout/list_picker_item" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_header_income_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:text="@string/filter_options_income_header"
-        android:textSize="@dimen/text_caption"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_flag_status"
-        tools:visibility="visible" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_income_status"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:scrollbars="none"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_header_income_status"
-        tools:itemCount="1"
-        tools:listitem="@layout/list_picker_item"
-        tools:visibility="visible" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

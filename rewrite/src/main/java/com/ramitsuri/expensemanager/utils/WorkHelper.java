@@ -15,12 +15,8 @@ import androidx.work.WorkManager;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.work.CreateSpreadsheetWorker;
-import com.ramitsuri.expensemanager.work.EntitiesBackupWorker;
-import com.ramitsuri.expensemanager.work.ExpenseSyncWorker;
 import com.ramitsuri.expensemanager.work.ExpensesBackupWorker;
 import com.ramitsuri.expensemanager.work.RecurringExpensesWorker;
-import com.ramitsuri.expensemanager.work.SyncWorker;
 
 import java.util.Calendar;
 import java.util.List;
@@ -48,14 +44,6 @@ public class WorkHelper {
                 .cancelAllWorkByTag(tag);
     }
 
-    public static void cancelPeriodicLegacyBackup() {
-        Timber.i("Cancel scheduled backup invoked");
-
-        String tag = getPeriodicWorkLegacyTag();
-        getInstance()
-                .cancelAllWorkByTag(tag);
-    }
-
     /**
      * Periodic Backup
      * Runs once every 2 days around 3AM
@@ -71,62 +59,6 @@ public class WorkHelper {
         Timber.i("Cancel scheduled backup invoked");
 
         String tag = getPeriodicExpensesBackupTag();
-        getInstance()
-                .cancelAllWorkByTag(tag);
-    }
-
-    /**
-     * One Time Entities Sync
-     */
-    public static void enqueueOneTimeSync() {
-        Timber.i("Enqueue one-time sync invoked");
-
-        String tag = getOneTimeSyncTag();
-        enqueueOneTimeWork(tag, SyncWorker.class);
-    }
-
-    /**
-     * One Time Expenses Sync
-     */
-    public static void enqueueOneTimeExpenseSync() {
-        Timber.i("Enqueue one-time expenses sync invoked");
-
-        String tag = getOneTimeExpenseSyncTag();
-        enqueueOneTimeWork(tag, ExpenseSyncWorker.class);
-    }
-
-    /**
-     * One Time Entities Backup
-     */
-    public static void enqueueOneTimeEntitiesBackup(boolean scheduled) {
-        Timber.i("Enqueue one-time entities backup invoked");
-
-        String tag = getOneTimeEntitiesBackupTag();
-        enqueueOneTimeWork(tag, EntitiesBackupWorker.class, scheduled);
-    }
-
-    public static void cancelOneTimeEntitiesBackup() {
-        Timber.i("Cancel one time entities backup invoked");
-
-        String tag = getOneTimeEntitiesBackupTag();
-        getInstance()
-                .cancelAllWorkByTag(tag);
-    }
-
-    /**
-     * Periodic Entities Backup
-     */
-    public static void enqueuePeriodicEntitiesBackup() {
-        Timber.i("Enqueue periodic entities backup invoked");
-        // Prepare
-        String tag = getPeriodicEntitiesBackupTag();
-        enqueuePeriodicWork(tag, EntitiesBackupWorker.class, true, false);
-    }
-
-    public static void cancelPeriodicEntitiesBackup() {
-        Timber.i("Cancel scheduled entities backup invoked");
-
-        String tag = getPeriodicEntitiesBackupTag();
         getInstance()
                 .cancelAllWorkByTag(tag);
     }
@@ -149,31 +81,13 @@ public class WorkHelper {
                 .cancelAllWorkByTag(tag);
     }
 
-    /**
-     * One time create spreadsheet
-     */
-    public static void enqueueOneTimeCreateSpreadsheet() {
-        Timber.i("Enqueue one-time spreadsheet creation invoked");
-
-        String tag = getOneTimeCreateSpreadsheetTag();
-        enqueueOneTimeWork(tag, CreateSpreadsheetWorker.class);
-    }
-
     public static LiveData<List<WorkInfo>> getWorkStatus(String tag) {
         return getInstance()
                 .getWorkInfosByTagLiveData(tag);
     }
 
-    public static String getPeriodicWorkLegacyTag() {
-        return Constants.Tag.PERIODIC_BACKUP_LEGACY;
-    }
-
     public static String getPeriodicExpensesBackupTag() {
         return Constants.Tag.PERIODIC_EXPENSES_BACKUP;
-    }
-
-    private static String getPeriodicEntitiesBackupTag() {
-        return Constants.Tag.PERIODIC_ENTITIES_BACKUP;
     }
 
     public static String getRecurringExpensesRunnerTag() {
@@ -182,22 +96,6 @@ public class WorkHelper {
 
     public static String getOneTimeWorkTag() {
         return Constants.Tag.ONE_TIME_BACKUP;
-    }
-
-    private static String getOneTimeEntitiesBackupTag() {
-        return Constants.Tag.ONE_TIME_ENTITIES_BACKUP;
-    }
-
-    private static String getOneTimeSyncTag() {
-        return Constants.Tag.ONE_TIME_SYNC;
-    }
-
-    private static String getOneTimeExpenseSyncTag() {
-        return Constants.Tag.ONE_TIME_EXPENSE_SYNC;
-    }
-
-    public static String getOneTimeCreateSpreadsheetTag() {
-        return Constants.Tag.ONE_TIME_CREATE_SPREADSHEET;
     }
 
     public static void pruneWork() {
@@ -270,17 +168,6 @@ public class WorkHelper {
         }
         // Enqueue
         getInstance().enqueueUniquePeriodicWork(tag, policy, builder.build());
-    }
-
-    private static Data getInputData(String appName, String accountName, String accountType,
-            String spreadsheetId, String sheetId) {
-        Data.Builder builder = new Data.Builder();
-        builder.putString(Constants.Work.APP_NAME, appName);
-        builder.putString(Constants.Work.ACCOUNT_NAME, accountName);
-        builder.putString(Constants.Work.ACCOUNT_TYPE, accountType);
-        builder.putString(Constants.Work.SPREADSHEET_ID, spreadsheetId);
-        builder.putString(Constants.Work.SHEET_ID, sheetId);
-        return builder.build();
     }
 
     private static WorkManager getInstance() {

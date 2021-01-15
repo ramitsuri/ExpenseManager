@@ -52,8 +52,8 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     private ViewGroup mCardInfo;
     private ViewGroup mGroupButtons;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
-    private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnSharedSecond, mBtnFilter,
-            mBtnSetup, mBtnAnalysis, mBtnClearFilter, mBtnShared;
+    private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnFilter,
+            mBtnSetup, mBtnAnalysis, mBtnClearFilter;
 
     public AllExpensesFragment() {
     }
@@ -94,15 +94,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
 
         mBtnClearFilter = view.findViewById(R.id.btn_clear_filter);
         mBtnClearFilter.setOnClickListener(this);
-
-        mBtnShared = view.findViewById(R.id.btn_getShared);
-        if (mViewModel.isEnableSharedExpenses()) {
-            mBtnShared.setVisibility(View.VISIBLE);
-        }
-        mBtnShared.setOnClickListener(this);
-
-        mBtnSharedSecond = view.findViewById(R.id.btn_get_shared_second);
-        mBtnSharedSecond.setOnClickListener(this);
 
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
@@ -216,10 +207,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
                 });
     }
 
-    private void handleExpensePushToRemoteRequested(@Nonnull Expense expense) {
-        mViewModel.pushToRemoteShared(expense);
-    }
-
     private void handleExpenseEditRequested(@Nonnull Expense expense) {
         AllExpensesFragmentDirections.NavActionAddExpense addAction
                 = AllExpensesFragmentDirections.navActionAddExpense();
@@ -261,15 +248,9 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             public void onDuplicateRequested(@Nonnull Expense expense) {
                 handleExpenseDuplicateRequested(expense);
             }
-
-            @Override
-            public void onPushToRemoteSharedRequested(@Nonnull Expense expense) {
-                handleExpensePushToRemoteRequested(expense);
-            }
         });
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.BundleKeys.SELECTED_EXPENSE, wrapper.getExpense());
-        bundle.putBoolean(Constants.BundleKeys.ENABLE_SHARED, mViewModel.isEnableSharedExpenses());
         detailsFragment.setArguments(bundle);
         if (getActivity() != null) {
             detailsFragment
@@ -328,9 +309,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             mBtnAddSecond.setVisibility(View.VISIBLE);
             mBtnFilterSecond.setVisibility(View.VISIBLE);
             mBtnSetupSecond.setVisibility(View.VISIBLE);
-            if (mViewModel.isEnableSharedExpenses()) {
-                mBtnSharedSecond.setVisibility(View.VISIBLE);
-            }
             mTextInfoEmpty.setVisibility(View.VISIBLE);
         } else {
             doCalculation = true;
@@ -342,7 +320,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             mBtnAddSecond.setVisibility(View.GONE);
             mBtnFilterSecond.setVisibility(View.GONE);
             mBtnSetupSecond.setVisibility(View.GONE);
-            mBtnSharedSecond.setVisibility(View.GONE);
             mTextInfoEmpty.setVisibility(View.GONE);
         }
 
@@ -377,9 +354,6 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             showAnalysis();
         } else if (v.getId() == mBtnClearFilter.getId()) {
             mViewModel.clearFilter();
-        } else if (v.getId() == mBtnShared.getId() ||
-                v.getId() == mBtnSharedSecond.getId()) { // Shared get
-            mViewModel.getAndSaveAndDeleteFromRemoteShared();
         }
     }
 }

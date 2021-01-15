@@ -11,12 +11,10 @@ import com.ramitsuri.expensemanager.data.converter.BigDecimalConverter;
 import com.ramitsuri.expensemanager.data.converter.ListConverter;
 import com.ramitsuri.expensemanager.data.dao.BudgetDao;
 import com.ramitsuri.expensemanager.data.dao.CategoryDao;
-import com.ramitsuri.expensemanager.data.dao.EditedSheetDao;
 import com.ramitsuri.expensemanager.data.dao.ExpenseDao;
 import com.ramitsuri.expensemanager.data.dao.LogDao;
 import com.ramitsuri.expensemanager.data.dao.PaymentMethodDao;
 import com.ramitsuri.expensemanager.data.dao.RecurringExpenseInfoDao;
-import com.ramitsuri.expensemanager.data.dao.SheetDao;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.entities.EditedSheet;
@@ -68,11 +66,7 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
     public abstract LogDao logDao();
 
-    public abstract SheetDao sheetDao();
-
     public abstract BudgetDao budgetDao();
-
-    public abstract EditedSheetDao editedSheetDao();
 
     public abstract RecurringExpenseInfoDao recurringExpenseDao();
 }

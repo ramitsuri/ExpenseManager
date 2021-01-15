@@ -153,17 +153,6 @@
                 app:cornerRadius="@dimen/corner_radius_large"
                 tools:visibility="visible" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_getShared"
-                style="@style/ButtonTextSimple"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:text="@string/shared_expense_temp"
-                android:textSize="@dimen/text_caption"
-                android:visibility="gone"
-                app:cornerRadius="@dimen/corner_radius_large"
-                tools:visibility="visible" />
-
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -193,15 +182,6 @@
             app:layout_constraintEnd_toEndOf="@id/btn_filter_second"
             app:layout_constraintStart_toStartOf="@id/btn_filter_second"
             app:layout_constraintTop_toBottomOf="@id/btn_setup_second" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_get_shared_second"
-            style="@style/ButtonOutline"
-            android:text="@string/shared_expense_temp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/btn_filter_second"
-            app:layout_constraintStart_toStartOf="@id/btn_filter_second"
-            app:layout_constraintTop_toBottomOf="@id/btn_add_expense_second" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_expenses"

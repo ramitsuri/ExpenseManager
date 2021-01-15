@@ -17,15 +17,10 @@ import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.RecurringExpenseRepository;
 import com.ramitsuri.expensemanager.entities.Category;
-import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo;
-import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
-import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
-import com.ramitsuri.expensemanager.utils.SharedExpenseHelper;
-import com.ramitsuri.expensemanager.utils.SharedExpenseManager;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -37,10 +32,7 @@ import timber.log.Timber;
 
 public class AddExpenseViewModel extends ViewModel {
 
-    private SharedExpenseManager mSharedExpenseManager;
-
     private Expense mExpense;
-    private Integer mOldMonthIndex;
     private int mAddMode;
     private boolean mChangesMade;
 
@@ -89,73 +81,16 @@ public class AddExpenseViewModel extends ViewModel {
 
     public void add() {
         Expense expense = new Expense(mExpense);
-        if (expense.isIncome()) { // Set category to "INCOME" always
-            expense.setCategory(Constants.Basic.INCOME);
-        }
         mExpenseRepo.insert(expense);
         saveRecurringExpenseInfo(expense);
-        pushToRemoteShared(expense);
         reset(null);
-    }
-
-    private SharedExpenseManager getSharedExpenseManager() {
-        if (mSharedExpenseManager == null) {
-            mSharedExpenseManager = SharedExpenseHelper.getSharedExpenseManager(mCallbacks);
-        }
-        return mSharedExpenseManager;
-    }
-
-    private final SharedExpenseManager.Callbacks mCallbacks = new SharedExpenseManager.Callbacks() {
-        @Override
-        public void addSuccess() {
-            Timber.i("Expense added");
-        }
-
-        @Override
-        public void deleteForOtherSuccess(@Nonnull String source) {
-
-        }
-
-        @Override
-        public void getForOtherSuccess(@Nonnull String source,
-                @Nonnull List<Expense> expenses) {
-
-        }
-
-        @Override
-        public void failure(@Nonnull String message, @Nonnull Exception e) {
-            Timber.i("Expense add failed");
-        }
-    };
-
-    private void pushToRemoteShared(Expense expense) {
-        getSharedExpenseManager().add(expense);
     }
 
     public void edit() {
         Expense expense = new Expense(mExpense);
         expense.setId(mExpense.getId());
         expense.setSynced(false);
-        if (expense.isIncome()) { // Set category to "INCOME" always
-            expense.setCategory(Constants.Basic.INCOME);
-        }
-        boolean wasSynced = mExpense.isSynced();
         mExpenseRepo.edit(expense);
-        // Backed up expense was edited, update EditedSheets table to add this expense's month index
-        if (wasSynced) { // Backed up expense was edited
-            int editedMonthIndex;
-            if (mOldMonthIndex != null) {
-                // Expense date was changed to fall in a different sheet
-                // Old sheet would need to be rewritten as an expense from that was deleted
-                editedMonthIndex = mOldMonthIndex;
-            } else {
-                // Date's month wasn't changed so sheet corresponding to expense's month would
-                // need to be rewritten
-                editedMonthIndex = DateHelper.getMonthIndexFromDate(expense.getDateTime());
-            }
-            MainApplication.getInstance().getEditedSheetRepo()
-                    .insertEditedSheet(new EditedSheet(editedMonthIndex));
-        }
         saveRecurringExpenseInfo(expense);
         reset(null);
     }
@@ -165,17 +100,6 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     public void setDate(long date) {
-        int oldMonthIndex = DateHelper.getMonthIndexFromDate(mExpense.getDateTime());
-        int newMonthIndex = DateHelper.getMonthIndexFromDate(date);
-        boolean monthChanged = oldMonthIndex != newMonthIndex;
-        if (monthChanged) {
-            // A backed up expense is basically being deleted from the sheet corresponding to
-            // old month. Save the old month so that sheet holding expenses for that month
-            // can be updated.
-            if (mExpense.isSynced()) {
-                mOldMonthIndex = oldMonthIndex;
-            }
-        }
         mExpense.setDateTime(date);
         setChangesMade();
     }
@@ -280,18 +204,6 @@ public class AddExpenseViewModel extends ViewModel {
         return mAddMode;
     }
 
-    public boolean isIncomeAvailable() {
-        return SecretMessageHelper.isIncomeEnabled();
-    }
-
-    public boolean isIncome() {
-        return mExpense.isIncome();
-    }
-
-    public void setIncome(boolean isIncome) {
-        mExpense.setIncome(isIncome);
-    }
-
     public void setRecurType(@NonNull @RecurType String recurType) {
         if (mRecurTypeLive != null) {
             mRecurTypeLive.postValue(recurType);
@@ -331,7 +243,6 @@ public class AddExpenseViewModel extends ViewModel {
     }
 
     private void reset(@Nullable Expense expense) {
-        mOldMonthIndex = null;
         if (expense != null) {
             mExpense = expense;
             mAddMode = Constants.AddExpenseMode.EDIT;

@@ -1,8 +1,12 @@
 package com.ramitsuri.expensemanager.dependency
 
 import com.ramitsuri.expensemanager.backup.ExpenseBackupService
-import com.ramitsuri.expensemanager.backup.SpreadsheetExpenseBackupService
+import com.ramitsuri.expensemanager.backup.WorkResult
 
 class Injector {
-    fun provideExpenseBackupService(): ExpenseBackupService = SpreadsheetExpenseBackupService()
+    fun provideExpenseBackupService(): ExpenseBackupService = object : ExpenseBackupService {
+        override fun process(): WorkResult<String> {
+            TODO("Not yet implemented")
+        }
+    }
 }

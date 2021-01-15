@@ -1,34 +1,15 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import android.accounts.Account;
-import android.content.Intent;
-import android.text.TextUtils;
-
 import androidx.annotation.ArrayRes;
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
-import androidx.work.WorkInfo;
 
 import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
-import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
-import com.ramitsuri.expensemanager.utils.WorkHelper;
-import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
-import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
-import com.ramitsuri.sheetscore.googleSignIn.SignInResponse;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import timber.log.Timber;
 
@@ -38,7 +19,6 @@ public class MiscellaneousViewModel extends ViewModel {
     private int mAboutPressCount;
     private boolean mEnableHidden;
     private MutableLiveData<String> mCurrentTheme;
-    private MutableLiveData<String> mBackupInfoStatus;
 
     public MiscellaneousViewModel() {
         super();
@@ -49,25 +29,6 @@ public class MiscellaneousViewModel extends ViewModel {
 
         mCurrentTheme = new MutableLiveData<>();
         mCurrentTheme.postValue(AppHelper.getCurrentTheme());
-
-        mBackupInfoStatus = new MutableLiveData<>();
-        postBackupInfoStatus();
-    }
-
-    public void initiateBackup() {
-        Timber.i("Initiating backup");
-        WorkHelper.enqueueOneTimeBackup();
-        WorkHelper.enqueueOneTimeEntitiesBackup(false);
-    }
-
-    public void syncDataFromSheet() {
-        Timber.i("Initiating sync");
-        WorkHelper.enqueueOneTimeSync();
-    }
-
-    public void syncExpensesFromSheet() {
-        Timber.i("Initiating sync expenses");
-        WorkHelper.enqueueOneTimeExpenseSync();
     }
 
     public void deleteExpenses() {
@@ -88,16 +49,8 @@ public class MiscellaneousViewModel extends ViewModel {
         return mEnableHidden || BuildConfig.DEBUG;
     }
 
-    public boolean enableBackupNow() {
-        return (enableHidden() && SecretMessageHelper.isBackupNowEnabled()) || BuildConfig.DEBUG;
-    }
-
     public boolean enableDeleteAll() {
         return BuildConfig.DEBUG;
-    }
-
-    public String getSpreadsheetId() {
-        return AppHelper.getSpreadsheetId();
     }
 
     public boolean versionInfoPressSuccess() {
@@ -150,93 +103,5 @@ public class MiscellaneousViewModel extends ViewModel {
         }
         AppHelper.setCurrentTheme(theme);
         mCurrentTheme.postValue(theme);
-    }
-
-    public boolean enableExpenseSync() {
-        return enableHidden() && SecretMessageHelper.isExpenseSyncEnabled();
-    }
-
-    public boolean enableEntitiesSync() {
-        return enableHidden() && SecretMessageHelper.isEntitiesSyncEnabled();
-    }
-
-    @Nonnull
-    public LiveData<String> getBackupInfoStatus() {
-        return mBackupInfoStatus;
-    }
-
-    public LiveData<Boolean> onBackupInfoClicked() {
-        if (TextUtils.isEmpty(getSpreadsheetId())) { // Create spreadsheet
-            Timber.i("Spreadsheet id is empty, initiating create spreadsheet");
-            mBackupInfoStatus.postValue(BackupInfoStatus.CREATING);
-            WorkHelper.enqueueOneTimeCreateSpreadsheet();
-            // Transform work info to post status for backup info. if work has completed,
-            // a new status needs to be posted so progress can be hidden
-            return Transformations
-                    .map(WorkHelper.getWorkStatus(WorkHelper.getOneTimeCreateSpreadsheetTag()),
-                            new Function<List<WorkInfo>, Boolean>() {
-                                @Override
-                                public Boolean apply(List<WorkInfo> workInfoList) {
-                                    if (workInfoList != null && workInfoList.size() > 0) {
-                                        WorkInfo info = workInfoList.get(0);
-                                        if (info.getState().isFinished()) {
-                                            postBackupInfoStatus();
-                                            return true;
-                                        }
-                                    }
-                                    return null;
-                                }
-                            });
-        } else if (BackupInfoStatus.ERROR.equals(mBackupInfoStatus.getValue())) {
-            MutableLiveData<Boolean> value = new MutableLiveData<>();
-            value.postValue(true);
-            return value;
-        }
-        return null;
-    }
-
-    @Nullable
-    public LiveData<EntitiesConsumerResponse> restoreAccess() {
-        String spreadsheetId = AppHelper.getSpreadsheetId();
-        SheetRepository repository = MainApplication.getInstance().getSheetRepository();
-        if (repository != null && !TextUtils.isEmpty(spreadsheetId)) {
-            return repository.getEntity(spreadsheetId, Constants.Range.CATEGORIES_PAYMENT_METHODS);
-        }
-        return null;
-    }
-
-    @Nullable
-    public Account getSignInAccount() {
-        Account account = MainApplication.getInstance().getSignInAccount();
-        if (account != null) {
-            onAccountInfoReceived(account);
-        }
-        return account;
-    }
-
-    @Nullable
-    public Intent getSignInIntent() {
-        AccountManager accountManager = new AccountManager();
-        SignInResponse response =
-                accountManager.prepareSignIn(MainApplication.getInstance(), AppHelper.getScopes());
-        return response.getGoogleSignInIntent();
-    }
-
-    private void onAccountInfoReceived(@Nonnull Account account) {
-        Timber.i("On account received %s", account.name);
-        MainApplication.getInstance().refreshSheetRepo(account);
-    }
-
-    private void postBackupInfoStatus() {
-        String savedBackupInfoStatus = AppHelper.getBackupInfoStatus();
-        if (TextUtils.isEmpty(getSpreadsheetId())) { // No spreadsheet id, no connection
-            mBackupInfoStatus.postValue(BackupInfoStatus.NO);
-        } else if (BackupInfoStatus.ERROR.equals(savedBackupInfoStatus)) { // Error
-            mBackupInfoStatus.postValue(BackupInfoStatus.ERROR);
-        } else if (BackupInfoStatus.OK.equals(savedBackupInfoStatus)) { // All good
-            mBackupInfoStatus.postValue(BackupInfoStatus.OK);
-        } else { // Maybe connected
-            mBackupInfoStatus.postValue(BackupInfoStatus.MAYBE);
-        }
     }
 }

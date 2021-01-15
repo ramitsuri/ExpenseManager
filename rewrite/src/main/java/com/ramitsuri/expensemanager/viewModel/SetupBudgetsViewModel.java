@@ -1,5 +1,11 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
+
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
@@ -7,21 +13,13 @@ import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.ui.adapter.BudgetCategoryWrapper;
-import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
-import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import androidx.arch.core.util.Function;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
 public class SetupBudgetsViewModel extends ViewModel {
 
@@ -123,9 +121,6 @@ public class SetupBudgetsViewModel extends ViewModel {
         List<Budget> values = mValuesLive.getValue();
         if (values != null) {
             repository().setBudgets(values);
-            // Entities have been edited
-            AppHelper.setEntitiesEdited(true);
-            WorkHelper.enqueueOneTimeEntitiesBackup(true);
         }
     }
 

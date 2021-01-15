@@ -14,9 +14,7 @@ import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
 import com.ramitsuri.expensemanager.entities.Category;
 import com.ramitsuri.expensemanager.ui.adapter.ListItemWrapper;
-import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.ObjectHelper;
-import com.ramitsuri.expensemanager.utils.WorkHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +124,7 @@ public class SetupCategoriesViewModel extends ViewModel {
             values.remove(index);
             mValuesLive.postValue(values);
             mChangesMade = true;
-            mEditedCategories.add(new Pair<>(value, (String) null));
+            mEditedCategories.add(new Pair<>(value, (String)null));
             return true;
         }
         return false;
@@ -139,9 +137,6 @@ public class SetupCategoriesViewModel extends ViewModel {
         List<Category> values = mValuesLive.getValue();
         if (values != null) {
             repository().setCategories(values);
-            // Entities have been edited
-            AppHelper.setEntitiesEdited(true);
-            WorkHelper.enqueueOneTimeEntitiesBackup(true);
         }
         if (mEditedCategories.size() > 0) {
             budgetRepository().updateCategories(mEditedCategories);

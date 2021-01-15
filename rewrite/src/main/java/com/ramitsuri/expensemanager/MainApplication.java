@@ -7,16 +7,13 @@ import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.data.repository.BudgetRepository;
 import com.ramitsuri.expensemanager.data.repository.CategoryRepository;
-import com.ramitsuri.expensemanager.data.repository.EditedSheetRepository;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
 import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.data.repository.PaymentMethodRepository;
 import com.ramitsuri.expensemanager.data.repository.RecurringExpenseRepository;
-import com.ramitsuri.expensemanager.data.repository.SheetRepository;
 import com.ramitsuri.expensemanager.dependency.Injector;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
-import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.logging.ReleaseTree;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CrashReportingHelper;
@@ -43,10 +40,7 @@ public class MainApplication extends Application {
     private ExpenseRepository mExpenseRepo;
     private LogRepository mLogRepo;
     private BudgetRepository mBudgetRepository;
-    private EditedSheetRepository mEditedSheetRepo;
     private RecurringExpenseRepository mRecurringRepo;
-
-    private SheetRepository mSheetRepository;
 
     private static MainApplication sInstance;
 
@@ -66,11 +60,8 @@ public class MainApplication extends Application {
 
         initDataRepos();
 
-        initSheetRepo();
-
         // Enqueue periodic works
         if (!BuildConfig.DEBUG) {
-            WorkHelper.cancelPeriodicLegacyBackup();
             if (!AppHelper.isPruneComplete()) {
                 WorkHelper.pruneWork();
                 AppHelper.setPruneComplete(true);
@@ -87,24 +78,12 @@ public class MainApplication extends Application {
             AppHelper.setFirstRunComplete(true);
         }
 
-        if (AppHelper.isBackupIssueFixed()) {
-            Timber.i("Backup issue was fixed");
-        } else {
-            for (int i = 2; i < 8; i++) {
-                getEditedSheetRepo().insertEditedSheet(new EditedSheet(i));
-            }
-            AppHelper.setBackupIssueFixed(true);
-        }
-
         // Set identifier for expenses that don't have it (Can happen for expenses that were created
         // prior to this property was added)
         if (AppHelper.isIdentifierAdded()) {
             Timber.i("Identifier was added");
         } else {
             getExpenseRepo().updateSetIdentifier();
-            for (int i = 0; i < 12; i++) {
-                getEditedSheetRepo().insertEditedSheet(new EditedSheet(i));
-            }
             AppHelper.setIdentifierAdded(true);
         }
         removeLegacyPrefs();
@@ -149,30 +128,29 @@ public class MainApplication extends Application {
         mExpenseRepo = new ExpenseRepository(appExecutors, database);
         mLogRepo = new LogRepository(appExecutors, database);
         mBudgetRepository = new BudgetRepository(appExecutors, database);
-        mEditedSheetRepo = new EditedSheetRepository(appExecutors, database);
         mRecurringRepo = new RecurringExpenseRepository(appExecutors, database);
     }
 
-    private void initSheetRepo() {
-        Timber.i("Attempting to initialize sheet repo");
+    private void initDriveRepo() {
+        Timber.i("Attempting to initialize drive repo");
         Account account = getSignInAccount();
         if (account != null) {
-            refreshSheetRepo(account);
+            refreshDriveRepo(account);
         } else {
             Timber.i("Account is null");
         }
     }
 
-    public void refreshSheetRepo(@Nonnull Account account) {
-        Timber.i("Refreshing sheet repo");
+    public void refreshDriveRepo(@Nonnull Account account) {
+        Timber.i("Refreshing drive repo");
         String appName = getString(R.string.app_name);
         List<String> scopes = Arrays.asList(AppHelper.getScopes());
-        if (mSheetRepository == null) {
+        /*if (mSheetRepository == null) {
             mSheetRepository =
                     new SheetRepository(this, appName, account, scopes, AppExecutors.getInstance());
         } else {
             mSheetRepository.refreshProcessors(this, appName, account, scopes);
-        }
+        }*/
     }
 
     private void addDefaultData() {
@@ -234,19 +212,9 @@ public class MainApplication extends Application {
         return mLogRepo;
     }
 
-    @Nullable
-    public synchronized SheetRepository getSheetRepository() {
-        return mSheetRepository;
-    }
-
     @Nonnull
     public synchronized BudgetRepository getBudgetRepository() {
         return mBudgetRepository;
-    }
-
-    @Nonnull
-    public synchronized EditedSheetRepository getEditedSheetRepo() {
-        return mEditedSheetRepo;
     }
 
     @Nonnull

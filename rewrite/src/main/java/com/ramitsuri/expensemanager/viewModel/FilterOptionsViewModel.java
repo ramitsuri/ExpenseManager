@@ -16,7 +16,6 @@ import com.ramitsuri.expensemanager.entities.Filter;
 import com.ramitsuri.expensemanager.ui.adapter.FilterWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
-import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -222,71 +221,6 @@ public class FilterOptionsViewModel extends ViewModel {
     public void onRemovePaymentMethod(@Nonnull FilterWrapper value) {
         mFilter
                 .removePaymentMethod(value.getValue());
-    }
-    //endregion
-
-    // region Income
-    public boolean isIncomeAvailable() {
-        return SecretMessageHelper.isIncomeEnabled();
-    }
-
-    public List<FilterWrapper> getIncomes() {
-        Boolean filterIncome = mFilter.isIncome();
-        List<FilterWrapper> wrappers = new ArrayList<>();
-        String value = getString(R.string.filter_options_income_incomes);
-        boolean selected = filterIncome == null || filterIncome;
-        wrappers.add(new FilterWrapper(value, selected));
-
-        value = getString(R.string.filter_options_income_expenses);
-        selected = filterIncome == null || !filterIncome;
-        wrappers.add(new FilterWrapper(value, selected));
-        return wrappers;
-    }
-
-    public void onAddIncome(@Nonnull List<FilterWrapper> oldValues, @Nonnull FilterWrapper value) {
-        List<FilterWrapper> newValues = onItemSelected(oldValues, value);
-        if (newValues == null) {
-            return;
-        }
-        onModifyIncome(newValues);
-    }
-
-    public void onRemoveIncome(@Nonnull List<FilterWrapper> oldValues,
-            @Nonnull FilterWrapper value) {
-        List<FilterWrapper> newValues = onItemUnselected(oldValues, value);
-        if (newValues == null) {
-            return;
-        }
-        boolean noneSelected = true;
-        for (FilterWrapper wrapper : newValues) {
-            if (wrapper.isSelected()) {
-                noneSelected = false;
-                break;
-            }
-        }
-        if (noneSelected) {
-            return;
-        }
-        onModifyIncome(newValues);
-    }
-
-    private void onModifyIncome(@Nonnull List<FilterWrapper> newValues) {
-        boolean incomes = false, expenses = false;
-        for (FilterWrapper wrapper : newValues) {
-            if (wrapper.getValue().equals(getString(R.string.filter_options_income_incomes))) {
-                incomes = wrapper.isSelected();
-            } else if (wrapper.getValue()
-                    .equals(getString(R.string.filter_options_income_expenses))) {
-                expenses = wrapper.isSelected();
-            }
-        }
-        if ((incomes && expenses) || (!incomes && !expenses)) { // Both
-            mFilter.setIncome(null);
-        } else if (incomes) { // Incomes
-            mFilter.setIncome(true);
-        } else { // Expenses
-            mFilter.setIncome(false);
-        }
     }
     //endregion
 
