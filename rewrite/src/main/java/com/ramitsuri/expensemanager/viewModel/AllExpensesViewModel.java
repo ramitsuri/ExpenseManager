@@ -52,7 +52,8 @@ public class AllExpensesViewModel extends ViewModel {
                     @Override
                     public List<ExpenseWrapper> apply(List<Expense> input) {
                         mExpenses = input;
-                        return TransformationHelper.toExpenseWrapperList(input);
+                        return TransformationHelper
+                                .toExpenseWrapperList(input, AppHelper.getTimeZone());
                     }
                 });
     }
@@ -97,7 +98,6 @@ public class AllExpensesViewModel extends ViewModel {
     public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
         Expense duplicate = new Expense(expense);
         duplicate.generateIdentifier();
-        duplicate.setSynced(false);
         return mRepository.insertAndGet(duplicate, mFilter);
     }
 

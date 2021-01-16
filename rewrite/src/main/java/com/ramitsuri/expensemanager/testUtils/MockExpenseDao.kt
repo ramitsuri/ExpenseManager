@@ -21,10 +21,6 @@ class MockExpenseDao: ExpenseDao() {
         TODO("Not yet implemented")
     }
 
-    override fun getAllUnsynced(): MutableList<Expense> {
-        TODO("Not yet implemented")
-    }
-
     override fun getForQuery(query: SupportSQLiteQuery?): MutableList<Expense> {
         TODO("Not yet implemented")
     }
@@ -45,10 +41,6 @@ class MockExpenseDao: ExpenseDao() {
             }
         }
         return null
-    }
-
-    override fun getIncomes(): MutableList<Expense> {
-        TODO("Not yet implemented")
     }
 
     override fun getStores(startsWith: String?): MutableList<String> {
@@ -95,14 +87,6 @@ class MockExpenseDao: ExpenseDao() {
         }
     }
 
-    override fun updateUnsynced() {
-        TODO("Not yet implemented")
-    }
-
-    override fun updateSetAllUnsynced() {
-        TODO("Not yet implemented")
-    }
-
     override fun setStarred(id: Int) {
         TODO("Not yet implemented")
     }
@@ -111,19 +95,11 @@ class MockExpenseDao: ExpenseDao() {
         TODO("Not yet implemented")
     }
 
-    override fun updateSetUnsyncedForQuery(query: SupportSQLiteQuery?): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun deleteExpense(id: Int) {
         TODO("Not yet implemented")
     }
 
     override fun deleteAll() {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteSynced() {
         TODO("Not yet implemented")
     }
 }

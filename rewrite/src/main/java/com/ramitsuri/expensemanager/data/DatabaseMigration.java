@@ -178,4 +178,60 @@ public class DatabaseMigration {
                     "ON `RecurringExpenseInfo` (`identifier`)");
         }
     };
+
+    public static final Migration MIGRATION_11_12 = new Migration(11, 12) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Drop SheetInfo
+            database.execSQL("DROP TABLE `SheetInfo`");
+
+            // Drop SheetInfo
+            database.execSQL("DROP TABLE `EditedSheet`");
+
+            // Drop columns Synced, SheetId, Income
+            String createTemp = "CREATE TABLE IF NOT EXISTS `ExpenseTmp` " +
+                    "(`mId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`date_time` INTEGER NOT NULL, " +
+                    "`amount` TEXT NOT NULL, " +
+                    "`payment_method` TEXT NOT NULL, " +
+                    "`category` TEXT NOT NULL, " +
+                    "`description` TEXT NOT NULL, " +
+                    "`store` TEXT NOT NULL, " +
+                    "`is_starred` INTEGER NOT NULL, " +
+                    "`record_type` TEXT NOT NULL DEFAULT 'MONTHLY', " +
+                    "`identifier` TEXT NOT NULL, " +
+                    "`add_type` TEXT NOT NULL DEFAULT 'MANUAL')";
+            database.execSQL(createTemp);
+
+            String copyData = "INSERT INTO 'ExpenseTmp' " +
+                    "(`date_time`, " +
+                    "`amount`, " +
+                    "`payment_method`, " +
+                    "`category`, " +
+                    "`description`, " +
+                    "`store`, " +
+                    "`is_starred`, " +
+                    "`record_type`, " +
+                    "`identifier`, " +
+                    "`add_type`) " +
+                    "SELECT " +
+                    "`date_time`, " +
+                    "`amount`, " +
+                    "`payment_method`, " +
+                    "`category`, " +
+                    "`description`, " +
+                    "`store`, " +
+                    "`is_starred`, " +
+                    "`record_type`, " +
+                    "`identifier`, " +
+                    "`add_type` FROM 'Expense'";
+            database.execSQL(copyData);
+
+            String dropExpense = "DROP TABLE 'Expense'";
+            database.execSQL(dropExpense);
+
+            String renameExpense = "ALTER TABLE 'ExpenseTmp' RENAME TO 'Expense'";
+            database.execSQL(renameExpense);
+        }
+    };
 }

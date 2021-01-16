@@ -14,7 +14,7 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
-open class BaseWorkerTest {
+abstract class BaseWorkerTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 

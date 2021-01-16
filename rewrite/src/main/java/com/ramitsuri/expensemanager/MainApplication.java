@@ -62,12 +62,21 @@ public class MainApplication extends Application {
 
         // Enqueue periodic works
         if (!BuildConfig.DEBUG) {
+            WorkHelper.cancelByTag(
+                    "one_time_backup",
+                    "one_time_expenses_backup",
+                    "one_time_entities_backup",
+                    "scheduled_backup",
+                    "periodic_backup",
+                    "periodic_expenses_backup",
+                    "periodic_entities_backup",
+                    "one_time_sync",
+                    "one_time_expense_sync",
+                    "one_time_create_spreadsheet");
             if (!AppHelper.isPruneComplete()) {
                 WorkHelper.pruneWork();
                 AppHelper.setPruneComplete(true);
             }
-            WorkHelper.enqueuePeriodicBackup(AppHelper.shouldReplaceWork());
-            AppHelper.setShouldReplaceWork(false);
             WorkHelper.enqueueRecurringExpensesRunner();
         }
 
@@ -101,6 +110,24 @@ public class MainApplication extends Application {
         PrefHelper.remove("version_info");
         PrefHelper.remove("enable_debug_options");
         PrefHelper.remove("migration_step");
+        PrefHelper.remove("settings_account_name");
+        PrefHelper.remove("settings_account_type");
+        PrefHelper.remove("settings_spreadsheet_id");
+        PrefHelper.remove("settings_sheet_id");
+        PrefHelper.remove("default_sheet_id");
+        PrefHelper.remove("enable_expense_sync");
+        PrefHelper.remove("enable_entities_sync");
+        PrefHelper.remove("is_entities_edited");
+        PrefHelper.remove("backup_info_status");
+        PrefHelper.remove("enable_income");
+        PrefHelper.remove("enable_backup_now");
+        PrefHelper.remove("surprise_message");
+        PrefHelper.remove("shared_collection_name");
+        PrefHelper.remove("shared_this_source");
+        PrefHelper.remove("shared_other_source");
+        PrefHelper.remove("backup_issue_fixed");
+        PrefHelper.remove("is_prune_complete");
+        PrefHelper.remove("replace_work");
     }
 
     private void initTimber() {

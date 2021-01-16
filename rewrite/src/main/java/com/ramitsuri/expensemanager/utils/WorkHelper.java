@@ -15,7 +15,6 @@ import androidx.work.WorkManager;
 
 import com.ramitsuri.expensemanager.MainApplication;
 import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.work.ExpensesBackupWorker;
 import com.ramitsuri.expensemanager.work.RecurringExpensesWorker;
 
 import java.util.Calendar;
@@ -27,43 +26,6 @@ import timber.log.Timber;
 public class WorkHelper {
 
     /**
-     * One Time Backup
-     */
-    public static void enqueueOneTimeBackup() {
-        Timber.i("Enqueue one-time backup invoked");
-
-        String tag = getOneTimeWorkTag();
-        enqueueOneTimeWork(tag, ExpensesBackupWorker.class);
-    }
-
-    public static void cancelOneTimeBackup() {
-        Timber.i("Cancel one time backup invoked");
-
-        String tag = getOneTimeWorkTag();
-        getInstance()
-                .cancelAllWorkByTag(tag);
-    }
-
-    /**
-     * Periodic Backup
-     * Runs once every 2 days around 3AM
-     */
-    public static void enqueuePeriodicBackup(boolean replace) {
-        Timber.i("Enqueue scheduled backup invoked");
-
-        String tag = getPeriodicExpensesBackupTag();
-        enqueuePeriodicWork(tag, ExpensesBackupWorker.class, false, replace);
-    }
-
-    public static void cancelPeriodicBackup() {
-        Timber.i("Cancel scheduled backup invoked");
-
-        String tag = getPeriodicExpensesBackupTag();
-        getInstance()
-                .cancelAllWorkByTag(tag);
-    }
-
-    /**
      * Periodic Recurring Expenses runner
      */
     public static void enqueueRecurringExpensesRunner() {
@@ -73,33 +35,24 @@ public class WorkHelper {
         enqueuePeriodicWork(tag, RecurringExpensesWorker.class, false, false, 24);
     }
 
-    public static void cancelRecurringExpensesRunner() {
-        Timber.i("Cancel recurring expenses runner invoked");
-
-        String tag = getRecurringExpensesRunnerTag();
-        getInstance()
-                .cancelAllWorkByTag(tag);
-    }
-
     public static LiveData<List<WorkInfo>> getWorkStatus(String tag) {
         return getInstance()
                 .getWorkInfosByTagLiveData(tag);
-    }
-
-    public static String getPeriodicExpensesBackupTag() {
-        return Constants.Tag.PERIODIC_EXPENSES_BACKUP;
     }
 
     public static String getRecurringExpensesRunnerTag() {
         return Constants.Tag.RECURRING_EXPENSES_RUNNER;
     }
 
-    public static String getOneTimeWorkTag() {
-        return Constants.Tag.ONE_TIME_BACKUP;
-    }
-
     public static void pruneWork() {
         getInstance().pruneWork();
+    }
+
+    public static void cancelByTag(@NonNull String... tags) {
+        for (String tag : tags) {
+            getInstance()
+                    .cancelAllWorkByTag(tag);
+        }
     }
 
     private static Constraints getConstraints() {
@@ -107,11 +60,6 @@ public class WorkHelper {
                 .setRequiresCharging(false)
                 .setRequiredNetworkType(NetworkType.UNMETERED)
                 .build();
-    }
-
-    private static void enqueueOneTimeWork(String tag,
-            @NonNull Class<? extends ListenableWorker> workerClass) {
-        enqueueOneTimeWork(tag, workerClass, false);
     }
 
     private static void enqueueOneTimeWork(String tag,
@@ -134,13 +82,6 @@ public class WorkHelper {
 
         // Enqueue
         getInstance().enqueueUniqueWork(tag, ExistingWorkPolicy.REPLACE, request);
-    }
-
-    private static void enqueuePeriodicWork(String tag,
-            @NonNull Class<? extends ListenableWorker> workerClass,
-            boolean setConstraints,
-            boolean replace) {
-        enqueuePeriodicWork(tag, workerClass, setConstraints, replace, 48);
     }
 
     private static void enqueuePeriodicWork(String tag,

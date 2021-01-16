@@ -36,6 +36,7 @@ import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.ui.adapter.ListEqualizer;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.AddExpenseViewModel;
@@ -388,7 +389,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private void handleDateClicked() {
         removeFocusAndHideKeyboard();
-        LocalDate localDate = DateHelper.getLocalDate(new Date(mViewModel.getDate()));
+        LocalDate localDate =
+                DateHelper.getLocalDate(new Date(mViewModel.getDate()), AppHelper.getTimeZone());
         int year = DateHelper.getYearFromDate(localDate);
         int month = DateHelper.getMonthFromDate(localDate);
         int day = DateHelper.getDayFromDate(localDate);

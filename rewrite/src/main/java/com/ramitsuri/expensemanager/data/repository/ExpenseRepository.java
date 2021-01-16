@@ -10,7 +10,6 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
 
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.annotation.Nonnull;
 
@@ -33,16 +32,6 @@ public class ExpenseRepository extends BaseRepository {
             @Override
             public void run() {
                 List<Expense> values = mDatabase.expenseDao().getForFilter(filter);
-                mExpenses.postValue(values);
-            }
-        });
-    }
-
-    public void getIncomes() {
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Expense> values = mDatabase.expenseDao().getIncomes();
                 mExpenses.postValue(values);
             }
         });
@@ -147,24 +136,6 @@ public class ExpenseRepository extends BaseRepository {
             @Override
             public void run() {
                 mDatabase.expenseDao().deleteAll();
-            }
-        });
-    }
-
-    public void updateSetAllUnsynced() {
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDatabase.expenseDao().updateSetAllUnsynced();
-            }
-        });
-    }
-
-    public void updateSetUnsynced(final int monthIndex, @Nonnull final TimeZone timeZone) {
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDatabase.expenseDao().updateSetUnsynced(monthIndex, timeZone);
             }
         });
     }

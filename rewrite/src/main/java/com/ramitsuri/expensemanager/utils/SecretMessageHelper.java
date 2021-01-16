@@ -27,13 +27,11 @@ public class SecretMessageHelper {
 
             case SecretMessages.CANCEL_ONE_TIME:
                 Timber.i("Cancel all one time work");
-                WorkHelper.cancelOneTimeBackup();
                 handled = true;
                 break;
 
             case SecretMessages.CANCEL_PERIODIC:
                 Timber.i("Cancel all periodic work");
-                WorkHelper.cancelPeriodicBackup();
                 handled = true;
                 break;
         }

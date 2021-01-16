@@ -8,13 +8,17 @@ import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+
+import javax.annotation.Nonnull;
 
 public class TransformationHelper {
 
-    public static List<ExpenseWrapper> toExpenseWrapperList(List<Expense> input) {
+    public static List<ExpenseWrapper> toExpenseWrapperList(List<Expense> input,
+            @Nonnull TimeZone timeZone) {
         LongSparseArray<List<Expense>> map = new LongSparseArray<>();
         for (Expense expense : input) {
-            long commonDate = DateHelper.toSheetsDate(expense.getDateTime());
+            long commonDate = DateHelper.toSheetsDate(expense.getDateTime(), timeZone);
             List<Expense> expenses = map.get(commonDate);
             if (expenses == null) {
                 expenses = new ArrayList<>();
@@ -22,6 +26,7 @@ public class TransformationHelper {
             expenses.add(expense);
             map.put(commonDate, expenses);
         }
+
         List<ExpenseWrapper> expenseWrappers = new ArrayList<>();
         for (int i = map.size() - 1; i >= 0; i--) {
             long date = map.keyAt(i);

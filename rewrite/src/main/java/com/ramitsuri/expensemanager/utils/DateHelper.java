@@ -79,10 +79,6 @@ public class DateHelper {
         return formatDayOfMonth.format(date);
     }
 
-    public static long toSheetsDate(long date) {
-        return toSheetsDate(date, null);
-    }
-
     public static long toSheetsDate(long date, @Nullable TimeZone timeZone) {
         if (timeZone == null) {
             timeZone = AppHelper.getTimeZone();
@@ -92,10 +88,6 @@ public class DateHelper {
             offset = timeZone.getOffset(date);
         }
         return (date + offset) / MILLI_SECONDS_IN_DAY + SHEETS_DATE_OFFSET;
-    }
-
-    public static long fromSheetsDate(long sheetsDate) {
-        return fromSheetsDate(sheetsDate, null);
     }
 
     public static long fromSheetsDate(long sheetsDate, @Nullable TimeZone timeZone) {
@@ -123,10 +115,6 @@ public class DateHelper {
 
     public static int getDayFromDate(LocalDate localDate) {
         return localDate.getDayOfMonth();
-    }
-
-    public static LocalDate getLocalDate(Date date) {
-        return getLocalDate(date, null);
     }
 
     public static LocalDate getLocalDate(Date date, TimeZone timeZone) {

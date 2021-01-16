@@ -20,9 +20,7 @@ class Filter(
         var paymentMethods: MutableList<String>? = null,
         @RecordType
         var recordType: String? = null,
-        var isIncome: Boolean? = null,
         var isStarred: Boolean? = null,
-        var isSynced: Boolean? = null,
         private var timeZone: TimeZone = AppHelper.getTimeZone()
 ): Parcelable {
     constructor(parcel: Parcel): this() {
@@ -42,19 +40,9 @@ class Filter(
 
         recordType = parcel.readString()
 
-        val income: String? = parcel.readString()
-        if (income != null) {
-            isIncome = income == TRUE
-        }
-
         val starred: String? = parcel.readString()
         if (starred != null) {
             isStarred = starred == TRUE
-        }
-
-        val synced: String? = parcel.readString()
-        if (synced != null) {
-            isSynced = synced == TRUE
         }
 
         timeZone = TimeZone.getTimeZone(ZoneId.of(parcel.readString()))
@@ -66,7 +54,6 @@ class Filter(
 
     fun getDefault(): Filter {
         apply {
-            isIncome = false
             addCurrentMonth()
         }
         return this
@@ -75,11 +62,9 @@ class Filter(
     fun clear(): Filter {
         years = null
         months = null
-        isIncome = null
         categories = null
         paymentMethods = null
         isStarred = null
-        isSynced = null
         recordType = RecordType.MONTHLY
         return this
     }
@@ -149,7 +134,7 @@ class Filter(
         if (periods.size == 1) {
             friendlyString = DateHelper.getMonthAndYear(periods[0].start, timeZone)
         }
-        return if (isSynced != null || isStarred != null ||
+        return if (isStarred != null ||
                 categories != null && categories!!.size > 0 ||
                 paymentMethods != null && paymentMethods!!.size > 0 ||
                 recordType == null || recordType == RecordType.ANNUAL) {
@@ -161,12 +146,6 @@ class Filter(
         val builder = SqlBuilder()
         builder.select("*")
                 .from(Expense.DB.TABLE)
-        // Is income
-        isIncome?.let {
-            builder.where()
-                    .column(Expense.DB.COL_INCOME)
-                    .equal(if (it) 1 else 0)
-        }
         // Date ranges
         val periods = getPeriods()
         periods.let {
@@ -191,12 +170,6 @@ class Filter(
                         .`in`<String>(it)
             }
         }
-        // Synced
-        isSynced?.let {
-            builder.whereOrAnd()
-                    .column(Expense.DB.COL_SYNCED)
-                    .equal(if (it) 1 else 0)
-        }
         // Starred
         isStarred?.let {
             builder.whereOrAnd()
@@ -209,24 +182,6 @@ class Filter(
             builder.whereOrAnd()
                     .column(Expense.DB.COL_RECORD_TYPE)
                     .equal(it)
-        }
-        val query = SimpleSQLiteQuery(builder.toString(), builder.args.toTypedArray())
-        Timber.i("Generated query is: [%s]", query.sql)
-        return query
-    }
-
-    fun toUpdateSyncedQuery(): SimpleSQLiteQuery {
-        val builder = SqlBuilder()
-        builder.update(Expense.DB.TABLE)
-                .setEqualTo(Expense.DB.COL_SYNCED, 0)
-
-        // Date ranges
-        val periods = getPeriods()
-        periods.let {
-            if (it.isNotEmpty()) {
-                builder.whereOrAnd()
-                        .betweenPeriods(Expense.DB.COL_DATE_TIME, it)
-            }
         }
         val query = SimpleSQLiteQuery(builder.toString(), builder.args.toTypedArray())
         Timber.i("Generated query is: [%s]", query.sql)
@@ -268,27 +223,7 @@ class Filter(
             dest.writeString(null)
         }
 
-        isIncome?.let {
-            if (it) {
-                dest.writeString(TRUE)
-            } else {
-                dest.writeString(FALSE)
-            }
-        } ?: run {
-            dest.writeString(null)
-        }
-
         isStarred?.let {
-            if (it) {
-                dest.writeString(TRUE)
-            } else {
-                dest.writeString(FALSE)
-            }
-        } ?: run {
-            dest.writeString(null)
-        }
-
-        isSynced?.let {
             if (it) {
                 dest.writeString(TRUE)
             } else {

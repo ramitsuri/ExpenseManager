@@ -8,10 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ramitsuri.expensemanager.BuildConfig;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.intDefs.AddType;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
@@ -159,15 +157,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 addStatus.setVisibility(View.VISIBLE);
             } else {
                 addStatus.setVisibility(View.GONE);
-            }
-            if (BuildConfig.DEBUG) {
-                if (expense.isSynced()) {
-                    txtAmount.setTextColor(
-                            ContextCompat.getColor(txtAmount.getContext(), R.color.color_teal));
-                } else {
-                    txtAmount.setTextColor(
-                            ContextCompat.getColor(txtAmount.getContext(), R.color.color_red));
-                }
             }
         }
 

@@ -17,16 +17,14 @@ import com.ramitsuri.expensemanager.data.dao.PaymentMethodDao;
 import com.ramitsuri.expensemanager.data.dao.RecurringExpenseInfoDao;
 import com.ramitsuri.expensemanager.entities.Budget;
 import com.ramitsuri.expensemanager.entities.Category;
-import com.ramitsuri.expensemanager.entities.EditedSheet;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.entities.RecurringExpenseInfo;
-import com.ramitsuri.expensemanager.entities.SheetInfo;
 
 @Database(entities = {Category.class, Expense.class, PaymentMethod.class,
-        Log.class, SheetInfo.class, Budget.class, EditedSheet.class, RecurringExpenseInfo.class},
-        version = 11, exportSchema = true)
+        Log.class, Budget.class, RecurringExpenseInfo.class},
+        version = 12, exportSchema = true)
 @TypeConverters({BigDecimalConverter.class, ListConverter.class})
 public abstract class ExpenseManagerDatabase extends RoomDatabase {
 
@@ -50,7 +48,8 @@ public abstract class ExpenseManagerDatabase extends RoomDatabase {
                                     DatabaseMigration.MIGRATION_7_8,
                                     DatabaseMigration.MIGRATION_8_9,
                                     DatabaseMigration.MIGRATION_9_10,
-                                    DatabaseMigration.MIGRATION_10_11)
+                                    DatabaseMigration.MIGRATION_10_11,
+                                    DatabaseMigration.MIGRATION_11_12)
                             .build();
                 }
             }

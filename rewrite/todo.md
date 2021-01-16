@@ -1,5 +1,6 @@
 ## High
 - [ ] Manage Recurring Expense UI
+- [ ] Filters for add type, amount
 - [ ] Disallow saving without category/payment method
 - [ ] Find an alternate backup system
 - [ ] Full migration to Kotlin

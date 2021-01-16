@@ -89,7 +89,6 @@ public class AddExpenseViewModel extends ViewModel {
     public void edit() {
         Expense expense = new Expense(mExpense);
         expense.setId(mExpense.getId());
-        expense.setSynced(false);
         mExpenseRepo.edit(expense);
         saveRecurringExpenseInfo(expense);
         reset(null);

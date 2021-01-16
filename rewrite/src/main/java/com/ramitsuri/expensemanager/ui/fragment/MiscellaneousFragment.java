@@ -72,7 +72,7 @@ public class MiscellaneousFragment extends BaseFragment {
             }
         });
 
-        // Header - Backup and Sync
+        /*// Header - Backup and Sync
         setupHeader(view,
                 R.id.header_backup_sync,
                 R.string.header_title_backup_sync,
@@ -83,7 +83,7 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_backup_info,
                 R.string.miscellaneous_backup_info_title,
                 R.drawable.ic_backup,
-                true);
+                true);*/
 
         // Header - Entities
         setupHeader(view,

@@ -1,3 +1,22 @@
+Cleanup (Remove EditedSheet, SheetInfo, Prefs, Work)
+Expense
+    - Remove isSynced, isIncome, sheetId columns
+    - Remove methods for to and from List
+Database
+    - Drop SheetInfo, EditedSheet, columns from Expense
+ExpenseDao
+    - Modify queries to account for column removal
+Filter
+    - Remove synced, and income filters
+MainApplication
+    - Cancel all works except recurring
+    - Remove legacy prefs
+WorkHelper
+    - Add method to cancel work by tags
+    - Remove unneeded code
+DateHelper
+    - Remove methods that don't take in time zone
+
 Cleanup (Remove spreadsheet, income, Firebase Firestore)
 AddExpense
     - Remove income support
@@ -27,7 +46,6 @@ SecretMessages
     - Remove force month sync, surprise message
 Remove SharedExpenseHelper (Firebase Firestore)
 Remove SheetRequestHelper
-
 
 Abstract backup service
 Add an interface for Expense Backup Service

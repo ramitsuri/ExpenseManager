@@ -31,9 +31,6 @@ public class Constants {
     }
 
     public class Tag {
-        public static final String ONE_TIME_BACKUP = "one_time_expenses_backup";
-        public static final String SCHEDULED_BACKUP_LEGACY = "scheduled_backup";
-        public static final String PERIODIC_EXPENSES_BACKUP = "periodic_expenses_backup";
         public static final String RECURRING_EXPENSES_RUNNER = "recurring_expenses_runner";
     }
 
@@ -57,7 +54,6 @@ public class Constants {
 
     public class Sheets {
         public static final String FLAG = "FLAG";
-        public static final String INCOME = "INCOME";
     }
 
     public class Basic {
