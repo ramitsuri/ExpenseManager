@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ramitsuri.expensemanager.BuildConfig;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.intDefs.AddType;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
@@ -14,14 +17,8 @@ import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
-import com.ramitsuri.expensemanager.utils.SecretMessageHelper;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import timber.log.Timber;
 
@@ -147,11 +144,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 txtDetail3.setText(expense.getStore());
             }
             txtDetail2.setText(expense.getPaymentMethod());
-            if (TextUtils.isEmpty(SecretMessageHelper.getSurpriseMessage())) {
-                txtDescription.setText(expense.getDescription());
-            } else {
-                txtDescription.setText(SecretMessageHelper.getSurpriseMessage());
-            }
+            txtDescription.setText(expense.getDescription());
             txtAmount.setText(CurrencyHelper.formatForDisplay(true, expense.getAmount()));
             txtDate.setText(DateHelper.getFriendlyDate(expense.getDateTime()));
             txtDetail1.setText(expense.getCategory());
@@ -164,15 +157,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 addStatus.setVisibility(View.VISIBLE);
             } else {
                 addStatus.setVisibility(View.GONE);
-            }
-            if (BuildConfig.DEBUG) {
-                if (expense.isSynced()) {
-                    txtAmount.setTextColor(
-                            ContextCompat.getColor(txtAmount.getContext(), R.color.color_teal));
-                } else {
-                    txtAmount.setTextColor(
-                            ContextCompat.getColor(txtAmount.getContext(), R.color.color_red));
-                }
             }
         }
 

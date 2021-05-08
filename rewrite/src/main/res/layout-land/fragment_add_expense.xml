@@ -183,18 +183,6 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/toggle_income"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/button_size_extra_small"
-        android:checked="true"
-        android:text="@string/common_income"
-        android:textColor="?attr/colorControlNormal"
-        android:textSize="@dimen/text_caption"
-        app:layout_constraintBottom_toBottomOf="@id/tabs_categories"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tabs_categories" />
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_header_payment_methods"
         android:layout_width="wrap_content"

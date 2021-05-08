@@ -21,33 +21,33 @@ public class DateHelperTest {
     public void testExpandedDate() {
         long base = 1565818852014L;
         long oneDay = 86400000;
-        assertEquals("Sunday, July 28th", DateHelper.getExpandedDate(base - 17 * oneDay));
-        assertEquals("Monday, July 29th", DateHelper.getExpandedDate(base - 16 * oneDay));
-        assertEquals("Tuesday, July 30th", DateHelper.getExpandedDate(base - 15 * oneDay));
-        assertEquals("Wednesday, July 31st", DateHelper.getExpandedDate(base - 14 * oneDay));
-        assertEquals("Thursday, August 1st", DateHelper.getExpandedDate(base - 13 * oneDay));
-        assertEquals("Friday, August 2nd", DateHelper.getExpandedDate(base - 12 * oneDay));
-        assertEquals("Saturday, August 3rd", DateHelper.getExpandedDate(base - 11 * oneDay));
-        assertEquals("Sunday, August 4th", DateHelper.getExpandedDate(base - 10 * oneDay));
-        assertEquals("Monday, August 5th", DateHelper.getExpandedDate(base - 9 * oneDay));
-        assertEquals("Tuesday, August 6th", DateHelper.getExpandedDate(base - 8 * oneDay));
-        assertEquals("Wednesday, August 7th", DateHelper.getExpandedDate(base - 7 * oneDay));
-        assertEquals("Thursday, August 8th", DateHelper.getExpandedDate(base - 6 * oneDay));
-        assertEquals("Friday, August 9th", DateHelper.getExpandedDate(base - 5 * oneDay));
-        assertEquals("Saturday, August 10th", DateHelper.getExpandedDate(base - 4 * oneDay));
-        assertEquals("Sunday, August 11th", DateHelper.getExpandedDate(base - 3 * oneDay));
-        assertEquals("Monday, August 12th", DateHelper.getExpandedDate(base - 2 * oneDay));
-        assertEquals("Tuesday, August 13th", DateHelper.getExpandedDate(base - oneDay));
-        assertEquals("Wednesday, August 14th", DateHelper.getExpandedDate(base));
-        assertEquals("Thursday, August 15th", DateHelper.getExpandedDate(base + oneDay));
-        assertEquals("Friday, August 16th", DateHelper.getExpandedDate(base + 2 * oneDay));
-        assertEquals("Saturday, August 17th", DateHelper.getExpandedDate(base + 3 * oneDay));
-        assertEquals("Sunday, August 18th", DateHelper.getExpandedDate(base + 4 * oneDay));
-        assertEquals("Monday, August 19th", DateHelper.getExpandedDate(base + 5 * oneDay));
-        assertEquals("Tuesday, August 20th", DateHelper.getExpandedDate(base + 6 * oneDay));
-        assertEquals("Wednesday, August 21st", DateHelper.getExpandedDate(base + 7 * oneDay));
-        assertEquals("Thursday, August 22nd", DateHelper.getExpandedDate(base + 8 * oneDay));
-        assertEquals("Friday, August 23rd", DateHelper.getExpandedDate(base + 9 * oneDay));
+        assertEquals("Sunday, July 28, 2019", DateHelper.getExpandedDate(base - 17 * oneDay));
+        assertEquals("Monday, July 29, 2019", DateHelper.getExpandedDate(base - 16 * oneDay));
+        assertEquals("Tuesday, July 30, 2019", DateHelper.getExpandedDate(base - 15 * oneDay));
+        assertEquals("Wednesday, July 31, 2019", DateHelper.getExpandedDate(base - 14 * oneDay));
+        assertEquals("Thursday, August 01, 2019", DateHelper.getExpandedDate(base - 13 * oneDay));
+        assertEquals("Friday, August 02, 2019", DateHelper.getExpandedDate(base - 12 * oneDay));
+        assertEquals("Saturday, August 03, 2019", DateHelper.getExpandedDate(base - 11 * oneDay));
+        assertEquals("Sunday, August 04, 2019", DateHelper.getExpandedDate(base - 10 * oneDay));
+        assertEquals("Monday, August 05, 2019", DateHelper.getExpandedDate(base - 9 * oneDay));
+        assertEquals("Tuesday, August 06, 2019", DateHelper.getExpandedDate(base - 8 * oneDay));
+        assertEquals("Wednesday, August 07, 2019", DateHelper.getExpandedDate(base - 7 * oneDay));
+        assertEquals("Thursday, August 08, 2019", DateHelper.getExpandedDate(base - 6 * oneDay));
+        assertEquals("Friday, August 09, 2019", DateHelper.getExpandedDate(base - 5 * oneDay));
+        assertEquals("Saturday, August 10, 2019", DateHelper.getExpandedDate(base - 4 * oneDay));
+        assertEquals("Sunday, August 11, 2019", DateHelper.getExpandedDate(base - 3 * oneDay));
+        assertEquals("Monday, August 12, 2019", DateHelper.getExpandedDate(base - 2 * oneDay));
+        assertEquals("Tuesday, August 13, 2019", DateHelper.getExpandedDate(base - oneDay));
+        assertEquals("Wednesday, August 14, 2019", DateHelper.getExpandedDate(base));
+        assertEquals("Thursday, August 15, 2019", DateHelper.getExpandedDate(base + oneDay));
+        assertEquals("Friday, August 16, 2019", DateHelper.getExpandedDate(base + 2 * oneDay));
+        assertEquals("Saturday, August 17, 2019", DateHelper.getExpandedDate(base + 3 * oneDay));
+        assertEquals("Sunday, August 18, 2019", DateHelper.getExpandedDate(base + 4 * oneDay));
+        assertEquals("Monday, August 19, 2019", DateHelper.getExpandedDate(base + 5 * oneDay));
+        assertEquals("Tuesday, August 20, 2019", DateHelper.getExpandedDate(base + 6 * oneDay));
+        assertEquals("Wednesday, August 21, 2019", DateHelper.getExpandedDate(base + 7 * oneDay));
+        assertEquals("Thursday, August 22, 2019", DateHelper.getExpandedDate(base + 8 * oneDay));
+        assertEquals("Friday, August 23, 2019", DateHelper.getExpandedDate(base + 9 * oneDay));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DateHelperTest {
         calendar1.set(Calendar.MILLISECOND, 0);
 
         for (int i = 1; i <= 3650; i++) {
-            long longDate = DateHelper.toSheetsDate(calendar1.getTime().getTime());
+            long longDate = DateHelper.toSheetsDate(calendar1.getTime().getTime(), timeZone);
             assertEquals(startSheetDate, (int)longDate);
             System.out.println(calendar1.getTime() + " " + longDate);
             calendar1.add(Calendar.DAY_OF_MONTH, 1);
@@ -159,10 +159,11 @@ public class DateHelperTest {
         calendar1.set(Calendar.MILLISECOND, 0);
 
         for (int i = 1; i <= 730; i++) {
-            assertTrue(calendar1.getTime().getTime() - DateHelper.fromSheetsDate(startSheetDate) <=
+            assertTrue(calendar1.getTime().getTime() -
+                    DateHelper.fromSheetsDate(startSheetDate, timeZone) <=
                     86400000);
             System.out.println(startSheetDate + " " +
-                    new Date(DateHelper.fromSheetsDate(startSheetDate)));
+                    new Date(DateHelper.fromSheetsDate(startSheetDate, timeZone)));
             calendar1.add(Calendar.DAY_OF_MONTH, 1);
             startSheetDate = startSheetDate + 1;
         }
@@ -181,7 +182,7 @@ public class DateHelperTest {
         calendar1.set(Calendar.MILLISECOND, 0);
 
         for (int i = 1; i <= 3650; i++) {
-            LocalDate localDate = DateHelper.getLocalDate(calendar1.getTime());
+            LocalDate localDate = DateHelper.getLocalDate(calendar1.getTime(), timeZone);
             assertEquals(calendar1.get(Calendar.YEAR), DateHelper.getYearFromDate(localDate));
             calendar1.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -200,7 +201,7 @@ public class DateHelperTest {
         calendar1.set(Calendar.MILLISECOND, 0);
 
         for (int i = 1; i <= 3650; i++) {
-            LocalDate localDate = DateHelper.getLocalDate(calendar1.getTime());
+            LocalDate localDate = DateHelper.getLocalDate(calendar1.getTime(), timeZone);
             assertEquals(calendar1.get(Calendar.MONTH), DateHelper.getMonthFromDate(localDate));
             calendar1.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -219,7 +220,7 @@ public class DateHelperTest {
         calendar1.set(Calendar.MILLISECOND, 0);
 
         for (int i = 1; i <= 3650; i++) {
-            LocalDate localDate = DateHelper.getLocalDate(calendar1.getTime());
+            LocalDate localDate = DateHelper.getLocalDate(calendar1.getTime(), timeZone);
             assertEquals(calendar1.get(Calendar.DAY_OF_MONTH),
                     DateHelper.getDayFromDate(localDate));
             calendar1.add(Calendar.DAY_OF_MONTH, 1);

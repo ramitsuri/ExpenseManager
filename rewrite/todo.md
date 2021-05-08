@@ -1,5 +1,14 @@
+## Final
+- [x] Add export expenses to file option
+- [x] Add more readable date string to expense for backup
+    Not going to do it. Seems like too much work for little benefit
+- [x] Decide if want to backup separately per year or all together
+    Added backup per year but same file
+- [x] Expense export error handling
+
 ## High
 - [ ] Manage Recurring Expense UI
+- [ ] Filters for add type, amount
 - [ ] Disallow saving without category/payment method
 - [ ] Find an alternate backup system
 - [ ] Full migration to Kotlin

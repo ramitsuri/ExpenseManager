@@ -7,6 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
@@ -19,13 +26,6 @@ import com.ramitsuri.expensemanager.viewModel.ViewModelFactory;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import timber.log.Timber;
 
@@ -41,7 +41,7 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
     private FilterOptionsViewModel mViewModel;
 
     private FilterAdapter mYearAdapter, mMonthAdapter, mPaymentsAdapter, mCategoriesAdapter,
-            mIncomeAdapter, mFlagAdapter, mRecordTypeAdapter;
+            mFlagAdapter, mRecordTypeAdapter;
 
     @Nullable
     private FilterOptionsFragmentCallback mCallback;
@@ -107,9 +107,6 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         if (mCategoriesAdapter != null) {
             mCategoriesAdapter.setValues(mViewModel.getCategories());
         }
-        if (mIncomeAdapter != null) {
-            mIncomeAdapter.setValues(mViewModel.getIncomes());
-        }
         if (mFlagAdapter != null) {
             mFlagAdapter.setValues(mViewModel.getFlagStatuses());
         }
@@ -125,7 +122,6 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
         setupCategories(view);
         setupPaymentMethods(view);
         setupFlagStatus(view);
-        setupIncomeStatus(view);
         setupRecordType(view);
     }
 
@@ -303,44 +299,6 @@ public class FilterOptionsFragment extends BaseBottomSheetFragment {
                         }
                     }
                 });
-    }
-
-    private void setupIncomeStatus(@NonNull View view) {
-        if (!mViewModel.isIncomeAvailable()) {
-            return;
-        }
-        // Income
-        mIncomeAdapter = new FilterAdapter();
-        mIncomeAdapter.setValues(mViewModel.getIncomes());
-        mIncomeAdapter.setCallback(new FilterAdapter.Callback() {
-            @Override
-            public void onSelected(FilterWrapper value) {
-                if (value == null || mIncomeAdapter.getValues() == null) {
-                    return;
-                }
-                mViewModel.onAddIncome(mIncomeAdapter.getValues(), value);
-                mIncomeAdapter.setValues(mViewModel.getIncomes());
-                apply(mViewModel.get());
-            }
-
-            @Override
-            public void onUnselected(FilterWrapper value) {
-                if (value == null || mIncomeAdapter.getValues() == null) {
-                    return;
-                }
-                mViewModel.onRemoveIncome(mIncomeAdapter.getValues(), value);
-                mIncomeAdapter.setValues(mViewModel.getIncomes());
-                apply(mViewModel.get());
-            }
-        });
-
-        final RecyclerView list = view.findViewById(R.id.list_income_status);
-        list.setLayoutManager(
-                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        list.setHasFixedSize(true);
-        list.setAdapter(mIncomeAdapter);
-        list.setVisibility(View.VISIBLE);
-        view.findViewById(R.id.text_header_income_status).setVisibility(View.VISIBLE);
     }
 
     private void setupFlagStatus(@NonNull View view) {

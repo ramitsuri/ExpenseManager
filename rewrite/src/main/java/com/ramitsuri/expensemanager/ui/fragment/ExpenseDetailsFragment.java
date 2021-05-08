@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
@@ -18,9 +21,6 @@ import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 
 import javax.annotation.Nonnull;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class ExpenseDetailsFragment extends BaseBottomSheetFragment {
 
@@ -38,8 +38,6 @@ public class ExpenseDetailsFragment extends BaseBottomSheetFragment {
         void onDeleteRequested(@NonNull Expense expense);
 
         void onDuplicateRequested(@Nonnull Expense expense);
-
-        void onPushToRemoteSharedRequested(@Nonnull Expense expense);
     }
 
     public void setCallback(@NonNull DetailFragmentCallback callback) {
@@ -150,20 +148,5 @@ public class ExpenseDetailsFragment extends BaseBottomSheetFragment {
                 }
             }
         });
-
-        // Shared push to remote button
-        Button pushToRemoteButton = view.findViewById(R.id.btn_add_shared);
-        if (enableShared) {
-            pushToRemoteButton.setVisibility(View.VISIBLE);
-            pushToRemoteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dismiss();
-                    if (mCallback != null) {
-                        mCallback.onPushToRemoteSharedRequested(expense);
-                    }
-                }
-            });
-        }
     }
 }

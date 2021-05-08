@@ -63,21 +63,6 @@ class RecurringExpenseManagerTest {
     }
 
     @Test
-    fun testGetExpenses_syncedShouldBeFalse() {
-        val currentTime = Instant.now().toEpochMilli()
-        val expense = Expense()
-        expense.isSynced = true
-
-        val recurringExpenseInfo = RecurringExpenseInfo()
-
-        val newExpenses = manager.getExpenses(expense, recurringExpenseInfo, currentTime, zoneId)
-
-        for (newExpense in newExpenses) {
-            assertFalse(newExpense.isSynced)
-        }
-    }
-
-    @Test
     fun testGetExpenses_addTypeShouldBeRecur() {
         val currentTime = Instant.now().toEpochMilli()
         val expense = Expense()

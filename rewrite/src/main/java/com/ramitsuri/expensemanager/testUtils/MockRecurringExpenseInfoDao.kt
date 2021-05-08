@@ -28,7 +28,7 @@ class MockRecurringExpenseInfoDao: RecurringExpenseInfoDao() {
         TODO("Not yet implemented")
     }
 
-    override fun read(): List<RecurringExpenseInfo> {
+    override fun getAll(): List<RecurringExpenseInfo> {
         return values
     }
 

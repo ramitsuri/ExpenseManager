@@ -1,6 +1,5 @@
 package com.ramitsuri.expensemanager.data.dummy;
 
-import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.entities.Log;
 
 import java.util.ArrayList;
@@ -15,29 +14,29 @@ public class Logs {
 
         Log log = new Log();
         log.setTime(BASE_DATE_TIME - 10 * ONE_DAY);
-        log.setType(Constants.Tag.ONE_TIME_BACKUP);
-        log.setResult(Constants.LogResult.SUCCESS);
+        log.setType("Type1");
+        log.setResult("SUCCESS");
         log.setMessage(null);
         log.setIsAcknowledged(false);
 
         log = new Log();
         log.setTime(BASE_DATE_TIME - 5 * ONE_DAY);
-        log.setType(Constants.Tag.ONE_TIME_BACKUP);
-        log.setResult(Constants.LogResult.SUCCESS);
+        log.setType("Type2");
+        log.setResult("SUCCESS");
         log.setMessage(null);
         log.setIsAcknowledged(true);
 
         log = new Log();
         log.setTime(BASE_DATE_TIME - 6 * ONE_DAY);
-        log.setType(Constants.Tag.SCHEDULED_BACKUP_LEGACY);
-        log.setResult(Constants.LogResult.SUCCESS);
+        log.setType("Type1");
+        log.setResult("SUCCESS");
         log.setMessage(null);
         log.setIsAcknowledged(false);
 
         log = new Log();
         log.setTime(BASE_DATE_TIME + 10 * ONE_DAY);
-        log.setType(Constants.Tag.SCHEDULED_BACKUP_LEGACY);
-        log.setResult(Constants.LogResult.FAILURE);
+        log.setType("Type3");
+        log.setResult("FAILURE");
         log.setMessage(null);
         log.setIsAcknowledged(false);
 

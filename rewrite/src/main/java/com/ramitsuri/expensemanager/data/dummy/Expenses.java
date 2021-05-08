@@ -71,8 +71,6 @@ public class Expenses {
         expense.setDescription(descriptions()[0]);
         expense.setStore(stores()[0]);
         expense.setStarred(true);
-        expense.setSynced(false);
-        expense.setSheetId(1);
         expense.setRecordType(RecordType.ANNUAL);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -85,8 +83,6 @@ public class Expenses {
         expense.setDescription(descriptions()[4]);
         expense.setStore(stores()[5]);
         expense.setStarred(false);
-        expense.setSynced(true);
-        expense.setSheetId(2);
         expense.setRecordType(RecordType.MONTHLY);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -99,8 +95,6 @@ public class Expenses {
         expense.setDescription(descriptions()[7]);
         expense.setStore(stores()[9]);
         expense.setStarred(true);
-        expense.setSynced(false);
-        expense.setSheetId(3);
         expense.setRecordType(RecordType.ANNUAL);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -113,8 +107,6 @@ public class Expenses {
         expense.setDescription(descriptions()[12]);
         expense.setStore(stores()[13]);
         expense.setStarred(false);
-        expense.setSynced(false);
-        expense.setSheetId(1);
         expense.setRecordType(RecordType.MONTHLY);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -127,8 +119,6 @@ public class Expenses {
         expense.setDescription(descriptions()[10]);
         expense.setStore(stores()[7]);
         expense.setStarred(false);
-        expense.setSynced(false);
-        expense.setSheetId(2);
         expense.setRecordType(RecordType.ANNUAL);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -141,8 +131,6 @@ public class Expenses {
         expense.setDescription(descriptions()[4]);
         expense.setStore(stores()[3]);
         expense.setStarred(true);
-        expense.setSynced(true);
-        expense.setSheetId(3);
         expense.setRecordType(RecordType.MONTHLY);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -155,8 +143,6 @@ public class Expenses {
         expense.setDescription(descriptions()[10]);
         expense.setStore(stores()[10]);
         expense.setStarred(false);
-        expense.setSynced(false);
-        expense.setSheetId(1);
         expense.setRecordType(RecordType.ANNUAL);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -169,8 +155,6 @@ public class Expenses {
         expense.setDescription(descriptions()[2]);
         expense.setStore(stores()[5]);
         expense.setStarred(false);
-        expense.setSynced(false);
-        expense.setSheetId(1);
         expense.setRecordType(RecordType.MONTHLY);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -183,8 +167,6 @@ public class Expenses {
         expense.setDescription(descriptions()[3]);
         expense.setStore(stores()[1]);
         expense.setStarred(false);
-        expense.setSynced(true);
-        expense.setSheetId(2);
         expense.setRecordType(RecordType.ANNUAL);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -197,8 +179,6 @@ public class Expenses {
         expense.setDescription(descriptions()[9]);
         expense.setStore(stores()[2]);
         expense.setStarred(true);
-        expense.setSynced(false);
-        expense.setSheetId(3);
         expense.setRecordType(RecordType.MONTHLY);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -211,8 +191,6 @@ public class Expenses {
         expense.setDescription(descriptions()[10]);
         expense.setStore(stores()[13]);
         expense.setStarred(false);
-        expense.setSynced(false);
-        expense.setSheetId(2);
         expense.setRecordType(RecordType.ANNUAL);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -225,8 +203,6 @@ public class Expenses {
         expense.setDescription(descriptions()[7]);
         expense.setStore(stores()[4]);
         expense.setStarred(false);
-        expense.setSynced(false);
-        expense.setSheetId(2);
         expense.setRecordType(RecordType.MONTHLY);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -239,8 +215,6 @@ public class Expenses {
         expense.setDescription(descriptions()[7]);
         expense.setStore(stores()[4]);
         expense.setStarred(false);
-        expense.setSynced(true);
-        expense.setSheetId(1);
         expense.setRecordType(RecordType.ANNUAL);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -253,8 +227,6 @@ public class Expenses {
         expense.setDescription(descriptions()[9]);
         expense.setStore(stores()[2]);
         expense.setStarred(true);
-        expense.setSynced(true);
-        expense.setSheetId(-1);
         expense.setRecordType(RecordType.MONTHLY);
         expense.setIdentifier("");
         expenses.add(expense);
@@ -267,9 +239,6 @@ public class Expenses {
         expense.setDescription(descriptions()[9]);
         expense.setStore(stores()[2]);
         expense.setStarred(true);
-        expense.setSynced(true);
-        expense.setSheetId(-1);
-        expense.setIncome(true);
         expense.setRecordType(RecordType.ANNUAL);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -282,9 +251,6 @@ public class Expenses {
         expense.setDescription(descriptions()[9]);
         expense.setStore(stores()[2]);
         expense.setStarred(true);
-        expense.setSynced(true);
-        expense.setSheetId(-1);
-        expense.setIncome(true);
         expense.setRecordType(RecordType.MONTHLY);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -297,9 +263,6 @@ public class Expenses {
         expense.setDescription(descriptions()[9]);
         expense.setStore(stores()[2]);
         expense.setStarred(true);
-        expense.setSynced(true);
-        expense.setSheetId(-1);
-        expense.setIncome(true);
         expense.setRecordType(RecordType.ANNUAL);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -312,9 +275,6 @@ public class Expenses {
         expense.setDescription(descriptions()[9]);
         expense.setStore(stores()[2]);
         expense.setStarred(true);
-        expense.setSynced(true);
-        expense.setSheetId(-1);
-        expense.setIncome(true);
         expense.setRecordType(RecordType.MONTHLY);
         expense.generateIdentifier();
         expenses.add(expense);
@@ -323,13 +283,7 @@ public class Expenses {
     }
 
     public static List<Expense> getExpenses() {
-        List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : all()) {
-            if (!expense.isIncome()) {
-                expenses.add(expense);
-            }
-        }
-        return expenses;
+        return all();
     }
 
     public static List<Expense> getAllStarred() {
@@ -342,35 +296,6 @@ public class Expenses {
         return expenses;
     }
 
-    public static List<Expense> getAllUnsynced() {
-        List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : all()) {
-            if (!expense.isSynced()) {
-                expenses.add(expense);
-            }
-        }
-        return expenses;
-    }
-
-    public static List<Expense> getAllsynced() {
-        List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : all()) {
-            if (expense.isSynced()) {
-                expenses.add(expense);
-            }
-        }
-        return expenses;
-    }
-
-    public static List<Expense> getAllForBackup(List<Integer> monthIndices) {
-        Filter filter = new Filter(TIME_ZONE);
-        filter.addYear(2020);
-        for (Integer index : monthIndices) {
-            filter.addMonth(index);
-        }
-        return getForFilter(filter);
-    }
-
     public static List<Expense> getAllForDateRange(long fromDateTime, long toDateTime) {
         List<Expense> expenses = new ArrayList<>();
         for (Expense expense : all()) {
@@ -381,33 +306,10 @@ public class Expenses {
         return expenses;
     }
 
-    public static List<Expense> getIncomes() {
-        List<Expense> expenses = new ArrayList<>();
-        for (Expense expense : all()) {
-            if (expense.isIncome()) {
-                expenses.add(expense);
-            }
-        }
-        return expenses;
-    }
-
     public static List<Expense> getForFilter(Filter filter) {
-        // Income
-        List<Expense> afterIncomeFilter = new ArrayList<>();
-        for (Expense expense : all()) {
-            if (filter.isIncome() != null) {
-                if (filter.isIncome() && expense.isIncome()) {
-                    afterIncomeFilter.add(expense);
-                } else if (!filter.isIncome() && !expense.isIncome()) {
-                    afterIncomeFilter.add(expense);
-                }
-            } else {
-                afterIncomeFilter.add(expense);
-            }
-        }
         // Date range
         List<Expense> afterDateFilter = new ArrayList<>();
-        for (Expense expense : afterIncomeFilter) {
+        for (Expense expense : all()) {
             List<Period> periods = filter.getPeriods();
             if (periods != null && periods.size() != 0) {
                 for (Period dateTime : periods) {
@@ -445,22 +347,9 @@ public class Expenses {
                 afterPaymentsFilter.add(expense);
             }
         }
-        // Synced
-        List<Expense> afterSyncedFilter = new ArrayList<>();
-        for (Expense expense : afterPaymentsFilter) {
-            if (filter.isSynced() != null) {
-                if (filter.isSynced() && expense.isSynced()) {
-                    afterSyncedFilter.add(expense);
-                } else if (!filter.isSynced() && !expense.isSynced()) {
-                    afterSyncedFilter.add(expense);
-                }
-            } else {
-                afterSyncedFilter.add(expense);
-            }
-        }
         // Starred
         List<Expense> afterStarredFilter = new ArrayList<>();
-        for (Expense expense : afterSyncedFilter) {
+        for (Expense expense : afterPaymentsFilter) {
             if (filter.isStarred() != null) {
                 if (filter.isStarred() && expense.isStarred()) {
                     afterStarredFilter.add(expense);

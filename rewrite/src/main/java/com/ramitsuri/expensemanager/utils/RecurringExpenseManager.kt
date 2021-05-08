@@ -57,7 +57,6 @@ class RecurringExpenseManager(private val expenseDao: ExpenseDao,
         while (canRecur(recurringInfo, currentTimeInMillis, zoneId)) {
             val newExpense = Expense(expense)
             newExpense.generateIdentifier()
-            newExpense.isSynced = false
             newExpense.addType = AddType.RECUR
 
             // DateTime held in the Expense that's being used to recreate the recurring expense
@@ -96,7 +95,7 @@ class RecurringExpenseManager(private val expenseDao: ExpenseDao,
      */
     @WorkerThread
     fun process(timeZoneId: ZoneId, currentTimeInMillis: Long): Int {
-        val recurringExpenses = recurringDao.read()
+        val recurringExpenses = recurringDao.getAll()
         val newExpenses = mutableListOf<Expense>()
         val updatedRecurringExpenses = mutableListOf<RecurringExpenseInfo>()
         for (recurringExpense in recurringExpenses) {

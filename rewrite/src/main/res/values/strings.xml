@@ -10,7 +10,6 @@
     <string name="hello_expenses_fragment">Hello Expenses fragment</string>
     <string name="common_sync_now">Backup now</string>
     <string name="common_sync">Sync entities</string>
-    <string name="common_sync_expenses">Sync expenses</string>
     <string name="common_edit">Edit</string>
     <string name="common_delete">Delete</string>
     <string name="common_duplicate">Clone</string>
@@ -47,7 +46,6 @@
     <string name="common_new_tab">New</string>
     <string name="common_all_tab">History</string>
     <string name="common_extra_tab">Setup</string>
-    <string name="common_income">Income</string>
     <string name="common_clear">(Clear)</string>
     <string name="common_monthly">Monthly</string>
     <string name="common_annual">Annual</string>
@@ -65,8 +63,6 @@
     <string name="expenses_empty_message">No expenses!</string>
     <string name="expenses_empty_help_message">tap the ADD EXPENSE button to add a new expense</string>
     <string name="expenses_duplicate_success">Expense duplicated</string>
-    <string name="expenses_not_synced">Not synced</string>
-    <string name="expenses_filter_incomes">Incomes</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -151,6 +147,7 @@
 
     <!-- All Expenses -->
     <string name="all_expenses_filter">Filter</string>
+    <string name="all_expenses_export">Export</string>
     <string name="all_expenses_modify_filter">Modify Filter</string>
     <string name="all_expenses_go_to_setup">Go To Setup</string>
     <string name="all_expenses_empty_message">No expenses!\n%1s</string>
@@ -197,7 +194,6 @@
     <string name="spreadsheet_title_format">Expenses %1d</string>
 
     <!-- Filters -->
-    <string name="filter_options_show_income">Show income</string>
     <string name="filter_options_show_flagged">Show flagged</string>
     <string name="filter_options_flag_header">Flag status</string>
     <string name="filter_options_record_type_header">Type</string>
@@ -205,13 +201,18 @@
     <string name="filter_options_flag_not_flagged">Not flagged</string>
     <string name="filter_options_record_monthly">Monthly</string>
     <string name="filter_options_record_annual">Annual</string>
-    <string name="filter_options_income_header">Income</string>
-    <string name="filter_options_income_incomes">Incomes</string>
-    <string name="filter_options_income_expenses">Expenses</string>
     <string name="filter_options_clear_filter">Clear filter</string>
 
     <!-- Shared -->
     <string name="shared_expense_temp">S</string>
     <string name="title_recurring">Recurring</string>
+
+    <!-- EOL -->
+    <string name="eol_dialog_title">End of life</string>
+    <string name="eol_dialog_message">This app is no longer being maintained.
+        \n\nYou can use the EXPORT button to export your data to a directory in your device as a
+        JSON file.
+    </string>
+    <string name="eol_dialog_positive">OK</string>
 
 </resources>

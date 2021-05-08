@@ -17,7 +17,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
-public class BaseDatabaseTest {
+public abstract class BaseDatabaseTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 

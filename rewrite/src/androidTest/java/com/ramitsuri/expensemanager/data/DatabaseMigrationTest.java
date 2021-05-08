@@ -282,4 +282,44 @@ public class DatabaseMigrationTest {
             Assert.assertNotNull(e);
         }
     }
+
+    @Test
+    public void migrate11To12() throws IOException {
+        int versionFrom = 11;
+        int versionTo = 12;
+        Migration migration = DatabaseMigration.MIGRATION_11_12;
+
+        // Open database with version "From"
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, versionFrom);
+
+        // Perform queries using SQL queries.
+        // DAO classes cannot be used because they expect the latest schema.
+        db.execSQL("INSERT INTO SheetInfo(sheet_name, sheet_id) VALUES('name', 4)");
+        db.execSQL("INSERT INTO EditedSheet(sheet_id) VALUES(4)");
+
+        // Prepare for the next version.
+        db.close();
+
+        // Re-open the database with version "To" and provide
+        // MIGRATION_<From>_<To> as the migration process.
+        db = helper.runMigrationsAndValidate(TEST_DB, versionTo, true, migration);
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+        try {
+            db.execSQL("INSERT INTO SheetInfo(sheet_name, sheet_id) VALUES('name', 4)");
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+        }
+        try {
+            db.execSQL("INSERT INTO EditedSheet(sheet_id) VALUES(4)");
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+        }
+        try {
+            db.execSQL("SELECT sheet_id, is_income, is_synced FROM Expense");
+        } catch (Exception e) {
+            Assert.assertNotNull(e);
+        }
+    }
 }

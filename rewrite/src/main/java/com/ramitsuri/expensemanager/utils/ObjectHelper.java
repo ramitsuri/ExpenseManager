@@ -2,14 +2,12 @@ package com.ramitsuri.expensemanager.utils;
 
 import android.util.SparseArray;
 
-import com.ramitsuri.expensemanager.entities.SheetInfo;
 import com.ramitsuri.expensemanager.ui.adapter.ListEqualizer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class ObjectHelper {
     public static boolean contains(@Nonnull List<String> values, @Nonnull String value) {
@@ -36,42 +34,6 @@ public class ObjectHelper {
             }
         }
         return index;
-    }
-
-    public static boolean isSheetInfosValid(@Nonnull List<SheetInfo> sheetInfos,
-            @Nonnull List<String> months) {
-        if (sheetInfos.size() == 0 || sheetInfos.size() < months.size()) {
-            return false;
-        }
-
-        boolean valid = false;
-        for (String month : months) {
-            for (SheetInfo sheetInfo : sheetInfos) {
-                if (sheetInfo.getSheetName().equalsIgnoreCase(month)) {
-                    valid = true;
-                    break;
-                }
-            }
-            if (!valid) {
-                return false;
-            }
-        }
-        return valid;
-    }
-
-    @Nullable
-    public static SheetInfo getSheetInfo(@Nonnull List<SheetInfo> sheetInfos,
-            @Nonnull String sheetName) {
-        if (sheetInfos.size() == 0) {
-            return null;
-        }
-
-        for (SheetInfo sheetInfo : sheetInfos) {
-            if (sheetInfo.getSheetName().equalsIgnoreCase(sheetName)) {
-                return sheetInfo;
-            }
-        }
-        return null;
     }
 
     /**

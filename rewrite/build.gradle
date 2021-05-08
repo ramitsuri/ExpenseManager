@@ -11,8 +11,8 @@ android {
         applicationId "com.ramitsuri.expensemanager.re"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 53
-        versionName "6.2.0"
+        versionCode 54
+        versionName "6.3.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -31,7 +31,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
@@ -125,9 +126,6 @@ dependencies {
     testImplementation "junit:junit:$test_junit_version"
     testImplementation "androidx.test:core:$test_core_version"
     testImplementation "org.mockito:mockito-core:$test_mockito_core_version"
-
-    // SheetsCore
-    implementation "com.ramitsuri:sheetscore:$sheets_core_version"
 
     // Due to error - Duplicate class com.google.common.util.concurrent.ListenableFuture found in
     // modules guava-jdk5-17.0.jar (com.google.guava:guava-jdk5:17.0) and listenablefuture-1.0.jar

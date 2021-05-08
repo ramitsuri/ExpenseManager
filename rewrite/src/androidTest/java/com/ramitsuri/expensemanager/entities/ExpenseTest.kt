@@ -9,7 +9,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.math.BigDecimal
 
-
 @RunWith(AndroidJUnit4ClassRunner::class)
 class ExpenseTest {
     @Test
@@ -21,10 +20,7 @@ class ExpenseTest {
                 category = "Shopping",
                 description = "Grocery",
                 store = "Publix",
-                isSynced = true,
                 isStarred = true,
-                sheetId = 1,
-                isIncome = true,
                 recordType = RecordType.MONTHLY,
                 identifier = "1",
                 addType = AddType.MANUAL
@@ -42,9 +38,6 @@ class ExpenseTest {
         assertEquals(expense.description, fromParcel.description)
         assertEquals(expense.store, fromParcel.store)
         assertEquals(expense.isStarred, fromParcel.isStarred)
-        assertEquals(expense.isSynced, fromParcel.isSynced)
-        assertEquals(expense.sheetId, fromParcel.sheetId)
-        assertEquals(expense.isIncome, fromParcel.isIncome)
         assertEquals(expense.recordType, fromParcel.recordType)
         assertEquals(expense.identifier, fromParcel.identifier)
         assertEquals(expense.addType, fromParcel.addType)

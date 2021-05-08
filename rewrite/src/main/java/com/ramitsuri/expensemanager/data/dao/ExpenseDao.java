@@ -1,17 +1,5 @@
 package com.ramitsuri.expensemanager.data.dao;
 
-import com.ramitsuri.expensemanager.constants.intDefs.AddType;
-import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
-import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.Filter;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.TimeZone;
-
-import javax.annotation.Nonnull;
-
-import androidx.annotation.NonNull;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -20,22 +8,29 @@ import androidx.room.Transaction;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
+import com.ramitsuri.expensemanager.constants.intDefs.AddType;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Filter;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 @Dao
 public abstract class ExpenseDao {
     /*
      * SELECT
      */
-    @Query("SELECT * FROM expense WHERE is_income = 0 ORDER BY date_time DESC")
-    public abstract List<Expense> getExpenses();
+    @Query("SELECT * FROM expense ORDER BY date_time DESC")
+    public abstract List<Expense> getAll();
 
-    @Query("SELECT * FROM expense WHERE date_time BETWEEN :fromDateTime AND :toDateTime AND is_income = 0 ORDER BY date_time DESC")
+    @Query("SELECT * FROM expense WHERE date_time BETWEEN :fromDateTime AND :toDateTime ORDER BY date_time DESC")
     public abstract List<Expense> getExpensesForDateRange(long fromDateTime, long toDateTime);
 
     @Query("SELECT * FROM expense WHERE is_starred = 1")
     public abstract List<Expense> getAllStarred();
-
-    @Query("SELECT * FROM expense WHERE is_synced = 0")
-    public abstract List<Expense> getAllUnsynced();
 
     @RawQuery
     public abstract List<Expense> getForQuery(SupportSQLiteQuery query);
@@ -43,20 +38,16 @@ public abstract class ExpenseDao {
     @Query("SELECT * FROM expense WHERE mId = :id")
     public abstract Expense getExpense(long id);
 
-
     @Query("SELECT * FROM expense WHERE identifier = :identifier")
     public abstract Expense getExpense(String identifier);
-
-    @Query("SELECT * FROM expense WHERE is_income = 1 ORDER BY date_time DESC")
-    public abstract List<Expense> getIncomes();
 
     @Query("SELECT DISTINCT store FROM expense WHERE store LIKE :startsWith || '%' ORDER BY date_time DESC")
     public abstract List<String> getStores(String startsWith);
 
-    @Query("SELECT DISTINCT category FROM expense WHERE is_income = 0")
+    @Query("SELECT DISTINCT category FROM expense")
     public abstract List<String> getCategories();
 
-    @Query("SELECT DISTINCT payment_method FROM expense WHERE is_income = 0")
+    @Query("SELECT DISTINCT payment_method FROM expense")
     public abstract List<String> getPaymentMethods();
 
     @Query("SELECT * FROM expense WHERE store LIKE :store ORDER BY date_time DESC LIMIT 1")
@@ -104,12 +95,6 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET is_starred =:isStarred WHERE mId = :id")
     abstract void updateIsStarred(int id, boolean isStarred);
 
-    @Query("UPDATE expense SET is_synced =:isSynced WHERE mId = :id")
-    abstract void updateIsSynced(int id, boolean isSynced);
-
-    @Query("UPDATE expense SET is_income =:isIncome WHERE mId = :id")
-    abstract void updateIsIncome(int id, boolean isIncome);
-
     @Query("UPDATE expense SET record_type =:recordType WHERE mId = :id")
     abstract void updateRecordType(int id, @RecordType String recordType);
 
@@ -119,20 +104,11 @@ public abstract class ExpenseDao {
     @Query("UPDATE expense SET add_type =:addType WHERE mId = :id")
     abstract void updateAddType(int id, @AddType String addType);
 
-    @Query("UPDATE expense SET is_synced = 1 WHERE is_synced = 0")
-    public abstract void updateUnsynced();
-
-    @Query("UPDATE expense SET is_synced = 0")
-    public abstract void updateSetAllUnsynced();
-
     @Query("UPDATE expense SET is_starred = 1 WHERE mId = :id")
     public abstract void setStarred(int id);
 
     @Query("UPDATE expense SET is_starred = 0 WHERE mId = :id")
     public abstract void setUnstarred(int id);
-
-    @RawQuery
-    public abstract boolean updateSetUnsyncedForQuery(SupportSQLiteQuery query);
 
     /*
      * DELETE
@@ -143,9 +119,6 @@ public abstract class ExpenseDao {
     @Query("DELETE FROM expense")
     public abstract void deleteAll();
 
-    @Query("DELETE FROM expense WHERE is_synced = 1")
-    public abstract void deleteSynced();
-
     /*
      * TRANSACTION
      */
@@ -153,23 +126,6 @@ public abstract class ExpenseDao {
     public Expense insertAndGetExpense(Expense expense) {
         long id = insert(expense);
         return getExpense(id);
-    }
-
-    /**
-     * @deprecated This method will be removed once backup service is migrated to a non Google Sheet
-     * service.
-     */
-    @Deprecated
-    @Transaction
-    public List<Expense> getAllForBackup(@Nonnull List<Integer> months, TimeZone timeZone) {
-        Filter filter = new Filter(timeZone);
-        for (Integer index : months) {
-            filter.addMonth(index);
-        }
-        // SELECT * FROM expense WHERE is_synced = 0 OR (date_time BETWEEN ? AND ?) OR
-        // (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?)
-        SimpleSQLiteQuery query = filter.toQuery();
-        return getForQuery(query);
     }
 
     @Transaction
@@ -188,23 +144,9 @@ public abstract class ExpenseDao {
         updateDescription(expense.getId(), expense.getDescription());
         updateStore(expense.getId(), expense.getStore());
         updateIsStarred(expense.getId(), expense.isStarred());
-        updateIsSynced(expense.getId(), expense.isSynced());
-        updateIsIncome(expense.getId(), expense.isIncome());
         updateRecordType(expense.getId(), expense.getRecordType());
         updateAddType(expense.getId(), expense.getAddType());
         // Not updating ID and Identifier intentionally
-    }
-
-    /** Updates expenses and sets unsynced for month index
-     * @deprecated This method will be removed once backup service is migrated to a non Google Sheet
-     * service.
-     */
-    @Deprecated
-    @Transaction
-    public void updateSetUnsynced(int monthIndex, @NonNull TimeZone timeZone) {
-        Filter filter = new Filter(timeZone);
-        filter.addMonth(monthIndex);
-        updateSetUnsyncedForQuery(filter.toUpdateSyncedQuery());
     }
 
     @Transaction

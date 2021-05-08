@@ -1,47 +1,50 @@
 package com.ramitsuri.expensemanager.viewModel;
 
-import com.ramitsuri.expensemanager.MainApplication;
-import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
-import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
-import com.ramitsuri.expensemanager.entities.EditedSheet;
-import com.ramitsuri.expensemanager.entities.Expense;
-import com.ramitsuri.expensemanager.entities.Filter;
-import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
-import com.ramitsuri.expensemanager.utils.AppHelper;
-import com.ramitsuri.expensemanager.utils.Calculator;
-import com.ramitsuri.expensemanager.utils.DateHelper;
-import com.ramitsuri.expensemanager.utils.SharedExpenseHelper;
-import com.ramitsuri.expensemanager.utils.SharedExpenseManager;
-import com.ramitsuri.expensemanager.utils.TransformationHelper;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.TimeZone;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.backup.BackupCallback;
+import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
+import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
+import com.ramitsuri.expensemanager.data.repository.LogRepository;
+import com.ramitsuri.expensemanager.entities.Expense;
+import com.ramitsuri.expensemanager.entities.Filter;
+import com.ramitsuri.expensemanager.entities.Log;
+import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
+import com.ramitsuri.expensemanager.utils.AppHelper;
+import com.ramitsuri.expensemanager.utils.Calculator;
+import com.ramitsuri.expensemanager.utils.TransformationHelper;
+
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import timber.log.Timber;
 
 public class AllExpensesViewModel extends ViewModel {
 
     private final ExpenseRepository mRepository;
+    private final LogRepository mLogRepo;
 
     private List<Expense> mExpenses;
     private Filter mFilter;
     private MutableLiveData<String> mFilterInfo;
-    private SharedExpenseManager mSharedExpenseManager;
     private final TimeZone mTimeZone = AppHelper.getTimeZone();
 
     public AllExpensesViewModel() {
         super();
         mRepository = MainApplication.getInstance().getExpenseRepo();
+        mLogRepo = MainApplication.getInstance().getLogRepo();
         mFilter = getDefaultFilter();
         mFilterInfo = new MutableLiveData<>();
         updateFilterInfo();
@@ -57,7 +60,8 @@ public class AllExpensesViewModel extends ViewModel {
                     @Override
                     public List<ExpenseWrapper> apply(List<Expense> input) {
                         mExpenses = input;
-                        return TransformationHelper.toExpenseWrapperList(input);
+                        return TransformationHelper
+                                .toExpenseWrapperList(input, AppHelper.getTimeZone());
                     }
                 });
     }
@@ -102,17 +106,11 @@ public class AllExpensesViewModel extends ViewModel {
     public LiveData<Expense> duplicateExpense(@Nonnull Expense expense) {
         Expense duplicate = new Expense(expense);
         duplicate.generateIdentifier();
-        duplicate.setSynced(false);
         return mRepository.insertAndGet(duplicate, mFilter);
     }
 
     public void deleteExpense(@Nonnull Expense expense) {
         mRepository.delete(expense, mFilter);
-        // Backed up expense was deleted, update Edited Sheets table to add this expense's sheet id
-        if (expense.isSynced()) {
-            MainApplication.getInstance().getEditedSheetRepo().insertEditedSheet(
-                    new EditedSheet(DateHelper.getMonthIndexFromDate(expense.getDateTime())));
-        }
     }
 
     public LiveData<String> getFilterInfo() {
@@ -138,47 +136,21 @@ public class AllExpensesViewModel extends ViewModel {
         updateFilterInfo();
     }
 
-    public boolean isEnableSharedExpenses() {
-        return getSharedExpenseManager().isEnabled();
+    public void requestExport(@NonNull OutputStream outputStream,
+            @NonNull BackupCallback callback) {
+        mRepository.exportAllData(outputStream, callback);
     }
 
-    public void getAndSaveAndDeleteFromRemoteShared() {
-        final String otherSource = SharedExpenseHelper.getOtherSource();
-        getSharedExpenseManager().getForOtherSource(otherSource);
+    public boolean showEOLWarning() {
+        return MainApplication.getInstance().showEOLWarning();
     }
 
-    public void pushToRemoteShared(@Nonnull Expense expense) {
-        getSharedExpenseManager().add(expense);
+    public void onEOLAcknowledged() {
+        MainApplication.getInstance().eolWarningDone();
     }
 
-    private SharedExpenseManager getSharedExpenseManager() {
-        if (mSharedExpenseManager == null) {
-            mSharedExpenseManager = SharedExpenseHelper.getSharedExpenseManager(mCallbacks);
-        }
-        return mSharedExpenseManager;
+    public void logExport(String message, String result) {
+        mLogRepo.insertLog(new Log(new Date().getTime(), "Export", result, message));
+        Timber.i(message);
     }
-
-    private SharedExpenseManager.Callbacks mCallbacks = new SharedExpenseManager.Callbacks() {
-        @Override
-        public void addSuccess() {
-            Timber.i("Expense added");
-        }
-
-        @Override
-        public void deleteForOtherSuccess(@Nonnull String source) {
-            Timber.i("Deleted for %s", source);
-        }
-
-        @Override
-        public void getForOtherSuccess(@Nonnull String source, @Nonnull List<Expense> expenses) {
-            Timber.i("Expenses %s", expenses.toString());
-            getSharedExpenseManager().deleteForOtherSource(source);
-            mRepository.insert(expenses, mFilter);
-        }
-
-        @Override
-        public void failure(@Nonnull String message, @Nonnull Exception e) {
-            Timber.i(e, message);
-        }
-    };
 }

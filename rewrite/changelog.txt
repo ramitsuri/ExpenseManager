@@ -1,3 +1,63 @@
+Add export data functionality
+AllExpenses
+    - Add EOL warning on Application start
+    - Add SAF export to json file
+Remove anything that had to do with Google Sheets data backup
+
+Cleanup (Remove EditedSheet, SheetInfo, Prefs, Work)
+Expense
+    - Remove isSynced, isIncome, sheetId columns
+    - Remove methods for to and from List
+Database
+    - Drop SheetInfo, EditedSheet, columns from Expense
+ExpenseDao
+    - Modify queries to account for column removal
+Filter
+    - Remove synced, and income filters
+MainApplication
+    - Cancel all works except recurring
+    - Remove legacy prefs
+WorkHelper
+    - Add method to cancel work by tags
+    - Remove unneeded code
+DateHelper
+    - Remove methods that don't take in time zone
+
+Cleanup (Remove spreadsheet, income, Firebase Firestore)
+AddExpense
+    - Remove income support
+AddExpenseViewModel, AllExpensesViewModel
+    - Remove support for Firebase database Firestore
+    - Remove stuff related to adding edited sheet index for backup
+AllExpenses
+    - Remove push to Firebase Firestore
+AppHelper
+    - Remove Spreadsheet id methods, entitied info edited, backup info status
+Constants
+    - Remove unused ones
+Workers
+    - Remove CreateSpreadsheet, EntitiesBackup, ExpenseSync, Sync, SpreadsheetExpenseBackupService
+Remove surprise message
+Remove EditedSheetDao, SheetDao
+Add dummy expense backup service in Injector
+Remove EditedSheetRepo, SheetRepo
+MainApplication
+    - Remove some backup related code
+    - Change SheetRepo code to Drive repo code for future if local backup needs to be moved to Google Drive
+Miscellaneous
+    - Remove backup, sync, spreadsheet items
+SecretMessages
+    - Remove entities, expense sync and backup
+    - Remove income
+    - Remove force month sync, surprise message
+Remove SharedExpenseHelper (Firebase Firestore)
+Remove SheetRequestHelper
+
+Abstract backup service
+Add an interface for Expense Backup Service
+Add new worker class in Kotlin for Expenses backup that implements the above interface
+Add an Injector class that only provides ExpensesBackupService for now
+
 Recurring Expense (VI)
 AddExpenseFragment
     - Add button to set RecurType

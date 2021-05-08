@@ -11,13 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
@@ -38,6 +36,7 @@ import com.ramitsuri.expensemanager.entities.PaymentMethod;
 import com.ramitsuri.expensemanager.ui.adapter.ListEqualizer;
 import com.ramitsuri.expensemanager.ui.adapter.ListPickerAdapter;
 import com.ramitsuri.expensemanager.ui.dialog.DatePickerDialog;
+import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.DateHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.AddExpenseViewModel;
@@ -137,20 +136,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
         mBtnFlag.setOnClickListener(this);
         updateExpenseFlag();
 
-        // Income
-        SwitchCompat btnIncome = view.findViewById(R.id.toggle_income);
-        btnIncome.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mViewModel.setIncome(isChecked);
-            }
-        });
-        if (mViewModel.isIncomeAvailable()) {
-            btnIncome.setVisibility(View.VISIBLE);
-        } else {
-            btnIncome.setVisibility(View.GONE);
-        }
-
         /*
          * Set values from expense on views
          */
@@ -178,9 +163,6 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
             mEditAmount.setText(value);
             mEditAmount.setSelection(value.length());
         }
-
-        // Income
-        btnIncome.setChecked(mViewModel.isIncome());
 
         // Recur Type
         mBtnRecurType = view.findViewById(R.id.btn_recur_type);
@@ -407,7 +389,8 @@ public class AddExpenseFragment extends BaseFragment implements View.OnClickList
 
     private void handleDateClicked() {
         removeFocusAndHideKeyboard();
-        LocalDate localDate = DateHelper.getLocalDate(new Date(mViewModel.getDate()));
+        LocalDate localDate =
+                DateHelper.getLocalDate(new Date(mViewModel.getDate()), AppHelper.getTimeZone());
         int year = DateHelper.getYearFromDate(localDate);
         int month = DateHelper.getMonthFromDate(localDate);
         int day = DateHelper.getDayFromDate(localDate);

@@ -1,14 +1,8 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
-import android.accounts.Account;
-import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,26 +16,16 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.ramitsuri.expensemanager.R;
 import com.ramitsuri.expensemanager.constants.Constants;
-import com.ramitsuri.expensemanager.constants.stringDefs.BackupInfoStatus;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
 import com.ramitsuri.expensemanager.viewModel.MiscellaneousViewModel;
-import com.ramitsuri.sheetscore.consumerResponse.EntitiesConsumerResponse;
-import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
 
 import javax.annotation.Nonnull;
-
-import timber.log.Timber;
-
-import static com.ramitsuri.expensemanager.constants.Constants.RequestCode.GOOGLE_SIGN_IN;
 
 public class MiscellaneousFragment extends BaseFragment {
 
@@ -88,7 +72,7 @@ public class MiscellaneousFragment extends BaseFragment {
             }
         });
 
-        // Header - Backup and Sync
+        /*// Header - Backup and Sync
         setupHeader(view,
                 R.id.header_backup_sync,
                 R.string.header_title_backup_sync,
@@ -99,41 +83,7 @@ public class MiscellaneousFragment extends BaseFragment {
                 R.id.item_backup_info,
                 R.string.miscellaneous_backup_info_title,
                 R.drawable.ic_backup,
-                true);
-
-        // Backup
-        setupMenuItem(view,
-                R.id.item_backup,
-                R.string.common_sync_now,
-                R.drawable.ic_backup,
-                mViewModel.enableBackupNow());
-
-        // Sync
-        setupMenuItem(view,
-                R.id.item_sync,
-                R.string.common_sync,
-                R.drawable.ic_sync,
-                mViewModel.enableEntitiesSync());
-
-        // Sync Expenses
-        setupMenuItem(view,
-                R.id.item_sync_expenses,
-                R.string.common_sync_expenses,
-                R.drawable.ic_sync,
-                mViewModel.enableExpenseSync());
-
-        // Header - Spreadsheet
-        setupHeader(view,
-                R.id.header_spreadsheet,
-                R.string.header_title_spreadsheet,
-                mViewModel.enableHidden());
-
-        // Spreadsheet Id
-        setupSpreadsheetItem(view,
-                R.id.item_spreadsheet_id,
-                R.string.settings_title_spreadsheet_id,
-                R.drawable.ic_spreadsheet_id,
-                mViewModel.enableHidden());
+                true);*/
 
         // Header - Entities
         setupHeader(view,
@@ -266,43 +216,6 @@ public class MiscellaneousFragment extends BaseFragment {
         }
     }
 
-    private void setupSpreadsheetItem(@Nonnull View view,
-            @IdRes final int idRes,
-            @StringRes int titleRes,
-            @DrawableRes int drawableRes,
-            boolean show) {
-        ViewGroup container = setupMenuItem(view, idRes, titleRes, drawableRes, show);
-        if (container != null) {
-            final String spreadsheetId = mViewModel.getSpreadsheetId();
-            if (TextUtils.isEmpty(spreadsheetId)) {
-                return;
-            }
-            // Summary
-            final TextView summary = container.findViewById(R.id.summary);
-            if (summary != null) {
-                summary.setText(spreadsheetId);
-                summary.setVisibility(View.VISIBLE);
-            }
-            container.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Activity activity = getActivity();
-                    if (activity == null) {
-                        return false;
-                    }
-                    ClipboardManager clipboard =
-                            (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                    if (clipboard == null) {
-                        return false;
-                    }
-                    ClipData clip = ClipData.newPlainText(spreadsheetId, spreadsheetId);
-                    clipboard.setPrimaryClip(clip);
-                    return false;
-                }
-            });
-        }
-    }
-
     private void setupBackupInfoItem(@Nonnull View view,
             @IdRes final int idRes,
             @StringRes int titleRes,
@@ -316,53 +229,6 @@ public class MiscellaneousFragment extends BaseFragment {
             final TextView summary = container.findViewById(R.id.summary);
             if (summary != null) {
                 summary.setVisibility(View.VISIBLE);
-                mViewModel.getBackupInfoStatus().observe(getViewLifecycleOwner(),
-                        new Observer<String>() {
-                            @Override
-                            public void onChanged(String status) {
-                                if (TextUtils.isEmpty(status)) {
-                                    return;
-                                }
-                                switch (status) {
-                                    case BackupInfoStatus.NO:
-                                        summary.setText(
-                                                R.string.miscellaneous_backup_info_not_enabled);
-                                        if (progress != null) {
-                                            progress.setVisibility(View.GONE);
-                                        }
-                                        break;
-
-                                    case BackupInfoStatus.MAYBE:
-                                        summary.setText(R.string.miscellaneous_backup_info_enabled);
-                                        if (progress != null) {
-                                            progress.setVisibility(View.GONE);
-                                        }
-                                        break;
-
-                                    case BackupInfoStatus.CREATING:
-                                        summary.setText(
-                                                R.string.miscellaneous_backup_info_creating);
-                                        if (progress != null) {
-                                            progress.setVisibility(View.VISIBLE);
-                                        }
-                                        break;
-
-                                    case BackupInfoStatus.ERROR:
-                                        summary.setText(R.string.miscellaneous_backup_info_error);
-                                        if (progress != null) {
-                                            progress.setVisibility(View.GONE);
-                                        }
-                                        break;
-
-                                    case BackupInfoStatus.OK:
-                                        summary.setText(R.string.miscellaneous_backup_info_good);
-                                        if (progress != null) {
-                                            progress.setVisibility(View.GONE);
-                                        }
-                                        break;
-                                }
-                            }
-                        });
             }
         }
     }
@@ -400,18 +266,6 @@ public class MiscellaneousFragment extends BaseFragment {
 
     private void handleMenuItemClicked(@IdRes int idRes) {
         switch (idRes) {
-            case R.id.item_backup:
-                mViewModel.initiateBackup();
-                break;
-
-            case R.id.item_sync:
-                mViewModel.syncDataFromSheet();
-                break;
-
-            case R.id.item_sync_expenses:
-                mViewModel.syncExpensesFromSheet();
-                break;
-
             case R.id.item_sheets:
                 NavHostFragment.findNavController(MiscellaneousFragment.this)
                         .navigate(R.id.nav_action_sheets, null);
@@ -464,95 +318,6 @@ public class MiscellaneousFragment extends BaseFragment {
                 NavHostFragment.findNavController(MiscellaneousFragment.this)
                         .navigate(R.id.nav_action_payment_methods_setup, null);
                 break;
-
-            case R.id.item_backup_info:
-                handleBackupInfoClicked();
-                break;
         }
-    }
-
-    private void handleBackupInfoClicked() {
-        Account account = mViewModel.getSignInAccount();
-        if (account == null) {
-            Timber.i("Account null, attempting sign in");
-            signIn();
-            return;
-        } else {
-            Timber.i("Signed in as %s", account.name);
-        }
-        // Create or possibly fetch existing spreadsheet
-        LiveData<Boolean> resultReceived = mViewModel.onBackupInfoClicked();
-        if (resultReceived != null) {
-            resultReceived.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean aBoolean) {
-                    if (aBoolean != null) {
-                        if (aBoolean) {
-                            restoreAccess();
-                        }
-                        Timber.i("Something happened as a result of onBackupInfoClicked");
-                    }
-                }
-            });
-        }
-    }
-
-    private void restoreAccess() {
-        LiveData<EntitiesConsumerResponse> responseLiveData = mViewModel.restoreAccess();
-        if (responseLiveData != null) {
-            responseLiveData
-                    .observe(getViewLifecycleOwner(), new Observer<EntitiesConsumerResponse>() {
-                        @Override
-                        public void onChanged(EntitiesConsumerResponse response) {
-                            if (response != null) {
-                                if (response.getException() != null) {
-                                    Exception e = response.getException();
-                                    if (e instanceof UserRecoverableAuthIOException) {
-                                        Intent intent =
-                                                ((UserRecoverableAuthIOException)e).getIntent();
-
-                                        startActivityForResult(intent, 101);
-                                    }
-                                }
-                            }
-                        }
-                    });
-        }
-    }
-
-    private void signIn() {
-        Intent intent = mViewModel.getSignInIntent();
-        if (intent != null) {
-            Timber.i("Sign in intent received, requesting auth");
-            startActivityForResult(intent, GOOGLE_SIGN_IN);
-        } else {
-            Timber.i("Sign in intent null, dead end");
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == GOOGLE_SIGN_IN) {
-            Account account = AccountManager.getSignInAccountFromIntent(data);
-            if (account != null) {
-                handleBackupInfoClicked();
-            } else {
-                Timber.i("Activity returned null account");
-                if (data != null && data.getExtras() != null && !data.getExtras().isEmpty()) {
-                    Timber.w("Information returned for error: %s", data.getExtras());
-                    if (getView() != null) {
-                        Snackbar.make(getView(), R.string.miscellaneous_sign_in_fail_message,
-                                Snackbar.LENGTH_LONG).show();
-                    }
-                }
-            }
-        } else if (requestCode == 101) {
-            if (resultCode == Activity.RESULT_OK) {
-                Timber.i("Access possibly restored");
-
-            }
-
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

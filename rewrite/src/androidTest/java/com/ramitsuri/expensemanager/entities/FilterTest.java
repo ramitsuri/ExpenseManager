@@ -19,22 +19,6 @@ public class FilterTest {
     private final TimeZone timeZone = TimeZone.getDefault();
 
     @Test
-    public void testQueryJustIncome() {
-        Filter filter = new Filter(timeZone);
-        assertEquals("SELECT * FROM expense", filter.toQuery().getSql());
-
-        filter.setIncome(true);
-        assertEquals("SELECT * FROM expense WHERE is_income = ?",
-                filter.toQuery().getSql());
-        assertEquals(1, filter.toQuery().getArgCount());
-
-        filter.setIncome(false);
-        assertEquals("SELECT * FROM expense WHERE is_income = ?",
-                filter.toQuery().getSql());
-        assertEquals(1, filter.toQuery().getArgCount());
-    }
-
-    @Test
     public void testJustDateTime() {
         Filter filter = new Filter(timeZone);
         filter.addYear(2020);
@@ -80,32 +64,29 @@ public class FilterTest {
     }
 
     @Test
-    public void testDateTimeAndIncome() {
-        // Month 3, income true
+    public void testDateTime() {
+        // Month 3
         Filter filter = new Filter(timeZone);
         filter.addYear(2020);
         filter.addMonth(3);
-        filter.setIncome(true);
         assertEquals(
-                "SELECT * FROM expense WHERE is_income = ? AND ( (date_time BETWEEN ? AND ?) )",
+                "SELECT * FROM expense WHERE ( (date_time BETWEEN ? AND ?) )",
                 filter.toQuery().getSql());
-        assertEquals(3, filter.toQuery().getArgCount());
+        assertEquals(2, filter.toQuery().getArgCount());
 
-        // Month 3, income true again
+        // Month 3
         filter.addMonth(3);
-        filter.setIncome(true);
         assertEquals(
-                "SELECT * FROM expense WHERE is_income = ? AND ( (date_time BETWEEN ? AND ?) )",
+                "SELECT * FROM expense WHERE ( (date_time BETWEEN ? AND ?) )",
                 filter.toQuery().getSql());
-        assertEquals(3, filter.toQuery().getArgCount());
+        assertEquals(2, filter.toQuery().getArgCount());
 
-        // Month 3 and 4, income true
+        // Month 3 and 4
         filter.addMonth(4);
-        filter.setIncome(true);
         assertEquals(
-                "SELECT * FROM expense WHERE is_income = ? AND ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) )",
+                "SELECT * FROM expense WHERE ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) )",
                 filter.toQuery().getSql());
-        assertEquals(5, filter.toQuery().getArgCount());
+        assertEquals(4, filter.toQuery().getArgCount());
     }
 
     @Test
@@ -162,8 +143,6 @@ public class FilterTest {
         filter.addYear(2020);
         filter.addMonth(3);
         filter.addMonth(4);
-        filter.setIncome(true);
-        filter.setSynced(true);
         filter.setStarred(true);
         filter.addCategory("Food");
         filter.addCategory("Travel");
@@ -172,9 +151,9 @@ public class FilterTest {
         filter.addPaymentMethod("Cash");
         filter.setRecordType(RecordType.ANNUAL);
         assertEquals(
-                "SELECT * FROM expense WHERE is_income = ? AND ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) ) AND category IN (?,?) AND payment_method IN (?,?,?) AND is_synced = ? AND is_starred = ? AND record_type = ?",
+                "SELECT * FROM expense WHERE ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) ) AND category IN (?,?) AND payment_method IN (?,?,?) AND is_starred = ? AND record_type = ?",
                 filter.toQuery().getSql());
-        assertEquals(13, filter.toQuery().getArgCount());
+        assertEquals(11, filter.toQuery().getArgCount());
     }
 
     @Test
@@ -183,8 +162,6 @@ public class FilterTest {
         filter.addYear(2020);
         filter.addMonth(3);
         filter.addMonth(4);
-        filter.setIncome(true);
-        filter.setSynced(true);
         filter.setStarred(true);
         filter.addCategory("Food");
         filter.addCategory("Travel");
@@ -202,19 +179,6 @@ public class FilterTest {
         assertEquals(filter.toQuery().getSql(), fromParcel.toQuery().getSql());
         assertEquals(filter.toQuery().getArgCount(),
                 fromParcel.toQuery().getArgCount());
-    }
-
-    @Test
-    public void testToUpdateSyncedQuery() {
-        Filter filter = new Filter(timeZone);
-        filter.addYear(2020);
-        filter.addMonth(3)
-                .addMonth(5);
-
-        assertEquals(
-                "UPDATE expense SET is_synced = 0 WHERE ( (date_time BETWEEN ? AND ?) OR (date_time BETWEEN ? AND ?) )",
-                filter.toUpdateSyncedQuery().getSql());
-        assertEquals(4, filter.toUpdateSyncedQuery().getArgCount());
     }
 
     @Test

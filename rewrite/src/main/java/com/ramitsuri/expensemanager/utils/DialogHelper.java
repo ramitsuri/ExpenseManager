@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+
 import timber.log.Timber;
 
 public class DialogHelper {
@@ -50,6 +51,15 @@ public class DialogHelper {
                 .setSingleChoiceItems(arrayList, checkedItem, itemClickListener)
                 .setTitle(title)
                 .setNegativeButton(negativeText, negativeListener)
+                .show();
+    }
+
+    public static void showEOLDialog(@NonNull Context context,
+            DialogInterface.OnClickListener positiveListener) {
+        new MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.eol_dialog_title)
+                .setMessage(R.string.eol_dialog_message)
+                .setPositiveButton(R.string.eol_dialog_positive, positiveListener)
                 .show();
     }
 
