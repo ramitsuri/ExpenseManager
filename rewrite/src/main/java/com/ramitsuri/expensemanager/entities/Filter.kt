@@ -82,6 +82,9 @@ class Filter(
         return this
     }
 
+    /**
+     * Takes in month in range 1..12
+     */
     fun addMonth(month: Int): Filter {
         if (months == null) {
             months = mutableSetOf()

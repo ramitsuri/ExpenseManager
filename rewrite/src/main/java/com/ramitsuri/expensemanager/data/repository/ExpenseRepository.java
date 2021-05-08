@@ -5,10 +5,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.ramitsuri.expensemanager.AppExecutors;
+import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.backup.BackupCallback;
 import com.ramitsuri.expensemanager.data.ExpenseManagerDatabase;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
+import com.ramitsuri.expensemanager.work.WorkResult;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -175,5 +181,26 @@ public class ExpenseRepository extends BaseRepository {
         // Refresh expenses as they don't refresh automatically
         getForFilter(filter);
         return duplicate;
+    }
+
+    public void exportAllData(@NonNull OutputStream outputStream,
+            final @NonNull BackupCallback callback) {
+        mExecutors.diskIO().execute(() -> {
+            WorkResult<String> res =
+                    MainApplication.getInstance().getInjector().provideExpenseBackupService()
+                            .process();
+            if (res instanceof WorkResult.Success) {
+                String data = ((WorkResult.Success<String>)res).getData();
+                try {
+                    outputStream.write(data.getBytes(StandardCharsets.UTF_8));
+                    outputStream.close();
+                    callback.onSuccess();
+                } catch (IOException e) {
+                    callback.onFailed(e.getMessage());
+                }
+            } else {
+                callback.onFailed("Backup Service failed");
+            }
+        });
     }
 }

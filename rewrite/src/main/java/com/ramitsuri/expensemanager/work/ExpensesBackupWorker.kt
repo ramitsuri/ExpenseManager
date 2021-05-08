@@ -3,7 +3,6 @@ package com.ramitsuri.expensemanager.work
 import android.content.Context
 import androidx.work.WorkerParameters
 import com.ramitsuri.expensemanager.MainApplication
-import com.ramitsuri.expensemanager.backup.WorkResult
 import com.ramitsuri.expensemanager.constants.Constants
 
 class ExpensesBackupWorker(context: Context, workerParams: WorkerParameters):

@@ -95,7 +95,7 @@ class RecurringExpenseManager(private val expenseDao: ExpenseDao,
      */
     @WorkerThread
     fun process(timeZoneId: ZoneId, currentTimeInMillis: Long): Int {
-        val recurringExpenses = recurringDao.read()
+        val recurringExpenses = recurringDao.getAll()
         val newExpenses = mutableListOf<Expense>()
         val updatedRecurringExpenses = mutableListOf<RecurringExpenseInfo>()
         for (recurringExpense in recurringExpenses) {

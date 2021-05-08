@@ -24,7 +24,7 @@ abstract class RecurringExpenseInfoDao {
     abstract fun readReactive(): LiveData<List<RecurringExpenseInfo>>
 
     @Query("SELECT * FROM recurringexpenseinfo ORDER BY last_occur ASC")
-    abstract fun read(): List<RecurringExpenseInfo>
+    abstract fun getAll(): List<RecurringExpenseInfo>
 
     @Query("SELECT * FROM recurringexpenseinfo WHERE last_occur <= :before ORDER BY last_occur ASC")
     abstract fun readReactive(before: Long): LiveData<List<RecurringExpenseInfo>>

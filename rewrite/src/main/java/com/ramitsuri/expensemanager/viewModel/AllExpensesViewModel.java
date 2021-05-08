@@ -1,5 +1,6 @@
 package com.ramitsuri.expensemanager.viewModel;
 
+import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,16 +8,21 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.ramitsuri.expensemanager.MainApplication;
+import com.ramitsuri.expensemanager.backup.BackupCallback;
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
 import com.ramitsuri.expensemanager.data.repository.ExpenseRepository;
+import com.ramitsuri.expensemanager.data.repository.LogRepository;
 import com.ramitsuri.expensemanager.entities.Expense;
 import com.ramitsuri.expensemanager.entities.Filter;
+import com.ramitsuri.expensemanager.entities.Log;
 import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.Calculator;
 import com.ramitsuri.expensemanager.utils.TransformationHelper;
 
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -28,6 +34,7 @@ import timber.log.Timber;
 public class AllExpensesViewModel extends ViewModel {
 
     private final ExpenseRepository mRepository;
+    private final LogRepository mLogRepo;
 
     private List<Expense> mExpenses;
     private Filter mFilter;
@@ -37,6 +44,7 @@ public class AllExpensesViewModel extends ViewModel {
     public AllExpensesViewModel() {
         super();
         mRepository = MainApplication.getInstance().getExpenseRepo();
+        mLogRepo = MainApplication.getInstance().getLogRepo();
         mFilter = getDefaultFilter();
         mFilterInfo = new MutableLiveData<>();
         updateFilterInfo();
@@ -126,5 +134,23 @@ public class AllExpensesViewModel extends ViewModel {
                 .getDefault();
         mRepository.getForFilter(mFilter);
         updateFilterInfo();
+    }
+
+    public void requestExport(@NonNull OutputStream outputStream,
+            @NonNull BackupCallback callback) {
+        mRepository.exportAllData(outputStream, callback);
+    }
+
+    public boolean showEOLWarning() {
+        return MainApplication.getInstance().showEOLWarning();
+    }
+
+    public void onEOLAcknowledged() {
+        MainApplication.getInstance().eolWarningDone();
+    }
+
+    public void logExport(String message, String result) {
+        mLogRepo.insertLog(new Log(new Date().getTime(), "Export", result, message));
+        Timber.i(message);
     }
 }

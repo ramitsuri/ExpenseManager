@@ -1,6 +1,5 @@
 package com.ramitsuri.expensemanager;
 
-import android.accounts.Account;
 import android.app.Application;
 
 import com.ramitsuri.expensemanager.constants.intDefs.RecordType;
@@ -19,8 +18,6 @@ import com.ramitsuri.expensemanager.utils.AppHelper;
 import com.ramitsuri.expensemanager.utils.CrashReportingHelper;
 import com.ramitsuri.expensemanager.utils.PrefHelper;
 import com.ramitsuri.expensemanager.utils.WorkHelper;
-import com.ramitsuri.sheetscore.googleSignIn.AccountManager;
-import com.ramitsuri.sheetscore.googleSignIn.SignInResponse;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,7 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import timber.log.Timber;
 
@@ -43,6 +39,8 @@ public class MainApplication extends Application {
     private RecurringExpenseRepository mRecurringRepo;
 
     private static MainApplication sInstance;
+
+    private boolean showEOLWarning = true;
 
     @Override
     public void onCreate() {
@@ -158,28 +156,6 @@ public class MainApplication extends Application {
         mRecurringRepo = new RecurringExpenseRepository(appExecutors, database);
     }
 
-    private void initDriveRepo() {
-        Timber.i("Attempting to initialize drive repo");
-        Account account = getSignInAccount();
-        if (account != null) {
-            refreshDriveRepo(account);
-        } else {
-            Timber.i("Account is null");
-        }
-    }
-
-    public void refreshDriveRepo(@Nonnull Account account) {
-        Timber.i("Refreshing drive repo");
-        String appName = getString(R.string.app_name);
-        List<String> scopes = Arrays.asList(AppHelper.getScopes());
-        /*if (mSheetRepository == null) {
-            mSheetRepository =
-                    new SheetRepository(this, appName, account, scopes, AppExecutors.getInstance());
-        } else {
-            mSheetRepository.refreshProcessors(this, appName, account, scopes);
-        }*/
-    }
-
     private void addDefaultData() {
         List<String> categoryStrings =
                 Arrays.asList(getResources().getStringArray(R.array.categories));
@@ -249,19 +225,16 @@ public class MainApplication extends Application {
         return mRecurringRepo;
     }
 
-    @Nullable
-    public Account getSignInAccount() {
-        AccountManager accountManager = new AccountManager();
-        SignInResponse response =
-                accountManager.prepareSignIn(getInstance(), AppHelper.getScopes());
-        if (response.getGoogleSignInAccount() != null) {
-            return response.getGoogleSignInAccount().getAccount();
-        }
-        return null;
-    }
-
     @Nonnull
     public Injector getInjector() {
         return mInjector;
+    }
+
+    public void eolWarningDone() {
+        showEOLWarning = false;
+    }
+
+    public boolean showEOLWarning() {
+        return showEOLWarning;
     }
 }

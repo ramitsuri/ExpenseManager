@@ -8,7 +8,7 @@ class MockExpenseDao: ExpenseDao() {
     private val values = mutableListOf<Expense>()
     private var autoIncrementId = 1
 
-    override fun getExpenses(): MutableList<Expense> {
+    override fun getAll(): MutableList<Expense> {
         return values
     }
 

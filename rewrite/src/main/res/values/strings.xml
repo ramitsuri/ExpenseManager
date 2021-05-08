@@ -147,6 +147,7 @@
 
     <!-- All Expenses -->
     <string name="all_expenses_filter">Filter</string>
+    <string name="all_expenses_export">Export</string>
     <string name="all_expenses_modify_filter">Modify Filter</string>
     <string name="all_expenses_go_to_setup">Go To Setup</string>
     <string name="all_expenses_empty_message">No expenses!\n%1s</string>
@@ -205,5 +206,13 @@
     <!-- Shared -->
     <string name="shared_expense_temp">S</string>
     <string name="title_recurring">Recurring</string>
+
+    <!-- EOL -->
+    <string name="eol_dialog_title">End of life</string>
+    <string name="eol_dialog_message">This app is no longer being maintained.
+        \n\nYou can use the EXPORT button to export your data to a directory in your device as a
+        JSON file.
+    </string>
+    <string name="eol_dialog_positive">OK</string>
 
 </resources>

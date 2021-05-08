@@ -24,7 +24,7 @@ public abstract class ExpenseDao {
      * SELECT
      */
     @Query("SELECT * FROM expense ORDER BY date_time DESC")
-    public abstract List<Expense> getExpenses();
+    public abstract List<Expense> getAll();
 
     @Query("SELECT * FROM expense WHERE date_time BETWEEN :fromDateTime AND :toDateTime ORDER BY date_time DESC")
     public abstract List<Expense> getExpensesForDateRange(long fromDateTime, long toDateTime);

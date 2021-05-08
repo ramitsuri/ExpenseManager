@@ -1,6 +1,9 @@
 package com.ramitsuri.expensemanager.ui.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.ramitsuri.expensemanager.R;
+import com.ramitsuri.expensemanager.backup.BackupCallback;
 import com.ramitsuri.expensemanager.constants.Constants;
 import com.ramitsuri.expensemanager.constants.intDefs.ListItemType;
 import com.ramitsuri.expensemanager.entities.Expense;
@@ -31,9 +35,10 @@ import com.ramitsuri.expensemanager.ui.adapter.ExpenseWrapper;
 import com.ramitsuri.expensemanager.ui.decoration.StickyHeaderItemDecoration;
 import com.ramitsuri.expensemanager.utils.CurrencyHelper;
 import com.ramitsuri.expensemanager.utils.DialogHelper;
-import com.ramitsuri.expensemanager.utils.WorkHelper;
 import com.ramitsuri.expensemanager.viewModel.AllExpensesViewModel;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +58,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
     private ViewGroup mGroupButtons;
     private TextView mTextInfoEmpty, mTextInfo1, mTextInfo2, mTextInfo3;
     private Button mBtnFilterSecond, mBtnSetupSecond, mBtnAddSecond, mBtnFilter,
-            mBtnSetup, mBtnAnalysis, mBtnClearFilter;
+            mBtnSetup, mBtnAnalysis, mBtnClearFilter, mBtnExport, mBtnExportSecond;
 
     public AllExpensesFragment() {
     }
@@ -95,6 +100,12 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         mBtnClearFilter = view.findViewById(R.id.btn_clear_filter);
         mBtnClearFilter.setOnClickListener(this);
 
+        mBtnExportSecond = view.findViewById(R.id.btn_export_second);
+        mBtnExportSecond.setOnClickListener(this);
+
+        mBtnExport = view.findViewById(R.id.btn_export);
+        mBtnExport.setOnClickListener(this);
+
         // Shown when no expenses
         mTextInfoEmpty = view.findViewById(R.id.txt_expense_empty);
 
@@ -123,6 +134,8 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
         setupListExpenses(view);
 
         onFilterApplied(null);
+
+        showEOLWarning();
     }
 
     private void setupListExpenses(View view) {
@@ -305,6 +318,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
 
             mBtnAddSecond.setVisibility(View.VISIBLE);
             mBtnFilterSecond.setVisibility(View.VISIBLE);
+            mBtnExportSecond.setVisibility(View.VISIBLE);
             mBtnSetupSecond.setVisibility(View.VISIBLE);
             mTextInfoEmpty.setVisibility(View.VISIBLE);
         } else {
@@ -316,6 +330,7 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
 
             mBtnAddSecond.setVisibility(View.GONE);
             mBtnFilterSecond.setVisibility(View.GONE);
+            mBtnExportSecond.setVisibility(View.GONE);
             mBtnSetupSecond.setVisibility(View.GONE);
             mTextInfoEmpty.setVisibility(View.GONE);
         }
@@ -351,7 +366,69 @@ public class AllExpensesFragment extends BaseFragment implements View.OnClickLis
             showAnalysis();
         } else if (v.getId() == mBtnClearFilter.getId()) {
             mViewModel.clearFilter();
+        } else if (v.getId() == mBtnExport.getId() ||
+                v.getId() == mBtnExportSecond.getId()) { // Export
+            requestExport();
         }
     }
-}
 
+    private void requestExport() {
+        if (!isAdded()) {
+            Timber.i("Activity null or not added");
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/json");
+        intent.putExtra(Intent.EXTRA_TITLE, "expenses-backup.json");
+        startActivityForResult(intent, Constants.RequestCode.SELECT_BACKUP_FILE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestCode.SELECT_BACKUP_FILE) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                Uri uri = data.getData();
+                if (uri != null) {
+                    onBackupUriReceived(uri);
+                }
+            } else {
+                mViewModel.logExport("Export failed due to cancelled or invalid location",
+                        Constants.LogResult.FAILURE);
+            }
+        }
+    }
+
+    private void onBackupUriReceived(@Nonnull Uri uri) {
+        BackupCallback callback = new BackupCallback() {
+            @Override
+            public void onSuccess() {
+                mViewModel.logExport("Export successful", Constants.LogResult.SUCCESS);
+            }
+
+            @Override
+            public void onFailed(@NonNull String message) {
+                mViewModel.logExport(message, Constants.LogResult.FAILURE);
+            }
+        };
+        try {
+            OutputStream outputStream = getActivity().getContentResolver().openOutputStream(uri);
+            mViewModel.requestExport(outputStream, callback);
+        } catch (IOException e) {
+            mViewModel.logExport(e.getMessage(), Constants.LogResult.FAILURE);
+        }
+    }
+
+    public void showEOLWarning() {
+        if (!mViewModel.showEOLWarning()) {
+            return;
+        }
+        mViewModel.onEOLAcknowledged();
+        DialogInterface.OnClickListener positiveListener = (dialog, which) -> {
+            dialog.dismiss();
+        };
+        Timber.i(requireContext().toString());
+        DialogHelper.showEOLDialog(requireContext(), positiveListener);
+    }
+}

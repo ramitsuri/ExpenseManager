@@ -32,7 +32,7 @@ class RecurringExpenseDatabaseTest: BaseDatabaseTest() {
     fun testRead() {
         insertAll(getRecurringExpenses())
 
-        val actualExpenses = dao.read()
+        val actualExpenses = dao.getAll()
         assertEquals(getRecurringExpenses().size, actualExpenses.size)
 
         val actualExpensesBefore = dao.read(dateTime)
@@ -44,24 +44,24 @@ class RecurringExpenseDatabaseTest: BaseDatabaseTest() {
         insertAll(getRecurringExpenses())
 
         dao.delete("1")
-        assertEquals(getRecurringExpenses().size - 1, dao.read().size)
+        assertEquals(getRecurringExpenses().size - 1, dao.getAll().size)
 
         dao.delete()
-        assertEquals(0, dao.read().size)
+        assertEquals(0, dao.getAll().size)
     }
 
     @Test
     fun testUpdate() {
         insertAll(getRecurringExpenses())
 
-        val updatedRecurringExpenses = dao.read()
+        val updatedRecurringExpenses = dao.getAll()
         for (info in updatedRecurringExpenses) {
             info.lastOccur = dateTime
         }
 
         dao.update(updatedRecurringExpenses)
 
-        for (info in dao.read()) {
+        for (info in dao.getAll()) {
             assertEquals(dateTime, info.lastOccur)
         }
     }
@@ -70,12 +70,12 @@ class RecurringExpenseDatabaseTest: BaseDatabaseTest() {
     fun testUpdateRecur() {
         insertAll(getRecurringExpenses())
 
-        val updatedRecurringExpenses = dao.read()
+        val updatedRecurringExpenses = dao.getAll()
         for (info in updatedRecurringExpenses) {
             dao.update(info.id, RecurType.NONE)
         }
 
-        for (info in dao.read()) {
+        for (info in dao.getAll()) {
             assertEquals(RecurType.NONE, info.recurType)
         }
     }
@@ -89,11 +89,11 @@ class RecurringExpenseDatabaseTest: BaseDatabaseTest() {
 
         dao.insertUpdateOrDelete(recurringExpenseInfo)
 
-        val actual = dao.read()[0]
+        val actual = dao.getAll()[0]
         assertEquals(recurringExpenseInfo.identifier, actual.identifier)
         assertEquals(recurringExpenseInfo.lastOccur, actual.lastOccur)
         assertEquals(recurringExpenseInfo.recurType, actual.recurType)
-        assertEquals(1, dao.read().size)
+        assertEquals(1, dao.getAll().size)
     }
 
     @Test
@@ -105,7 +105,7 @@ class RecurringExpenseDatabaseTest: BaseDatabaseTest() {
 
         dao.insertUpdateOrDelete(recurringExpenseInfo)
 
-        assertTrue(dao.read().isEmpty())
+        assertTrue(dao.getAll().isEmpty())
     }
 
     @Test
@@ -120,7 +120,7 @@ class RecurringExpenseDatabaseTest: BaseDatabaseTest() {
         dao.insertUpdateOrDelete(recurringExpenseInfo)
 
         assertNull(dao.read(recurringExpenseInfo.identifier))
-        assertTrue(dao.read().isEmpty())
+        assertTrue(dao.getAll().isEmpty())
     }
 
     @Test
@@ -134,11 +134,11 @@ class RecurringExpenseDatabaseTest: BaseDatabaseTest() {
         recurringExpenseInfo.recurType = RecurType.WEEKLY
         dao.insertUpdateOrDelete(recurringExpenseInfo)
 
-        val actual = dao.read()[0]
+        val actual = dao.getAll()[0]
         assertEquals(recurringExpenseInfo.identifier, actual.identifier)
         assertEquals(recurringExpenseInfo.lastOccur, actual.lastOccur)
         assertEquals(recurringExpenseInfo.recurType, actual.recurType)
-        assertEquals(1, dao.read().size)
+        assertEquals(1, dao.getAll().size)
     }
 
     private fun insertAll(recurringExpenses: List<RecurringExpenseInfo>) {

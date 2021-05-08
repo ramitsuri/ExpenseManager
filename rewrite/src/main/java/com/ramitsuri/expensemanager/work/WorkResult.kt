@@ -1,4 +1,4 @@
-package com.ramitsuri.expensemanager.backup
+package com.ramitsuri.expensemanager.work
 
 sealed class WorkResult<T> {
     data class Success<T>(val data: T): WorkResult<T>()

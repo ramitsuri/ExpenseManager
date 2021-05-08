@@ -1,3 +1,9 @@
+Add export data functionality
+AllExpenses
+    - Add EOL warning on Application start
+    - Add SAF export to json file
+Remove anything that had to do with Google Sheets data backup
+
 Cleanup (Remove EditedSheet, SheetInfo, Prefs, Work)
 Expense
     - Remove isSynced, isIncome, sheetId columns
